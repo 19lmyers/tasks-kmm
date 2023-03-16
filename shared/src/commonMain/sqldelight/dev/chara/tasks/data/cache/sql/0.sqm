@@ -1,0 +1,38 @@
+import kotlinx.datetime.Instant;
+import kotlin.Boolean;
+
+CREATE TABLE TaskList (
+    id TEXT PRIMARY KEY NOT NULL,
+
+    title TEXT NOT NULL,
+
+    is_pinned INTEGER AS Boolean NOT NULL DEFAULT 0,
+
+    last_modified TEXT AS Instant NOT NULL,
+
+    CHECK (is_pinned IN (0, 1)),
+    CONSTRAINT last_modified CHECK (last_modified IS datetime(last_modified))
+);
+
+CREATE TABLE Task (
+    id TEXT PRIMARY KEY NOT NULL,
+    list_id TEXT NOT NULL,
+
+    label TEXT NOT NULL,
+    is_completed INTEGER AS Boolean NOT NULL DEFAULT 0,
+    is_starred INTEGER AS Boolean NOT NULL DEFAULT 0,
+
+    details TEXT,
+    reminder_date TEXT AS Instant,
+    due_date TEXT AS Instant,
+
+    last_modified TEXT AS Instant NOT NULL,
+
+    FOREIGN KEY (list_id) REFERENCES TaskList(id),
+
+    CHECK (is_completed IN (0, 1)),
+    CHECK (is_starred IN (0, 1)),
+    CONSTRAINT reminder_date CHECK (reminder_date IS datetime(reminder_date)),
+    CONSTRAINT due_date CHECK (due_date IS datetime(due_date)),
+    CONSTRAINT last_modified CHECK (last_modified IS datetime(last_modified))
+);

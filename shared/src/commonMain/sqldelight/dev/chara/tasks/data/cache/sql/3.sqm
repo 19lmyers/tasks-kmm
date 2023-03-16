@@ -1,0 +1,74 @@
+import dev.chara.tasks.model.TaskList.Color;
+import dev.chara.tasks.model.TaskList.Icon;
+import dev.chara.tasks.model.TaskList.SortType;
+import dev.chara.tasks.model.TaskList.SortDirection;
+import kotlinx.datetime.Instant;
+import kotlin.Boolean;
+
+PRAGMA foreign_keys=off;
+
+ALTER TABLE TaskList RENAME TO TaskList_V3;
+
+CREATE TABLE TaskList (
+    id TEXT PRIMARY KEY NOT NULL,
+
+    title TEXT NOT NULL,
+
+    color TEXT AS Color,
+    icon TEXT AS Icon,
+    description TEXT,
+
+    is_pinned INTEGER AS Boolean NOT NULL DEFAULT 0,
+    show_index_numbers INTEGER AS Boolean NOT NULL DEFAULT 0,
+
+    sort_type TEXT AS SortType NOT NULL,
+    sort_direction TEXT AS SortDirection NOT NULL,
+
+    date_created TEXT AS Instant NOT NULL,
+    last_modified TEXT AS Instant NOT NULL,
+
+    CHECK (is_pinned IN (0, 1)),
+    CHECK (show_index_numbers IN (0, 1)),
+    CONSTRAINT date_created CHECK (date_created IS datetime(date_created)),
+    CONSTRAINT last_modified CHECK (last_modified IS datetime(last_modified))
+);
+
+INSERT INTO TaskList (id, title, is_pinned, show_index_numbers, sort_type, sort_direction, date_created, last_modified)
+SELECT id, title, is_pinned, show_index_numbers, sort_type, sort_direction, date_created, last_modified FROM TaskList_V3;
+
+ALTER TABLE Task RENAME TO Task_V3;
+
+CREATE TABLE Task (
+    id TEXT PRIMARY KEY NOT NULL,
+    list_id TEXT NOT NULL,
+
+    label TEXT NOT NULL,
+    is_completed INTEGER AS Boolean NOT NULL DEFAULT 0,
+    is_starred INTEGER AS Boolean NOT NULL DEFAULT 0,
+
+    details TEXT,
+    reminder_date TEXT AS Instant,
+    due_date TEXT AS Instant,
+
+    date_created TEXT AS Instant NOT NULL,
+    last_modified TEXT AS Instant NOT NULL,
+
+    ordinal INTEGER NOT NULL,
+
+    FOREIGN KEY (list_id) REFERENCES TaskList(id),
+
+    CHECK (is_completed IN (0, 1)),
+    CHECK (is_starred IN (0, 1)),
+    CONSTRAINT reminder_date CHECK (reminder_date IS datetime(reminder_date)),
+    CONSTRAINT due_date CHECK (due_date IS datetime(due_date)),
+    CONSTRAINT date_created CHECK (date_created IS datetime(date_created)),
+    CONSTRAINT last_modified CHECK (last_modified IS datetime(last_modified))
+);
+
+INSERT INTO Task (id, list_id, label, is_completed, is_starred, details, reminder_date, due_date, date_created, last_modified, ordinal)
+SELECT id, list_id, label, is_completed, is_starred, details, reminder_date, due_date, date_created, last_modified, ordinal FROM Task_V3;
+
+DROP TABLE Task_V3;
+DROP TABLE TaskList_V3;
+
+PRAGMA foreign_keys=on;

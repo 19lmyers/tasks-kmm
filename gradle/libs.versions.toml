@@ -1,0 +1,120 @@
+[versions]
+android = "8.1.0-alpha09"
+kotlin = "1.8.10"
+
+coroutines = "1.6.4"
+koin = "3.3.3"
+ktor = "2.2.4"
+sqldelight = "2.0.0-alpha05"
+validator = "0.6.0"
+
+material3 = "1.1.0-alpha08"
+
+[plugins]
+
+android-application = { id = "com.android.application", version.ref = "android" }
+android-library = { id = "com.android.library", version.ref = "android" }
+
+crashlytics = { id = "com.google.firebase.crashlytics", version = "2.9.4" }
+
+google-services = { id = "com.google.gms.google-services", version = "4.3.15" }
+
+kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
+kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+
+kotlin-plugin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
+
+kotlin-atomicfu = { id = "org.jetbrains.kotlin.plugin.atomicfu", version.ref = "kotlin" }
+
+sqldelight = { id = "app.cash.sqldelight", version.ref = "sqldelight" }
+
+versions = { id = "com.github.ben-manes.versions", version = "0.46.0" }
+
+[libraries]
+accompanist-systemuicontroller = { module = "com.google.accompanist:accompanist-systemuicontroller", version = "0.28.0" }
+
+androidx-activity = { module = "androidx.activity:activity-compose", version = "1.7.0-rc01" }
+androidx-glance = { module = "androidx.glance:glance-appwidget", version = "1.0.0-alpha05" }
+androidx-lifecycle-runtime = { module = "androidx.lifecycle:lifecycle-runtime-compose", version = "2.6.0" }
+androidx-lifecycle-service = { module = "androidx.lifecycle:lifecycle-service", version = "2.6.0" }
+androidx-work = { module = "androidx.work:work-runtime-ktx", version = "2.8.0" }
+
+coil-compose = { module = "io.coil-kt:coil-compose-base", version = "2.2.2" }
+
+compose-bom = { module = "androidx.compose:compose-bom", version = "2023.01.00" }
+
+compose-ui = { module = "androidx.compose.ui:ui" }
+compose-ui-tooling-preview = { module = "androidx.compose.ui:ui-tooling-preview" }
+compose-foundation = { module = "androidx.compose.foundation:foundation" }
+
+compose-ui-tooling = { module = "androidx.compose.ui:ui-tooling" }
+compose-ui-test-manifest = { module = "androidx.compose.ui:ui-test-manifest" }
+
+compose-material = { module = "androidx.compose.material:material" }
+compose-material-icons-extended = { module = "androidx.compose.material:material-icons-extended" }
+
+compose-material3 = { module = "androidx.compose.material3:material3", version.ref = "material3" }
+compose-material3-window-size = { module = "androidx.compose.material3:material3-window-size-class", version.ref = "material3" }
+
+compose-reorderable = { module = "org.burnoutcrew.composereorderable:reorderable", version = "0.9.6" }
+
+# Out of band release, should not be updated
+datastore = { module = "androidx.datastore:datastore-preferences-core", version = "1.1.0-dev01" }
+
+desugar_jdk_libs = { module = "com.android.tools:desugar_jdk_libs", version = "2.0.2" }
+
+firebase-bom = { module = "com.google.firebase:firebase-bom", version = "31.2.3" }
+
+firebase-analytics = { module = "com.google.firebase:firebase-analytics-ktx" }
+firebase-messaging = { module = "com.google.firebase:firebase-messaging-ktx" }
+firebase-crashlytics = { module = "com.google.firebase:firebase-crashlytics-ktx" }
+
+koin-core = { module = "io.insert-koin:koin-core", version.ref = "koin" }
+
+koin-android = { module = "io.insert-koin:koin-android", version.ref = "koin" }
+koin-androidx-compose = { module = "io.insert-koin:koin-androidx-compose", version = "3.4.2" }
+
+kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "coroutines" }
+
+kotlinx-coroutines-android = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version.ref = "coroutines" }
+
+kotlinx-datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version = "0.4.0" }
+kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version = "1.5.0" }
+
+ktor-client-core = { module = "io.ktor:ktor-client-core", version.ref = "ktor" }
+
+ktor-client-auth = { module = "io.ktor:ktor-client-auth", version.ref = "ktor" }
+ktor-client-content-negotiation = { module = "io.ktor:ktor-client-content-negotiation", version.ref = "ktor" }
+
+ktor-client-darwin = { module = "io.ktor:ktor-client-darwin", version.ref = "ktor" }
+ktor-client-okhttp = { module = "io.ktor:ktor-client-okhttp", version.ref = "ktor" }
+
+ktor-serialization-kotlinx-json = { module = "io.ktor:ktor-serialization-kotlinx-json", version.ref = "ktor" }
+
+napier = { module = "io.github.aakira:napier", version = "2.6.1" }
+
+navigation-reimagined = { module = "dev.olshevski.navigation:reimagined", version = "1.3.1" }
+
+nbvcxz = { module = "me.gosimple:nbvcxz", version = "1.5.1" }
+
+okio = { module = "com.squareup.okio:okio", version = "3.3.0" }
+
+sqldelight-dialect = { module = "app.cash.sqldelight:sqlite-3-38-dialect", version.ref = "sqldelight" }
+sqldelight-coroutines-extensions = { module = "app.cash.sqldelight:coroutines-extensions", version.ref = "sqldelight" }
+
+sqldelight-android-driver = { module = "app.cash.sqldelight:android-driver", version.ref = "sqldelight" }
+sqldelight-native-driver = { module = "app.cash.sqldelight:native-driver", version.ref = "sqldelight" }
+
+sqlite-android = { module = "com.github.requery:sqlite-android", version = "3.39.2" }
+
+uuid = { module = "com.benasher44:uuid", version = "0.7.0" }
+
+validator-core = { module = "com.chrynan.validator:validator-core", version.ref = "validator" }
+validator-email = { module = "com.chrynan.validator:validator-email", version.ref = "validator" }
+
+[bundles]
+firebase = ["firebase-analytics", "firebase-messaging", "firebase-crashlytics"]
+
+compose = ["compose-ui", "compose-ui-tooling-preview", "compose-foundation", "compose-material", "compose-material-icons-extended"]
+
+compose-material3 = ["compose-material3", "compose-material3-window-size"]

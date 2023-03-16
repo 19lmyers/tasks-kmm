@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- TODO remove and replace -->
+    <color name="purple_80">#D0BCFF</color>
+    <color name="purple_grey_80">#CCC2DC</color>
+    <color name="pink_80">#EFB8C8</color>
+
+    <color name="purple_40">#6650a4</color>
+    <color name="purple_grey_40">#625b71</color>
+    <color name="pink_40">#7D5260</color>
+
+    <color name="red">#AC322C</color>
+    <color name="orange">#974800</color>
+    <color name="yellow">#7C5800</color>
+    <color name="green">#356A22</color>
+    <color name="blue">#00639D</color>
+    <color name="purple">#6750A4</color>
+    <color name="pink">#95416E</color>
+</resources>
