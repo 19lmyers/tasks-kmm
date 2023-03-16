@@ -1,6 +1,6 @@
 # Tasks (KMM)
 
-A fucntional and colorful task / to-do list app built with Kotlin Multiplatform Mobile (KMM)
+A functional and colorful task / to-do list app built with Kotlin Multiplatform Mobile (KMM)
 
 ## Objectives
 
