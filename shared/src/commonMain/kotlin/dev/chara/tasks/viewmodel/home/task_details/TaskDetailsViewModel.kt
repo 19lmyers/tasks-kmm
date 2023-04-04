@@ -6,7 +6,6 @@ import dev.chara.tasks.network.ConnectivityStatusManager
 import dev.chara.tasks.viewmodel.ViewModel
 import dev.chara.tasks.viewmodel.util.SnackbarMessage
 import dev.chara.tasks.viewmodel.util.emitAsMessage
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
@@ -16,9 +15,7 @@ import kotlinx.coroutines.launch
 import kotlinx.datetime.Instant
 import org.koin.core.component.inject
 
-class TaskDetailsViewModel(
-    private val taskId: String, coroutineScope: CoroutineScope
-) : ViewModel(coroutineScope) {
+class TaskDetailsViewModel(private val taskId: String): ViewModel() {
 
     private val repository: Repository by inject()
     private val connectivityStatusManager: ConnectivityStatusManager by inject()

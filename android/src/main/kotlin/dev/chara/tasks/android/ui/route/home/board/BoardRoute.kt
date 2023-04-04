@@ -11,6 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import dev.chara.tasks.model.Task
 import dev.chara.tasks.model.TaskList
 import dev.chara.tasks.viewmodel.home.board.BoardUiState
@@ -19,13 +20,13 @@ import dev.chara.tasks.viewmodel.home.board.BoardViewModel
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun BoardRoute(
-    presenter: BoardViewModel,
     snackbarHostState: SnackbarHostState,
     scrollBehavior: TopAppBarScrollBehavior,
     navigateToTaskDetails: (Task) -> Unit,
     navigateToListDetails: (TaskList) -> Unit
 ) {
-    val state = presenter.uiState.collectAsStateWithLifecycle()
+    val viewModel: BoardViewModel = viewModel()
+    val state = viewModel.uiState.collectAsStateWithLifecycle()
 
     if (state.value is BoardUiState.Loaded) {
         BoardScreen(
@@ -37,8 +38,8 @@ fun BoardRoute(
             onListClicked = {
                 navigateToListDetails(it)
             },
-            onRefresh = presenter::refreshCache,
-            onUpdateTask = presenter::updateTask
+            onRefresh = viewModel::refreshCache,
+            onUpdateTask = viewModel::updateTask
         )
     } else {
         Surface(modifier = Modifier.fillMaxSize()) {
@@ -46,8 +47,8 @@ fun BoardRoute(
         }
     }
 
-    LaunchedEffect(presenter.messages) {
-        presenter.messages.collect { message ->
+    LaunchedEffect(viewModel.messages) {
+        viewModel.messages.collect { message ->
             snackbarHostState.showSnackbar(
                 message = message.text,
                 duration = SnackbarDuration.Short,

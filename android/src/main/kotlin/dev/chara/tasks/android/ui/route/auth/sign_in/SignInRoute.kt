@@ -7,17 +7,18 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import dev.chara.tasks.viewmodel.auth.sign_in.SignInUiState
 import dev.chara.tasks.viewmodel.auth.sign_in.SignInViewModel
 
 @Composable
 fun SignInRoute(
-    presenter: SignInViewModel,
     navigateToHome: () -> Unit,
     navigateToForgotPassword: () -> Unit,
     navigateUp: () -> Unit
 ) {
-    val state = presenter.uiState.collectAsStateWithLifecycle()
+    val viewModel: SignInViewModel = viewModel()
+    val state = viewModel.uiState.collectAsStateWithLifecycle()
 
     val snackbarHostState = remember { SnackbarHostState() }
 
@@ -36,14 +37,14 @@ fun SignInRoute(
                 navigateToForgotPassword()
             },
             onSignInClicked = { username, password ->
-                presenter.signIn(username, password)
+                viewModel.signIn(username, password)
             },
-            validateEmail = { presenter.validateEmail(it) }
+            validateEmail = { viewModel.validateEmail(it) }
         )
     }
 
-    LaunchedEffect(presenter.messages) {
-        presenter.messages.collect { message ->
+    LaunchedEffect(viewModel.messages) {
+        viewModel.messages.collect { message ->
             snackbarHostState.showSnackbar(
                 message = message.text,
                 duration = SnackbarDuration.Short,

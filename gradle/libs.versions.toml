@@ -1,5 +1,5 @@
 [versions]
-android = "8.1.0-alpha09"
+android = "8.1.0-alpha11"
 kotlin = "1.8.10"
 
 coroutines = "1.6.4"
@@ -8,7 +8,7 @@ ktor = "2.2.4"
 sqldelight = "2.0.0-alpha05"
 validator = "0.6.0"
 
-material3 = "1.1.0-alpha08"
+material3 = "1.1.0-beta01"
 
 [plugins]
 
@@ -33,15 +33,16 @@ versions = { id = "com.github.ben-manes.versions", version = "0.46.0" }
 [libraries]
 accompanist-systemuicontroller = { module = "com.google.accompanist:accompanist-systemuicontroller", version = "0.28.0" }
 
-androidx-activity = { module = "androidx.activity:activity-compose", version = "1.7.0-rc01" }
+androidx-activity = { module = "androidx.activity:activity-compose", version = "1.7.0" }
 androidx-glance = { module = "androidx.glance:glance-appwidget", version = "1.0.0-alpha05" }
-androidx-lifecycle-runtime = { module = "androidx.lifecycle:lifecycle-runtime-compose", version = "2.6.0" }
-androidx-lifecycle-service = { module = "androidx.lifecycle:lifecycle-service", version = "2.6.0" }
-androidx-work = { module = "androidx.work:work-runtime-ktx", version = "2.8.0" }
+androidx-lifecycle-viewmodel = { module = "androidx.lifecycle:lifecycle-viewmodel-ktx", version = "2.6.1" }
+androidx-lifecycle-runtime = { module = "androidx.lifecycle:lifecycle-runtime-compose", version = "2.6.1" }
+androidx-lifecycle-service = { module = "androidx.lifecycle:lifecycle-service", version = "2.6.1" }
+androidx-work = { module = "androidx.work:work-runtime-ktx", version = "2.8.1" }
 
 coil-compose = { module = "io.coil-kt:coil-compose-base", version = "2.2.2" }
 
-compose-bom = { module = "androidx.compose:compose-bom", version = "2023.01.00" }
+compose-bom = { module = "androidx.compose:compose-bom", version = "2023.03.00" }
 
 compose-ui = { module = "androidx.compose.ui:ui" }
 compose-ui-tooling-preview = { module = "androidx.compose.ui:ui-tooling-preview" }
@@ -61,9 +62,9 @@ compose-reorderable = { module = "org.burnoutcrew.composereorderable:reorderable
 # Out of band release, should not be updated
 datastore = { module = "androidx.datastore:datastore-preferences-core", version = "1.1.0-dev01" }
 
-desugar_jdk_libs = { module = "com.android.tools:desugar_jdk_libs", version = "2.0.2" }
+desugar_jdk_libs = { module = "com.android.tools:desugar_jdk_libs", version = "2.0.3" }
 
-firebase-bom = { module = "com.google.firebase:firebase-bom", version = "31.2.3" }
+firebase-bom = { module = "com.google.firebase:firebase-bom", version = "31.4.0" }
 
 firebase-analytics = { module = "com.google.firebase:firebase-analytics-ktx" }
 firebase-messaging = { module = "com.google.firebase:firebase-messaging-ktx" }

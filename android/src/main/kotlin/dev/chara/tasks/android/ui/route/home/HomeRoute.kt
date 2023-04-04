@@ -35,6 +35,7 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import dev.chara.tasks.android.R
 import dev.chara.tasks.android.model.navTarget
 import dev.chara.tasks.android.ui.RootNavTarget
@@ -44,14 +45,10 @@ import dev.chara.tasks.android.ui.route.CreateTaskDialog
 import dev.chara.tasks.android.ui.route.home.list_details.ListDetailsRoute
 import dev.chara.tasks.android.ui.route.home.profile.UserProfileDialog
 import dev.chara.tasks.android.ui.route.home.task_details.TaskDetailsRoute
-import dev.chara.tasks.android.ui.viewmodel.LocalViewModelStore
-import dev.chara.tasks.android.ui.viewmodel.viewModel
 import dev.chara.tasks.model.StartScreen
 import dev.chara.tasks.model.Task
 import dev.chara.tasks.viewmodel.home.HomeUiState
 import dev.chara.tasks.viewmodel.home.HomeViewModel
-import dev.chara.tasks.viewmodel.home.list_details.ListDetailsViewModel
-import dev.chara.tasks.viewmodel.home.task_details.TaskDetailsViewModel
 import dev.olshevski.navigation.reimagined.rememberNavController
 import kotlinx.coroutines.launch
 import kotlinx.datetime.Clock
@@ -59,7 +56,6 @@ import java.io.ByteArrayOutputStream
 
 @Composable
 fun HomeRoute(
-    presenter: HomeViewModel,
     useNavRail: Boolean,
     useEditDialog: Boolean,
     useDualPane: Boolean,
@@ -69,7 +65,8 @@ fun HomeRoute(
     navigateToChangeEmail: () -> Unit,
     navigateToChangePassword: () -> Unit
 ) {
-    val state = presenter.uiState.collectAsStateWithLifecycle()
+    val viewModel: HomeViewModel = viewModel()
+    val state = viewModel.uiState.collectAsStateWithLifecycle()
 
     val snackbarHostState = remember { SnackbarHostState() }
 
@@ -96,7 +93,7 @@ fun HomeRoute(
                 val bitmap = MediaStore.Images.Media.getBitmap(context.contentResolver, uri)
                 val stream = ByteArrayOutputStream()
                 bitmap.compress(Bitmap.CompressFormat.JPEG, 0, stream)
-                presenter.updateUserProfilePhoto(stream.toByteArray())
+                viewModel.updateUserProfilePhoto(stream.toByteArray())
             }
         }
     }
@@ -130,7 +127,7 @@ fun HomeRoute(
                     showProfileDialog = false
                     navigateToSettings()
                 },
-                onLogoutClicked = presenter::logout,
+                onLogoutClicked = viewModel::logout,
                 onChangePhotoClicked = {
                     selectProfilePhoto.launch(
                         PickVisualMediaRequest(
@@ -147,7 +144,7 @@ fun HomeRoute(
                     navigateToChangePassword()
                 },
                 onUpdateUserProfile = {
-                    presenter.updateUserProfile(it)
+                    viewModel.updateUserProfile(it)
                 }
             )
         }
@@ -168,7 +165,7 @@ fun HomeRoute(
                     showCreateTaskDialog = false
                 },
                 onSave = { task ->
-                    presenter.createTask(task.listId, task)
+                    viewModel.createTask(task.listId, task)
                     showCreateTaskDialog = false
                 }
             )
@@ -202,8 +199,6 @@ fun HomeRoute(
             )
         }
 
-        val presenterStore = LocalViewModelStore.current
-
         if (isTaskShown && useEditDialog) {
             MaterialDialog(
                 semanticTitle = "Task details",
@@ -211,9 +206,7 @@ fun HomeRoute(
                 onClose = { isTaskShown = false }
             ) {
                 TaskDetailsRoute(
-                    presenterStore.viewModel(selectedTaskId) { scope ->
-                        TaskDetailsViewModel(selectedTaskId, scope)
-                    },
+                    selectedTaskId,
                     upAsCloseButton = true,
                     navigateUp = { isTaskShown = false }
                 )
@@ -238,12 +231,10 @@ fun HomeRoute(
                 SnackbarHost(hostState = snackbarHostState)
             }
         ) {
-            Crossfade(targetState = isTaskShown) { isTaskShownState ->
+            Crossfade(targetState = isTaskShown, label = "showTask") { isTaskShownState ->
                 if (isTaskShownState && !useEditDialog) {
                     TaskDetailsRoute(
-                        presenterStore.viewModel(selectedTaskId) { scope ->
-                            TaskDetailsViewModel(selectedTaskId, scope)
-                        },
+                        selectedTaskId,
                         upAsCloseButton = false,
                         navigateUp = { isTaskShown = false }
                     )
@@ -279,9 +270,7 @@ fun HomeRoute(
                                 detailPaneWidth = detailPaneWidth
                             ) {
                                 ListDetailsRoute(
-                                    presenterStore.viewModel(selectedListId) { scope ->
-                                        ListDetailsViewModel(selectedListId, scope)
-                                    },
+                                    selectedListId,
                                     snackbarHostState = snackbarHostState,
                                     upAsCloseButton = true,
                                     navigateUp = { isListShown = false },
@@ -297,12 +286,10 @@ fun HomeRoute(
                             }
                         }
                     } else {
-                        Crossfade(targetState = isListShown) { isListShownState ->
+                        Crossfade(targetState = isListShown, label = "showList") { isListShownState ->
                             if (isListShownState) {
                                 ListDetailsRoute(
-                                    presenterStore.viewModel(selectedListId) { scope ->
-                                        ListDetailsViewModel(selectedListId, scope)
-                                    },
+                                    selectedListId,
                                     snackbarHostState = snackbarHostState,
                                     upAsCloseButton = false,
                                     navigateUp = { isListShown = false },
@@ -347,8 +334,8 @@ fun HomeRoute(
         }
     }
 
-    LaunchedEffect(presenter.messages) {
-        presenter.messages.collect { message ->
+    LaunchedEffect(viewModel.messages) {
+        viewModel.messages.collect { message ->
             snackbarHostState.showSnackbar(
                 message = message.text,
                 duration = SnackbarDuration.Short,

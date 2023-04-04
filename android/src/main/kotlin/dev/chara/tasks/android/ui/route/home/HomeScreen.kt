@@ -40,17 +40,12 @@ import androidx.compose.ui.unit.dp
 import dev.chara.tasks.android.ui.component.ProfileImage
 import dev.chara.tasks.android.ui.route.home.board.BoardRoute
 import dev.chara.tasks.android.ui.route.home.lists.ListsRoute
-import dev.chara.tasks.android.ui.viewmodel.LocalViewModelStore
-import dev.chara.tasks.android.ui.viewmodel.viewModel
 import dev.chara.tasks.model.Profile
 import dev.chara.tasks.model.Task
 import dev.chara.tasks.model.TaskList
 import dev.chara.tasks.viewmodel.home.HomeUiState
-import dev.chara.tasks.viewmodel.home.board.BoardViewModel
-import dev.chara.tasks.viewmodel.home.lists.ListsViewModel
 import dev.olshevski.navigation.reimagined.AnimatedNavHost
 import dev.olshevski.navigation.reimagined.NavController
-import dev.olshevski.navigation.reimagined.currentHostEntry
 import dev.olshevski.navigation.reimagined.replaceAll
 
 @OptIn(ExperimentalAnimationApi::class, ExperimentalMaterial3Api::class)
@@ -67,8 +62,6 @@ fun HomeScreen(
     navigateToListDetails: (TaskList) -> Unit,
     navigateToTaskDetails: (Task) -> Unit,
 ) {
-    val presenterStore = LocalViewModelStore.current
-
     HomeScreen(
         modifier = modifier,
         menuItems = destinations,
@@ -84,9 +77,6 @@ fun HomeScreen(
         AnimatedNavHost(navController) { navTarget ->
             when (navTarget) {
                 HomeNavTarget.Board -> BoardRoute(
-                    presenterStore.viewModel(navHostEntry = currentHostEntry) { scope ->
-                        BoardViewModel(scope)
-                    },
                     snackbarHostState,
                     scrollBehavior,
                     navigateToTaskDetails = { task ->
@@ -98,9 +88,6 @@ fun HomeScreen(
                 )
 
                 HomeNavTarget.Lists -> ListsRoute(
-                    presenterStore.viewModel(navHostEntry = currentHostEntry) { scope ->
-                        ListsViewModel(scope)
-                    },
                     snackbarHostState,
                     scrollBehavior,
                     navigateToListDetails = { taskList ->

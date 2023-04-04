@@ -10,20 +10,18 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.core.view.WindowCompat
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import dev.chara.tasks.android.ui.component.util.MaterialDialog
 import dev.chara.tasks.android.ui.route.CreateTaskDialog
 import dev.chara.tasks.android.ui.theme.AppTheme
-import dev.chara.tasks.android.ui.viewmodel.viewModel
 import dev.chara.tasks.model.Task
 import dev.chara.tasks.model.Theme
-import dev.chara.tasks.viewmodel.ViewModelStore
 import dev.chara.tasks.viewmodel.shortcut.ShortcutUiState
 import dev.chara.tasks.viewmodel.shortcut.ShortcutViewModel
 import kotlinx.datetime.Clock
@@ -36,17 +34,11 @@ class ShortcutActivity : FragmentActivity() {
         WindowCompat.setDecorFitsSystemWindows(window, false)
 
         setContent {
-            val coroutineScope = rememberCoroutineScope()
+            val viewModel: ShortcutViewModel by viewModel()
 
-            val viewModelStore = remember(coroutineScope) { ViewModelStore(coroutineScope) }
+            val state by viewModel.uiState.collectAsStateWithLifecycle()
 
-            val presenter = viewModelStore.viewModel("Shortcut") { scope ->
-                ShortcutViewModel(scope)
-            }
-
-            val state by presenter.uiState.collectAsStateWithLifecycle()
-
-            val userTheme by presenter.getAppTheme()
+            val userTheme by viewModel.getAppTheme()
                 .collectAsStateWithLifecycle(initialValue = Theme.SYSTEM_DEFAULT)
 
             val isDarkTheme = when (userTheme) {
@@ -55,7 +47,7 @@ class ShortcutActivity : FragmentActivity() {
                 Theme.DARK -> true
             }
 
-            val vibrantColors by presenter.useVibrantColors()
+            val vibrantColors by viewModel.useVibrantColors()
                 .collectAsStateWithLifecycle(initialValue = false)
 
             AppTheme(darkTheme = isDarkTheme, vibrantColors = vibrantColors) {
@@ -86,7 +78,7 @@ class ShortcutActivity : FragmentActivity() {
                                 finish()
                             },
                             onSave = { task ->
-                                presenter.createTask(task.listId, task)
+                                viewModel.createTask(task.listId, task)
                                 creationInProgress = true
                             }
                         )
@@ -97,8 +89,8 @@ class ShortcutActivity : FragmentActivity() {
                 }
             }
 
-            LaunchedEffect(presenter.statuses) {
-                presenter.statuses.collect { status ->
+            LaunchedEffect(viewModel.statuses) {
+                viewModel.statuses.collect { status ->
                     if (status.first) {
                         Toast.makeText(this@ShortcutActivity, "Task created", Toast.LENGTH_LONG)
                             .show()

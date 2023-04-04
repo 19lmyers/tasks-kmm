@@ -7,7 +7,6 @@ import dev.chara.tasks.util.validate.PasswordValidator
 import dev.chara.tasks.viewmodel.ViewModel
 import dev.chara.tasks.viewmodel.util.SnackbarMessage
 import dev.chara.tasks.viewmodel.util.emitAsMessage
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
@@ -15,10 +14,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import org.koin.core.component.inject
 
-class ResetPasswordViewModel(private val resetToken: String, coroutineScope: CoroutineScope) :
-    ViewModel(
-        coroutineScope
-    ) {
+class ResetPasswordViewModel(private val resetToken: String) : ViewModel() {
     private val repository: Repository by inject()
 
     private val passwordValidator = PasswordValidator()

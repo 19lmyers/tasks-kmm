@@ -7,16 +7,17 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import dev.chara.tasks.viewmodel.auth.sign_up.SignUpUiState
 import dev.chara.tasks.viewmodel.auth.sign_up.SignUpViewModel
 
 @Composable
 fun SignUpRoute(
-    presenter: SignUpViewModel,
     navigateToHome: () -> Unit,
     navigateUp: () -> Unit
 ) {
-    val state = presenter.uiState.collectAsStateWithLifecycle()
+    val viewModel: SignUpViewModel = viewModel()
+    val state = viewModel.uiState.collectAsStateWithLifecycle()
 
     val snackbarHostState = remember { SnackbarHostState() }
 
@@ -32,19 +33,19 @@ fun SignUpRoute(
                 }
             },
             onSignUpClicked = { username, displayName, password ->
-                presenter.signUp(username, displayName, password)
+                viewModel.signUp(username, displayName, password)
             },
             validateEmail = {
-                presenter.validateEmail(it)
+                viewModel.validateEmail(it)
             },
             validatePassword = {
-                presenter.validatePassword(it)
+                viewModel.validatePassword(it)
             }
         )
     }
 
-    LaunchedEffect(presenter.messages) {
-        presenter.messages.collect { message ->
+    LaunchedEffect(viewModel.messages) {
+        viewModel.messages.collect { message ->
             snackbarHostState.showSnackbar(
                 message = message.text,
                 duration = SnackbarDuration.Short,
