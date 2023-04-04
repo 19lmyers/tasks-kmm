@@ -39,7 +39,8 @@ Some brief notes:
 My goal was to utilize Jetpack Compose for as much as possible, and lessen its reliance on the
 Android platform's Activity and Fragment classes for managing UI state.
 
-I implemented (work in progress) shared ViewModels that replace the old "use at your own risk" code.
+The ViewModels use the Moko-MVVM and KSwift libraries to make using them in iOS simpler.
+(On Android, they inherit from the AndroidX component.)
 
 ## Design
 

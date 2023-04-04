@@ -4,17 +4,18 @@ import com.chrynan.validator.ValidationResult
 import dev.chara.tasks.data.Repository
 import dev.chara.tasks.model.ValidationFailure
 import dev.chara.tasks.util.validate.PasswordValidator
-import dev.chara.tasks.viewmodel.ViewModel
 import dev.chara.tasks.viewmodel.util.SnackbarMessage
 import dev.chara.tasks.viewmodel.util.emitAsMessage
+import dev.icerock.moko.mvvm.viewmodel.ViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
-class ChangePasswordViewModel : ViewModel() {
+class ChangePasswordViewModel : ViewModel(), KoinComponent {
     private val repository: Repository by inject()
 
     private val passwordValidator = PasswordValidator()
@@ -37,7 +38,7 @@ class ChangePasswordViewModel : ViewModel() {
     }
 
     fun changePassword(currentPassword: String, newPassword: String) {
-        coroutineScope.launch {
+        viewModelScope.launch {
             _uiState.value = ChangePasswordUiState.Loading
 
             val result = repository.changePassword(currentPassword, newPassword)

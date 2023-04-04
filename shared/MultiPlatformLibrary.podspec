@@ -1,5 +1,5 @@
 Pod::Spec.new do |spec|
-    spec.name                     = 'shared'
+    spec.name                     = 'MultiPlatformLibrary'
     spec.version                  = '1.0'
     spec.homepage                 = 'https://tasks.chara.dev/'
     spec.source                   = { :http=> ''}
@@ -18,7 +18,7 @@ Pod::Spec.new do |spec|
                 
     spec.script_phases = [
         {
-            :name => 'Build shared',
+            :name => 'Build MultiPlatformLibrary',
             :execution_position => :before_compile,
             :shell_path => '/bin/sh',
             :script => <<-SCRIPT

@@ -1,0 +1,3 @@
+${PODS_ROOT}/Target Support Files/Pods-ios/Pods-ios-frameworks.sh
+${PODS_ROOT}/../../shared/build/cocoapods/framework/shared.framework
+${PODS_XCFRAMEWORKS_BUILD_DIR}/mokoMvvmFlowSwiftUI/mokoMvvmFlowSwiftUI.framework/mokoMvvmFlowSwiftUI

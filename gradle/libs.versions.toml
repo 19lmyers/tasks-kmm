@@ -4,7 +4,9 @@ kotlin = "1.8.10"
 
 coroutines = "1.6.4"
 koin = "3.3.3"
+kswift = "0.6.1"
 ktor = "2.2.4"
+mvvm = "0.13.0"
 sqldelight = "2.0.0-alpha05"
 validator = "0.6.0"
 
@@ -25,6 +27,8 @@ kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-plugin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 
 kotlin-atomicfu = { id = "org.jetbrains.kotlin.plugin.atomicfu", version.ref = "kotlin" }
+
+moko-kswift = { id = "dev.icerock.moko.kswift", version.ref = "kswift" }
 
 sqldelight = { id = "app.cash.sqldelight", version.ref = "sqldelight" }
 
@@ -91,6 +95,11 @@ ktor-client-darwin = { module = "io.ktor:ktor-client-darwin", version.ref = "kto
 ktor-client-okhttp = { module = "io.ktor:ktor-client-okhttp", version.ref = "ktor" }
 
 ktor-serialization-kotlinx-json = { module = "io.ktor:ktor-serialization-kotlinx-json", version.ref = "ktor" }
+
+moko-kswift-runtime = { module = "dev.icerock.moko:kswift-runtime", version.ref = "kswift" }
+
+moko-mvvm-core = { module = "dev.icerock.moko:mvvm-core", version.ref = "mvvm" }
+moko-mvvm-flow = { module = "dev.icerock.moko:mvvm-flow", version.ref = "mvvm" }
 
 napier = { module = "io.github.aakira:napier", version = "2.6.1" }
 

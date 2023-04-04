@@ -5,18 +5,19 @@ import dev.chara.tasks.model.BoardSection
 import dev.chara.tasks.model.StartScreen
 import dev.chara.tasks.model.TaskList
 import dev.chara.tasks.model.Theme
-import dev.chara.tasks.viewmodel.ViewModel
 import dev.chara.tasks.viewmodel.util.SnackbarMessage
 import dev.chara.tasks.viewmodel.util.emitAsMessage
+import dev.icerock.moko.mvvm.viewmodel.ViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
+import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
-class SettingsViewModel : ViewModel() {
+class SettingsViewModel : ViewModel(), KoinComponent {
     private val repository: Repository by inject()
 
     private var _uiState = MutableStateFlow<SettingsUiState>(SettingsUiState.Loading)
@@ -26,7 +27,7 @@ class SettingsViewModel : ViewModel() {
     val messages = _messages.asSharedFlow()
 
     init {
-        coroutineScope.launch {
+        viewModelScope.launch {
             combine(
                 repository.getAppTheme(),
                 repository.useVibrantColors(),
@@ -48,31 +49,31 @@ class SettingsViewModel : ViewModel() {
     }
 
     fun setAppTheme(theme: Theme) {
-        coroutineScope.launch {
+        viewModelScope.launch {
             repository.setAppTheme(theme)
         }
     }
 
     fun setVibrantColors(useVibrantColors: Boolean) {
-        coroutineScope.launch {
+        viewModelScope.launch {
             repository.setVibrantColors(useVibrantColors)
         }
     }
 
     fun setStartScreen(startScreen: StartScreen) {
-        coroutineScope.launch {
+        viewModelScope.launch {
             repository.setStartScreen(startScreen)
         }
     }
 
     fun setEnabledForBoardSection(boardSection: BoardSection.Type, enabled: Boolean) {
-        coroutineScope.launch {
+        viewModelScope.launch {
             repository.setEnabledForBoardSection(boardSection, enabled)
         }
     }
 
     fun updateList(taskList: TaskList) {
-        coroutineScope.launch {
+        viewModelScope.launch {
             val result = repository.updateList(taskList.id, taskList)
             _messages.emitAsMessage(result)
         }

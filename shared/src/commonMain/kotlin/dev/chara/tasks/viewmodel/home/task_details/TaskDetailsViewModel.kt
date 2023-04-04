@@ -3,9 +3,9 @@ package dev.chara.tasks.viewmodel.home.task_details
 import dev.chara.tasks.data.Repository
 import dev.chara.tasks.model.Task
 import dev.chara.tasks.network.ConnectivityStatusManager
-import dev.chara.tasks.viewmodel.ViewModel
 import dev.chara.tasks.viewmodel.util.SnackbarMessage
 import dev.chara.tasks.viewmodel.util.emitAsMessage
+import dev.icerock.moko.mvvm.viewmodel.ViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
@@ -13,9 +13,10 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 import kotlinx.datetime.Instant
+import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
-class TaskDetailsViewModel(private val taskId: String): ViewModel() {
+class TaskDetailsViewModel(private val taskId: String): ViewModel(), KoinComponent {
 
     private val repository: Repository by inject()
     private val connectivityStatusManager: ConnectivityStatusManager by inject()
@@ -27,7 +28,7 @@ class TaskDetailsViewModel(private val taskId: String): ViewModel() {
     val messages = _messages.asSharedFlow()
 
     init {
-        coroutineScope.launch {
+        viewModelScope.launch {
             combine(
                 repository.getTaskById(taskId),
                 repository.getLists(),
@@ -49,21 +50,21 @@ class TaskDetailsViewModel(private val taskId: String): ViewModel() {
     }
 
     fun updateTask(listId: String, taskId: String, task: Task) {
-        coroutineScope.launch {
+        viewModelScope.launch {
             val result = repository.updateTask(listId, taskId, task)
             _messages.emitAsMessage(result)
         }
     }
 
     fun moveTask(oldListId: String, newListId: String, taskId: String, lastModified: Instant) {
-        coroutineScope.launch {
+        viewModelScope.launch {
             val result = repository.moveTask(oldListId, newListId, taskId, lastModified)
             _messages.emitAsMessage(result)
         }
     }
 
     fun deleteTask(listId: String, taskId: String) {
-        coroutineScope.launch {
+        viewModelScope.launch {
             val result = repository.deleteTask(listId, taskId)
             _messages.emitAsMessage(result, "")
         }

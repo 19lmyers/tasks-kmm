@@ -7,6 +7,8 @@ plugins {
 
     alias(libs.plugins.android.library)
 
+    alias(libs.plugins.moko.kswift)
+
     alias(libs.plugins.sqldelight)
 
     kotlin("native.cocoapods")
@@ -17,18 +19,24 @@ kotlin {
     jvmToolchain(8)
 
     android()
+
     iosX64()
     iosArm64()
     iosSimulatorArm64()
 
     cocoapods {
+        name = "MultiPlatformLibrary"
         summary = "Shared components for Tasks"
         homepage = "https://tasks.chara.dev/"
         version = "1.0"
+
         ios.deploymentTarget = "14.1"
+
         podfile = project.file("../ios/Podfile")
+
         framework {
-            baseName = "shared"
+            export(libs.moko.mvvm.core)
+            export(libs.moko.mvvm.flow)
         }
     }
 
@@ -48,6 +56,11 @@ kotlin {
                 implementation(libs.ktor.client.auth)
                 implementation(libs.ktor.client.content.negotiation)
                 implementation(libs.ktor.serialization.kotlinx.json)
+
+                implementation(libs.moko.kswift.runtime)
+
+                api(libs.moko.mvvm.core)
+                api(libs.moko.mvvm.flow)
 
                 implementation(libs.sqldelight.coroutines.extensions)
 
@@ -142,4 +155,8 @@ sqldelight {
             verifyMigrations.set(true)
         }
     }
+}
+
+kswift {
+
 }

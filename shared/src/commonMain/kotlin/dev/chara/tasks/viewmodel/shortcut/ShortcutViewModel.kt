@@ -3,7 +3,7 @@ package dev.chara.tasks.viewmodel.shortcut
 import dev.chara.tasks.data.Repository
 import dev.chara.tasks.model.Task
 import dev.chara.tasks.model.Theme
-import dev.chara.tasks.viewmodel.ViewModel
+import dev.icerock.moko.mvvm.viewmodel.ViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -11,9 +11,10 @@ import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
+import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
-class ShortcutViewModel : ViewModel() {
+class ShortcutViewModel : ViewModel(), KoinComponent {
     private val repository: Repository by inject()
 
     private var _uiState = MutableStateFlow<ShortcutUiState>(ShortcutUiState.Loading)
@@ -23,7 +24,7 @@ class ShortcutViewModel : ViewModel() {
     val statuses = _statuses.asSharedFlow()
 
     init {
-        coroutineScope.launch {
+        viewModelScope.launch {
             combine(
                 repository.isUserAuthenticated(),
                 repository.getLists()
@@ -50,7 +51,7 @@ class ShortcutViewModel : ViewModel() {
     fun useVibrantColors(): Flow<Boolean> = repository.useVibrantColors()
 
     fun createTask(listId: String, task: Task) {
-        coroutineScope.launch {
+        viewModelScope.launch {
             val result = repository.createTask(listId, task)
 
             result.fold(

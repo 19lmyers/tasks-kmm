@@ -1,0 +1,27 @@
+PODS:
+  - mokoMvvmFlowSwiftUI (0.15.0)
+  - MultiPlatformLibrary (1.0)
+  - MultiPlatformLibrarySwift (1.0):
+    - MultiPlatformLibrary
+
+DEPENDENCIES:
+  - mokoMvvmFlowSwiftUI (from `https://raw.githubusercontent.com/icerockdev/moko-mvvm/release/0.15.0/mokoMvvmFlowSwiftUI.podspec`)
+  - MultiPlatformLibrary (from `../shared`)
+  - MultiPlatformLibrarySwift (from `../shared`)
+
+EXTERNAL SOURCES:
+  mokoMvvmFlowSwiftUI:
+    :podspec: https://raw.githubusercontent.com/icerockdev/moko-mvvm/release/0.15.0/mokoMvvmFlowSwiftUI.podspec
+  MultiPlatformLibrary:
+    :path: "../shared"
+  MultiPlatformLibrarySwift:
+    :path: "../shared"
+
+SPEC CHECKSUMS:
+  mokoMvvmFlowSwiftUI: dd95361932cc305d0a0746c32735b7e1cea41c21
+  MultiPlatformLibrary: bd68de91798a55d9837ef178ba9ffb21168b2360
+  MultiPlatformLibrarySwift: 03f040d91befebbb7ce8143d69797a3002d55777
+
+PODFILE CHECKSUM: 9c6aa133558b00aaa02e615abb0dbadb943e90d0
+
+COCOAPODS: 1.12.0
