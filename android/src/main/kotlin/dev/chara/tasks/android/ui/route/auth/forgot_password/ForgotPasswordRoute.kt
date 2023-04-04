@@ -10,15 +10,16 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import dev.chara.tasks.viewmodel.auth.forgot_password.ForgotPasswordUiState
 import dev.chara.tasks.viewmodel.auth.forgot_password.ForgotPasswordViewModel
 
 @Composable
 fun ForgotPasswordRoute(
-    presenter: ForgotPasswordViewModel,
     navigateUp: () -> Unit
 ) {
-    val state = presenter.uiState.collectAsStateWithLifecycle()
+    val viewModel: ForgotPasswordViewModel = viewModel()
+    val state = viewModel.uiState.collectAsStateWithLifecycle()
 
     val snackbarHostState = remember { SnackbarHostState() }
 
@@ -44,15 +45,15 @@ fun ForgotPasswordRoute(
             }
         },
         onResetClicked = {
-            presenter.sendResetEmail(it)
+            viewModel.sendResetEmail(it)
         },
         validateEmail = {
-            presenter.validateEmail(it)
+            viewModel.validateEmail(it)
         },
     )
 
-    LaunchedEffect(presenter.messages) {
-        presenter.messages.collect { message ->
+    LaunchedEffect(viewModel.messages) {
+        viewModel.messages.collect { message ->
             snackbarHostState.showSnackbar(
                 message = message.text,
                 duration = SnackbarDuration.Short,

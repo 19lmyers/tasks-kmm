@@ -73,6 +73,8 @@ kotlin {
             dependencies {
                 implementation(libs.bundles.firebase)
 
+                implementation(libs.androidx.lifecycle.viewmodel)
+
                 implementation(libs.nbvcxz)
 
                 implementation(libs.ktor.client.okhttp)

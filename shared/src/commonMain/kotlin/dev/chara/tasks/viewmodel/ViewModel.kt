@@ -4,4 +4,6 @@ import kotlinx.coroutines.CoroutineScope
 import org.koin.core.component.KoinComponent
 
 
-abstract class ViewModel(val coroutineScope: CoroutineScope) : KoinComponent
+expect abstract class ViewModel() : KoinComponent {
+    val coroutineScope: CoroutineScope
+}

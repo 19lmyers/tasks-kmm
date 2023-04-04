@@ -9,15 +9,16 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import dev.chara.tasks.viewmodel.settings.SettingsUiState
 import dev.chara.tasks.viewmodel.settings.SettingsViewModel
 
 @Composable
 fun SettingsRoute(
-    presenter: SettingsViewModel,
     navigateUp: () -> Unit
 ) {
-    val state = presenter.uiState.collectAsStateWithLifecycle()
+    val viewModel: SettingsViewModel = viewModel()
+    val state = viewModel.uiState.collectAsStateWithLifecycle()
 
     val snackbarHostState = remember { SnackbarHostState() }
 
@@ -29,19 +30,19 @@ fun SettingsRoute(
                 navigateUp()
             },
             onSetTheme = {
-                presenter.setAppTheme(it)
+                viewModel.setAppTheme(it)
             },
             onSetStartScreen = {
-                presenter.setStartScreen(it)
+                viewModel.setStartScreen(it)
             },
             onSetVibrantColors = {
-                presenter.setVibrantColors(it)
+                viewModel.setVibrantColors(it)
             },
             onUpdateBoardSection = { boardSection, enabled ->
-                presenter.setEnabledForBoardSection(boardSection, enabled)
+                viewModel.setEnabledForBoardSection(boardSection, enabled)
             },
             onUpdateList = {
-                presenter.updateList(it)
+                viewModel.updateList(it)
             }
         )
     } else {
@@ -50,8 +51,8 @@ fun SettingsRoute(
         }
     }
 
-    LaunchedEffect(presenter.messages) {
-        presenter.messages.collect { message ->
+    LaunchedEffect(viewModel.messages) {
+        viewModel.messages.collect { message ->
             snackbarHostState.showSnackbar(
                 message = message.text,
                 duration = SnackbarDuration.Short,

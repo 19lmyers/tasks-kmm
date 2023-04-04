@@ -15,6 +15,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import dev.chara.tasks.android.ui.component.dialog.ModifyListDialog
 import dev.chara.tasks.model.TaskList
 import dev.chara.tasks.viewmodel.home.lists.ListsUiState
@@ -23,12 +24,12 @@ import dev.chara.tasks.viewmodel.home.lists.ListsViewModel
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ListsRoute(
-    presenter: ListsViewModel,
     snackbarHostState: SnackbarHostState,
     scrollBehavior: TopAppBarScrollBehavior,
     navigateToListDetails: (TaskList) -> Unit
 ) {
-    val state = presenter.uiState.collectAsStateWithLifecycle()
+    val viewModel: ListsViewModel = viewModel()
+    val state = viewModel.uiState.collectAsStateWithLifecycle()
 
     var showCreateDialog by remember { mutableStateOf(false) }
 
@@ -40,7 +41,7 @@ fun ListsRoute(
                 showCreateDialog = false
             },
             onSave = { taskList ->
-                presenter.createList(taskList)
+                viewModel.createList(taskList)
                 showCreateDialog = false
             }
         )
@@ -50,7 +51,7 @@ fun ListsRoute(
         ListsScreen(
             state.value as ListsUiState.Loaded,
             scrollBehavior,
-            onRefresh = presenter::refreshCache,
+            onRefresh = viewModel::refreshCache,
             onListClicked = { taskList ->
                 navigateToListDetails(taskList)
             },
@@ -62,8 +63,8 @@ fun ListsRoute(
         }
     }
 
-    LaunchedEffect(presenter.messages) {
-        presenter.messages.collect { message ->
+    LaunchedEffect(viewModel.messages) {
+        viewModel.messages.collect { message ->
             snackbarHostState.showSnackbar(
                 message = message.text,
                 duration = SnackbarDuration.Short,

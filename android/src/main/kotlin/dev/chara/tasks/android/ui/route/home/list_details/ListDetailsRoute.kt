@@ -13,6 +13,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import dev.chara.tasks.android.ui.component.dialog.ModifyListDialog
 import dev.chara.tasks.android.ui.theme.ColorTheme
 import dev.chara.tasks.model.Task
@@ -23,14 +24,17 @@ import kotlinx.datetime.Clock
 
 @Composable
 fun ListDetailsRoute(
-    presenter: ListDetailsViewModel,
+    listId: String,
     snackbarHostState: SnackbarHostState,
     upAsCloseButton: Boolean,
     navigateUp: () -> Unit,
     navigateToTaskDetails: (Task) -> Unit,
     onCreateTaskClicked: (TaskList) -> Unit
 ) {
-    val state = presenter.uiState.collectAsStateWithLifecycle()
+    val viewModel: ListDetailsViewModel = viewModel(key = listId) {
+        ListDetailsViewModel(listId)
+    }
+    val state = viewModel.uiState.collectAsStateWithLifecycle()
 
     if (state.value is ListDetailsUiState.Loaded) {
         val loadedState = (state.value as ListDetailsUiState.Loaded)
@@ -46,7 +50,7 @@ fun ListDetailsRoute(
                         showEditDialog = false
                     },
                     onSave = { taskList ->
-                        presenter.updateList(loadedState.selectedList.id, taskList)
+                        viewModel.updateList(loadedState.selectedList.id, taskList)
                         showEditDialog = false
                     }
                 )
@@ -61,7 +65,7 @@ fun ListDetailsRoute(
                     },
                     onConfirm = {
                         showDeleteListDialog = false
-                        presenter.deleteList(loadedState.selectedList.id)
+                        viewModel.deleteList(loadedState.selectedList.id)
                         navigateUp()
                     }
                 )
@@ -75,7 +79,7 @@ fun ListDetailsRoute(
                         showDeleteCompletedTasksDialog = false
                     },
                     onConfirm = {
-                        presenter.clearCompletedTasks(loadedState.selectedList.id)
+                        viewModel.clearCompletedTasks(loadedState.selectedList.id)
                         showDeleteCompletedTasksDialog = false
                     }
                 )
@@ -90,7 +94,7 @@ fun ListDetailsRoute(
                         showSortDialog = false
                     },
                     onSelect = { sortType ->
-                        presenter.updateList(
+                        viewModel.updateList(
                             loadedState.selectedList.id,
                             loadedState.selectedList.copy(
                                 sortType = sortType,
@@ -105,7 +109,7 @@ fun ListDetailsRoute(
             ListDetailsScreen(
                 state = state.value as ListDetailsUiState.Loaded,
                 upAsCloseButton = upAsCloseButton,
-                onRefresh = presenter::refreshCache,
+                onRefresh = viewModel::refreshCache,
                 onUpClicked = { navigateUp() },
                 onEditClicked = { showEditDialog = true },
                 onDeleteCompletedTasksClicked = { showDeleteCompletedTasksDialog = true },
@@ -114,10 +118,10 @@ fun ListDetailsRoute(
                     navigateToTaskDetails(task)
                 },
                 onUpdateTask = { task ->
-                    presenter.updateTask(loadedState.selectedList.id, task.id, task)
+                    viewModel.updateTask(loadedState.selectedList.id, task.id, task)
                 },
                 onReorderTask = { taskId, fromIndex, toIndex ->
-                    presenter.reorderTask(
+                    viewModel.reorderTask(
                         loadedState.selectedList.id,
                         taskId,
                         fromIndex,
@@ -127,7 +131,7 @@ fun ListDetailsRoute(
                 },
                 onSortTypeClicked = { showSortDialog = true },
                 onSortDirectionClicked = {
-                    presenter.updateList(
+                    viewModel.updateList(
                         loadedState.selectedList.id,
                         loadedState.selectedList.copy(
                             sortDirection = if (loadedState.selectedList.sortDirection == TaskList.SortDirection.ASCENDING) {
@@ -148,8 +152,8 @@ fun ListDetailsRoute(
         }
     }
 
-    LaunchedEffect(presenter.messages) {
-        presenter.messages.collect { message ->
+    LaunchedEffect(viewModel.messages) {
+        viewModel.messages.collect { message ->
             snackbarHostState.showSnackbar(
                 message = message.text,
                 duration = SnackbarDuration.Short,

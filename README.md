@@ -38,15 +38,8 @@ Some brief notes:
 
 My goal was to utilize Jetpack Compose for as much as possible, and lessen its reliance on the
 Android platform's Activity and Fragment classes for managing UI state.
-However, I ran into a major issue in doing so: in Jetpack, the traditional ViewModel is an Android
-Architecture Component, and therefore cannot be used in the shared module.
-It also exists at a different scope than my individual Composable screens, which caused more than a
-few bugs.
 
-So instead, I
-adapted [this open-source experiment](https://github.com/chrisbanes/tivi/pull/806/commits) to work
-with KMM.
-It's worked really well thus far, but comes with a heavy "use at your own risk" warning.
+I implemented (work in progress) shared ViewModels that replace the old "use at your own risk" code.
 
 ## Design
 

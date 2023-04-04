@@ -6,22 +6,17 @@ import androidx.activity.compose.setContent
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
 import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
-import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.view.WindowCompat
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import dev.chara.tasks.android.notification.service.MessagingService
 import dev.chara.tasks.android.ui.theme.AppTheme
-import dev.chara.tasks.android.ui.viewmodel.LocalViewModelStore
-import dev.chara.tasks.android.ui.viewmodel.viewModel
 import dev.chara.tasks.model.Theme
 import dev.chara.tasks.viewmodel.BaseViewModel
-import dev.chara.tasks.viewmodel.ViewModelStore
 import dev.olshevski.navigation.reimagined.NavController
 import dev.olshevski.navigation.reimagined.navController
 
@@ -36,15 +31,9 @@ class MainActivity : FragmentActivity() {
         val initialBackstack: List<RootNavTarget> = parseDeepLinks()
 
         setContent {
-            val coroutineScope = rememberCoroutineScope()
+            val viewModel: BaseViewModel = viewModel()
 
-            val viewModelStore = remember(coroutineScope) { ViewModelStore(coroutineScope) }
-
-            val presenter = viewModelStore.viewModel("Base") { scope ->
-                BaseViewModel(scope)
-            }
-
-            val userTheme by presenter.getAppTheme()
+            val userTheme by viewModel.getAppTheme()
                 .collectAsStateWithLifecycle(initialValue = Theme.SYSTEM_DEFAULT)
 
             val isDarkTheme = when (userTheme) {
@@ -53,7 +42,7 @@ class MainActivity : FragmentActivity() {
                 Theme.DARK -> true
             }
 
-            val vibrantColors by presenter.useVibrantColors()
+            val vibrantColors by viewModel.useVibrantColors()
                 .collectAsStateWithLifecycle(initialValue = false)
 
             val navController: NavController<RootNavTarget> = rememberSaveable(initialBackstack) {
@@ -63,9 +52,7 @@ class MainActivity : FragmentActivity() {
             val windowSizeClass = calculateWindowSizeClass(this)
 
             AppTheme(darkTheme = isDarkTheme, vibrantColors = vibrantColors) {
-                CompositionLocalProvider(LocalViewModelStore provides viewModelStore) {
-                    RootNavHost(navController, windowSizeClass = windowSizeClass)
-                }
+                RootNavHost(navController, windowSizeClass = windowSizeClass)
             }
         }
     }

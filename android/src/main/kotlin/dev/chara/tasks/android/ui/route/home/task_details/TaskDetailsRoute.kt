@@ -13,6 +13,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import dev.chara.tasks.android.ui.theme.ColorTheme
 import dev.chara.tasks.viewmodel.home.task_details.TaskDetailsUiState
 import dev.chara.tasks.viewmodel.home.task_details.TaskDetailsViewModel
@@ -20,11 +21,14 @@ import kotlinx.datetime.Clock
 
 @Composable
 fun TaskDetailsRoute(
-    presenter: TaskDetailsViewModel,
+    taskId: String,
     upAsCloseButton: Boolean,
     navigateUp: () -> Unit
 ) {
-    val state = presenter.uiState.collectAsStateWithLifecycle()
+    val viewModel: TaskDetailsViewModel = viewModel(key = taskId) {
+        TaskDetailsViewModel(taskId)
+    }
+    val state = viewModel.uiState.collectAsStateWithLifecycle()
 
     val snackbarHostState = remember { SnackbarHostState() }
 
@@ -41,7 +45,7 @@ fun TaskDetailsRoute(
                     },
                     onConfirm = {
                         showDeleteDialog = false
-                        presenter.deleteTask(loadedState.task.listId, loadedState.task.id)
+                        viewModel.deleteTask(loadedState.task.listId, loadedState.task.id)
                         navigateUp()
                     }
                 )
@@ -53,14 +57,14 @@ fun TaskDetailsRoute(
                 upAsCloseButton = upAsCloseButton,
                 onUpClicked = { navigateUp() },
                 onUpdateTask = {
-                    presenter.updateTask(
+                    viewModel.updateTask(
                         loadedState.task.listId,
                         loadedState.task.id,
                         it
                     )
                 },
                 onMoveTask = { newListId ->
-                    presenter.moveTask(
+                    viewModel.moveTask(
                         loadedState.task.listId,
                         newListId,
                         loadedState.task.id,
@@ -78,8 +82,8 @@ fun TaskDetailsRoute(
         }
     }
 
-    LaunchedEffect(presenter.messages) {
-        presenter.messages.collect { message ->
+    LaunchedEffect(viewModel.messages) {
+        viewModel.messages.collect { message ->
             snackbarHostState.showSnackbar(
                 message = message.text,
                 duration = SnackbarDuration.Short,

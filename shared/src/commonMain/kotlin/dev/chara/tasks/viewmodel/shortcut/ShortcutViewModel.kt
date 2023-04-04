@@ -4,7 +4,6 @@ import dev.chara.tasks.data.Repository
 import dev.chara.tasks.model.Task
 import dev.chara.tasks.model.Theme
 import dev.chara.tasks.viewmodel.ViewModel
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -14,7 +13,7 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 import org.koin.core.component.inject
 
-class ShortcutViewModel(coroutineScope: CoroutineScope) : ViewModel(coroutineScope) {
+class ShortcutViewModel : ViewModel() {
     private val repository: Repository by inject()
 
     private var _uiState = MutableStateFlow<ShortcutUiState>(ShortcutUiState.Loading)
