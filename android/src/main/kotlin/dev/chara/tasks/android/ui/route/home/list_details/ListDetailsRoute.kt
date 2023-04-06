@@ -1,16 +1,18 @@
 package dev.chara.tasks.android.ui.route.home.list_details
 
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.SnackbarResult
-import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -18,7 +20,6 @@ import dev.chara.tasks.android.ui.component.dialog.ModifyListDialog
 import dev.chara.tasks.android.ui.theme.ColorTheme
 import dev.chara.tasks.model.Task
 import dev.chara.tasks.model.TaskList
-import dev.chara.tasks.viewmodel.home.list_details.ListDetailsUiState
 import dev.chara.tasks.viewmodel.home.list_details.ListDetailsViewModel
 import kotlinx.datetime.Clock
 
@@ -36,21 +37,26 @@ fun ListDetailsRoute(
     }
     val state = viewModel.uiState.collectAsStateWithLifecycle()
 
-    if (state.value is ListDetailsUiState.Loaded) {
-        val loadedState = (state.value as ListDetailsUiState.Loaded)
+    val selectedList = state.value.selectedList
 
-        ColorTheme(color = loadedState.selectedList.color) {
+    if (!state.value.firstLoad) {
+        if (selectedList == null) {
+            navigateUp()
+            return
+        }
+
+        ColorTheme(color = selectedList.color) {
             var showEditDialog by remember { mutableStateOf(false) }
 
             if (showEditDialog) {
                 ModifyListDialog(
                     title = "Edit list",
-                    current = loadedState.selectedList,
+                    current = selectedList,
                     onDismiss = {
                         showEditDialog = false
                     },
                     onSave = { taskList ->
-                        viewModel.updateList(loadedState.selectedList.id, taskList)
+                        viewModel.updateList(selectedList.id, taskList)
                         showEditDialog = false
                     }
                 )
@@ -65,7 +71,7 @@ fun ListDetailsRoute(
                     },
                     onConfirm = {
                         showDeleteListDialog = false
-                        viewModel.deleteList(loadedState.selectedList.id)
+                        viewModel.deleteList(selectedList.id)
                         navigateUp()
                     }
                 )
@@ -79,7 +85,7 @@ fun ListDetailsRoute(
                         showDeleteCompletedTasksDialog = false
                     },
                     onConfirm = {
-                        viewModel.clearCompletedTasks(loadedState.selectedList.id)
+                        viewModel.clearCompletedTasks(selectedList.id)
                         showDeleteCompletedTasksDialog = false
                     }
                 )
@@ -89,14 +95,14 @@ fun ListDetailsRoute(
 
             if (showSortDialog) {
                 SortListDialog(
-                    sortType = loadedState.selectedList.sortType,
+                    sortType = selectedList.sortType,
                     onDismiss = {
                         showSortDialog = false
                     },
                     onSelect = { sortType ->
                         viewModel.updateList(
-                            loadedState.selectedList.id,
-                            loadedState.selectedList.copy(
+                            selectedList.id,
+                            selectedList.copy(
                                 sortType = sortType,
                                 lastModified = Clock.System.now()
                             )
@@ -107,7 +113,7 @@ fun ListDetailsRoute(
             }
 
             ListDetailsScreen(
-                state = state.value as ListDetailsUiState.Loaded,
+                state = state.value,
                 upAsCloseButton = upAsCloseButton,
                 onRefresh = viewModel::refreshCache,
                 onUpClicked = { navigateUp() },
@@ -118,11 +124,11 @@ fun ListDetailsRoute(
                     navigateToTaskDetails(task)
                 },
                 onUpdateTask = { task ->
-                    viewModel.updateTask(loadedState.selectedList.id, task.id, task)
+                    viewModel.updateTask(selectedList.id, task.id, task)
                 },
                 onReorderTask = { taskId, fromIndex, toIndex ->
                     viewModel.reorderTask(
-                        loadedState.selectedList.id,
+                        selectedList.id,
                         taskId,
                         fromIndex,
                         toIndex,
@@ -132,9 +138,9 @@ fun ListDetailsRoute(
                 onSortTypeClicked = { showSortDialog = true },
                 onSortDirectionClicked = {
                     viewModel.updateList(
-                        loadedState.selectedList.id,
-                        loadedState.selectedList.copy(
-                            sortDirection = if (loadedState.selectedList.sortDirection == TaskList.SortDirection.ASCENDING) {
+                        selectedList.id,
+                        selectedList.copy(
+                            sortDirection = if (selectedList.sortDirection == TaskList.SortDirection.ASCENDING) {
                                 TaskList.SortDirection.DESCENDING
                             } else {
                                 TaskList.SortDirection.ASCENDING
@@ -143,12 +149,12 @@ fun ListDetailsRoute(
                         )
                     )
                 },
-                onCreateClicked = { onCreateTaskClicked(loadedState.selectedList) }
+                onCreateClicked = { onCreateTaskClicked(selectedList) }
             )
         }
     } else {
-        Surface(modifier = Modifier.fillMaxSize()) {
-            // Placeholder
+        Box(modifier = Modifier.fillMaxSize()) {
+            CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
         }
     }
 

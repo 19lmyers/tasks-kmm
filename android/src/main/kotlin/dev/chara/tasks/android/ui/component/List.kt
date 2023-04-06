@@ -36,7 +36,6 @@ private const val CONTENT_TYPE_CREATE = "CONTENT_TYPE_CREATE"
 fun TaskLists(
     modifier: Modifier = Modifier,
     taskLists: List<TaskList>,
-    newEnabled: Boolean,
     onListClick: (TaskList) -> Unit,
     onNewClick: () -> Unit
 ) {
@@ -51,14 +50,12 @@ fun TaskLists(
         item(contentType = CONTENT_TYPE_CREATE) {
             CreateListItem(
                 Modifier.animateItemPlacement(),
-                enabled = newEnabled,
                 onClick = onNewClick
             )
         }
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TaskListItem(
     modifier: Modifier = Modifier,

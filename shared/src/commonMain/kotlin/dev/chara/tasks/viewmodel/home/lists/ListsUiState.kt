@@ -2,13 +2,9 @@ package dev.chara.tasks.viewmodel.home.lists
 
 import dev.chara.tasks.model.TaskList
 
-sealed class ListsUiState {
+data class ListsUiState(
+    val isLoading: Boolean = false,
+    val firstLoad: Boolean = false,
 
-    data class Loaded(
-        val taskLists: List<TaskList> = listOf(),
-        val isInternetConnected: Boolean = false,
-        val isRefreshing: Boolean = false,
-    ) : ListsUiState()
-
-    object Loading : ListsUiState()
-}
+    val taskLists: List<TaskList> = listOf(),
+)

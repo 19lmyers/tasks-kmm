@@ -3,7 +3,10 @@ package dev.chara.tasks.viewmodel.shortcut
 import dev.chara.tasks.data.Repository
 import dev.chara.tasks.model.Task
 import dev.chara.tasks.model.Theme
+import dev.icerock.moko.mvvm.flow.cFlow
+import dev.icerock.moko.mvvm.flow.cStateFlow
 import dev.icerock.moko.mvvm.viewmodel.ViewModel
+import io.github.aakira.napier.Napier
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -17,11 +20,11 @@ import org.koin.core.component.inject
 class ShortcutViewModel : ViewModel(), KoinComponent {
     private val repository: Repository by inject()
 
-    private var _uiState = MutableStateFlow<ShortcutUiState>(ShortcutUiState.Loading)
-    val uiState = _uiState.asStateFlow()
+    private var _uiState = MutableStateFlow(ShortcutUiState(isLoading = true, firstLoad = true))
+    val uiState = _uiState.asStateFlow().cStateFlow()
 
     private val _statuses = MutableSharedFlow<Pair<Boolean, String?>>()
-    val statuses = _statuses.asSharedFlow()
+    val statuses = _statuses.asSharedFlow().cFlow()
 
     init {
         viewModelScope.launch {
@@ -29,18 +32,18 @@ class ShortcutViewModel : ViewModel(), KoinComponent {
                 repository.isUserAuthenticated(),
                 repository.getLists()
             ) { isUserAuthenticated, taskLists ->
-                if (isUserAuthenticated) {
-                    ShortcutUiState.Authenticated(
-                        taskLists = taskLists
-                    )
-                } else {
-                    ShortcutUiState.NotAuthenticated
-                }
+                ShortcutUiState(
+                    isLoading = false,
+                    firstLoad = false,
+                    isAuthenticated = isUserAuthenticated,
+                    taskLists = taskLists
+                )
             }.collect {
                 _uiState.value = it
             }
 
-            if (uiState.value is ShortcutUiState.Authenticated) {
+            if (uiState.value.isAuthenticated) {
+                Napier.d("REFRESH ME")
                 repository.refresh()
             }
         }

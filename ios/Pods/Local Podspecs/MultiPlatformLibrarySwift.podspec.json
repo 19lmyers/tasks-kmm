@@ -11,7 +11,7 @@
   "summary": "Some description for a Kotlin/Native module",
   "module_name": "MultiPlatformLibrarySwift",
   "platforms": {
-    "ios": "14.1"
+    "ios": "16.0"
   },
   "static_framework": false,
   "dependencies": {
@@ -19,5 +19,5 @@
 
     ]
   },
-  "source_files": "build/cocoapods/framework/sharedSwift/**/*.{h,m,swift}"
+  "source_files": "build/cocoapods/framework/MultiPlatformLibrarySwift/**/*.{h,m,swift}"
 }

@@ -5,13 +5,14 @@ import dev.chara.tasks.model.Profile
 import dev.chara.tasks.model.Task
 import dev.chara.tasks.viewmodel.util.SnackbarMessage
 import dev.chara.tasks.viewmodel.util.emitAsMessage
+import dev.icerock.moko.mvvm.flow.cFlow
+import dev.icerock.moko.mvvm.flow.cStateFlow
 import dev.icerock.moko.mvvm.viewmodel.ViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
@@ -20,35 +21,30 @@ class HomeViewModel : ViewModel(), KoinComponent {
 
     private val repository: Repository by inject()
 
-    private var _uiState = MutableStateFlow<HomeUiState>(HomeUiState.Loading)
-    val uiState = _uiState.asStateFlow()
+    private var _uiState = MutableStateFlow(HomeUiState(isLoading = true, firstLoad = true))
+    val uiState = _uiState.asStateFlow().cStateFlow()
 
     private val _messages = MutableSharedFlow<SnackbarMessage>()
-    val messages = _messages.asSharedFlow()
+    val messages = _messages.asSharedFlow().cFlow()
 
     init {
         viewModelScope.launch {
             combine(
                 repository.isUserAuthenticated(),
                 repository.getStartScreen(),
-                repository.getLists()
-            ) { isUserAuthenticated, startScreen, taskLists ->
-                if (isUserAuthenticated) {
-                    val profile = repository.getUserProfile().first()!!
-                    HomeUiState.Authenticated(
-                        profile = profile,
-                        startScreen = startScreen,
-                        taskLists = taskLists
-                    )
-                } else {
-                    HomeUiState.NotAuthenticated
-                }
+                repository.getLists(),
+                repository.getUserProfile()
+            ) { isUserAuthenticated, startScreen, taskLists, profile ->
+                HomeUiState(
+                    isLoading = false,
+                    firstLoad = false,
+                    isAuthenticated = isUserAuthenticated,
+                    profile = profile,
+                    startScreen = startScreen,
+                    taskLists = taskLists
+                )
             }.collect {
                 _uiState.value = it
-            }
-
-            if (uiState.value is HomeUiState.Authenticated) {
-                repository.refresh()
             }
         }
     }

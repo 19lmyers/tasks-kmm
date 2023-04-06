@@ -11,7 +11,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
-import dev.chara.tasks.viewmodel.auth.forgot_password.ForgotPasswordUiState
 import dev.chara.tasks.viewmodel.auth.forgot_password.ForgotPasswordViewModel
 
 @Composable
@@ -23,7 +22,7 @@ fun ForgotPasswordRoute(
 
     val snackbarHostState = remember { SnackbarHostState() }
 
-    if (state.value is ForgotPasswordUiState.PasswordResetLinkSent) {
+    if (state.value.passwordResetLinkSent) {
         AlertDialog(
             onDismissRequest = { },
             title = { Text(text = "Password reset link sent") },
@@ -40,7 +39,7 @@ fun ForgotPasswordRoute(
         state = state.value,
         snackbarHostState = snackbarHostState,
         onUpClicked = {
-            if (state.value !is ForgotPasswordUiState.Loading) {
+            if (!state.value.isLoading) {
                 navigateUp()
             }
         },
@@ -62,7 +61,7 @@ fun ForgotPasswordRoute(
         }
     }
 
-    BackHandler(state.value is ForgotPasswordUiState.Loading) {
+    BackHandler(state.value.isLoading) {
         // Stub
     }
 }

@@ -22,7 +22,7 @@ class SignUpViewModel : ViewModel(), KoinComponent {
     private val emailValidator = EmailValidator()
     private val passwordValidator = PasswordValidator()
 
-    private var _uiState = MutableStateFlow<SignUpUiState>(SignUpUiState.NotAuthenticated)
+    private var _uiState = MutableStateFlow(SignUpUiState())
     val uiState = _uiState.asStateFlow()
 
     private val _messages = MutableSharedFlow<SnackbarMessage>()
@@ -50,16 +50,10 @@ class SignUpViewModel : ViewModel(), KoinComponent {
 
     fun signUp(email: String, displayName: String, password: String) {
         viewModelScope.launch {
-            _uiState.value = SignUpUiState.Loading
-
             val result = repository.createUser(email, displayName, password)
             _messages.emitAsMessage(result)
 
-            _uiState.value = if (result.isSuccess) {
-                SignUpUiState.Authenticated
-            } else {
-                SignUpUiState.NotAuthenticated
-            }
+            _uiState.value = _uiState.value.copy(isLoading = false, isAuthenticated = result.isSuccess)
         }
     }
 }

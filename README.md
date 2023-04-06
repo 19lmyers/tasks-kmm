@@ -39,7 +39,7 @@ Some brief notes:
 My goal was to utilize Jetpack Compose for as much as possible, and lessen its reliance on the
 Android platform's Activity and Fragment classes for managing UI state.
 
-The ViewModels use the Moko-MVVM and KSwift libraries to make using them in iOS simpler.
+The ViewModels use the **Moko MVVM** and **KSwift** libraries to make using them in iOS simpler.
 (On Android, they inherit from the AndroidX component.)
 
 ## Design
@@ -69,9 +69,7 @@ There are a few things I have yet to implement, mainly:
 ## Backend
 
 The backend server was concurrently designed with the app, using many of the same libraries (mainly
-SQLDelight and Ktor) as the client code.
-It's my first time writing a backend for an app, and I don't think the code is ready to release, but
-that may change as I continue to work on it.
+SQLDelight and Ktor) as the client code. [You can view the code here.](https://github.com/19lmyers/tasks-backend)
 
 ## Evolution
 

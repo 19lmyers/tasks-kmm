@@ -42,6 +42,10 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
+	<key>LSApplicationCategoryType</key>
+	<string></string>
+	<key>ENDPOINT_URL</key>
+	<string>${ENDPOINT_URL}</string>
 	<key>UILaunchScreen</key>
 	<dict/>
 </dict>

@@ -1,21 +1,22 @@
 package dev.chara.tasks.android.ui.route.home.task_details
 
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.SnackbarResult
-import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import dev.chara.tasks.android.ui.theme.ColorTheme
-import dev.chara.tasks.viewmodel.home.task_details.TaskDetailsUiState
 import dev.chara.tasks.viewmodel.home.task_details.TaskDetailsViewModel
 import kotlinx.datetime.Clock
 
@@ -32,10 +33,15 @@ fun TaskDetailsRoute(
 
     val snackbarHostState = remember { SnackbarHostState() }
 
-    if (state.value is TaskDetailsUiState.Loaded) {
-        val loadedState = (state.value as TaskDetailsUiState.Loaded)
+    val task = state.value.task
 
-        ColorTheme(color = loadedState.taskLists.first { it.id == loadedState.task.listId }.color) {
+    if (!state.value.firstLoad) {
+        if (task == null) {
+            navigateUp()
+            return
+        }
+
+        ColorTheme(color = state.value.taskLists.first { it.id == task.listId }.color) {
             var showDeleteDialog by remember { mutableStateOf(false) }
 
             if (showDeleteDialog) {
@@ -45,29 +51,29 @@ fun TaskDetailsRoute(
                     },
                     onConfirm = {
                         showDeleteDialog = false
-                        viewModel.deleteTask(loadedState.task.listId, loadedState.task.id)
+                        viewModel.deleteTask(task.listId, task.id)
                         navigateUp()
                     }
                 )
             }
 
             TaskDetailsScreen(
-                state.value as TaskDetailsUiState.Loaded,
+                state.value,
                 snackbarHostState = snackbarHostState,
                 upAsCloseButton = upAsCloseButton,
                 onUpClicked = { navigateUp() },
                 onUpdateTask = {
                     viewModel.updateTask(
-                        loadedState.task.listId,
-                        loadedState.task.id,
+                        task.listId,
+                        task.id,
                         it
                     )
                 },
                 onMoveTask = { newListId ->
                     viewModel.moveTask(
-                        loadedState.task.listId,
+                        task.listId,
                         newListId,
-                        loadedState.task.id,
+                        task.id,
                         Clock.System.now()
                     )
                 },
@@ -77,8 +83,8 @@ fun TaskDetailsRoute(
             )
         }
     } else {
-        Surface(modifier = Modifier.fillMaxSize()) {
-            // Placeholder
+        Box(modifier = Modifier.fillMaxSize()) {
+            CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
         }
     }
 

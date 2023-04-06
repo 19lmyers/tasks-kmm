@@ -29,7 +29,7 @@ import coil.request.ImageRequest
 import dev.chara.tasks.android.ui.util.forwardingPainter
 import dev.chara.tasks.data.getGravatarUrl
 import dev.chara.tasks.model.Profile
-import org.koin.androidx.compose.get
+import org.koin.compose.koinInject
 
 @Composable
 fun ProfileCard(
@@ -90,7 +90,7 @@ fun ProfileImage(
     profilePhotoUri: String?,
     modifier: Modifier = Modifier
 ) {
-    val imageLoader = get<ImageLoader>()
+    val imageLoader = koinInject<ImageLoader>()
 
     // Make it work in preview by hardcoding the image URL
     val imageUrl = if (LocalInspectionMode.current) {

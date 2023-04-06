@@ -82,7 +82,7 @@ fun SignInScreen(
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
-                if (state is SignInUiState.Loading) {
+                if (state.isLoading) {
                     LinearProgressIndicator(modifier = Modifier.fillMaxWidth())
                 }
                 SignInForm(
@@ -91,7 +91,7 @@ fun SignInScreen(
                     onEmailChanged = { email = it },
                     onPasswordChanged = { password = it },
                     onForgotPasswordClicked = onForgotPasswordClicked,
-                    signInPending = state is SignInUiState.Loading,
+                    signInPending = state.isLoading,
                     onSignInClicked = { onSignInClicked(email, password) },
                     validateEmail = { validateEmail(it) }
                 )
@@ -104,7 +104,7 @@ fun SignInScreen(
 @Composable
 private fun Preview_SignInScreen() {
     SignInScreen(
-        state = SignInUiState.NotAuthenticated,
+        state = SignInUiState(),
         snackbarHostState = SnackbarHostState(),
         onUpClicked = {},
         onForgotPasswordClicked = {},

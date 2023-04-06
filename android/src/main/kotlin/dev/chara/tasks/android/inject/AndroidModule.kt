@@ -7,7 +7,6 @@ import dev.chara.tasks.android.BuildConfig
 import dev.chara.tasks.data.cache.DriverFactory
 import dev.chara.tasks.data.preference.DataStorePath
 import dev.chara.tasks.data.rest.Endpoint
-import dev.chara.tasks.network.ConnectivityStatusManager
 import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.module
 
@@ -15,8 +14,6 @@ fun androidDataLayer() = module {
     factory { DriverFactory(androidContext()) }
     factory { DataStorePath(androidContext()) }
     factory { Endpoint(BuildConfig.ENDPOINT_URL) }
-
-    single { ConnectivityStatusManager(androidContext()) }
 }
 
 fun androidUiLayer() = module {

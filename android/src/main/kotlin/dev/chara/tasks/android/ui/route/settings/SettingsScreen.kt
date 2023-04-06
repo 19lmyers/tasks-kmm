@@ -51,7 +51,7 @@ import kotlinx.datetime.Clock
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
 @Composable
 fun SettingsScreen(
-    state: SettingsUiState.Loaded,
+    state: SettingsUiState,
     snackbarHostState: SnackbarHostState,
     onUpClicked: () -> Unit,
     onSetTheme: (Theme) -> Unit,

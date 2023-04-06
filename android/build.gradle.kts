@@ -41,7 +41,7 @@ android {
         buildConfig = true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.4.3"
+        kotlinCompilerExtensionVersion = "1.4.4"
     }
     packaging {
         resources {
@@ -66,7 +66,7 @@ android {
         create("prod") {
             dimension = "endpoint"
 
-            buildConfigField("String", "ENDPOINT_URL", "\"https://tasks-api.chara.dev:8443\"")
+            buildConfigField("String", "ENDPOINT_URL", "\"https://tasks-api.chara.dev\"")
         }
         create("dev") {
             dimension = "endpoint"

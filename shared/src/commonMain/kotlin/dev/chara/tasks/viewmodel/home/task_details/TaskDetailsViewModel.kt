@@ -2,9 +2,10 @@ package dev.chara.tasks.viewmodel.home.task_details
 
 import dev.chara.tasks.data.Repository
 import dev.chara.tasks.model.Task
-import dev.chara.tasks.network.ConnectivityStatusManager
 import dev.chara.tasks.viewmodel.util.SnackbarMessage
 import dev.chara.tasks.viewmodel.util.emitAsMessage
+import dev.icerock.moko.mvvm.flow.cFlow
+import dev.icerock.moko.mvvm.flow.cStateFlow
 import dev.icerock.moko.mvvm.viewmodel.ViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -16,33 +17,28 @@ import kotlinx.datetime.Instant
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
-class TaskDetailsViewModel(private val taskId: String): ViewModel(), KoinComponent {
+class TaskDetailsViewModel(private val taskId: String) : ViewModel(), KoinComponent {
 
     private val repository: Repository by inject()
-    private val connectivityStatusManager: ConnectivityStatusManager by inject()
 
-    private var _uiState = MutableStateFlow<TaskDetailsUiState>(TaskDetailsUiState.Loading)
-    val uiState = _uiState.asStateFlow()
+    private var _uiState = MutableStateFlow(TaskDetailsUiState(isLoading = true, firstLoad = true))
+    val uiState = _uiState.asStateFlow().cStateFlow()
 
     private val _messages = MutableSharedFlow<SnackbarMessage>()
-    val messages = _messages.asSharedFlow()
+    val messages = _messages.asSharedFlow().cFlow()
 
     init {
         viewModelScope.launch {
             combine(
                 repository.getTaskById(taskId),
                 repository.getLists(),
-                connectivityStatusManager.isInternetConnected,
-            ) { task, taskLists, isInternetConnected ->
-                if (task != null) {
-                    TaskDetailsUiState.Loaded(
-                        task = task,
-                        taskLists = taskLists,
-                        isInternetConnected = isInternetConnected
-                    )
-                } else {
-                    TaskDetailsUiState.NotFound
-                }
+            ) { task, taskLists ->
+                TaskDetailsUiState(
+                    isLoading = false,
+                    firstLoad = false,
+                    task = task,
+                    taskLists = taskLists,
+                )
             }.collect {
                 _uiState.value = it
             }

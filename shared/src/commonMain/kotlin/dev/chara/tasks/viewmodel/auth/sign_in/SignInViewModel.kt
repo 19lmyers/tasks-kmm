@@ -6,6 +6,8 @@ import dev.chara.tasks.data.Repository
 import dev.chara.tasks.model.ValidationFailure
 import dev.chara.tasks.viewmodel.util.SnackbarMessage
 import dev.chara.tasks.viewmodel.util.emitAsMessage
+import dev.icerock.moko.mvvm.flow.cFlow
+import dev.icerock.moko.mvvm.flow.cStateFlow
 import dev.icerock.moko.mvvm.viewmodel.ViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -20,11 +22,11 @@ class SignInViewModel : ViewModel(), KoinComponent {
 
     private val emailValidator = EmailValidator()
 
-    private var _uiState = MutableStateFlow<SignInUiState>(SignInUiState.NotAuthenticated)
-    val uiState = _uiState.asStateFlow()
+    private var _uiState = MutableStateFlow(SignInUiState())
+    val uiState = _uiState.asStateFlow().cStateFlow()
 
     private val _messages = MutableSharedFlow<SnackbarMessage>()
-    val messages = _messages.asSharedFlow()
+    val messages = _messages.asSharedFlow().cFlow()
 
     fun validateEmail(email: String): Result<String> {
         val result = emailValidator.validate(email)
@@ -38,16 +40,10 @@ class SignInViewModel : ViewModel(), KoinComponent {
 
     fun signIn(username: String, password: String) {
         viewModelScope.launch {
-            _uiState.value = SignInUiState.Loading
-
             val result = repository.authenticateUser(username, password)
             _messages.emitAsMessage(result)
 
-            _uiState.value = if (result.isSuccess) {
-                SignInUiState.Authenticated
-            } else {
-                SignInUiState.NotAuthenticated
-            }
+            _uiState.value = _uiState.value.copy(isLoading = false, isAuthenticated = result.isSuccess)
         }
     }
 }

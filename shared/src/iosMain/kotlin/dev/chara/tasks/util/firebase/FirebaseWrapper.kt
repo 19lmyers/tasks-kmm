@@ -17,6 +17,5 @@ actual class FirebaseWrapper {
         actual fun recordException(t: Throwable) {
             TODO("Not yet implemented")
         }
-
     }
 }

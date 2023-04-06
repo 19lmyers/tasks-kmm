@@ -68,8 +68,8 @@ class PreferenceDataSource(private val dataStorePath: DataStorePath) {
 
     suspend fun setApiTokens(tokens: TokenPair) {
         dataStore.edit {
-            it[KEY_API_ACCESS_TOKEN] = tokens.accessToken
-            it[KEY_API_REFRESH_TOKEN] = tokens.refreshToken
+            it[KEY_API_ACCESS_TOKEN] = tokens.access
+            it[KEY_API_REFRESH_TOKEN] = tokens.refresh
         }
     }
 

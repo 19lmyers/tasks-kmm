@@ -3,14 +3,10 @@ package dev.chara.tasks.viewmodel.home.task_details
 import dev.chara.tasks.model.Task
 import dev.chara.tasks.model.TaskList
 
-sealed class TaskDetailsUiState {
-    data class Loaded(
-        val task: Task,
-        val taskLists: List<TaskList>,
-        val isInternetConnected: Boolean = false,
-        val isRefreshing: Boolean = false
-    ) : TaskDetailsUiState()
+data class TaskDetailsUiState(
+    val isLoading: Boolean = false,
+    val firstLoad: Boolean = false,
 
-    object NotFound : TaskDetailsUiState()
-    object Loading : TaskDetailsUiState()
-}
+    val task: Task? = null,
+    val taskLists: List<TaskList> = listOf(),
+)

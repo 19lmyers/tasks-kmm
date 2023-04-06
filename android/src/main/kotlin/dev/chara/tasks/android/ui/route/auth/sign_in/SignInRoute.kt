@@ -8,7 +8,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
-import dev.chara.tasks.viewmodel.auth.sign_in.SignInUiState
 import dev.chara.tasks.viewmodel.auth.sign_in.SignInViewModel
 
 @Composable
@@ -22,14 +21,14 @@ fun SignInRoute(
 
     val snackbarHostState = remember { SnackbarHostState() }
 
-    if (state.value is SignInUiState.Authenticated) {
+    if (state.value.isAuthenticated) {
         navigateToHome()
     } else {
         SignInScreen(
             state.value,
             snackbarHostState = snackbarHostState,
             onUpClicked = {
-                if (state.value !is SignInUiState.Loading) {
+                if (!state.value.isLoading) {
                     navigateUp()
                 }
             },
@@ -53,7 +52,7 @@ fun SignInRoute(
         }
     }
 
-    BackHandler(state.value is SignInUiState.Loading) {
+    BackHandler(state.value.isLoading) {
         // Stub
     }
 }

@@ -7,6 +7,8 @@ import dev.chara.tasks.model.TaskList
 import dev.chara.tasks.model.Theme
 import dev.chara.tasks.viewmodel.util.SnackbarMessage
 import dev.chara.tasks.viewmodel.util.emitAsMessage
+import dev.icerock.moko.mvvm.flow.cFlow
+import dev.icerock.moko.mvvm.flow.cStateFlow
 import dev.icerock.moko.mvvm.viewmodel.ViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -20,11 +22,11 @@ import org.koin.core.component.inject
 class SettingsViewModel : ViewModel(), KoinComponent {
     private val repository: Repository by inject()
 
-    private var _uiState = MutableStateFlow<SettingsUiState>(SettingsUiState.Loading)
-    val uiState = _uiState.asStateFlow()
+    private var _uiState = MutableStateFlow(SettingsUiState(isLoading = true, firstLoad = true))
+    val uiState = _uiState.asStateFlow().cStateFlow()
 
     private val _messages = MutableSharedFlow<SnackbarMessage>()
-    val messages = _messages.asSharedFlow()
+    val messages = _messages.asSharedFlow().cFlow()
 
     init {
         viewModelScope.launch {
@@ -35,7 +37,9 @@ class SettingsViewModel : ViewModel(), KoinComponent {
                 repository.getLists(),
                 repository.getEnabledBoardSections()
             ) { theme, useVibrantColors, startScreen, taskLists, enabledBoardSections ->
-                SettingsUiState.Loaded(
+                SettingsUiState(
+                    isLoading = false,
+                    firstLoad = false,
                     appTheme = theme,
                     useVibrantColors = useVibrantColors,
                     startScreen = startScreen,

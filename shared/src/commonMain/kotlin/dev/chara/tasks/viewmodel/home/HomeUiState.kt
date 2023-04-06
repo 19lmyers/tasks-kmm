@@ -4,13 +4,12 @@ import dev.chara.tasks.model.Profile
 import dev.chara.tasks.model.StartScreen
 import dev.chara.tasks.model.TaskList
 
-sealed class HomeUiState {
-    data class Authenticated(
-        val profile: Profile,
-        val startScreen: StartScreen,
-        val taskLists: List<TaskList>
-    ) : HomeUiState()
+data class HomeUiState(
+    val isLoading: Boolean = false,
+    val firstLoad: Boolean = false,
 
-    object NotAuthenticated : HomeUiState()
-    object Loading : HomeUiState()
-}
+    val isAuthenticated: Boolean = false,
+    val profile: Profile? = null,
+    val startScreen: StartScreen = StartScreen.BOARD,
+    val taskLists: List<TaskList> = listOf()
+)

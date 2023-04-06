@@ -61,7 +61,7 @@ import kotlinx.datetime.Clock
 )
 @Composable
 fun ListDetailsScreen(
-    state: ListDetailsUiState.Loaded,
+    state: ListDetailsUiState,
     upAsCloseButton: Boolean,
     onRefresh: () -> Unit,
     onUpClicked: () -> Unit,
@@ -79,14 +79,13 @@ fun ListDetailsScreen(
 
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
 
-    val pullRefreshState = rememberPullRefreshState(state.isRefreshing, onRefresh)
+    val pullRefreshState = rememberPullRefreshState(state.isLoading, onRefresh)
 
     Scaffold(
         topBar = {
             TopBar(
                 scrollBehavior,
-                state.selectedList,
-                state.isInternetConnected,
+                state.selectedList!!,
                 upAsCloseButton = upAsCloseButton,
                 onUpClicked = { onUpClicked() },
                 onEditClicked = { onEditClicked() },
@@ -98,8 +97,8 @@ fun ListDetailsScreen(
         },
         bottomBar = {
             BottomBar(
-                sortType = state.selectedList.sortType,
-                sortDirection = state.selectedList.sortDirection,
+                sortType = state.selectedList!!.sortType,
+                sortDirection = state.selectedList!!.sortDirection,
                 onSortTypeClicked = onSortTypeClicked,
                 onSortDirectionClicked = onSortDirectionClicked,
                 onCreateClicked = onCreateClicked
@@ -113,7 +112,7 @@ fun ListDetailsScreen(
                     .nestedScroll(scrollBehavior.nestedScrollConnection)
             ) {
                 PullRefreshLayout(
-                    isRefreshing = state.isRefreshing,
+                    isRefreshing = state.isLoading,
                     refreshState = pullRefreshState
                 ) {
                     Column(
@@ -132,11 +131,11 @@ fun ListDetailsScreen(
                                 onUpdate = { task ->
                                     onUpdateTask(task)
                                 },
-                                allowReorder = state.selectedList.sortType == TaskList.SortType.ORDINAL,
+                                allowReorder = state.selectedList!!.sortType == TaskList.SortType.ORDINAL,
                                 onReorder = { taskId, fromIndex, toIndex ->
                                     onReorderTask(taskId, fromIndex, toIndex)
                                 },
-                                showIndexNumbers = state.selectedList.showIndexNumbers,
+                                showIndexNumbers = state.selectedList!!.showIndexNumbers,
                             )
                         }
                     }
@@ -150,7 +149,7 @@ fun ListDetailsScreen(
 @Composable
 private fun Preview_ListDetailsScreen() {
     ListDetailsScreen(
-        state = ListDetailsUiState.Loaded(
+        state = ListDetailsUiState(
             selectedList = TaskList(id = "1", title = "Tasks"),
             currentTasks = listOf(
                 Task(
@@ -187,8 +186,6 @@ private fun Preview_ListDetailsScreen() {
                     details = "A very long and arduous process.",
                 )
             ),
-            isInternetConnected = true,
-            isRefreshing = false,
         ),
         upAsCloseButton = true,
         onRefresh = {},
@@ -210,7 +207,6 @@ private fun Preview_ListDetailsScreen() {
 private fun TopBar(
     scrollBehavior: TopAppBarScrollBehavior,
     taskList: TaskList,
-    deletesEnabled: Boolean,
     upAsCloseButton: Boolean,
     onUpClicked: () -> Unit,
     onEditClicked: () -> Unit,
@@ -252,7 +248,6 @@ private fun TopBar(
                     leadingIcon = {
                         Icon(Icons.Filled.DeleteSweep, contentDescription = "Delete")
                     },
-                    enabled = deletesEnabled,
                     onClick = {
                         onDeleteTasksClicked()
                         setOverflowShown(false)
@@ -263,7 +258,6 @@ private fun TopBar(
                     leadingIcon = {
                         Icon(Icons.Filled.DeleteForever, contentDescription = "Delete")
                     },
-                    enabled = deletesEnabled,
                     onClick = {
                         onDeleteListClicked()
                         setOverflowShown(false)
@@ -282,7 +276,6 @@ private fun Preview_TopBar() {
     TopBar(
         scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(),
         taskList = TaskList(id = "1", title = "Tasks", lastModified = Clock.System.now()),
-        deletesEnabled = true,
         upAsCloseButton = true,
         onUpClicked = {},
         onEditClicked = {},

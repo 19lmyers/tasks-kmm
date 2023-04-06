@@ -7,7 +7,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import dev.chara.tasks.viewmodel.profile.change_password.ChangePasswordUiState
 import dev.chara.tasks.viewmodel.profile.change_password.ChangePasswordViewModel
 
 @Composable
@@ -20,14 +19,14 @@ fun ChangePasswordRoute(
 
     val snackbarHostState = remember { SnackbarHostState() }
 
-    if (state.value is ChangePasswordUiState.PasswordChanged) {
+    if (state.value.passwordChanged) {
         navigateToHome()
     } else {
         ChangePasswordScreen(
             state.value,
             snackbarHostState = snackbarHostState,
             onUpClicked = {
-                if (state.value !is ChangePasswordUiState.Loading) {
+                if (!state.value.isLoading) {
                     navigateUp()
                 }
             },
@@ -50,7 +49,7 @@ fun ChangePasswordRoute(
         }
     }
 
-    BackHandler(state.value is ChangePasswordUiState.Loading) {
+    BackHandler(state.value.isLoading) {
         // Stub
     }
 }

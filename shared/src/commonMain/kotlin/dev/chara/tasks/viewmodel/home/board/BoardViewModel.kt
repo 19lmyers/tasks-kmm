@@ -2,9 +2,10 @@ package dev.chara.tasks.viewmodel.home.board
 
 import dev.chara.tasks.data.Repository
 import dev.chara.tasks.model.Task
-import dev.chara.tasks.network.ConnectivityStatusManager
 import dev.chara.tasks.viewmodel.util.SnackbarMessage
 import dev.chara.tasks.viewmodel.util.emitAsMessage
+import dev.icerock.moko.mvvm.flow.cFlow
+import dev.icerock.moko.mvvm.flow.cStateFlow
 import dev.icerock.moko.mvvm.viewmodel.ViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -18,13 +19,12 @@ import org.koin.core.component.inject
 class BoardViewModel : ViewModel(), KoinComponent {
 
     private val repository: Repository by inject()
-    private val connectivityStatusManager: ConnectivityStatusManager by inject()
 
-    private var _uiState = MutableStateFlow<BoardUiState>(BoardUiState.Loading)
-    val uiState = _uiState.asStateFlow()
+    private var _uiState = MutableStateFlow(BoardUiState(isLoading = true, firstLoad = true))
+    val uiState = _uiState.asStateFlow().cStateFlow()
 
     private val _messages = MutableSharedFlow<SnackbarMessage>()
-    val messages = _messages.asSharedFlow()
+    val messages = _messages.asSharedFlow().cFlow()
 
     init {
         viewModelScope.launch {
@@ -32,13 +32,13 @@ class BoardViewModel : ViewModel(), KoinComponent {
                 repository.getBoardSections(),
                 repository.getPinnedLists(),
                 repository.getLists(),
-                connectivityStatusManager.isInternetConnected
-            ) { boardSections, pinnedLists, allLists, isInternetConnected ->
-                BoardUiState.Loaded(
+            ) { boardSections, pinnedLists, allLists ->
+                BoardUiState(
+                    isLoading = false,
+                    firstLoad = false,
                     boardSections = boardSections,
                     pinnedLists = pinnedLists,
                     allLists = allLists,
-                    isInternetConnected = isInternetConnected,
                 )
             }.collect {
                 _uiState.value = it
@@ -48,16 +48,12 @@ class BoardViewModel : ViewModel(), KoinComponent {
 
     fun refreshCache() {
         viewModelScope.launch {
-            if (_uiState.value is BoardUiState.Loaded) {
-                val oldState = _uiState.value as BoardUiState.Loaded
+            _uiState.value = _uiState.value.copy(isLoading = true)
 
-                _uiState.value = oldState.copy(isRefreshing = true)
+            val result = repository.refresh()
+            _messages.emitAsMessage(result)
 
-                val result = repository.refresh()
-                _messages.emitAsMessage(result)
-
-                _uiState.value = oldState.copy(isRefreshing = false)
-            }
+            _uiState.value = _uiState.value.copy(isLoading = false)
         }
     }
 

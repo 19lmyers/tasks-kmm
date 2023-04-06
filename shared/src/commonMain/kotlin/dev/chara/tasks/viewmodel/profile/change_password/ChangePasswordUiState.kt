@@ -1,7 +1,7 @@
 package dev.chara.tasks.viewmodel.profile.change_password
 
-sealed class ChangePasswordUiState {
-    object PasswordChanged : ChangePasswordUiState()
-    object PasswordNotChanged : ChangePasswordUiState()
-    object Loading : ChangePasswordUiState()
-}
+data class ChangePasswordUiState(
+    val isLoading: Boolean = false,
+
+    val passwordChanged: Boolean = false,
+)

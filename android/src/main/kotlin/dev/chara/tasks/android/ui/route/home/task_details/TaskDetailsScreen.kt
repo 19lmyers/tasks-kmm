@@ -80,7 +80,7 @@ import kotlinx.datetime.toInstant
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
 @Composable
 fun TaskDetailsScreen(
-    state: TaskDetailsUiState.Loaded,
+    state: TaskDetailsUiState,
     snackbarHostState: SnackbarHostState,
     upAsCloseButton: Boolean,
     onUpClicked: () -> Unit,
@@ -90,7 +90,7 @@ fun TaskDetailsScreen(
 ) {
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
 
-    var task by remember(state.task) { mutableStateOf(state.task) }
+    var task by remember(state.task) { mutableStateOf(state.task!!) }
     var modified by remember { mutableStateOf(false) }
 
     Scaffold(
@@ -184,7 +184,7 @@ fun TaskDetailsScreen(
 @Composable
 private fun Preview_TaskDetailsScreen() {
     TaskDetailsScreen(
-        state = TaskDetailsUiState.Loaded(
+        state = TaskDetailsUiState(
             taskLists = listOf(
                 TaskList(id = "1", title = "Tasks")
             ),
@@ -194,7 +194,6 @@ private fun Preview_TaskDetailsScreen() {
                 label = "Take out trash",
                 details = "It needed to be done yesterday but I waited until today",
             ),
-            isRefreshing = false,
         ),
         snackbarHostState = SnackbarHostState(),
         upAsCloseButton = false,

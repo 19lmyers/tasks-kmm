@@ -71,13 +71,13 @@ fun ResetPasswordScreen(
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
-                if (state is ResetPasswordUiState.Loading) {
+                if (state.isLoading) {
                     LinearProgressIndicator(modifier = Modifier.fillMaxWidth())
                 }
                 ResetPasswordForm(
                     password = password,
                     onPasswordChanged = { password = it },
-                    resetPending = state is ResetPasswordUiState.Loading,
+                    resetPending = state.isLoading,
                     onResetClicked = { onResetClicked(password) },
                     validatePassword = { validatePassword(it) }
                 )
@@ -90,7 +90,7 @@ fun ResetPasswordScreen(
 @Composable
 private fun Preview_ResetPasswordScreen() {
     ResetPasswordScreen(
-        state = ResetPasswordUiState.PasswordNotReset,
+        state = ResetPasswordUiState(),
         snackbarHostState = SnackbarHostState(),
         onResetClicked = {},
         validatePassword = { Result.success("**********") }

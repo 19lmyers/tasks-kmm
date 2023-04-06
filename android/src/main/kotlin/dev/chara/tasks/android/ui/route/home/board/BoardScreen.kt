@@ -25,16 +25,16 @@ import dev.chara.tasks.viewmodel.home.board.BoardUiState
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterialApi::class)
 @Composable
 fun BoardScreen(
-    state: BoardUiState.Loaded,
+    state: BoardUiState,
     scrollBehavior: TopAppBarScrollBehavior,
     onTaskClicked: (Task) -> Unit,
     onListClicked: (TaskList) -> Unit,
     onRefresh: () -> Unit,
     onUpdateTask: (Task) -> Unit
 ) {
-    val pullRefreshState = rememberPullRefreshState(state.isRefreshing, onRefresh)
+    val pullRefreshState = rememberPullRefreshState(state.isLoading, onRefresh)
 
-    PullRefreshLayout(isRefreshing = state.isRefreshing, refreshState = pullRefreshState) {
+    PullRefreshLayout(isRefreshing = state.isLoading, refreshState = pullRefreshState) {
         if (state.boardSections.isEmpty() && state.pinnedLists.isEmpty()) {
             BoardPlaceholder()
         } else {
@@ -56,7 +56,7 @@ fun BoardScreen(
 @Composable
 fun Preview_BoardScreen() {
     BoardScreen(
-        state = BoardUiState.Loaded(
+        state = BoardUiState(
             boardSections = listOf(
                 BoardSection(
                     type = BoardSection.Type.STARRED,

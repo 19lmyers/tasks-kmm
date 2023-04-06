@@ -73,13 +73,13 @@ fun ForgotPasswordScreen(
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
-                if (state is ForgotPasswordUiState.Loading) {
+                if (state.isLoading) {
                     LinearProgressIndicator(modifier = Modifier.fillMaxWidth())
                 }
                 ForgotPasswordForm(
                     email = email,
                     onEmailChanged = { email = it },
-                    resetPending = state is ForgotPasswordUiState.Loading,
+                    resetPending = state.isLoading,
                     onResetClicked = { onResetClicked(email) },
                     validateEmail = { validateEmail(it) }
                 )
@@ -92,7 +92,7 @@ fun ForgotPasswordScreen(
 @Composable
 private fun Preview_ForgotPasswordScreen() {
     ForgotPasswordScreen(
-        state = ForgotPasswordUiState.PasswordResetFailed,
+        state = ForgotPasswordUiState(),
         snackbarHostState = SnackbarHostState(),
         onUpClicked = {},
         onResetClicked = {},

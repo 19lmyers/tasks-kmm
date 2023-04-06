@@ -54,9 +54,10 @@ fun HomeScreen(
     modifier: Modifier = Modifier,
     destinations: List<HomeNavTarget>,
     navController: NavController<HomeNavTarget>,
-    state: HomeUiState.Authenticated,
+    state: HomeUiState,
     snackbarHostState: SnackbarHostState,
     useNavRail: Boolean,
+    showCreateButton: Boolean,
     onAccountPressed: () -> Unit,
     onCreateTaskPressed: () -> Unit,
     navigateToListDetails: (TaskList) -> Unit,
@@ -71,6 +72,7 @@ fun HomeScreen(
         },
         state = state,
         useNavRail = useNavRail,
+        showCreateButton = showCreateButton,
         onAccountPressed = onAccountPressed,
         onCreateTaskPressed = onCreateTaskPressed,
     ) { scrollBehavior ->
@@ -108,8 +110,9 @@ private fun HomeScreen(
     menuItems: List<HomeNavTarget>,
     selectedMenuItem: HomeNavTarget,
     onMenuItemSelected: (HomeNavTarget) -> Unit,
-    state: HomeUiState.Authenticated,
+    state: HomeUiState,
     useNavRail: Boolean,
+    showCreateButton: Boolean,
     onAccountPressed: () -> Unit,
     onCreateTaskPressed: () -> Unit,
     content: @Composable (TopAppBarScrollBehavior) -> Unit
@@ -122,7 +125,7 @@ private fun HomeScreen(
         modifier = modifier,
         snackbarHost = { SnackbarHost(snackbarHostState) },
         topBar = {
-            TopBar(scrollBehavior, state.profile) {
+            TopBar(scrollBehavior, state.profile!!) {
                 onAccountPressed()
             }
         },
@@ -140,12 +143,14 @@ private fun HomeScreen(
             }
         },
         floatingActionButton = {
-            ExtendedFloatingActionButton(
-                text = { Text(text = "New task") },
-                icon = { Icon(Icons.Filled.Add, contentDescription = "New task") },
-                onClick = { onCreateTaskPressed() },
-                expanded = scrollBehavior.state.collapsedFraction == 0.0f
-            )
+            if (showCreateButton) {
+                ExtendedFloatingActionButton(
+                    text = { Text(text = "New task") },
+                    icon = { Icon(Icons.Filled.Add, contentDescription = "New task") },
+                    onClick = { onCreateTaskPressed() },
+                    expanded = scrollBehavior.state.collapsedFraction == 0.0f
+                )
+            }
         },
         content = { contentPadding ->
             val padding = if (useNavRail) {
@@ -180,9 +185,10 @@ private fun HomeScreen(
 fun HomeScreenWithDetailPane(
     destinations: List<HomeNavTarget>,
     navController: NavController<HomeNavTarget>,
-    state: HomeUiState.Authenticated,
+    state: HomeUiState,
     snackbarHostState: SnackbarHostState,
     useNavRail: Boolean,
+    showCreateButton: Boolean,
     onAccountPressed: () -> Unit,
     onCreateTaskPressed: () -> Unit,
     navigateToListDetails: (TaskList) -> Unit,
@@ -199,6 +205,7 @@ fun HomeScreenWithDetailPane(
             state = state,
             snackbarHostState = snackbarHostState,
             useNavRail = useNavRail,
+            showCreateButton = showCreateButton,
             onAccountPressed = onAccountPressed,
             onCreateTaskPressed = onCreateTaskPressed,
             navigateToListDetails = { taskList -> navigateToListDetails(taskList) },

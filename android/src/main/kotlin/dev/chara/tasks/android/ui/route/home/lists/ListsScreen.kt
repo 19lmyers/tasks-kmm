@@ -17,19 +17,18 @@ import dev.chara.tasks.viewmodel.home.lists.ListsUiState
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterialApi::class)
 @Composable
 fun ListsScreen(
-    state: ListsUiState.Loaded,
+    state: ListsUiState,
     scrollBehavior: TopAppBarScrollBehavior,
     onRefresh: () -> Unit,
     onListClicked: (TaskList) -> Unit,
     onCreateClicked: () -> Unit
 ) {
-    val pullRefreshState = rememberPullRefreshState(state.isRefreshing, onRefresh)
+    val pullRefreshState = rememberPullRefreshState(state.isLoading, onRefresh)
 
-    PullRefreshLayout(isRefreshing = state.isRefreshing, refreshState = pullRefreshState) {
+    PullRefreshLayout(isRefreshing = state.isLoading, refreshState = pullRefreshState) {
         TaskLists(
             Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
             state.taskLists,
-            state.isInternetConnected,
             onListClicked,
             onCreateClicked
         )
@@ -41,13 +40,12 @@ fun ListsScreen(
 @Composable
 private fun Preview_ListsScreen() {
     ListsScreen(
-        ListsUiState.Loaded(
+        ListsUiState(
             taskLists = listOf(
                 TaskList(id = "1", title = "Tasks"),
                 TaskList(id = "2", title = "Reminders"),
                 TaskList(id = "3", title = "Shopping List")
-            ),
-            isInternetConnected = true
+            )
         ),
         scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(),
         onRefresh = {},

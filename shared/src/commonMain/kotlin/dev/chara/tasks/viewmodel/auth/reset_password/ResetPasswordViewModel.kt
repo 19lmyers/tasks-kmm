@@ -6,6 +6,8 @@ import dev.chara.tasks.model.ValidationFailure
 import dev.chara.tasks.util.validate.PasswordValidator
 import dev.chara.tasks.viewmodel.util.SnackbarMessage
 import dev.chara.tasks.viewmodel.util.emitAsMessage
+import dev.icerock.moko.mvvm.flow.cFlow
+import dev.icerock.moko.mvvm.flow.cStateFlow
 import dev.icerock.moko.mvvm.viewmodel.ViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -20,12 +22,11 @@ class ResetPasswordViewModel(private val resetToken: String) : ViewModel(), Koin
 
     private val passwordValidator = PasswordValidator()
 
-    private var _uiState =
-        MutableStateFlow<ResetPasswordUiState>(ResetPasswordUiState.PasswordNotReset)
-    val uiState = _uiState.asStateFlow()
+    private var _uiState = MutableStateFlow(ResetPasswordUiState())
+    val uiState = _uiState.asStateFlow().cStateFlow()
 
     private val _messages = MutableSharedFlow<SnackbarMessage>()
-    val messages = _messages.asSharedFlow()
+    val messages = _messages.asSharedFlow().cFlow()
 
     fun validatePassword(password: String): Result<String> {
         val result = passwordValidator.validate(password)
@@ -39,16 +40,10 @@ class ResetPasswordViewModel(private val resetToken: String) : ViewModel(), Koin
 
     fun resetPassword(newPassword: String) {
         viewModelScope.launch {
-            _uiState.value = ResetPasswordUiState.Loading
-
             val result = repository.resetPassword(resetToken, newPassword)
             _messages.emitAsMessage(result)
 
-            _uiState.value = if (result.isSuccess) {
-                ResetPasswordUiState.PasswordReset
-            } else {
-                ResetPasswordUiState.PasswordNotReset
-            }
+            _uiState.value = _uiState.value.copy(isLoading = false, passwordReset = result.isSuccess)
         }
     }
 }

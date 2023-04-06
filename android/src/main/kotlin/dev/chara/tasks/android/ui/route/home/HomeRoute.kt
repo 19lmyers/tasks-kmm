@@ -47,7 +47,6 @@ import dev.chara.tasks.android.ui.route.home.profile.UserProfileDialog
 import dev.chara.tasks.android.ui.route.home.task_details.TaskDetailsRoute
 import dev.chara.tasks.model.StartScreen
 import dev.chara.tasks.model.Task
-import dev.chara.tasks.viewmodel.home.HomeUiState
 import dev.chara.tasks.viewmodel.home.HomeViewModel
 import dev.olshevski.navigation.reimagined.rememberNavController
 import kotlinx.coroutines.launch
@@ -69,10 +68,6 @@ fun HomeRoute(
     val state = viewModel.uiState.collectAsStateWithLifecycle()
 
     val snackbarHostState = remember { SnackbarHostState() }
-
-    if (state.value is HomeUiState.NotAuthenticated) {
-        navigateToWelcome()
-    }
 
     val context = LocalContext.current
     val permissionRequestLauncher = rememberLauncherForActivityResult(
@@ -98,9 +93,11 @@ fun HomeRoute(
         }
     }
 
-    // TODO this conditional is causing issues
-    if (state.value is HomeUiState.Authenticated) {
-        val loadedState = state.value as HomeUiState.Authenticated
+    if (!state.value.firstLoad) {
+        if (!state.value.isAuthenticated) {
+            navigateToWelcome()
+            return
+        }
 
         // Request notification permission - TODO move to sensible place
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
@@ -113,7 +110,7 @@ fun HomeRoute(
             }
         }
 
-        val profile = loadedState.profile
+        val profile = state.value.profile!!
 
         var showProfileDialog by remember { mutableStateOf(false) }
 
@@ -150,14 +147,14 @@ fun HomeRoute(
         }
 
         var showCreateTaskDialog by remember { mutableStateOf(false) }
-        var defaultListIdForCreatedTask by remember { mutableStateOf(loadedState.taskLists.first().id) }
+        var defaultListIdForCreatedTask by remember(state.value.taskLists) { mutableStateOf(state.value.taskLists.firstOrNull()?.id) }
 
-        if (showCreateTaskDialog) {
+        if (showCreateTaskDialog && defaultListIdForCreatedTask != null) {
             CreateTaskDialog(
-                taskLists = loadedState.taskLists,
+                taskLists = state.value.taskLists,
                 current = Task(
                     id = "",
-                    listId = defaultListIdForCreatedTask,
+                    listId = defaultListIdForCreatedTask!!,
                     label = "",
                     lastModified = Clock.System.now()
                 ),
@@ -171,7 +168,7 @@ fun HomeRoute(
             )
         }
 
-        val startScreen = loadedState.startScreen
+        val startScreen = state.value.startScreen
 
         val allDestinations = StartScreen.values().map { it.navTarget }
 
@@ -245,15 +242,18 @@ fun HomeRoute(
                 } else {
                     if (useDualPane) {
                         BoxWithConstraints {
-                            val detailPaneWidth by animateDpAsState(if (isListShown) maxWidth / 2 else 0.dp)
+                            val detailPaneWidth by animateDpAsState(if (isListShown) maxWidth / 2 else 0.dp,
+                                label = "detailPane"
+                            )
                             val homePaneWidth = maxWidth - detailPaneWidth
 
                             HomeScreenWithDetailPane(
                                 destinations = allDestinations,
                                 navController = navController,
-                                state = state.value as HomeUiState.Authenticated,
+                                state = state.value,
                                 snackbarHostState = snackbarHostState,
                                 useNavRail = useNavRail,
+                                showCreateButton = defaultListIdForCreatedTask != null,
                                 onAccountPressed = { showProfileDialog = true },
                                 onCreateTaskPressed = {
                                     showCreateTaskDialog = true
@@ -310,9 +310,10 @@ fun HomeRoute(
                                 HomeScreen(
                                     destinations = allDestinations,
                                     navController = navController,
-                                    state = state.value as HomeUiState.Authenticated,
+                                    state = state.value,
                                     snackbarHostState = snackbarHostState,
                                     useNavRail = useNavRail,
+                                    showCreateButton = defaultListIdForCreatedTask != null,
                                     onAccountPressed = { showProfileDialog = true },
                                     onCreateTaskPressed = {
                                         showCreateTaskDialog = true

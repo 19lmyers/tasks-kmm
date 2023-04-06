@@ -2,11 +2,10 @@ package dev.chara.tasks.viewmodel.shortcut
 
 import dev.chara.tasks.model.TaskList
 
-sealed class ShortcutUiState {
-    data class Authenticated(
-        val taskLists: List<TaskList>
-    ) : ShortcutUiState()
+data class ShortcutUiState(
+    val isLoading: Boolean = false,
+    val firstLoad: Boolean = false,
 
-    object NotAuthenticated : ShortcutUiState()
-    object Loading : ShortcutUiState()
-}
+    val isAuthenticated: Boolean = false,
+    val taskLists: List<TaskList> = listOf()
+)

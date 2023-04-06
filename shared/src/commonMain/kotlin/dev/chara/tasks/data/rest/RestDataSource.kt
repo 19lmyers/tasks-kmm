@@ -6,8 +6,8 @@ import dev.chara.tasks.model.Move
 import dev.chara.tasks.model.PasswordChange
 import dev.chara.tasks.model.PasswordReset
 import dev.chara.tasks.model.Profile
+import dev.chara.tasks.model.RegisterCredentials
 import dev.chara.tasks.model.Reorder
-import dev.chara.tasks.model.SignUpCredentials
 import dev.chara.tasks.model.Task
 import dev.chara.tasks.model.TaskList
 import dev.chara.tasks.model.TokenPair
@@ -42,7 +42,7 @@ class RestDataSource(
     private val preferenceDataSource: PreferenceDataSource,
     endpoint: Endpoint
 ) {
-    private val endpointUrl: String = "${endpoint.url}/v2"
+    private val endpointUrl: String = endpoint.url
 
     /**
      * TODO create this outside of the RestDataSource so we can inject preferences as needed
@@ -65,11 +65,11 @@ class RestDataSource(
                             return@loadTokens null
                         }
 
-                        BearerTokens(tokens.accessToken, tokens.refreshToken)
+                        BearerTokens(tokens.access, tokens.refresh)
                     }
                     refreshTokens {
                         val refreshToken: String = oldTokens?.refreshToken
-                            ?: preferenceDataSource.getApiTokens().first()?.refreshToken
+                            ?: preferenceDataSource.getApiTokens().first()?.refresh
                             ?: return@refreshTokens null
 
                         val result = refreshAuth(refreshToken)
@@ -77,7 +77,7 @@ class RestDataSource(
                         if (result.isSuccess) {
                             val tokenPair = result.getOrThrow()
                             preferenceDataSource.setApiTokens(tokenPair)
-                            BearerTokens(tokenPair.accessToken, tokenPair.refreshToken)
+                            BearerTokens(tokenPair.access, tokenPair.refresh)
                         } else {
                             preferenceDataSource.clearAuthFields()
                             null
@@ -94,7 +94,7 @@ class RestDataSource(
     }
 
     suspend fun getUserProfile(): Result<Profile> = try {
-        val response = client.get("$endpointUrl/self/profile")
+        val response = client.get("$endpointUrl/profile")
 
         when (response.status) {
             HttpStatusCode.OK -> {
@@ -115,7 +115,7 @@ class RestDataSource(
     }
 
     suspend fun updateUserProfile(profile: Profile) = try {
-        val response = client.put("$endpointUrl/self/profile") {
+        val response = client.put("$endpointUrl/profile") {
             contentType(ContentType.Application.Json)
             setBody(profile)
         }
@@ -139,7 +139,7 @@ class RestDataSource(
 
     suspend fun updateUserProfilePhoto(photo: ByteArray) = try {
         val response = client.submitFormWithBinaryData(
-            "$endpointUrl/self/profile/photo",
+            "$endpointUrl/profile/photo",
             formData {
                 append("image", photo, Headers.build {
                     append(HttpHeaders.ContentType, "image/jpeg")
@@ -167,9 +167,9 @@ class RestDataSource(
 
     suspend fun createUser(email: String, displayName: String, password: String): Result<Unit> =
         try {
-            val response = client.post("$endpointUrl/auth/signup") {
+            val response = client.post("$endpointUrl/auth/register") {
                 contentType(ContentType.Application.Json)
-                setBody(SignUpCredentials(email, displayName, password))
+                setBody(RegisterCredentials(email, displayName, password))
             }
 
             when (response.status) {
@@ -312,7 +312,7 @@ class RestDataSource(
     }
 
     suspend fun getLists(): Result<List<TaskList>> = try {
-        val response = client.get("$endpointUrl/self/lists")
+        val response = client.get("$endpointUrl/lists")
 
         when (response.status) {
             HttpStatusCode.OK -> {
@@ -333,7 +333,7 @@ class RestDataSource(
     }
 
     suspend fun createList(taskList: TaskList): Result<Unit> = try {
-        val response = client.post("$endpointUrl/self/lists") {
+        val response = client.post("$endpointUrl/lists") {
             contentType(ContentType.Application.Json)
             setBody(taskList)
         }
@@ -356,7 +356,7 @@ class RestDataSource(
     }
 
     suspend fun updateList(listId: String, taskList: TaskList): Result<Unit> = try {
-        val response = client.put("$endpointUrl/self/lists/$listId") {
+        val response = client.put("$endpointUrl/lists/$listId") {
             contentType(ContentType.Application.Json)
             setBody(taskList)
         }
@@ -379,7 +379,7 @@ class RestDataSource(
     }
 
     suspend fun deleteList(listId: String): Result<Unit> = try {
-        val response = client.delete("$endpointUrl/self/lists/$listId")
+        val response = client.delete("$endpointUrl/lists/$listId")
 
         when (response.status) {
             HttpStatusCode.Accepted -> {
@@ -543,7 +543,7 @@ class RestDataSource(
     }
 
     suspend fun clearCompletedTasks(listId: String): Result<Unit> = try {
-        val response = client.post("$endpointUrl/lists/$listId/clear")
+        val response = client.post("$endpointUrl/lists/$listId/tasks/clear")
 
         when (response.status) {
             HttpStatusCode.OK -> {

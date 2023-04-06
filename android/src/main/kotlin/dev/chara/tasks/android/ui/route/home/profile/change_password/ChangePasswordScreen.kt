@@ -76,7 +76,7 @@ fun ChangePasswordScreen(
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
-                if (state is ChangePasswordUiState.Loading) {
+                if (state.isLoading) {
                     LinearProgressIndicator(modifier = Modifier.fillMaxWidth())
                 }
                 ChangePasswordForm(
@@ -84,7 +84,7 @@ fun ChangePasswordScreen(
                     newPassword = newPassword,
                     onCurrentPasswordChanged = { currentPassword = it },
                     onNewPasswordChanged = { newPassword = it },
-                    changePasswordPending = state is ChangePasswordUiState.Loading,
+                    changePasswordPending = state.isLoading,
                     onChangePasswordClicked = {
                         onChangePasswordClicked(
                             currentPassword,
@@ -101,7 +101,7 @@ fun ChangePasswordScreen(
 @Composable
 private fun Preview_SignUpScreen() {
     ChangePasswordScreen(
-        ChangePasswordUiState.PasswordNotChanged,
+        ChangePasswordUiState(),
         snackbarHostState = SnackbarHostState(),
         onUpClicked = {},
         onChangePasswordClicked = { _, _ -> },

@@ -3,9 +3,10 @@ package dev.chara.tasks.viewmodel.home.list_details
 import dev.chara.tasks.data.Repository
 import dev.chara.tasks.model.Task
 import dev.chara.tasks.model.TaskList
-import dev.chara.tasks.network.ConnectivityStatusManager
 import dev.chara.tasks.viewmodel.util.SnackbarMessage
 import dev.chara.tasks.viewmodel.util.emitAsMessage
+import dev.icerock.moko.mvvm.flow.cFlow
+import dev.icerock.moko.mvvm.flow.cStateFlow
 import dev.icerock.moko.mvvm.viewmodel.ViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -20,13 +21,12 @@ import org.koin.core.component.inject
 class ListDetailsViewModel(private val listId: String) : ViewModel(), KoinComponent {
 
     private val repository: Repository by inject()
-    private val connectivityStatusManager: ConnectivityStatusManager by inject()
 
-    private var _uiState = MutableStateFlow<ListDetailsUiState>(ListDetailsUiState.Loading)
-    val uiState = _uiState.asStateFlow()
+    private var _uiState = MutableStateFlow(ListDetailsUiState(isLoading = true, firstLoad = true))
+    val uiState = _uiState.asStateFlow().cStateFlow()
 
     private val _messages = MutableSharedFlow<SnackbarMessage>()
-    val messages = _messages.asSharedFlow()
+    val messages = _messages.asSharedFlow().cFlow()
 
     init {
         viewModelScope.launch {
@@ -34,18 +34,14 @@ class ListDetailsViewModel(private val listId: String) : ViewModel(), KoinCompon
                 repository.getListById(listId),
                 repository.getTasksByList(listId, isCompleted = false),
                 repository.getTasksByList(listId, isCompleted = true),
-                connectivityStatusManager.isInternetConnected,
-            ) { selectedList, currentTasks, completedTasks, isInternetConnected ->
-                if (selectedList != null) {
-                    ListDetailsUiState.Loaded(
-                        selectedList = selectedList,
-                        currentTasks = currentTasks,
-                        completedTasks = completedTasks,
-                        isInternetConnected = isInternetConnected
-                    )
-                } else {
-                    ListDetailsUiState.NotFound
-                }
+            ) { selectedList, currentTasks, completedTasks ->
+                ListDetailsUiState(
+                    isLoading = false,
+                    firstLoad = false,
+                    selectedList = selectedList,
+                    currentTasks = currentTasks,
+                    completedTasks = completedTasks
+                )
             }.collect {
                 _uiState.value = it
             }
@@ -54,16 +50,12 @@ class ListDetailsViewModel(private val listId: String) : ViewModel(), KoinCompon
 
     fun refreshCache() {
         viewModelScope.launch {
-            if (_uiState.value is ListDetailsUiState.Loaded) {
-                val oldState = _uiState.value as ListDetailsUiState.Loaded
+            _uiState.value = _uiState.value.copy(isLoading = true)
 
-                _uiState.value = oldState.copy(isRefreshing = true)
+            val result = repository.refresh()
+            _messages.emitAsMessage(result)
 
-                val result = repository.refresh()
-                _messages.emitAsMessage(result)
-
-                _uiState.value = oldState.copy(isRefreshing = false)
-            }
+            _uiState.value = _uiState.value.copy(isLoading = false)
         }
     }
 
@@ -98,7 +90,8 @@ class ListDetailsViewModel(private val listId: String) : ViewModel(), KoinCompon
         if (fromIndex == toIndex) return
 
         viewModelScope.launch {
-            val result = repository.reorderTask(listId, taskId, fromIndex, toIndex, lastModified)
+            val result =
+                repository.reorderTask(listId, taskId, fromIndex, toIndex, lastModified)
             _messages.emitAsMessage(result)
         }
     }

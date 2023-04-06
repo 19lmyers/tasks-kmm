@@ -1,16 +1,17 @@
 package dev.chara.tasks.android.ui.route.settings
 
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHostState
-import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
-import dev.chara.tasks.viewmodel.settings.SettingsUiState
 import dev.chara.tasks.viewmodel.settings.SettingsViewModel
 
 @Composable
@@ -22,9 +23,9 @@ fun SettingsRoute(
 
     val snackbarHostState = remember { SnackbarHostState() }
 
-    if (state.value is SettingsUiState.Loaded) {
+    if (!state.value.firstLoad) {
         SettingsScreen(
-            state.value as SettingsUiState.Loaded,
+            state.value,
             snackbarHostState,
             onUpClicked = {
                 navigateUp()
@@ -46,8 +47,8 @@ fun SettingsRoute(
             }
         )
     } else {
-        Surface(modifier = Modifier.fillMaxSize()) {
-            // Placeholder
+        Box(modifier = Modifier.fillMaxSize()) {
+            CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
         }
     }
 

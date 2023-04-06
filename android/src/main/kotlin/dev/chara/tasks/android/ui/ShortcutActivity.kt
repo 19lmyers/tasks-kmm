@@ -2,6 +2,7 @@ package dev.chara.tasks.android.ui
 
 import android.os.Bundle
 import android.widget.Toast
+import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.padding
@@ -14,7 +15,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.core.view.WindowCompat
-import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import dev.chara.tasks.android.ui.component.util.MaterialDialog
@@ -22,11 +22,10 @@ import dev.chara.tasks.android.ui.route.CreateTaskDialog
 import dev.chara.tasks.android.ui.theme.AppTheme
 import dev.chara.tasks.model.Task
 import dev.chara.tasks.model.Theme
-import dev.chara.tasks.viewmodel.shortcut.ShortcutUiState
 import dev.chara.tasks.viewmodel.shortcut.ShortcutViewModel
 import kotlinx.datetime.Clock
 
-class ShortcutActivity : FragmentActivity() {
+class ShortcutActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,7 +33,7 @@ class ShortcutActivity : FragmentActivity() {
         WindowCompat.setDecorFitsSystemWindows(window, false)
 
         setContent {
-            val viewModel: ShortcutViewModel by viewModel()
+            val viewModel: ShortcutViewModel = viewModel()
 
             val state by viewModel.uiState.collectAsStateWithLifecycle()
 
@@ -51,9 +50,7 @@ class ShortcutActivity : FragmentActivity() {
                 .collectAsStateWithLifecycle(initialValue = false)
 
             AppTheme(darkTheme = isDarkTheme, vibrantColors = vibrantColors) {
-                if (state is ShortcutUiState.Authenticated) {
-                    val loadedState = state as ShortcutUiState.Authenticated
-
+                if (!state.isLoading && state.isAuthenticated) {
                     var creationInProgress by remember { mutableStateOf(false) }
 
                     if (creationInProgress) {
@@ -66,11 +63,16 @@ class ShortcutActivity : FragmentActivity() {
                             )
                         }
                     } else {
+                        if (state.taskLists.isEmpty()) {
+                            Toast.makeText(this, "Create a list first", Toast.LENGTH_SHORT).show()
+                            finish()
+                        }
+
                         CreateTaskDialog(
-                            taskLists = loadedState.taskLists,
+                            taskLists = state.taskLists,
                             current = Task(
                                 id = "",
-                                listId = loadedState.taskLists.first().id,
+                                listId = state.taskLists.first().id,
                                 label = "",
                                 lastModified = Clock.System.now()
                             ),
@@ -83,7 +85,7 @@ class ShortcutActivity : FragmentActivity() {
                             }
                         )
                     }
-                } else if (state is ShortcutUiState.NotAuthenticated) {
+                } else if (!state.isLoading) {
                     Toast.makeText(this, "Log in to create tasks", Toast.LENGTH_SHORT).show()
                     finish()
                 }
