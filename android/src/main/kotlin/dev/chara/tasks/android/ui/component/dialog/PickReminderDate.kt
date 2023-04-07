@@ -35,7 +35,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
-import dev.chara.tasks.util.time.FriendlyInstantFormatter
+import dev.chara.tasks.util.FriendlyDateFormat
 import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDateTime
@@ -75,7 +75,7 @@ fun PickReminderDateDialog(onDismiss: () -> Unit, onConfirm: (LocalDateTime) -> 
     }
 
     val context = LocalContext.current
-    val formatter = FriendlyInstantFormatter(context)
+    val formatter = FriendlyDateFormat(context)
 
     DatePickerDialog(
         onDismiss = onDismiss,

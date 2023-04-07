@@ -71,7 +71,7 @@ import dev.chara.tasks.android.ui.component.dialog.PickDueDateDialog
 import dev.chara.tasks.android.ui.component.dialog.PickReminderDateDialog
 import dev.chara.tasks.model.Task
 import dev.chara.tasks.model.TaskList
-import dev.chara.tasks.util.time.FriendlyInstantFormatter
+import dev.chara.tasks.util.FriendlyDateFormat
 import dev.chara.tasks.viewmodel.home.task_details.TaskDetailsUiState
 import kotlinx.datetime.Clock
 import kotlinx.datetime.TimeZone
@@ -514,7 +514,7 @@ private fun TaskDetailsForm(
         },
     )
 
-    val formatter = FriendlyInstantFormatter(context)
+    val formatter = FriendlyDateFormat(context)
     val currentTime = Clock.System.now()
 
     val reminderColors = if (task.reminderDate == null) {

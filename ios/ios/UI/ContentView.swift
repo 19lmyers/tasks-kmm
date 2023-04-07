@@ -10,32 +10,24 @@ import SwiftUI
 
 struct ContentView: View {
     var onCreateTaskPressed = {}
-
-    @State var showCreateTaskDialog = false
+    
+    @State var showAuthenticationFlow = false
 
     var body: some View {
         NavigationView {
-            HomeView()
-                .navigationTitle("Tasks")
-                .toolbar {
-                    ToolbarItem(placement: .navigationBarTrailing) {
-                        Button(action: {
-                            showCreateTaskDialog = true
-                        }) {
-                            Image(systemName: "plus")
-                                .foregroundColor(.accentColor)
-                        }.sheet(isPresented: $showCreateTaskDialog) {
-                            Text("TODO show create task sheet")
-                                .presentationDetents([.medium])
-                        }
+            if (showAuthenticationFlow) {
+                WelcomeView(
+                    navigateToHome: {
+                        showAuthenticationFlow = false
                     }
-                }
+                )
+            } else {
+                HomeRoute(
+                    navigateToWelcome: {
+                        showAuthenticationFlow = true
+                    }
+                )
+            }
         }
-    }
-}
-
-struct ContentView_Previews: PreviewProvider {
-    static var previews: some View {
-        ContentView()
     }
 }

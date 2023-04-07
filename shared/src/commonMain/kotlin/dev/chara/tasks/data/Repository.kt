@@ -14,7 +14,7 @@ import dev.chara.tasks.model.Task
 import dev.chara.tasks.model.TaskList
 import dev.chara.tasks.model.Theme
 import dev.chara.tasks.model.toModel
-import dev.chara.tasks.util.firebase.FirebaseWrapper
+import dev.chara.tasks.util.FirebaseWrapper
 import io.github.aakira.napier.Napier
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
@@ -48,7 +48,9 @@ class Repository(
                 FirebaseWrapper.setUserId(userId)
 
                 val fcmToken = FirebaseWrapper.getMessagingToken()
-                linkFCMToken(fcmToken)
+                if (fcmToken != null) {
+                    linkFCMToken(fcmToken)
+                }
 
                 refreshUserProfile()
                 refreshCache().with(tokenPair)
@@ -72,6 +74,9 @@ class Repository(
         restDataSource.resetPassword(resetToken, newPassword).toDataResult()
 
     suspend fun logout() {
+        FirebaseWrapper.getMessagingToken()?.apply {
+            restDataSource.invalidateFcmToken(this)
+        }
         preferenceDataSource.clearAuthFields()
         cacheDataSource.deleteAll()
 

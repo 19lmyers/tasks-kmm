@@ -4,7 +4,7 @@ import com.chrynan.validator.EmailValidator
 import com.chrynan.validator.ValidationResult
 import dev.chara.tasks.data.Repository
 import dev.chara.tasks.model.ValidationFailure
-import dev.chara.tasks.viewmodel.util.SnackbarMessage
+import dev.chara.tasks.viewmodel.util.PopupMessage
 import dev.chara.tasks.viewmodel.util.emitAsMessage
 import dev.icerock.moko.mvvm.flow.cFlow
 import dev.icerock.moko.mvvm.flow.cStateFlow
@@ -25,7 +25,7 @@ class ForgotPasswordViewModel : ViewModel(), KoinComponent {
     private var _uiState = MutableStateFlow(ForgotPasswordUiState())
     val uiState = _uiState.asStateFlow().cStateFlow()
 
-    private val _messages = MutableSharedFlow<SnackbarMessage>()
+    private val _messages = MutableSharedFlow<PopupMessage>()
     val messages = _messages.asSharedFlow().cFlow()
 
     fun validateEmail(email: String): Result<String> {

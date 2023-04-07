@@ -2,7 +2,7 @@ package dev.chara.tasks.viewmodel.home.lists
 
 import dev.chara.tasks.data.Repository
 import dev.chara.tasks.model.TaskList
-import dev.chara.tasks.viewmodel.util.SnackbarMessage
+import dev.chara.tasks.viewmodel.util.PopupMessage
 import dev.chara.tasks.viewmodel.util.emitAsMessage
 import dev.icerock.moko.mvvm.flow.cFlow
 import dev.icerock.moko.mvvm.flow.cStateFlow
@@ -22,7 +22,7 @@ class ListsViewModel : ViewModel(), KoinComponent {
     private var _uiState = MutableStateFlow(ListsUiState(isLoading = true, firstLoad = true))
     val uiState = _uiState.asStateFlow().cStateFlow()
 
-    private val _messages = MutableSharedFlow<SnackbarMessage>()
+    private val _messages = MutableSharedFlow<PopupMessage>()
     val messages = _messages.asSharedFlow().cFlow()
 
     init {

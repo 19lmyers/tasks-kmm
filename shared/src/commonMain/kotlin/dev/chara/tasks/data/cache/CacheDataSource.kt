@@ -9,7 +9,6 @@ import app.cash.sqldelight.db.SqlDriver
 import dev.chara.tasks.data.cache.sql.CacheDatabase
 import dev.chara.tasks.model.Task
 import dev.chara.tasks.model.TaskList
-import dev.chara.tasks.util.time.SQLInstantFormatter
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.map
 import kotlinx.datetime.Instant
@@ -23,11 +22,18 @@ expect class DriverFactory {
     fun create(): SqlDriver
 }
 
+/**
+ * Kotlin uses ISO-8601. SQLite expects a subset.
+ * We have to manually convert between them.
+ */
 private val instantAdapter = object : ColumnAdapter<Instant, String> {
-    val formatter = SQLInstantFormatter()
+    override fun decode(databaseValue: String): Instant = Instant.parse(
+        databaseValue.replaceFirst(' ', 'T').plus("Z")
+    )
 
-    override fun decode(databaseValue: String): Instant = formatter.decode(databaseValue)
-    override fun encode(value: Instant): String = formatter.encode(value)
+    override fun encode(value: Instant): String = value.toString()
+        .replace('T', ' ')
+        .removeSuffix("Z")
 }
 
 class CacheDataSource(driverFactory: DriverFactory) {

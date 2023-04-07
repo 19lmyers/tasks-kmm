@@ -32,9 +32,6 @@ fun ChangePasswordRoute(
             },
             onChangePasswordClicked = { current, new ->
                 presenter.changePassword(current, new)
-            },
-            validatePassword = {
-                presenter.validatePassword(it)
             }
         )
     }

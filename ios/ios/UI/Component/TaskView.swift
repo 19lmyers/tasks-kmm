@@ -36,10 +36,10 @@ struct TaskView_Previews: PreviewProvider {
                 isCompleted: false,
                 isStarred: false,
                 details: nil,
-                reminderDate: ConvertersKt.toInstant(NSDate.now),
-                dueDate: ConvertersKt.toInstant(NSDate.now),
-                dateCreated: ConvertersKt.toInstant(NSDate.now),
-                lastModified: ConvertersKt.toInstant(NSDate.now),
+                reminderDate: NSDateKt.toInstant(NSDate.now),
+                dueDate: NSDateKt.toInstant(NSDate.now),
+                dateCreated: NSDateKt.toInstant(NSDate.now),
+                lastModified: NSDateKt.toInstant(NSDate.now),
                 ordinal: 1
             )
         )

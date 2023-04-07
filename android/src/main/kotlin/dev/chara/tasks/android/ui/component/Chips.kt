@@ -19,7 +19,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import dev.chara.tasks.android.model.vector
 import dev.chara.tasks.model.TaskList
-import dev.chara.tasks.util.time.FriendlyInstantFormatter
+import dev.chara.tasks.util.FriendlyDateFormat
 import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
 
@@ -72,7 +72,7 @@ fun ListChip(modifier: Modifier = Modifier, list: TaskList?, onClick: (TaskList?
 @Composable
 fun ReminderChip(reminderDate: Instant?, selectable: Boolean, onClick: () -> Unit) {
     val context = LocalContext.current
-    val formatter = FriendlyInstantFormatter(context)
+    val formatter = FriendlyDateFormat(context)
     val currentTime = Clock.System.now()
 
     val chipColors = if (reminderDate != null && reminderDate < currentTime) {
@@ -115,7 +115,7 @@ fun ReminderChip(reminderDate: Instant?, selectable: Boolean, onClick: () -> Uni
 @Composable
 fun DueDateChip(dueDate: Instant?, selectable: Boolean, onClick: () -> Unit) {
     val context = LocalContext.current
-    val formatter = FriendlyInstantFormatter(context)
+    val formatter = FriendlyDateFormat(context)
     val currentTime = Clock.System.now()
 
     val chipColors = if (dueDate != null && dueDate < currentTime) {

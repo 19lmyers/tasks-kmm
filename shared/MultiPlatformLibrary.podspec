@@ -9,7 +9,10 @@ Pod::Spec.new do |spec|
     spec.vendored_frameworks      = 'build/cocoapods/framework/MultiPlatformLibrary.framework'
     spec.libraries                = 'c++'
     spec.ios.deployment_target = '16.0'
-                
+    spec.dependency 'FirebaseAnalytics'
+    spec.dependency 'FirebaseCore'
+    spec.dependency 'FirebaseCrashlytics'
+    spec.dependency 'FirebaseMessaging'
                 
     spec.pod_target_xcconfig = {
         'KOTLIN_PROJECT_PATH' => ':shared',

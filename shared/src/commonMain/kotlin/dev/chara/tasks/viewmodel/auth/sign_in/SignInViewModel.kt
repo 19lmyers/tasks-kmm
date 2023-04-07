@@ -2,9 +2,11 @@ package dev.chara.tasks.viewmodel.auth.sign_in
 
 import com.chrynan.validator.EmailValidator
 import com.chrynan.validator.ValidationResult
+import com.github.michaelbull.result.Err
+import com.github.michaelbull.result.Ok
+import com.github.michaelbull.result.Result
 import dev.chara.tasks.data.Repository
-import dev.chara.tasks.model.ValidationFailure
-import dev.chara.tasks.viewmodel.util.SnackbarMessage
+import dev.chara.tasks.viewmodel.util.PopupMessage
 import dev.chara.tasks.viewmodel.util.emitAsMessage
 import dev.icerock.moko.mvvm.flow.cFlow
 import dev.icerock.moko.mvvm.flow.cStateFlow
@@ -25,25 +27,28 @@ class SignInViewModel : ViewModel(), KoinComponent {
     private var _uiState = MutableStateFlow(SignInUiState())
     val uiState = _uiState.asStateFlow().cStateFlow()
 
-    private val _messages = MutableSharedFlow<SnackbarMessage>()
+    private val _messages = MutableSharedFlow<PopupMessage>()
     val messages = _messages.asSharedFlow().cFlow()
 
-    fun validateEmail(email: String): Result<String> {
+    fun validateEmail(email: String): Result<Unit, String> {
         val result = emailValidator.validate(email)
 
         return if (result is ValidationResult.Invalid) {
-            Result.failure(ValidationFailure(result.errors.first().details ?: "Invalid email"))
+            Err(result.errors.first().details ?: "Invalid email")
         } else {
-            Result.success(email)
+            Ok(Unit)
         }
     }
 
-    fun signIn(username: String, password: String) {
+    fun signIn(email: String, password: String) {
         viewModelScope.launch {
-            val result = repository.authenticateUser(username, password)
+            _uiState.value = _uiState.value.copy(isLoading = true)
+
+            val result = repository.authenticateUser(email, password)
             _messages.emitAsMessage(result)
 
-            _uiState.value = _uiState.value.copy(isLoading = false, isAuthenticated = result.isSuccess)
+            _uiState.value =
+                _uiState.value.copy(isLoading = false, isAuthenticated = result.isSuccess)
         }
     }
 }

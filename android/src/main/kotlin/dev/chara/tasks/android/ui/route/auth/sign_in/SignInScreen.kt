@@ -2,10 +2,11 @@ package dev.chara.tasks.android.ui.route.auth.sign_in
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -13,6 +14,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
+import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.Icon
@@ -25,6 +27,7 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -37,6 +40,7 @@ import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
@@ -44,11 +48,15 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.github.michaelbull.result.Err
+import com.github.michaelbull.result.Ok
+import com.github.michaelbull.result.Result
+import com.github.michaelbull.result.unwrapError
 import dev.chara.tasks.viewmodel.auth.sign_in.SignInUiState
 
 
 @OptIn(
-    ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class
+    ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class, ExperimentalComposeUiApi::class
 )
 @Composable
 fun SignInScreen(
@@ -57,15 +65,22 @@ fun SignInScreen(
     onUpClicked: () -> Unit,
     onForgotPasswordClicked: () -> Unit,
     onSignInClicked: (String, String) -> Unit,
-    validateEmail: (String) -> Result<String>
+    validateEmail: (String) -> Result<Unit, String>
 ) {
+    val keyboardController = LocalSoftwareKeyboardController.current
+
     var email by rememberSaveable { mutableStateOf("") }
     var password by rememberSaveable { mutableStateOf("") }
+
+    val emailResult = validateEmail(email)
+
+    val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
 
     Scaffold(
         snackbarHost = { SnackbarHost(snackbarHostState) },
         topBar = {
             TopAppBar(
+                scrollBehavior = scrollBehavior,
                 title = { Text("Sign In") },
                 navigationIcon = {
                     IconButton(onClick = onUpClicked) {
@@ -74,9 +89,34 @@ fun SignInScreen(
                 }
             )
         },
+        bottomBar = {
+            BottomAppBar(modifier = Modifier.imePadding()) {
+                TextButton(
+                    modifier = Modifier.padding(16.dp, 0.dp),
+                    onClick = onForgotPasswordClicked,
+                    enabled = !state.isLoading
+                ) {
+                    Text(text = "Forgot password?")
+                }
+
+                Spacer(Modifier.weight(1f, true))
+
+                FilledTonalButton(
+                    modifier = Modifier.padding(16.dp, 8.dp),
+                    onClick = {
+                        keyboardController?.hide()
+                        onSignInClicked(email, password)
+                    },
+                    enabled = emailResult is Err && password.isNotBlank() && !state.isLoading
+                ) {
+                    Text(text = "Sign In")
+                }
+            }
+        },
         content = { innerPadding ->
             Column(
                 modifier = Modifier
+                    .nestedScroll(scrollBehavior.nestedScrollConnection)
                     .padding(innerPadding)
                     .consumeWindowInsets(innerPadding),
                 verticalArrangement = Arrangement.Center,
@@ -90,10 +130,11 @@ fun SignInScreen(
                     password = password,
                     onEmailChanged = { email = it },
                     onPasswordChanged = { password = it },
-                    onForgotPasswordClicked = onForgotPasswordClicked,
                     signInPending = state.isLoading,
-                    onSignInClicked = { onSignInClicked(email, password) },
-                    validateEmail = { validateEmail(it) }
+                    onSignInClicked = {
+                        onSignInClicked(email, password)
+                    },
+                    emailResult = emailResult
                 )
             }
         }
@@ -109,26 +150,23 @@ private fun Preview_SignInScreen() {
         onUpClicked = {},
         onForgotPasswordClicked = {},
         onSignInClicked = { _, _ -> },
-        validateEmail = { Result.success("email@password.com") }
+        validateEmail = { Ok(Unit) }
     )
 }
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
-private fun ColumnScope.SignInForm(
+private fun SignInForm(
     email: String,
     password: String,
     onEmailChanged: (String) -> Unit,
     onPasswordChanged: (String) -> Unit,
-    onForgotPasswordClicked: () -> Unit,
     signInPending: Boolean,
     onSignInClicked: () -> Unit,
-    validateEmail: (String) -> Result<String>
+    emailResult: Result<Unit, String>
 ) {
     val keyboardController = LocalSoftwareKeyboardController.current
     val focusRequester = remember { FocusRequester() }
-
-    val emailResult = validateEmail(email)
 
     OutlinedTextField(
         modifier = Modifier
@@ -142,10 +180,10 @@ private fun ColumnScope.SignInForm(
         keyboardOptions = KeyboardOptions(
             keyboardType = KeyboardType.Email, imeAction = ImeAction.Next
         ),
-        isError = email.isNotEmpty() && emailResult.isFailure,
+        isError = email.isNotEmpty() && emailResult is Err,
         supportingText = {
-            if (email.isNotEmpty() && emailResult.isFailure) {
-                Text(text = emailResult.exceptionOrNull()?.message ?: "Invalid email")
+            if (email.isNotEmpty() && emailResult is Err) {
+                Text(text = emailResult.unwrapError())
             }
         }
     )
@@ -166,7 +204,7 @@ private fun ColumnScope.SignInForm(
         ),
         keyboardActions = KeyboardActions(
             onDone = {
-                if (emailResult.isSuccess && password.isNotBlank() && !signInPending) {
+                if (emailResult is Ok && password.isNotBlank() && !signInPending) {
                     keyboardController?.hide()
                     onSignInClicked()
                 }
@@ -183,28 +221,6 @@ private fun ColumnScope.SignInForm(
             }
         }
     )
-
-    TextButton(
-        modifier = Modifier
-            .padding(16.dp, 0.dp)
-            .align(Alignment.Start),
-        onClick = onForgotPasswordClicked
-    ) {
-        Text(text = "Forgot password?")
-    }
-
-    FilledTonalButton(
-        modifier = Modifier
-            .padding(16.dp, 8.dp)
-            .fillMaxWidth(),
-        onClick = {
-            keyboardController?.hide()
-            onSignInClicked()
-        },
-        enabled = emailResult.isSuccess && password.isNotBlank() && !signInPending
-    ) {
-        Text(text = "Sign In")
-    }
 
     LaunchedEffect(focusRequester) {
         focusRequester.requestFocus()

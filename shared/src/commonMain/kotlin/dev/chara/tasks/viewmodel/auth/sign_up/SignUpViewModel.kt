@@ -2,11 +2,14 @@ package dev.chara.tasks.viewmodel.auth.sign_up
 
 import com.chrynan.validator.EmailValidator
 import com.chrynan.validator.ValidationResult
+import com.github.michaelbull.result.Err
+import com.github.michaelbull.result.Ok
+import com.github.michaelbull.result.Result
 import dev.chara.tasks.data.Repository
-import dev.chara.tasks.model.ValidationFailure
-import dev.chara.tasks.util.validate.PasswordValidator
-import dev.chara.tasks.viewmodel.util.SnackbarMessage
+import dev.chara.tasks.viewmodel.util.PopupMessage
 import dev.chara.tasks.viewmodel.util.emitAsMessage
+import dev.icerock.moko.mvvm.flow.cFlow
+import dev.icerock.moko.mvvm.flow.cStateFlow
 import dev.icerock.moko.mvvm.viewmodel.ViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -20,36 +23,27 @@ class SignUpViewModel : ViewModel(), KoinComponent {
     private val repository: Repository by inject()
 
     private val emailValidator = EmailValidator()
-    private val passwordValidator = PasswordValidator()
 
     private var _uiState = MutableStateFlow(SignUpUiState())
-    val uiState = _uiState.asStateFlow()
+    val uiState = _uiState.asStateFlow().cStateFlow()
 
-    private val _messages = MutableSharedFlow<SnackbarMessage>()
-    val messages = _messages.asSharedFlow()
+    private val _messages = MutableSharedFlow<PopupMessage>()
+    val messages = _messages.asSharedFlow().cFlow()
 
-    fun validateEmail(email: String): Result<String> {
+    fun validateEmail(email: String): Result<Unit, String> {
         val result = emailValidator.validate(email)
 
         return if (result is ValidationResult.Invalid) {
-            Result.failure(ValidationFailure(result.errors.first().details ?: "Invalid email"))
+            Err(result.errors.first().details ?: "Invalid email")
         } else {
-            Result.success(email)
-        }
-    }
-
-    fun validatePassword(password: String): Result<String> {
-        val result = passwordValidator.validate(password)
-
-        return if (result is ValidationResult.Invalid) {
-            Result.failure(ValidationFailure(result.errors.first().details ?: "Invalid password"))
-        } else {
-            Result.success(password)
+            Ok(Unit)
         }
     }
 
     fun signUp(email: String, displayName: String, password: String) {
         viewModelScope.launch {
+            _uiState.value = _uiState.value.copy(isLoading = true)
+
             val result = repository.createUser(email, displayName, password)
             _messages.emitAsMessage(result)
 

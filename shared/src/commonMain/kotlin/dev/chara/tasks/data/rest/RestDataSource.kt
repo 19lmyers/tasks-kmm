@@ -583,6 +583,28 @@ class RestDataSource(
     } catch (ex: Throwable) {
         Result.failure(ex)
     }
+
+    suspend fun invalidateFcmToken(fcmToken: String): Result<Unit> = try {
+        val response = client.post("$endpointUrl/fcm/invalidate") {
+            setBody(fcmToken)
+        }
+
+        when (response.status) {
+            HttpStatusCode.OK -> {
+                Result.success(Unit)
+            }
+
+            HttpStatusCode.BadRequest -> {
+                Result.failure(ApiError.InvalidQuery(response.body()))
+            }
+
+            else -> {
+                Result.failure(response.body())
+            }
+        }
+    } catch (ex: Throwable) {
+        Result.failure(ex)
+    }
 }
 
 data class Endpoint(val url: String)

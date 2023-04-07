@@ -1,6 +1,6 @@
 package dev.chara.tasks.logging
 
-import dev.chara.tasks.util.firebase.FirebaseWrapper
+import dev.chara.tasks.util.FirebaseWrapper
 import io.github.aakira.napier.Antilog
 import io.github.aakira.napier.LogLevel
 

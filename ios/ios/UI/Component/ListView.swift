@@ -49,8 +49,8 @@ struct ListView_Previews: PreviewProvider {
                 showIndexNumbers: false,
                 sortType: TaskList.SortType.ordinal,
                 sortDirection: TaskList.SortDirection.ascending,
-                dateCreated: ConvertersKt.toInstant(NSDate.now),
-                lastModified: ConvertersKt.toInstant(NSDate.now)
+                dateCreated: NSDateKt.toInstant(NSDate.now),
+                lastModified: NSDateKt.toInstant(NSDate.now)
             )
         )
     }

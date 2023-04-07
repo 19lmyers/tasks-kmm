@@ -51,7 +51,6 @@ fun ChangePasswordScreen(
     snackbarHostState: SnackbarHostState,
     onUpClicked: () -> Unit,
     onChangePasswordClicked: (String, String) -> Unit,
-    validatePassword: (String) -> Result<String>
 ) {
     var currentPassword by rememberSaveable { mutableStateOf("") }
     var newPassword by rememberSaveable { mutableStateOf("") }
@@ -90,8 +89,7 @@ fun ChangePasswordScreen(
                             currentPassword,
                             newPassword
                         )
-                    },
-                    validatePassword = { validatePassword(it) }
+                    }
                 )
             }
         })
@@ -105,7 +103,6 @@ private fun Preview_SignUpScreen() {
         snackbarHostState = SnackbarHostState(),
         onUpClicked = {},
         onChangePasswordClicked = { _, _ -> },
-        validatePassword = { Result.success("") }
     )
 }
 
@@ -118,7 +115,6 @@ private fun ChangePasswordForm(
     onNewPasswordChanged: (String) -> Unit,
     changePasswordPending: Boolean,
     onChangePasswordClicked: () -> Unit,
-    validatePassword: (String) -> Result<String>
 ) {
     val keyboardController = LocalSoftwareKeyboardController.current
     val focusRequester = remember { FocusRequester() }
@@ -152,8 +148,6 @@ private fun ChangePasswordForm(
 
     var newPasswordVisible by rememberSaveable { mutableStateOf(false) }
 
-    val newPasswordResult = validatePassword(newPassword)
-
     OutlinedTextField(
         modifier = Modifier
             .padding(16.dp, 8.dp)
@@ -168,7 +162,7 @@ private fun ChangePasswordForm(
         ),
         keyboardActions = KeyboardActions(
             onDone = {
-                if (currentPassword.isNotBlank() && newPasswordResult.isSuccess && !changePasswordPending) {
+                if (currentPassword.isNotBlank() && !changePasswordPending) {
                     keyboardController?.hide()
                     onChangePasswordClicked()
                 }
@@ -183,16 +177,6 @@ private fun ChangePasswordForm(
             IconButton(onClick = { newPasswordVisible = !newPasswordVisible }) {
                 Icon(imageVector = image, description)
             }
-        },
-        isError = newPassword.isNotEmpty() && (newPassword == currentPassword || newPasswordResult.isFailure),
-        supportingText = {
-            if (newPassword.isNotEmpty()) {
-                if (newPassword == currentPassword) {
-                    Text(text = "Passwords must not match")
-                } else if (newPasswordResult.isFailure) {
-                    Text(text = newPasswordResult.exceptionOrNull()?.message ?: "Invalid password")
-                }
-            }
         }
     )
 
@@ -204,7 +188,7 @@ private fun ChangePasswordForm(
             keyboardController?.hide()
             onChangePasswordClicked()
         },
-        enabled = currentPassword.isNotBlank() && newPassword.isNotBlank() && newPassword != currentPassword && newPasswordResult.isSuccess && !changePasswordPending
+        enabled = currentPassword.isNotBlank() && newPassword.isNotBlank() && newPassword != currentPassword && !changePasswordPending
     ) {
         Text(text = "Change")
     }

@@ -4,12 +4,14 @@ import SwiftUI
 @main
 struct iOSApp: App {
     init() {
-        InitHelpersKt.doInitKoin(endpointUrl: Configuration.endpointUrl.absoluteString)
+        InitKt.doInitKoin(endpointUrl: Configuration.endpointUrl.absoluteString)
+        
+        InitKt.doInitFirebase()
 
         #if DEBUG
-        InitHelpersKt.doInitNapierDebug()
+        InitKt.doInitNapierDebug()
         #else
-        InitHelpersKt.doInitNapierRelease()
+        InitKt.doInitNapierRelease()
         #endif
     }
 
@@ -19,3 +21,5 @@ struct iOSApp: App {
         }
     }
 }
+
+extension PopupMessage : Identifiable {}

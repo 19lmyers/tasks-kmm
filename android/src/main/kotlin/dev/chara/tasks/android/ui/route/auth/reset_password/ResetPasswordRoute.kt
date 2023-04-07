@@ -43,10 +43,7 @@ fun ResetPasswordRoute(
         snackbarHostState = snackbarHostState,
         onResetClicked = { password ->
             viewModel.resetPassword(password)
-        },
-        validatePassword = {
-            viewModel.validatePassword(it)
-        },
+        }
     )
 
     LaunchedEffect(viewModel.messages) {

@@ -105,7 +105,9 @@ napier = { module = "io.github.aakira:napier", version = "2.6.1" }
 
 navigation-reimagined = { module = "dev.olshevski.navigation:reimagined", version = "1.4.0" }
 
-nbvcxz = { module = "me.gosimple:nbvcxz", version = "1.5.1" }
+nserrorkt = { module = "com.rickclephas.kmp:nserror-kt", version = "0.1.0" }
+
+result = { module = "com.michael-bull.kotlin-result:kotlin-result", version = "1.1.17" }
 
 okio = { module = "com.squareup.okio:okio", version = "3.3.0" }
 

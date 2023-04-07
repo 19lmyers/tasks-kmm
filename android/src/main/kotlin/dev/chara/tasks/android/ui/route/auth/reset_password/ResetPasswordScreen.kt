@@ -52,7 +52,6 @@ fun ResetPasswordScreen(
     state: ResetPasswordUiState,
     snackbarHostState: SnackbarHostState,
     onResetClicked: (String) -> Unit,
-    validatePassword: (String) -> Result<String>,
 ) {
     var password by rememberSaveable { mutableStateOf("") }
 
@@ -79,7 +78,6 @@ fun ResetPasswordScreen(
                     onPasswordChanged = { password = it },
                     resetPending = state.isLoading,
                     onResetClicked = { onResetClicked(password) },
-                    validatePassword = { validatePassword(it) }
                 )
             }
         }
@@ -93,7 +91,6 @@ private fun Preview_ResetPasswordScreen() {
         state = ResetPasswordUiState(),
         snackbarHostState = SnackbarHostState(),
         onResetClicked = {},
-        validatePassword = { Result.success("**********") }
     )
 }
 
@@ -104,14 +101,11 @@ private fun ResetPasswordForm(
     onPasswordChanged: (String) -> Unit,
     resetPending: Boolean,
     onResetClicked: () -> Unit,
-    validatePassword: (String) -> Result<String>
 ) {
     val keyboardController = LocalSoftwareKeyboardController.current
     val focusRequester = remember { FocusRequester() }
 
     var passwordVisible by rememberSaveable { mutableStateOf(false) }
-
-    val passwordResult = validatePassword(password)
 
     OutlinedTextField(
         modifier = Modifier
@@ -128,7 +122,7 @@ private fun ResetPasswordForm(
         ),
         keyboardActions = KeyboardActions(
             onDone = {
-                if (passwordResult.isSuccess && !resetPending) {
+                if (!resetPending) {
                     keyboardController?.hide()
                     onResetClicked()
                 }
@@ -143,12 +137,6 @@ private fun ResetPasswordForm(
             IconButton(onClick = { passwordVisible = !passwordVisible }) {
                 Icon(imageVector = image, description)
             }
-        },
-        isError = password.isNotEmpty() && passwordResult.isFailure,
-        supportingText = {
-            if (password.isNotEmpty() && passwordResult.isFailure) {
-                Text(text = passwordResult.exceptionOrNull()?.message ?: "Invalid password")
-            }
         }
     )
 
@@ -161,7 +149,7 @@ private fun ResetPasswordForm(
             keyboardController?.hide()
             onResetClicked()
         },
-        enabled = passwordResult.isSuccess && !resetPending
+        enabled = password.isNotBlank() && !resetPending
     ) {
         Text(text = "Reset")
     }

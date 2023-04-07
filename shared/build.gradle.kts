@@ -34,11 +34,18 @@ kotlin {
 
         podfile = project.file("../ios/Podfile")
 
+        pod("FirebaseCore")
+        pod("FirebaseAnalytics")
+        pod("FirebaseMessaging")
+        pod("FirebaseCrashlytics")
+
         framework {
             baseName = "MultiPlatformLibrary"
 
             export(libs.moko.mvvm.core)
             export(libs.moko.mvvm.flow)
+
+            export(libs.result)
         }
     }
 
@@ -72,6 +79,8 @@ kotlin {
 
                 implementation(libs.okio)
 
+                api(libs.result)
+
                 implementation(libs.uuid)
 
                 implementation(libs.validator.core)
@@ -89,8 +98,6 @@ kotlin {
                 implementation(libs.bundles.firebase)
 
                 implementation(libs.androidx.lifecycle.viewmodel)
-
-                implementation(libs.nbvcxz)
 
                 implementation(libs.ktor.client.okhttp)
                 implementation(libs.sqldelight.android.driver)
@@ -111,6 +118,8 @@ kotlin {
             dependencies {
                 implementation(libs.ktor.client.darwin)
                 implementation(libs.sqldelight.native.driver)
+
+                implementation(libs.nserrorkt)
             }
         }
 

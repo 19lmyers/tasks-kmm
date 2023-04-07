@@ -36,9 +36,6 @@ fun SignUpRoute(
             },
             validateEmail = {
                 viewModel.validateEmail(it)
-            },
-            validatePassword = {
-                viewModel.validatePassword(it)
             }
         )
     }
