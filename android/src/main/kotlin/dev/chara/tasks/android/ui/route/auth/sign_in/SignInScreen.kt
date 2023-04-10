@@ -107,7 +107,7 @@ fun SignInScreen(
                         keyboardController?.hide()
                         onSignInClicked(email, password)
                     },
-                    enabled = emailResult is Err && password.isNotBlank() && !state.isLoading
+                    enabled = emailResult is Ok && password.isNotBlank() && !state.isLoading
                 ) {
                     Text(text = "Sign In")
                 }

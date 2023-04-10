@@ -405,7 +405,6 @@ class Repository(
                 combine(pinnedLists) { lists ->
                     lists.toList().filter { it.topTasks.isNotEmpty() }
                 }
-
             }
 
     private fun getPinnedList(taskList: TaskList) =

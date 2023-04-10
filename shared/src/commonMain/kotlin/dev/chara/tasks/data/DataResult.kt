@@ -3,6 +3,7 @@ package dev.chara.tasks.data
 import io.github.aakira.napier.Napier
 import kotlin.Result as KotlinResult
 
+@Deprecated(message = "TODO Switch to KotlinX Result")
 sealed class DataResult<T> {
     data class Success<T>(val result: T) : DataResult<T>()
     data class Failure<T>(val message: String?) : DataResult<T>()
@@ -63,6 +64,7 @@ fun <T, R> DataResult<T>.with(value: R): DataResult<R> = fold(
     }
 )
 
+@Deprecated(message = "TODO add better error handling")
 fun getLocalizedErrorMessage(t: Throwable): String {
     return t.message ?: "An unknown error occurred" //TODO more user friendly errors
 }

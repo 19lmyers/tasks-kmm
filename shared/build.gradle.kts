@@ -160,7 +160,7 @@ sqldelight {
             dialect(libs.sqldelight.dialect)
 
             packageName.set("dev.chara.tasks.data.cache.sql")
-            version = 4
+            version = 1
 
             deriveSchemaFromMigrations.set(true)
             verifyMigrations.set(true)

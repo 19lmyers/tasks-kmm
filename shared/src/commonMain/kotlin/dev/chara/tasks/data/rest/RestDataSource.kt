@@ -83,10 +83,9 @@ class RestDataSource(
                             null
                         }
                     }
-                    sendWithoutRequest { request ->
-                        request.url.pathSegments.contains("auth") || request.url.pathSegments.contains(
-                            "photo"
-                        )
+                    sendWithoutRequest {
+                        /* We don't want to hammer the server with credential requests for every request we make */
+                        true
                     }
                 }
             }

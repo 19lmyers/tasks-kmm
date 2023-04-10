@@ -39,9 +39,9 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import dev.chara.tasks.android.R
 import dev.chara.tasks.android.model.navTarget
 import dev.chara.tasks.android.ui.RootNavTarget
+import dev.chara.tasks.android.ui.component.dialog.CreateTaskDialog
 import dev.chara.tasks.android.ui.component.util.MaterialDialog
 import dev.chara.tasks.android.ui.component.util.SnackbarLayout
-import dev.chara.tasks.android.ui.route.CreateTaskDialog
 import dev.chara.tasks.android.ui.route.home.list_details.ListDetailsRoute
 import dev.chara.tasks.android.ui.route.home.profile.UserProfileDialog
 import dev.chara.tasks.android.ui.route.home.task_details.TaskDetailsRoute

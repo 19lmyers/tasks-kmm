@@ -22,18 +22,9 @@ expect class DriverFactory {
     fun create(): SqlDriver
 }
 
-/**
- * Kotlin uses ISO-8601. SQLite expects a subset.
- * We have to manually convert between them.
- */
 private val instantAdapter = object : ColumnAdapter<Instant, String> {
-    override fun decode(databaseValue: String): Instant = Instant.parse(
-        databaseValue.replaceFirst(' ', 'T').plus("Z")
-    )
-
+    override fun decode(databaseValue: String): Instant = Instant.parse(databaseValue)
     override fun encode(value: Instant): String = value.toString()
-        .replace('T', ' ')
-        .removeSuffix("Z")
 }
 
 class CacheDataSource(driverFactory: DriverFactory) {

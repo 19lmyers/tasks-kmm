@@ -1,3 +1,7 @@
+import dev.chara.tasks.model.TaskList.Color;
+import dev.chara.tasks.model.TaskList.Icon;
+import dev.chara.tasks.model.TaskList.SortType;
+import dev.chara.tasks.model.TaskList.SortDirection;
 import kotlinx.datetime.Instant;
 import kotlin.Boolean;
 
@@ -6,12 +10,18 @@ CREATE TABLE TaskList (
 
     title TEXT NOT NULL,
 
+    color TEXT AS Color,
+    icon TEXT AS Icon,
+    description TEXT,
+
     is_pinned INTEGER AS Boolean NOT NULL DEFAULT 0,
+    show_index_numbers INTEGER AS Boolean NOT NULL DEFAULT 0,
 
-    last_modified TEXT AS Instant NOT NULL,
+    sort_type TEXT AS SortType NOT NULL,
+    sort_direction TEXT AS SortDirection NOT NULL,
 
-    CHECK (is_pinned IN (0, 1)),
-    CONSTRAINT last_modified CHECK (last_modified IS datetime(last_modified))
+    date_created TEXT AS Instant NOT NULL,
+    last_modified TEXT AS Instant NOT NULL
 );
 
 CREATE TABLE Task (
@@ -26,13 +36,10 @@ CREATE TABLE Task (
     reminder_date TEXT AS Instant,
     due_date TEXT AS Instant,
 
+    date_created TEXT AS Instant NOT NULL,
     last_modified TEXT AS Instant NOT NULL,
 
-    FOREIGN KEY (list_id) REFERENCES TaskList(id),
+    ordinal INTEGER NOT NULL,
 
-    CHECK (is_completed IN (0, 1)),
-    CHECK (is_starred IN (0, 1)),
-    CONSTRAINT reminder_date CHECK (reminder_date IS datetime(reminder_date)),
-    CONSTRAINT due_date CHECK (due_date IS datetime(due_date)),
-    CONSTRAINT last_modified CHECK (last_modified IS datetime(last_modified))
+    FOREIGN KEY (list_id) REFERENCES TaskList(id)
 );

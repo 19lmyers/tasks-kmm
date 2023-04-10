@@ -17,8 +17,8 @@ import androidx.compose.ui.unit.dp
 import androidx.core.view.WindowCompat
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
+import dev.chara.tasks.android.ui.component.dialog.CreateTaskDialog
 import dev.chara.tasks.android.ui.component.util.MaterialDialog
-import dev.chara.tasks.android.ui.route.CreateTaskDialog
 import dev.chara.tasks.android.ui.theme.AppTheme
 import dev.chara.tasks.model.Task
 import dev.chara.tasks.model.Theme
