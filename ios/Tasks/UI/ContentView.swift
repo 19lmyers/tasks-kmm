@@ -10,24 +10,22 @@ import SwiftUI
 
 struct ContentView: View {
     var onCreateTaskPressed = {}
-    
+
     @State var showAuthenticationFlow = false
 
     var body: some View {
-        NavigationView {
-            if (showAuthenticationFlow) {
-                WelcomeView(
-                    navigateToHome: {
-                        showAuthenticationFlow = false
-                    }
-                )
-            } else {
-                HomeRoute(
-                    navigateToWelcome: {
-                        showAuthenticationFlow = true
-                    }
-                )
-            }
-        }.navigationViewStyle(.stack)
+        if showAuthenticationFlow {
+            WelcomeView(
+                navigateToHome: {
+                    showAuthenticationFlow = false
+                }
+            )
+        } else {
+            HomeRoute(
+                navigateToWelcome: {
+                    showAuthenticationFlow = true
+                }
+            )
+        }
     }
 }

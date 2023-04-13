@@ -45,7 +45,7 @@ struct ModifyListSheet: View {
     }
 
     var body: some View {
-        NavigationView {
+        NavigationStack {
             List {
                 Section {
                     TextField("Title", text: $listTitle, prompt: Text("Enter list title (required)"))

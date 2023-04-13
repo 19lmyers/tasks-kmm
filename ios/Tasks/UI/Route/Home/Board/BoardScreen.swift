@@ -29,49 +29,12 @@ struct BoardScreen: View {
             }
         } else {
             List {
-                ForEach(state.boardSections, id: \.type) { section in
-                    Section(header: Text(section.type.title)) {
-                        ForEach(section.tasks, id: \.id) { task in
-                            let parentList = state.allLists.first(where: { each in each.id == task.listId })
-
-                            NavigationLink(destination: {
-                                Text(task.description())
-                                    .foregroundStyle(.tint)
-                                    .tint(parentList?.color?.ui ?? Color.accentColor)
-                            }) {
-                                TaskView(task: task, onUpdate: onUpdateTask)
-                                    .tint(parentList?.color?.ui ?? Color.accentColor)
-                            }
-                        }
-                    }
-                }
-
-                ForEach(state.pinnedLists, id: \.taskList.id) { pinnedList in
-                    Section(header: Text(pinnedList.taskList.title)) {
-                        ForEach(pinnedList.topTasks, id: \.id) { task in
-                            NavigationLink(destination: {
-                                Text(task.description())
-                                    .foregroundStyle(.tint)
-                                    .tint(pinnedList.taskList.color?.ui ?? Color.accentColor)
-                            }) {
-                                TaskView(task: task, onUpdate: onUpdateTask)
-                            }
-                        }
-
-                        let count = pinnedList.totalTaskCount - Int32(pinnedList.topTasks.count)
-
-                        if count > 0 {
-                            NavigationLink(destination: {
-                                Text(pinnedList.taskList.description())
-                                    .foregroundStyle(.tint)
-                                    .tint(pinnedList.taskList.color?.ui ?? Color.accentColor)
-                            }) {
-                                Text("View \(count) more...")
-                                    .foregroundStyle(.tint)
-                            }
-                        }
-                    }.tint(pinnedList.taskList.color?.ui ?? Color.accentColor)
-                }
+                BoardSectionsView(
+                    sections: state.boardSections,
+                    pinnedLists: state.pinnedLists,
+                    allLists: state.allLists,
+                    onUpdateTask: onUpdateTask
+                )
             }.refreshable(action: onRefresh)
         }
     }

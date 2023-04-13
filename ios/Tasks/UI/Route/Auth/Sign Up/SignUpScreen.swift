@@ -117,7 +117,7 @@ struct SignUpScreen: View {
 
 struct SignUpScreen_Previews: PreviewProvider {
     static var previews: some View {
-        NavigationView {
+        NavigationStack {
             SignUpScreen(
                 state: SignUpUiState(
                     isLoading: false,

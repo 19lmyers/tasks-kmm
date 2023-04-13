@@ -11,27 +11,14 @@ import SwiftUI
 
 struct ListsScreen: View {
     var state: ListsUiState
-    
+
     var onRefresh: @Sendable () async -> Void
-    
+
     var onCreateListPressed: () -> Void
 
     var body: some View {
         List {
-            Section {
-                ForEach(state.taskLists, id: \.id) { taskList in
-                    NavigationLink(destination: {
-                        Text(taskList.description())
-                            .foregroundStyle(.tint)
-                            .tint(taskList.color?.ui ?? Color.accentColor)
-                    }) {
-                        ListView(taskList: taskList)
-                            .tint(taskList.color?.ui ?? Color.accentColor)
-                    }
-                }
-                
-                CreateListView(onCreateListPressed: onCreateListPressed)
-            }
+            ListsView(taskLists: state.taskLists, onCreateListPressed: onCreateListPressed)
         }.refreshable(action: onRefresh)
     }
 }

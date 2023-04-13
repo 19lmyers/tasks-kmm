@@ -12,9 +12,9 @@ import SwiftUI
 struct ChipView<Content>: View where Content: View {
     var selectable: Bool = false
     @State var selected: Bool = false
-        
+
     var onClick: (Bool) -> Void = { _ in }
-    
+
     @ViewBuilder var content: () -> Content
 
     var body: some View {
@@ -27,8 +27,9 @@ struct ChipView<Content>: View where Content: View {
             if selected {
                 HStack {
                     content()
+                        .font(.footnote)
                 }
-                .padding(.all, 10)
+                .padding(.all, 8)
                 .background(
                     RoundedRectangle(cornerRadius: 12).fill(.tint.opacity(0.25))
                 )
@@ -37,12 +38,12 @@ struct ChipView<Content>: View where Content: View {
             } else {
                 HStack {
                     content()
+                        .font(.footnote)
                 }
-                .padding(.all, 10)
+                .padding(.all, 8)
                 .background(
                     RoundedRectangle(cornerRadius: 12)
-                        .strokeBorder(.primary)
-                        .background(RoundedRectangle(cornerRadius: 12).fill(.background))
+                        .strokeBorder(.primary, lineWidth: 1)
                 )
                 .lineLimit(1)
                 .foregroundColor(.primary)
@@ -54,12 +55,8 @@ struct ChipView<Content>: View where Content: View {
 struct ListChipView: View {
     var list: TaskList
 
-    var onClick: (TaskList) -> Void
-
     var body: some View {
-        ChipView(selectable: false, onClick: { _ in
-            onClick(list)
-        }) {
+        ChipView(selectable: false) {
             HStack {
                 Image(systemName: "checklist")
                 Text(list.title)
@@ -78,29 +75,29 @@ struct ReminderChipView: View {
 
     var body: some View {
         if let date = reminderDate {
-                ChipView(
-                    selectable: false,
-                    selected: selectable,
-                    onClick: { _ in
-                        onClick()
-                    }
-                ) {
-                    if date < Date.now {
-                        Group {
-                            Image(systemName: "bell.fill")
-                            Text(formatter.formatDateTime(value: DateKt.toInstant(date)))
-                            if (selectable) {
-                                Image(systemName: "xmark")
-                            }
-                        }.foregroundColor(.red)
-                    } else {
-                        Image(systemName: "bell.fill")
-                        Text(formatter.formatDateTime(value: DateKt.toInstant(date)))
-                        if (selectable) {
+            ChipView(
+                selectable: false,
+                selected: selectable,
+                onClick: { _ in
+                    onClick()
+                }
+            ) {
+                if date < Date.now {
+                    Group {
+                        Image(systemName: "bell")
+                        Text(formatter.formatDateTime(date: date))
+                        if selectable {
                             Image(systemName: "xmark")
                         }
+                    }.foregroundColor(.red)
+                } else {
+                    Image(systemName: "bell")
+                    Text(formatter.formatDateTime(date: date))
+                    if selectable {
+                        Image(systemName: "xmark")
                     }
                 }
+            }
         } else {
             ChipView(
                 selectable: false,
@@ -109,7 +106,7 @@ struct ReminderChipView: View {
                     onClick()
                 }
             ) {
-                Image(systemName: "bell.slash.fill")
+                Image(systemName: "bell.slash")
                 Text("Remind me")
             }
         }
@@ -126,29 +123,29 @@ struct DueDateChipView: View {
 
     var body: some View {
         if let date = dueDate {
-                ChipView(
-                    selectable: false,
-                    selected: selectable,
-                    onClick: { _ in
-                        onClick()
-                    }
-                ) {
-                    if date < Date.now {
-                        Group {
-                            Image(systemName: "calendar")
-                            Text(formatter.formatDate(value: DateKt.toInstant(date)))
-                            if (selectable) {
-                                Image(systemName: "xmark")
-                            }
-                        }.foregroundColor(.red)
-                    } else {
+            ChipView(
+                selectable: false,
+                selected: selectable,
+                onClick: { _ in
+                    onClick()
+                }
+            ) {
+                if date < Date.now {
+                    Group {
                         Image(systemName: "calendar")
-                        Text(formatter.formatDate(value: DateKt.toInstant(date)))
-                        if (selectable) {
+                        Text(formatter.formatDate(date: date))
+                        if selectable {
                             Image(systemName: "xmark")
                         }
+                    }.foregroundColor(.red)
+                } else {
+                    Image(systemName: "calendar")
+                    Text(formatter.formatDate(date: date))
+                    if selectable {
+                        Image(systemName: "xmark")
                     }
                 }
+            }
         } else {
             ChipView(
                 selectable: false,
@@ -170,8 +167,7 @@ struct Chips_Previews: PreviewProvider {
             Text("Hello, world!")
         }
         ListChipView(
-            list: TaskListKt.doNew(id: "", title: "My long list name"),
-            onClick: { _ in }
+            list: TaskListKt.doNew(id: "", title: "My long list name")
         )
     }
 }

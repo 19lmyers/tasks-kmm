@@ -6,26 +6,45 @@
 //  Copyright © 2023 orgName. All rights reserved.
 //
 
-import mokoMvvmFlowSwiftUI
 import MultiPlatformLibrary
 import SwiftUI
+
+struct ListsView : View {
+    var taskLists: [TaskList]
+    
+    var onCreateListPressed: () -> Void
+    
+    var body: some View {
+        Section {
+            ForEach(taskLists, id: \.id) { taskList in
+                ListView(taskList: taskList)
+                        .tint(taskList.color?.ui ?? Color.accentColor)
+            }
+
+            CreateListView(onCreateListPressed: onCreateListPressed)
+        }
+    }
+}
 
 struct ListView: View {
     var taskList: TaskList
 
     var body: some View {
-        HStack {
-            Image(systemName: "checklist")
-                .foregroundStyle(.tint)
-
-            VStack(alignment: .leading) {
-                Text(taskList.title)
-                    .multilineTextAlignment(.leading)
-
-                if taskList.description_ != nil {
-                    Text(taskList.description_!)
-                        .font(.caption)
+        NavigationLink(value: taskList) {
+            HStack {
+                Image(systemName: "checklist")
+                    .foregroundStyle(.tint)
+                
+                VStack(alignment: .leading) {
+                    Text(taskList.title)
+                        .font(.body)
                         .multilineTextAlignment(.leading)
+                    
+                    if taskList.description_ != nil {
+                        Text(taskList.description_!)
+                            .font(.caption)
+                            .multilineTextAlignment(.leading)
+                    }
                 }
             }
         }

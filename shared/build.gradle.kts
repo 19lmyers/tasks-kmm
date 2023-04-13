@@ -1,4 +1,4 @@
-@file:Suppress("DSL_SCOPE_VIOLATION")
+@file:Suppress("UNUSED_VARIABLE")
 
 plugins {
     alias(libs.plugins.kotlin.multiplatform)
@@ -23,6 +23,14 @@ kotlin {
     iosX64()
     iosArm64()
     iosSimulatorArm64()
+
+    /*
+    @OptIn(org.jetbrains.kotlin.gradle.targets.js.dsl.ExperimentalWasmDsl::class)
+    wasm {
+        browser()
+        binaries.executable()
+    }
+    */
 
     cocoapods {
         name = "MultiPlatformLibrary"

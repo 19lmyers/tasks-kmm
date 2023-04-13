@@ -73,6 +73,13 @@ class ListDetailsViewModel(private val listId: String) : ViewModel(), KoinCompon
         }
     }
 
+    fun createTask(listId: String, task: Task) {
+        viewModelScope.launch {
+            val result = repository.createTask(listId, task)
+            _messages.emitAsMessage(result, successMessage = "Task created")
+        }
+    }
+
     fun updateTask(listId: String, taskId: String, task: Task) {
         viewModelScope.launch {
             val result = repository.updateTask(listId, taskId, task)

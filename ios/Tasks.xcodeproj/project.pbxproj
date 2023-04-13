@@ -12,11 +12,16 @@
 		ADEB6958EC460D6F2A8884C7 /* Pods_Tasks.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 758BA94CE2051B9B8C75AA68 /* Pods_Tasks.framework */; };
 		DD0C09D129DD3874007805EF /* BoardRoute.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD0C09D029DD3874007805EF /* BoardRoute.swift */; };
 		DD0C09D329DD38B9007805EF /* BoardScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD0C09D229DD38B9007805EF /* BoardScreen.swift */; };
-		DD0C09D729DD3999007805EF /* TaskView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD0C09D629DD3999007805EF /* TaskView.swift */; };
+		DD0C09D729DD3999007805EF /* Task.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD0C09D629DD3999007805EF /* Task.swift */; };
 		DD1A605D29E0C05D001AA3D8 /* SignUpRoute.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD1A605C29E0C05D001AA3D8 /* SignUpRoute.swift */; };
 		DD1A605F29E0C067001AA3D8 /* SignUpScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD1A605E29E0C067001AA3D8 /* SignUpScreen.swift */; };
 		DD1E5B1A29E49208003F73BA /* CreateTask.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD1E5B1929E49208003F73BA /* CreateTask.swift */; };
 		DD1E5B1C29E49FB8003F73BA /* Chips.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD1E5B1B29E49FB8003F73BA /* Chips.swift */; };
+		DD24717B29E62CAF00125846 /* ListDetailsRoute.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD24717A29E62CAF00125846 /* ListDetailsRoute.swift */; };
+		DD24717D29E62D5300125846 /* ListDetailsScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD24717C29E62D5300125846 /* ListDetailsScreen.swift */; };
+		DD24717F29E6638200125846 /* Board.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD24717E29E6638200125846 /* Board.swift */; };
+		DD24718129E6765600125846 /* HomeNavigationStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD24718029E6765600125846 /* HomeNavigationStack.swift */; };
+		DD6D75D729E772C5005A4B40 /* FriendlyDateFormat.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD6D75D629E772C5005A4B40 /* FriendlyDateFormat.swift */; };
 		DD96350129E0E21F00303FBA /* TypeExt.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD96350029E0E21F00303FBA /* TypeExt.swift */; };
 		DD96350729E0E3B800303FBA /* ListsRoute.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD96350629E0E3B800303FBA /* ListsRoute.swift */; };
 		DD96350929E0E3E400303FBA /* ListsScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD96350829E0E3E400303FBA /* ListsScreen.swift */; };
@@ -25,7 +30,7 @@
 		DD96351429E2227500303FBA /* ModelExt.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD96351329E2227500303FBA /* ModelExt.swift */; };
 		DDB08D7D29DCC90600239CE4 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDB08D7829DCC90600239CE4 /* ContentView.swift */; };
 		DDB08D7E29DCC90600239CE4 /* HomeScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDB08D7929DCC90600239CE4 /* HomeScreen.swift */; };
-		DDB08D8129DCC90600239CE4 /* ListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDB08D7C29DCC90600239CE4 /* ListView.swift */; };
+		DDB08D8129DCC90600239CE4 /* List.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDB08D7C29DCC90600239CE4 /* List.swift */; };
 		DDCD05D429DF6FCE00316955 /* Preview Content in Resources */ = {isa = PBXBuildFile; fileRef = DDCD05D329DF6FCE00316955 /* Preview Content */; };
 		DDCD05D629DF750100316955 /* HomeRoute.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDCD05D529DF750100316955 /* HomeRoute.swift */; };
 		DDCD05D929DF812600316955 /* SignInRoute.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDCD05D829DF812600316955 /* SignInRoute.swift */; };
@@ -46,11 +51,16 @@
 		9C4E19B28F7B9B9AC1E1BE01 /* Pods-Tasks.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Tasks.debug.xcconfig"; path = "Target Support Files/Pods-Tasks/Pods-Tasks.debug.xcconfig"; sourceTree = "<group>"; };
 		DD0C09D029DD3874007805EF /* BoardRoute.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoardRoute.swift; sourceTree = "<group>"; };
 		DD0C09D229DD38B9007805EF /* BoardScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoardScreen.swift; sourceTree = "<group>"; };
-		DD0C09D629DD3999007805EF /* TaskView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskView.swift; sourceTree = "<group>"; };
+		DD0C09D629DD3999007805EF /* Task.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Task.swift; sourceTree = "<group>"; };
 		DD1A605C29E0C05D001AA3D8 /* SignUpRoute.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpRoute.swift; sourceTree = "<group>"; };
 		DD1A605E29E0C067001AA3D8 /* SignUpScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpScreen.swift; sourceTree = "<group>"; };
 		DD1E5B1929E49208003F73BA /* CreateTask.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateTask.swift; sourceTree = "<group>"; };
 		DD1E5B1B29E49FB8003F73BA /* Chips.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Chips.swift; sourceTree = "<group>"; };
+		DD24717A29E62CAF00125846 /* ListDetailsRoute.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListDetailsRoute.swift; sourceTree = "<group>"; };
+		DD24717C29E62D5300125846 /* ListDetailsScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListDetailsScreen.swift; sourceTree = "<group>"; };
+		DD24717E29E6638200125846 /* Board.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Board.swift; sourceTree = "<group>"; };
+		DD24718029E6765600125846 /* HomeNavigationStack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeNavigationStack.swift; sourceTree = "<group>"; };
+		DD6D75D629E772C5005A4B40 /* FriendlyDateFormat.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendlyDateFormat.swift; sourceTree = "<group>"; };
 		DD96350029E0E21F00303FBA /* TypeExt.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TypeExt.swift; sourceTree = "<group>"; };
 		DD96350629E0E3B800303FBA /* ListsRoute.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListsRoute.swift; sourceTree = "<group>"; };
 		DD96350829E0E3E400303FBA /* ListsScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListsScreen.swift; sourceTree = "<group>"; };
@@ -59,7 +69,7 @@
 		DD96351329E2227500303FBA /* ModelExt.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelExt.swift; sourceTree = "<group>"; };
 		DDB08D7829DCC90600239CE4 /* ContentView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		DDB08D7929DCC90600239CE4 /* HomeScreen.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HomeScreen.swift; sourceTree = "<group>"; };
-		DDB08D7C29DCC90600239CE4 /* ListView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ListView.swift; sourceTree = "<group>"; };
+		DDB08D7C29DCC90600239CE4 /* List.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = List.swift; sourceTree = "<group>"; };
 		DDCD05D329DF6FCE00316955 /* Preview Content */ = {isa = PBXFileReference; lastKnownFileType = folder; path = "Preview Content"; sourceTree = "<group>"; };
 		DDCD05D529DF750100316955 /* HomeRoute.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeRoute.swift; sourceTree = "<group>"; };
 		DDCD05D829DF812600316955 /* SignInRoute.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInRoute.swift; sourceTree = "<group>"; };
@@ -156,10 +166,11 @@
 			isa = PBXGroup;
 			children = (
 				DD96350D29E2118A00303FBA /* Dialog */,
-				DDB08D7C29DCC90600239CE4 /* ListView.swift */,
-				DD0C09D629DD3999007805EF /* TaskView.swift */,
+				DDB08D7C29DCC90600239CE4 /* List.swift */,
+				DD0C09D629DD3999007805EF /* Task.swift */,
 				DDDB2C9D29E36F93004BF254 /* FormElements.swift */,
 				DD1E5B1B29E49FB8003F73BA /* Chips.swift */,
+				DD24717E29E6638200125846 /* Board.swift */,
 			);
 			path = Component;
 			sourceTree = "<group>";
@@ -167,11 +178,20 @@
 		DD0C09D529DD396C007805EF /* Route */ = {
 			isa = PBXGroup;
 			children = (
+				DDCD05DF29DF814D00316955 /* WelcomeView.swift */,
 				DDCD05D729DF810700316955 /* Auth */,
 				DDCD05E129DF877400316955 /* Home */,
-				DDCD05DF29DF814D00316955 /* WelcomeView.swift */,
 			);
 			path = Route;
+			sourceTree = "<group>";
+		};
+		DD24717929E62CA300125846 /* List Details */ = {
+			isa = PBXGroup;
+			children = (
+				DD24717A29E62CAF00125846 /* ListDetailsRoute.swift */,
+				DD24717C29E62D5300125846 /* ListDetailsScreen.swift */,
+			);
+			path = "List Details";
 			sourceTree = "<group>";
 		};
 		DD96350329E0E35300303FBA /* Sign In */ = {
@@ -223,6 +243,7 @@
 			children = (
 				DD96351029E21EE500303FBA /* BindingExt.swift */,
 				DD96350029E0E21F00303FBA /* TypeExt.swift */,
+				DD6D75D629E772C5005A4B40 /* FriendlyDateFormat.swift */,
 			);
 			path = Util;
 			sourceTree = "<group>";
@@ -239,9 +260,11 @@
 		DDCD05E129DF877400316955 /* Home */ = {
 			isa = PBXGroup;
 			children = (
+				DD24718029E6765600125846 /* HomeNavigationStack.swift */,
 				DDCD05D529DF750100316955 /* HomeRoute.swift */,
 				DDB08D7929DCC90600239CE4 /* HomeScreen.swift */,
 				DD0C09CF29DD383F007805EF /* Board */,
+				DD24717929E62CA300125846 /* List Details */,
 				DD96350529E0E3AF00303FBA /* Lists */,
 			);
 			path = Home;
@@ -386,12 +409,17 @@
 				DD1A605D29E0C05D001AA3D8 /* SignUpRoute.swift in Sources */,
 				DDDAA23629DCE4800062B5F4 /* Configuration.swift in Sources */,
 				DDCD05E029DF814D00316955 /* WelcomeView.swift in Sources */,
+				DD24718129E6765600125846 /* HomeNavigationStack.swift in Sources */,
 				DD1E5B1A29E49208003F73BA /* CreateTask.swift in Sources */,
-				DD0C09D729DD3999007805EF /* TaskView.swift in Sources */,
+				DD24717D29E62D5300125846 /* ListDetailsScreen.swift in Sources */,
+				DD24717F29E6638200125846 /* Board.swift in Sources */,
+				DD0C09D729DD3999007805EF /* Task.swift in Sources */,
 				DD1A605F29E0C067001AA3D8 /* SignUpScreen.swift in Sources */,
 				DD1E5B1C29E49FB8003F73BA /* Chips.swift in Sources */,
-				DDB08D8129DCC90600239CE4 /* ListView.swift in Sources */,
+				DD6D75D729E772C5005A4B40 /* FriendlyDateFormat.swift in Sources */,
+				DDB08D8129DCC90600239CE4 /* List.swift in Sources */,
 				DDDB2C9E29E36F93004BF254 /* FormElements.swift in Sources */,
+				DD24717B29E62CAF00125846 /* ListDetailsRoute.swift in Sources */,
 				DD96350729E0E3B800303FBA /* ListsRoute.swift in Sources */,
 				DDB08D7D29DCC90600239CE4 /* ContentView.swift in Sources */,
 				DD96350929E0E3E400303FBA /* ListsScreen.swift in Sources */,

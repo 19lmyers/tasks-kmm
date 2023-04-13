@@ -147,14 +147,14 @@ fun HomeRoute(
         }
 
         var showCreateTaskDialog by remember { mutableStateOf(false) }
-        var defaultListIdForCreatedTask by remember(state.value.taskLists) { mutableStateOf(state.value.taskLists.firstOrNull()?.id) }
+        var defaultListIdForCreatedTask by remember { mutableStateOf<String?>(null) }
 
-        if (showCreateTaskDialog && defaultListIdForCreatedTask != null) {
+        if (showCreateTaskDialog) {
             CreateTaskDialog(
                 taskLists = state.value.taskLists,
                 current = Task(
                     id = "",
-                    listId = defaultListIdForCreatedTask!!,
+                    listId = defaultListIdForCreatedTask ?: state.value.taskLists.first().id,
                     label = "",
                     lastModified = Clock.System.now()
                 ),

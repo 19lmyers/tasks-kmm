@@ -16,11 +16,13 @@ struct BoardRoute: View {
     
     var body: some View {
         let uiState = viewModel.state(\.uiState, equals: { $0 == $1 }, mapper: { $0 })
+        
         BoardScreen(
             state: uiState,
             onRefresh: {
                 DispatchQueue.main.sync {
                     viewModel.refreshCache()
+                    while (uiState.isLoading) {}
                 }
             },
             onUpdateTask: { task in

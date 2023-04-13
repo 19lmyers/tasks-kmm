@@ -12,7 +12,7 @@ import SwiftUI
 struct ListsRoute: View {
     @ObservedObject var viewModel = ListsViewModel()
 
-    @State var showCreateSheet = false
+    @State var showCreateListSheet = false
 
     var body: some View {
         let uiState = viewModel.state(\.uiState, equals: { $0 == $1 }, mapper: { $0 })
@@ -24,19 +24,19 @@ struct ListsRoute: View {
                     viewModel.refreshCache()
                 }
             },
-            onCreateListPressed: { showCreateSheet = true }
-        ).sheet(isPresented: $showCreateSheet) {
+            onCreateListPressed: { showCreateListSheet = true }
+        ).sheet(isPresented: $showCreateListSheet) {
             ModifyListSheet(
                 title: "New list",
                 current: TaskListKt.doNew(id: "", title: ""),
                 onDismiss: {
-                    showCreateSheet = false
+                    showCreateListSheet = false
                 },
                 onSave: { taskList in
                     viewModel.createList(taskList: taskList)
-                    showCreateSheet = false
+                    showCreateListSheet = false
                 }
-            ).presentationDetents([.medium])
+            ).presentationDetents([.medium, .large])
         }.onAppear {
             viewModel.messages.subscribe(
                 onCollect: { message in

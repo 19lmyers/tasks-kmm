@@ -43,24 +43,29 @@ struct CreateTaskSheet: View {
     }
     
     var body: some View {
-        NavigationView {
+        NavigationStack {
             List {
                 Section {
                     TextField("Label", text: $label, prompt: Text("Enter label (required)"))
                     
-                    Picker(
-                        selection: $listId,
-                        content: {
-                            ForEach(taskLists, id: \.id) { list in
-                                Text(list.title)
+                    if (taskLists.count > 1) {
+                        Picker(
+                            selection: $listId,
+                            content: {
+                                ForEach(taskLists, id: \.id) { list in
+                                    Text(list.title)
+                                }
+                            },
+                            label: {
+                                Text("List")
                             }
-                        },
-                        label: {
-                            Text("List")
-                        }
-                    )
+                        )
+                    }
                 }
                 
+                Section {
+                    
+                }
             }.toolbar {
                 ToolbarItem(placement: .cancellationAction) {
                     Button("Cancel") {
@@ -84,7 +89,6 @@ struct CreateTaskSheet: View {
             .tint(parentList?.color?.ui ?? Color.accentColor)
             .navigationTitle("New item")
             .navigationBarTitleDisplayMode(.inline)
-            .navigationViewStyle(.stack)
         }
         .onChange(of: listId) { id in
             parentList = taskLists.first(where: { list in list.id == id })

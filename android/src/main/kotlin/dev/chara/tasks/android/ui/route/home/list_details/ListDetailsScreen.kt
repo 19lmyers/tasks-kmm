@@ -15,9 +15,9 @@ import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.CheckCircleOutline
 import androidx.compose.material.icons.filled.Close
-import androidx.compose.material.icons.filled.DeleteForever
-import androidx.compose.material.icons.filled.DeleteSweep
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
@@ -246,7 +246,7 @@ private fun TopBar(
                 DropdownMenuItem(
                     text = { Text(text = "Delete completed items") },
                     leadingIcon = {
-                        Icon(Icons.Filled.DeleteSweep, contentDescription = "Delete")
+                        Icon(Icons.Filled.CheckCircleOutline, contentDescription = "Delete")
                     },
                     onClick = {
                         onDeleteTasksClicked()
@@ -256,7 +256,7 @@ private fun TopBar(
                 DropdownMenuItem(
                     text = { Text(text = "Delete list") },
                     leadingIcon = {
-                        Icon(Icons.Filled.DeleteForever, contentDescription = "Delete")
+                        Icon(Icons.Filled.Delete, contentDescription = "Delete")
                     },
                     onClick = {
                         onDeleteListClicked()

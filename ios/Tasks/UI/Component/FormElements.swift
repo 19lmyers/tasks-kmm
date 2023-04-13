@@ -9,14 +9,13 @@
 import SwiftUI
 
 struct CheckboxView: View {
-    @State var isChecked: Bool = false
+    var isChecked: Bool
     
     var onChange: (Bool) -> Void = { _ in }
-    
+
     var body: some View {
         Button(action: {
-            isChecked.toggle()
-            onChange(isChecked)
+            onChange(!isChecked)
         }) {
             Image(systemName: isChecked ? "checkmark.square" : "square").foregroundStyle(.tint)
         }.buttonStyle(PlainButtonStyle())
@@ -24,14 +23,13 @@ struct CheckboxView: View {
 }
 
 struct StarView: View {
-    @State var isStarred: Bool = false
+    var isStarred: Bool
     
     var onChange: (Bool) -> Void = { _ in }
     
     var body: some View {
         Button(action: {
-            isStarred.toggle()
-            onChange(isStarred)
+            onChange(!isStarred)
         }) {
             Image(systemName: isStarred ? "star.fill" : "star").foregroundStyle(.tint)
         }.buttonStyle(PlainButtonStyle())
@@ -41,7 +39,7 @@ struct StarView: View {
 
 struct FormElements_Previews: PreviewProvider {
     static var previews: some View {
-        CheckboxView()
-        StarView()
+        CheckboxView(isChecked: false)
+        StarView(isStarred: false)
     }
 }

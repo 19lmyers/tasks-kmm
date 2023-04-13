@@ -18,8 +18,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import dev.chara.tasks.android.model.vector
+import dev.chara.tasks.android.ui.util.FriendlyDateFormat
 import dev.chara.tasks.model.TaskList
-import dev.chara.tasks.util.FriendlyDateFormat
 import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
 

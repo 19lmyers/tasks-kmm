@@ -1,11 +1,11 @@
-package dev.chara.tasks.util
+package dev.chara.tasks.android.ui.util
 
 import android.content.Context
 import android.text.format.DateUtils
 import kotlinx.datetime.Instant
 
-actual class FriendlyDateFormat(private val context: Context) {
-    actual fun formatDate(value: Instant): String {
+class FriendlyDateFormat(private val context: Context) {
+    fun formatDate(value: Instant): String {
         val millis = value.toEpochMilliseconds()
 
         val flags = (DateUtils.FORMAT_SHOW_DATE
@@ -15,7 +15,7 @@ actual class FriendlyDateFormat(private val context: Context) {
         return DateUtils.formatDateTime(context, millis, flags)
     }
 
-    actual fun formatDateTime(value: Instant): String {
+    fun formatDateTime(value: Instant): String {
         val millis = value.toEpochMilliseconds()
 
         var flags = DateUtils.FORMAT_SHOW_TIME or DateUtils.FORMAT_ABBREV_TIME

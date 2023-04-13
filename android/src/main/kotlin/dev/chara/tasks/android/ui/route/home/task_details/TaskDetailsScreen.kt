@@ -69,9 +69,9 @@ import androidx.lifecycle.LifecycleEventObserver
 import dev.chara.tasks.android.model.vector
 import dev.chara.tasks.android.ui.component.dialog.PickDueDateDialog
 import dev.chara.tasks.android.ui.component.dialog.PickReminderDateDialog
+import dev.chara.tasks.android.ui.util.FriendlyDateFormat
 import dev.chara.tasks.model.Task
 import dev.chara.tasks.model.TaskList
-import dev.chara.tasks.util.FriendlyDateFormat
 import dev.chara.tasks.viewmodel.home.task_details.TaskDetailsUiState
 import kotlinx.datetime.Clock
 import kotlinx.datetime.TimeZone

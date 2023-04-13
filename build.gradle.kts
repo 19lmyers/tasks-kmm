@@ -1,5 +1,3 @@
-@file:Suppress("DSL_SCOPE_VIOLATION")
-
 plugins {
     alias(libs.plugins.kotlin.multiplatform) apply false
     alias(libs.plugins.kotlin.android) apply false
@@ -17,8 +15,4 @@ plugins {
     alias(libs.plugins.crashlytics) apply false
 
     alias(libs.plugins.versions)
-}
-
-tasks.register("clean", Delete::class) {
-    delete(rootProject.buildDir)
 }

@@ -34,7 +34,8 @@ struct HomeRoute: View {
                         // TODO: implement profile
                     },
                     showAddAction: !uiState.taskLists.isEmpty
-                ).sheet(isPresented: $showCreateTaskSheet) {
+                )
+                .sheet(isPresented: $showCreateTaskSheet) {
                     CreateTaskSheet(
                         taskLists: uiState.taskLists,
                         current: TaskKt.doNew(id: "", listId: uiState.taskLists.first!.id, label: "")
@@ -49,8 +50,9 @@ struct HomeRoute: View {
                             showCreateTaskSheet = false
                         }
                     )
-                    .presentationDetents([.medium])
+                    .presentationDetents([.medium, .large])
                 }
+
             }
         } else {
             ProgressView()
