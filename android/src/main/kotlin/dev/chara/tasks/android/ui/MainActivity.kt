@@ -28,7 +28,7 @@ class MainActivity : ComponentActivity() {
 
         WindowCompat.setDecorFitsSystemWindows(window, false)
 
-        val initialBackstack: List<RootNavTarget> = parseDeepLinks()
+        val initialBackstack: List<NavTarget> = parseDeepLinks()
 
         setContent {
             val viewModel: BaseViewModel = viewModel()
@@ -45,7 +45,7 @@ class MainActivity : ComponentActivity() {
             val vibrantColors by viewModel.useVibrantColors()
                 .collectAsStateWithLifecycle(initialValue = false)
 
-            val navController: NavController<RootNavTarget> = rememberSaveable(initialBackstack) {
+            val navController: NavController<NavTarget> = rememberSaveable(initialBackstack) {
                 navController(initialBackstack = initialBackstack)
             }
 
@@ -57,7 +57,7 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-    private fun parseDeepLinks(): List<RootNavTarget> =
+    private fun parseDeepLinks(): List<NavTarget> =
         if (intent.data != null && intent.data!!.host == DEEP_LINK_HOST) {
 
             when (intent.data!!.path) {
@@ -65,10 +65,10 @@ class MainActivity : ComponentActivity() {
                     val token = intent.data!!.getQueryParameter(QUERY_PASSWORD_RESET_TOKEN)
 
                     if (token != null) {
-                        listOf(RootNavTarget.ResetPassword(token))
+                        listOf(NavTarget.ResetPassword(token))
                     } else {
                         Toast.makeText(this, "Missing token parameter", Toast.LENGTH_LONG).show()
-                        listOf(RootNavTarget.Home.Default)
+                        listOf(NavTarget.Home.Default)
                     }
                 }
 
@@ -76,10 +76,10 @@ class MainActivity : ComponentActivity() {
                     val listId = intent.data!!.getQueryParameter(QUERY_LIST_ID)
 
                     if (listId != null) {
-                        listOf(RootNavTarget.Home.WithList(listId))
+                        listOf(NavTarget.Home.WithList(listId))
                     } else {
                         Toast.makeText(this, "Missing id parameter", Toast.LENGTH_LONG).show()
-                        listOf(RootNavTarget.Home.Default)
+                        listOf(NavTarget.Home.Default)
                     }
                 }
 
@@ -90,19 +90,19 @@ class MainActivity : ComponentActivity() {
                         NotificationManagerCompat.from(this)
                             .cancel(taskId, MessagingService.NOTIFICATION_TYPE_REMINDER)
 
-                        listOf(RootNavTarget.Home.WithTask(taskId))
+                        listOf(NavTarget.Home.WithTask(taskId))
                     } else {
                         Toast.makeText(this, "Missing id parameter", Toast.LENGTH_LONG).show()
-                        listOf(RootNavTarget.Home.Default)
+                        listOf(NavTarget.Home.Default)
                     }
                 }
 
                 else -> {
-                    listOf(RootNavTarget.Home.Default)
+                    listOf(NavTarget.Home.Default)
                 }
             }
         } else {
-            listOf(RootNavTarget.Home.Default)
+            listOf(NavTarget.Home.Default)
         }
 
     companion object {

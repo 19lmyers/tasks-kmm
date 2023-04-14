@@ -33,9 +33,6 @@ fun SettingsRoute(
             onSetTheme = {
                 viewModel.setAppTheme(it)
             },
-            onSetStartScreen = {
-                viewModel.setStartScreen(it)
-            },
             onSetVibrantColors = {
                 viewModel.setVibrantColors(it)
             },

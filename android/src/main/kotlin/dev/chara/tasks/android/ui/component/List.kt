@@ -67,12 +67,12 @@ fun TaskListItem(
             color = MaterialTheme.colorScheme.themedContainer,
             modifier = modifier
                 .fillMaxWidth()
-                .padding(8.dp),
+                .padding(4.dp),
             onClick = { onClick(taskList) },
             tonalElevation = 4.dp,
             shape = MaterialTheme.shapes.extraLarge
         ) {
-            Row(modifier = modifier.padding(16.dp, 32.dp)) {
+            Row(modifier = modifier.padding(vertical = 16.dp)) {
                 Icon(
                     modifier = Modifier
                         .padding(8.dp)
@@ -87,7 +87,7 @@ fun TaskListItem(
                 ) {
                     Text(
                         text = taskList.title,
-                        style = MaterialTheme.typography.headlineMedium,
+                        style = MaterialTheme.typography.headlineSmall,
                     )
                     if (!taskList.description.isNullOrBlank()) {
                         Spacer(modifier = Modifier.padding(4.dp))
@@ -118,12 +118,12 @@ fun CreateListItem(modifier: Modifier = Modifier, enabled: Boolean = true, onCli
     OutlinedCard(
         modifier = modifier
             .fillMaxWidth()
-            .padding(8.dp),
+            .padding(4.dp),
         enabled = enabled,
         onClick = { onClick() },
         shape = MaterialTheme.shapes.extraLarge
     ) {
-        Row(modifier = Modifier.padding(16.dp, 32.dp)) {
+        Row(modifier = Modifier.padding(16.dp)) {
             Icon(
                 modifier = Modifier
                     .padding(8.dp)
@@ -137,7 +137,7 @@ fun CreateListItem(modifier: Modifier = Modifier, enabled: Boolean = true, onCli
                     .align(Alignment.CenterVertically)
             ) {
                 Text(
-                    style = MaterialTheme.typography.headlineMedium,
+                    style = MaterialTheme.typography.headlineSmall,
                     text = "New list",
                 )
             }

@@ -9,7 +9,6 @@ import dev.chara.tasks.data.rest.RestDataSource
 import dev.chara.tasks.model.BoardSection
 import dev.chara.tasks.model.PinnedList
 import dev.chara.tasks.model.Profile
-import dev.chara.tasks.model.StartScreen
 import dev.chara.tasks.model.Task
 import dev.chara.tasks.model.TaskList
 import dev.chara.tasks.model.Theme
@@ -337,11 +336,6 @@ class Repository(
 
     suspend fun setVibrantColors(useVibrantColors: Boolean) =
         preferenceDataSource.setVibrantColors(useVibrantColors)
-
-    fun getStartScreen() = preferenceDataSource.getStartScreen()
-
-    suspend fun setStartScreen(startScreen: StartScreen) =
-        preferenceDataSource.setStartScreen(startScreen)
 
     fun getEnabledBoardSections() = preferenceDataSource.getDisabledBoardSections()
         .map { disabledSections ->

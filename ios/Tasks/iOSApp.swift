@@ -1,3 +1,4 @@
+import mokoMvvmFlowSwiftUI
 import MultiPlatformLibrary
 import SwiftUI
 
@@ -5,7 +6,7 @@ import SwiftUI
 struct iOSApp: App {
     init() {
         InitKt.doInitKoin(endpointUrl: Configuration.endpointUrl.absoluteString)
-        
+
         InitKt.doInitFirebase()
 
         #if DEBUG

@@ -54,7 +54,9 @@ struct ListDetailsScreen: View {
                     )
                 }
             }
-        }.refreshable(action: onRefresh)
+        }
+        .listStyle(.insetGrouped)
+        .refreshable(action: onRefresh)
     }
 }
 

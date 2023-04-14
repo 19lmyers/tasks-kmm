@@ -1,7 +1,8 @@
 package dev.chara.tasks.viewmodel.home
 
+import dev.chara.tasks.model.BoardSection
+import dev.chara.tasks.model.PinnedList
 import dev.chara.tasks.model.Profile
-import dev.chara.tasks.model.StartScreen
 import dev.chara.tasks.model.TaskList
 
 data class HomeUiState(
@@ -10,6 +11,7 @@ data class HomeUiState(
 
     val isAuthenticated: Boolean = false,
     val profile: Profile? = null,
-    val startScreen: StartScreen = StartScreen.BOARD,
-    val taskLists: List<TaskList> = listOf()
+    val boardSections: List<BoardSection> = listOf(),
+    val pinnedLists: List<PinnedList> = listOf(),
+    val allLists: List<TaskList> = listOf(),
 )

@@ -15,7 +15,7 @@ struct ListsView : View {
     var onCreateListPressed: () -> Void
     
     var body: some View {
-        Section {
+        Section("Lists") {
             ForEach(taskLists, id: \.id) { taskList in
                 ListView(taskList: taskList)
                         .tint(taskList.color?.ui ?? Color.accentColor)
@@ -60,7 +60,7 @@ struct CreateListView: View {
                 Image(systemName: "plus")
                 Text("New list")
                     .multilineTextAlignment(.leading)
-            }
+            }.foregroundStyle(.tint)
         }
     }
 }

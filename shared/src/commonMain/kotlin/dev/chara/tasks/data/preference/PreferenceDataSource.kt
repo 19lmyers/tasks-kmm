@@ -9,7 +9,6 @@ import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.core.stringSetPreferencesKey
 import dev.chara.tasks.model.BoardSection
 import dev.chara.tasks.model.Profile
-import dev.chara.tasks.model.StartScreen
 import dev.chara.tasks.model.Theme
 import dev.chara.tasks.model.TokenPair
 import kotlinx.coroutines.CoroutineScope
@@ -101,16 +100,6 @@ class PreferenceDataSource(private val dataStorePath: DataStorePath) {
     suspend fun setVibrantColors(useVibrantColors: Boolean) {
         dataStore.edit {
             it[KEY_USE_VIBRANT_COLORS] = useVibrantColors
-        }
-    }
-
-    fun getStartScreen() = dataStore.data.map {
-        StartScreen.valueOf(it[KEY_START_SCREEN] ?: StartScreen.BOARD.name)
-    }
-
-    suspend fun setStartScreen(startScreen: StartScreen) {
-        dataStore.edit {
-            it[KEY_START_SCREEN] = startScreen.name
         }
     }
 

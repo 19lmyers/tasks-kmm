@@ -14,6 +14,7 @@ struct BoardSectionsView: View {
     var pinnedLists: [PinnedList]
     var allLists: [TaskList]
     
+    var onCreateListPressed: () -> Void
     var onUpdateTask: (Task) -> Void
 
     var body: some View {
@@ -24,6 +25,8 @@ struct BoardSectionsView: View {
         ForEach(pinnedLists, id: \.taskList.id) { pinnedList in
             PinnedListView(pinnedList: pinnedList, onUpdateTask: onUpdateTask)
         }
+    
+        ListsView(taskLists: allLists, onCreateListPressed: onCreateListPressed)
     }
 }
 

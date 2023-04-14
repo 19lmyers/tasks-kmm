@@ -16,7 +16,6 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.Crossfade
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.layout.BoxWithConstraints
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
@@ -29,7 +28,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
@@ -37,28 +35,24 @@ import androidx.core.content.ContextCompat
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import dev.chara.tasks.android.R
-import dev.chara.tasks.android.model.navTarget
-import dev.chara.tasks.android.ui.RootNavTarget
+import dev.chara.tasks.android.ui.NavTarget
 import dev.chara.tasks.android.ui.component.dialog.CreateTaskDialog
-import dev.chara.tasks.android.ui.component.util.MaterialDialog
+import dev.chara.tasks.android.ui.component.dialog.ModifyListDialog
 import dev.chara.tasks.android.ui.component.util.SnackbarLayout
 import dev.chara.tasks.android.ui.route.home.list_details.ListDetailsRoute
 import dev.chara.tasks.android.ui.route.home.profile.UserProfileDialog
 import dev.chara.tasks.android.ui.route.home.task_details.TaskDetailsRoute
-import dev.chara.tasks.model.StartScreen
 import dev.chara.tasks.model.Task
+import dev.chara.tasks.model.TaskList
 import dev.chara.tasks.viewmodel.home.HomeViewModel
-import dev.olshevski.navigation.reimagined.rememberNavController
 import kotlinx.coroutines.launch
 import kotlinx.datetime.Clock
 import java.io.ByteArrayOutputStream
 
 @Composable
 fun HomeRoute(
-    useNavRail: Boolean,
-    useEditDialog: Boolean,
     useDualPane: Boolean,
-    initialNavTarget: RootNavTarget.Home,
+    initialNavTarget: NavTarget.Home,
     navigateToWelcome: () -> Unit,
     navigateToSettings: () -> Unit,
     navigateToChangeEmail: () -> Unit,
@@ -75,6 +69,17 @@ fun HomeRoute(
     ) { isGranted: Boolean ->
         if (isGranted) {
             initNotifications(context)
+        }
+    }
+
+    // Request notification permission - TODO move to sensible place
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+        if (ContextCompat.checkSelfPermission(
+                context,
+                Manifest.permission.POST_NOTIFICATIONS
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            permissionRequestLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
         }
     }
 
@@ -97,17 +102,6 @@ fun HomeRoute(
         if (!state.value.isAuthenticated) {
             navigateToWelcome()
             return
-        }
-
-        // Request notification permission - TODO move to sensible place
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            if (ContextCompat.checkSelfPermission(
-                    context,
-                    Manifest.permission.POST_NOTIFICATIONS
-                ) != PackageManager.PERMISSION_GRANTED
-            ) {
-                permissionRequestLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
-            }
         }
 
         val profile = state.value.profile!!
@@ -146,15 +140,31 @@ fun HomeRoute(
             )
         }
 
+        var showCreateListDialog by remember { mutableStateOf(false) }
+
+        if (showCreateListDialog) {
+            ModifyListDialog(
+                title = "New list",
+                current = TaskList(id = "", title = ""),
+                onDismiss = {
+                    showCreateListDialog = false
+                },
+                onSave = { taskList ->
+                    viewModel.createList(taskList)
+                    showCreateListDialog = false
+                }
+            )
+        }
+
         var showCreateTaskDialog by remember { mutableStateOf(false) }
         var defaultListIdForCreatedTask by remember { mutableStateOf<String?>(null) }
 
         if (showCreateTaskDialog) {
             CreateTaskDialog(
-                taskLists = state.value.taskLists,
+                taskLists = state.value.allLists,
                 current = Task(
                     id = "",
-                    listId = defaultListIdForCreatedTask ?: state.value.taskLists.first().id,
+                    listId = defaultListIdForCreatedTask ?: state.value.allLists.first().id,
                     label = "",
                     lastModified = Clock.System.now()
                 ),
@@ -168,16 +178,10 @@ fun HomeRoute(
             )
         }
 
-        val startScreen = state.value.startScreen
-
-        val allDestinations = StartScreen.values().map { it.navTarget }
-
-        val navController = rememberNavController(startDestination = startScreen.navTarget)
-
-        var isListShown by rememberSaveable { mutableStateOf(initialNavTarget is RootNavTarget.Home.WithList) }
+        var isListShown by rememberSaveable { mutableStateOf(initialNavTarget is NavTarget.Home.WithList) }
         var selectedListId by rememberSaveable(initialNavTarget) {
             mutableStateOf(
-                if (initialNavTarget is RootNavTarget.Home.WithList) {
+                if (initialNavTarget is NavTarget.Home.WithList) {
                     initialNavTarget.listId
                 } else {
                     ""
@@ -185,10 +189,10 @@ fun HomeRoute(
             )
         }
 
-        var isTaskShown by rememberSaveable { mutableStateOf(initialNavTarget is RootNavTarget.Home.WithTask) }
+        var isTaskShown by rememberSaveable { mutableStateOf(initialNavTarget is NavTarget.Home.WithTask) }
         var selectedTaskId by rememberSaveable(initialNavTarget) {
             mutableStateOf(
-                if (initialNavTarget is RootNavTarget.Home.WithTask) {
+                if (initialNavTarget is NavTarget.Home.WithTask) {
                     initialNavTarget.taskId
                 } else {
                     ""
@@ -196,30 +200,8 @@ fun HomeRoute(
             )
         }
 
-        if (isTaskShown && useEditDialog) {
-            MaterialDialog(
-                semanticTitle = "Task details",
-                modifier = Modifier.fillMaxSize(),
-                onClose = { isTaskShown = false }
-            ) {
-                TaskDetailsRoute(
-                    selectedTaskId,
-                    upAsCloseButton = true,
-                    navigateUp = { isTaskShown = false }
-                )
-            }
-        }
-
         val snackbarBottomOffset = with(LocalDensity.current) {
-            if (useNavRail && !isListShown) {
-                0.dp.roundToPx()
-            } else if (useDualPane) {
-                // see HomeScreenWithDetailPane
-                96.dp.roundToPx()
-            } else {
-                // see M3 BottomNavigationTokens
-                80.dp.roundToPx()
-            }
+            80.dp.roundToPx()
         }
 
         SnackbarLayout(
@@ -228,47 +210,51 @@ fun HomeRoute(
                 SnackbarHost(hostState = snackbarHostState)
             }
         ) {
-            Crossfade(targetState = isTaskShown, label = "showTask") { isTaskShownState ->
-                if (isTaskShownState && !useEditDialog) {
-                    TaskDetailsRoute(
-                        selectedTaskId,
-                        upAsCloseButton = false,
-                        navigateUp = { isTaskShown = false }
+            if (useDualPane) {
+                BoxWithConstraints {
+                    val detailPaneWidth by animateDpAsState(
+                        if (isListShown || isTaskShown) maxWidth / 2 else 0.dp,
+                        label = "detailPane"
                     )
+                    val homePaneWidth = maxWidth - detailPaneWidth
 
-                    BackHandler {
-                        isTaskShown = false
-                    }
-                } else {
-                    if (useDualPane) {
-                        BoxWithConstraints {
-                            val detailPaneWidth by animateDpAsState(if (isListShown) maxWidth / 2 else 0.dp,
-                                label = "detailPane"
-                            )
-                            val homePaneWidth = maxWidth - detailPaneWidth
-
-                            HomeScreenWithDetailPane(
-                                destinations = allDestinations,
-                                navController = navController,
-                                state = state.value,
-                                snackbarHostState = snackbarHostState,
-                                useNavRail = useNavRail,
-                                showCreateButton = defaultListIdForCreatedTask != null,
-                                onAccountPressed = { showProfileDialog = true },
-                                onCreateTaskPressed = {
-                                    showCreateTaskDialog = true
-                                },
-                                navigateToListDetails = { taskList ->
-                                    selectedListId = taskList.id
-                                    isListShown = true
-                                },
-                                navigateToTaskDetails = { task ->
-                                    selectedTaskId = task.id
-                                    isTaskShown = true
-                                },
-                                homePaneWidth = homePaneWidth,
-                                detailPaneWidth = detailPaneWidth
-                            ) {
+                    HomeScreenWithDetailPane(
+                        state = state.value,
+                        showCreateTaskButton = state.value.allLists.isNotEmpty(),
+                        onAccountPressed = { showProfileDialog = true },
+                        onCreateListPressed = {
+                            showCreateListDialog = true
+                        },
+                        onCreateTaskPressed = {
+                            showCreateTaskDialog = true
+                        },
+                        navigateToListDetails = { taskList ->
+                            selectedListId = taskList.id
+                            isListShown = true
+                        },
+                        navigateToTaskDetails = { task ->
+                            selectedTaskId = task.id
+                            isTaskShown = true
+                        },
+                        onUpdateTask = { task ->
+                            viewModel.updateTask(task)
+                        },
+                        onRefresh = {
+                            viewModel.refreshCache()
+                        },
+                        homePaneWidth = homePaneWidth,
+                        detailPaneWidth = detailPaneWidth
+                    ) {
+                        Crossfade(targetState = isTaskShown, label = "showTask") { showTaskState ->
+                            if (showTaskState) {
+                                TaskDetailsRoute(
+                                    taskId = selectedTaskId,
+                                    upAsCloseButton = !isListShown,
+                                    navigateUp = {
+                                        isTaskShown = false
+                                    }
+                                )
+                            } else {
                                 ListDetailsRoute(
                                     selectedListId,
                                     snackbarHostState = snackbarHostState,
@@ -285,49 +271,78 @@ fun HomeRoute(
                                 )
                             }
                         }
-                    } else {
-                        Crossfade(targetState = isListShown, label = "showList") { isListShownState ->
-                            if (isListShownState) {
-                                ListDetailsRoute(
-                                    selectedListId,
-                                    snackbarHostState = snackbarHostState,
-                                    upAsCloseButton = false,
-                                    navigateUp = { isListShown = false },
-                                    navigateToTaskDetails = { task ->
-                                        selectedTaskId = task.id
-                                        isTaskShown = true
-                                    },
-                                    onCreateTaskClicked = {
-                                        defaultListIdForCreatedTask = it.id
-                                        showCreateTaskDialog = true
-                                    }
-                                )
+                    }
+                }
+            } else {
+                val inputState = if (isTaskShown) {
+                    ScreenState.SHOW_TASK
+                } else if (isListShown) {
+                    ScreenState.SHOW_LIST
+                } else {
+                    ScreenState.HOME
+                }
 
-                                BackHandler {
-                                    isListShown = false
+                Crossfade(targetState = inputState, label = "ScreenState") { screenState ->
+                    when (screenState) {
+                        ScreenState.SHOW_TASK -> {
+                            TaskDetailsRoute(
+                                taskId = selectedTaskId,
+                                upAsCloseButton = false,
+                                navigateUp = {
+                                    isTaskShown = false
                                 }
-                            } else {
-                                HomeScreen(
-                                    destinations = allDestinations,
-                                    navController = navController,
-                                    state = state.value,
-                                    snackbarHostState = snackbarHostState,
-                                    useNavRail = useNavRail,
-                                    showCreateButton = defaultListIdForCreatedTask != null,
-                                    onAccountPressed = { showProfileDialog = true },
-                                    onCreateTaskPressed = {
-                                        showCreateTaskDialog = true
-                                    },
-                                    navigateToListDetails = { taskList ->
-                                        selectedListId = taskList.id
-                                        isListShown = true
-                                    },
-                                    navigateToTaskDetails = { task ->
-                                        selectedTaskId = task.id
-                                        isTaskShown = true
-                                    }
-                                )
+                            )
+
+                            BackHandler {
+                                isTaskShown = false
                             }
+                        }
+                        ScreenState.SHOW_LIST -> {
+                            ListDetailsRoute(
+                                selectedListId,
+                                snackbarHostState = snackbarHostState,
+                                upAsCloseButton = false,
+                                navigateUp = { isListShown = false },
+                                navigateToTaskDetails = { task ->
+                                    selectedTaskId = task.id
+                                    isTaskShown = true
+                                },
+                                onCreateTaskClicked = {
+                                    defaultListIdForCreatedTask = it.id
+                                    showCreateTaskDialog = true
+                                }
+                            )
+
+                            BackHandler {
+                                isListShown = false
+                            }
+                        }
+                        else -> {
+                            HomeScreen(
+                                state = state.value,
+                                showCreateTaskButton = state.value.allLists.isNotEmpty(),
+                                onAccountPressed = { showProfileDialog = true },
+                                onCreateListPressed = {
+                                    showCreateListDialog = true
+                                },
+                                onCreateTaskPressed = {
+                                    showCreateTaskDialog = true
+                                },
+                                navigateToListDetails = { taskList ->
+                                    selectedListId = taskList.id
+                                    isListShown = true
+                                },
+                                navigateToTaskDetails = { task ->
+                                    selectedTaskId = task.id
+                                    isTaskShown = true
+                                },
+                                onUpdateTask = { task ->
+                                    viewModel.updateTask(task)
+                                },
+                                onRefresh = {
+                                    viewModel.refreshCache()
+                                }
+                            )
                         }
                     }
                 }
@@ -349,6 +364,15 @@ fun HomeRoute(
             }
         }
     }
+}
+
+/**
+ * Used for single pane screen transitions.
+ */
+enum class ScreenState {
+    HOME,
+    SHOW_LIST,
+    SHOW_TASK
 }
 
 fun initNotifications(context: Context) {

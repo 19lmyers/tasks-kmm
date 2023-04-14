@@ -3,15 +3,15 @@ package dev.chara.tasks.android.ui
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
 
-sealed class RootNavTarget : Parcelable {
+sealed class NavTarget : Parcelable {
 
     @Parcelize
-    object Welcome : RootNavTarget()
+    object Welcome : NavTarget()
 
     /**
      * TODO make this one object with multiple Builder style constructors?
      */
-    sealed class Home : RootNavTarget() {
+    sealed class Home : NavTarget() {
 
         @Parcelize
         object Default : Home()
@@ -24,24 +24,24 @@ sealed class RootNavTarget : Parcelable {
     }
 
     @Parcelize
-    object Settings : RootNavTarget()
+    object Settings : NavTarget()
 
     // ChangeEmail
 
     // ValidateEmail
 
     @Parcelize
-    object ChangePassword : RootNavTarget()
+    object ChangePassword : NavTarget()
 
     @Parcelize
-    object SignIn : RootNavTarget()
+    object SignIn : NavTarget()
 
     @Parcelize
-    object SignUp : RootNavTarget()
+    object SignUp : NavTarget()
 
     @Parcelize
-    object ForgotPassword : RootNavTarget()
+    object ForgotPassword : NavTarget()
 
     @Parcelize
-    class ResetPassword(val resetToken: String) : RootNavTarget()
+    class ResetPassword(val resetToken: String) : NavTarget()
 }

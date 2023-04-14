@@ -84,7 +84,7 @@ struct ListDetailsRoute: View {
                     }
 
                     ToolbarItem(placement: .secondaryAction) {
-                        Button(action: {
+                        Button(role: .destructive, action: {
                             alertType = .deleteList
                             showAlert = true
                         }) {

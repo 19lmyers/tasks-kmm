@@ -42,7 +42,6 @@ import androidx.compose.ui.unit.dp
 import dev.chara.tasks.android.model.icon
 import dev.chara.tasks.android.model.vector
 import dev.chara.tasks.model.BoardSection
-import dev.chara.tasks.model.StartScreen
 import dev.chara.tasks.model.TaskList
 import dev.chara.tasks.model.Theme
 import dev.chara.tasks.viewmodel.settings.SettingsUiState
@@ -55,7 +54,6 @@ fun SettingsScreen(
     snackbarHostState: SnackbarHostState,
     onUpClicked: () -> Unit,
     onSetTheme: (Theme) -> Unit,
-    onSetStartScreen: (StartScreen) -> Unit,
     onSetVibrantColors: (Boolean) -> Unit,
     onUpdateBoardSection: (BoardSection.Type, Boolean) -> Unit,
     onUpdateList: (TaskList) -> Unit
@@ -86,11 +84,9 @@ fun SettingsScreen(
                     .padding(paddingBottom),
                 appTheme = state.appTheme,
                 useVibrantColors = state.useVibrantColors,
-                startScreen = state.startScreen,
                 enabledBoardSections = state.enabledBoardSections,
                 taskLists = state.taskLists,
                 onSetTheme = onSetTheme,
-                onSetStartScreen = onSetStartScreen,
                 onSetVibrantColors = onSetVibrantColors,
                 onUpdateBoardSection = onUpdateBoardSection,
                 onUpdateList = onUpdateList
@@ -134,68 +130,14 @@ private fun BoardSettings(
     modifier: Modifier = Modifier,
     appTheme: Theme,
     useVibrantColors: Boolean,
-    startScreen: StartScreen,
     enabledBoardSections: List<BoardSection.Type>,
     taskLists: List<TaskList>,
     onSetTheme: (Theme) -> Unit,
-    onSetStartScreen: (StartScreen) -> Unit,
     onSetVibrantColors: (Boolean) -> Unit,
     onUpdateBoardSection: (BoardSection.Type, Boolean) -> Unit,
     onUpdateList: (TaskList) -> Unit
 ) {
     Column(modifier = modifier) {
-        ListItem(
-            headlineContent = {
-                Text(
-                    text = "General",
-                    style = MaterialTheme.typography.titleMedium
-                )
-            }
-        )
-
-        var showStartScreenDropdown by remember { mutableStateOf(false) }
-
-        ListItem(
-            modifier = Modifier.clickable { showStartScreenDropdown = true },
-            headlineContent = {
-                Text(
-                    text = "Open app to",
-                )
-            },
-            trailingContent = {
-                ExposedDropdownMenuBox(
-                    expanded = showStartScreenDropdown,
-                    onExpandedChange = { showStartScreenDropdown = it }) {
-                    OutlinedTextField(
-                        modifier = Modifier
-                            .menuAnchor()
-                            .width(200.dp),
-                        readOnly = true,
-                        value = startScreen.toString(),
-                        onValueChange = {},
-                        trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = showStartScreenDropdown) },
-                        colors = ExposedDropdownMenuDefaults.outlinedTextFieldColors(),
-                        textStyle = MaterialTheme.typography.bodyLarge
-                    )
-                    DropdownMenu(
-                        modifier = Modifier.exposedDropdownSize(true),
-                        expanded = showStartScreenDropdown,
-                        onDismissRequest = { showStartScreenDropdown = false }
-                    ) {
-                        for (screen in StartScreen.values()) {
-                            DropdownMenuItem(
-                                text = { Text(screen.toString()) },
-                                onClick = {
-                                    onSetStartScreen(screen)
-                                    showStartScreenDropdown = false
-                                }
-                            )
-                        }
-                    }
-                }
-            }
-        )
-
         ListItem(
             headlineContent = {
                 Text(
@@ -341,7 +283,6 @@ private fun Preview_BoardSettings() {
     BoardSettings(
         appTheme = Theme.SYSTEM_DEFAULT,
         useVibrantColors = false,
-        startScreen = StartScreen.BOARD,
         enabledBoardSections = listOf(
             BoardSection.Type.STARRED
         ),
@@ -349,7 +290,6 @@ private fun Preview_BoardSettings() {
             TaskList(id = "1", title = "My tasks", isPinned = true)
         ),
         onSetTheme = {},
-        onSetStartScreen = {},
         onSetVibrantColors = {},
         onUpdateBoardSection = { _, _ -> },
         onUpdateList = {}

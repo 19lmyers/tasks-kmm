@@ -3,6 +3,7 @@ package dev.chara.tasks.viewmodel.home
 import dev.chara.tasks.data.Repository
 import dev.chara.tasks.model.Profile
 import dev.chara.tasks.model.Task
+import dev.chara.tasks.model.TaskList
 import dev.chara.tasks.viewmodel.util.PopupMessage
 import dev.chara.tasks.viewmodel.util.emitAsMessage
 import dev.icerock.moko.mvvm.flow.cFlow
@@ -31,17 +32,19 @@ class HomeViewModel : ViewModel(), KoinComponent {
         viewModelScope.launch {
             combine(
                 repository.isUserAuthenticated(),
-                repository.getStartScreen(),
+                repository.getUserProfile(),
+                repository.getBoardSections(),
+                repository.getPinnedLists(),
                 repository.getLists(),
-                repository.getUserProfile()
-            ) { isUserAuthenticated, startScreen, taskLists, profile ->
+            ) { isUserAuthenticated, profile, boardSections, pinnedLists, allLists ->
                 HomeUiState(
                     isLoading = false,
                     firstLoad = false,
                     isAuthenticated = isUserAuthenticated,
                     profile = profile,
-                    startScreen = startScreen,
-                    taskLists = taskLists
+                    boardSections = boardSections,
+                    pinnedLists = pinnedLists,
+                    allLists = allLists
                 )
             }.collect {
                 _uiState.value = it
@@ -77,10 +80,35 @@ class HomeViewModel : ViewModel(), KoinComponent {
         }
     }
 
+    fun refreshCache() {
+        viewModelScope.launch {
+            _uiState.value = _uiState.value.copy(isLoading = true)
+
+            val result = repository.refresh()
+            _messages.emitAsMessage(result)
+
+            _uiState.value = _uiState.value.copy(isLoading = false)
+        }
+    }
+
+    fun createList(taskList: TaskList) {
+        viewModelScope.launch {
+            val result = repository.createList(taskList)
+            _messages.emitAsMessage(result)
+        }
+    }
+
     fun createTask(listId: String, task: Task) {
         viewModelScope.launch {
             val result = repository.createTask(listId, task)
             _messages.emitAsMessage(result)
+        }
+    }
+
+    fun updateTask(task: Task) {
+        viewModelScope.launch {
+            val result = repository.updateTask(task.listId, task.id, task)
+            _messages.emitAsMessage(result, successMessage = "Task updated")
         }
     }
 }

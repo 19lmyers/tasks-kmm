@@ -4,6 +4,7 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -31,23 +32,25 @@ import dev.chara.tasks.model.TaskList
 
 private const val CONTENT_TYPE_HEADER = "CONTENT_TYPE_HEADER"
 private const val CONTENT_TYPE_TASK = "CONTENT_TYPE_TASK"
+private const val CONTENT_TYPE_LIST = "CONTENT_TYPE_LIST"
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun BoardSections(
-    modifier: Modifier = Modifier,
+fun Dashboard(
+    contentPadding: PaddingValues,
     sections: List<BoardSection>,
     pinnedLists: List<PinnedList>,
     allLists: List<TaskList>,
     onTaskClicked: (Task) -> Unit,
     onListClicked: (TaskList) -> Unit,
+    onCreateListClicked: () -> Unit,
     onUpdate: (Task) -> Unit
 ) {
     val state = rememberLazyListState()
 
     LazyColumn(
-        modifier = modifier.fillMaxSize(),
-        contentPadding = PaddingValues(vertical = 16.dp),
+        modifier = Modifier.fillMaxSize(),
+        contentPadding = contentPadding,
         state = state
     ) {
         for (section in sections) {
@@ -61,7 +64,8 @@ fun BoardSections(
             items(
                 section.tasks,
                 key = { "${section.type.name}/${it.id}" },
-                contentType = { CONTENT_TYPE_TASK }) { task ->
+                contentType = { CONTENT_TYPE_TASK }
+            ) { task ->
                 val parentList = allLists.first { it.id == task.listId }
 
                 ColorTheme(color = parentList.color) {
@@ -126,6 +130,37 @@ fun BoardSections(
                     }
                 }
             }
+        }
+
+        stickyHeader(contentType = CONTENT_TYPE_HEADER) {
+            SectionHeader(
+                modifier = Modifier.padding(horizontal = 8.dp),
+                title = "Lists"
+            )
+        }
+
+        items(
+            allLists,
+            key = { "lists/${it.id}" },
+            contentType = { CONTENT_TYPE_LIST }) { taskList ->
+            TaskListItem(
+                Modifier
+                    .animateItemPlacement()
+                    .padding(horizontal = 16.dp),
+                taskList,
+                onListClicked
+            )
+        }
+
+        item {
+            CreateListItem(
+                Modifier
+                    .animateItemPlacement()
+                    .padding(horizontal = 16.dp),
+                onClick = onCreateListClicked
+            )
+
+            Spacer(modifier = Modifier.padding(40.dp))
         }
     }
 }

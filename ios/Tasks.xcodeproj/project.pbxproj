@@ -10,8 +10,6 @@
 		058557BB273AAA24004C7B11 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 058557BA273AAA24004C7B11 /* Assets.xcassets */; };
 		2152FB042600AC8F00CF470E /* iOSApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2152FB032600AC8F00CF470E /* iOSApp.swift */; };
 		ADEB6958EC460D6F2A8884C7 /* Pods_Tasks.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 758BA94CE2051B9B8C75AA68 /* Pods_Tasks.framework */; };
-		DD0C09D129DD3874007805EF /* BoardRoute.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD0C09D029DD3874007805EF /* BoardRoute.swift */; };
-		DD0C09D329DD38B9007805EF /* BoardScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD0C09D229DD38B9007805EF /* BoardScreen.swift */; };
 		DD0C09D729DD3999007805EF /* Task.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD0C09D629DD3999007805EF /* Task.swift */; };
 		DD1A605D29E0C05D001AA3D8 /* SignUpRoute.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD1A605C29E0C05D001AA3D8 /* SignUpRoute.swift */; };
 		DD1A605F29E0C067001AA3D8 /* SignUpScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD1A605E29E0C067001AA3D8 /* SignUpScreen.swift */; };
@@ -20,11 +18,8 @@
 		DD24717B29E62CAF00125846 /* ListDetailsRoute.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD24717A29E62CAF00125846 /* ListDetailsRoute.swift */; };
 		DD24717D29E62D5300125846 /* ListDetailsScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD24717C29E62D5300125846 /* ListDetailsScreen.swift */; };
 		DD24717F29E6638200125846 /* Board.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD24717E29E6638200125846 /* Board.swift */; };
-		DD24718129E6765600125846 /* HomeNavigationStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD24718029E6765600125846 /* HomeNavigationStack.swift */; };
 		DD6D75D729E772C5005A4B40 /* FriendlyDateFormat.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD6D75D629E772C5005A4B40 /* FriendlyDateFormat.swift */; };
 		DD96350129E0E21F00303FBA /* TypeExt.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD96350029E0E21F00303FBA /* TypeExt.swift */; };
-		DD96350729E0E3B800303FBA /* ListsRoute.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD96350629E0E3B800303FBA /* ListsRoute.swift */; };
-		DD96350929E0E3E400303FBA /* ListsScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD96350829E0E3E400303FBA /* ListsScreen.swift */; };
 		DD96350F29E2119600303FBA /* ModifyList.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD96350E29E2119600303FBA /* ModifyList.swift */; };
 		DD96351129E21EE500303FBA /* BindingExt.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD96351029E21EE500303FBA /* BindingExt.swift */; };
 		DD96351429E2227500303FBA /* ModelExt.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD96351329E2227500303FBA /* ModelExt.swift */; };
@@ -49,8 +44,6 @@
 		7555FF8C242A565B00829871 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		758BA94CE2051B9B8C75AA68 /* Pods_Tasks.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Tasks.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		9C4E19B28F7B9B9AC1E1BE01 /* Pods-Tasks.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Tasks.debug.xcconfig"; path = "Target Support Files/Pods-Tasks/Pods-Tasks.debug.xcconfig"; sourceTree = "<group>"; };
-		DD0C09D029DD3874007805EF /* BoardRoute.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoardRoute.swift; sourceTree = "<group>"; };
-		DD0C09D229DD38B9007805EF /* BoardScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoardScreen.swift; sourceTree = "<group>"; };
 		DD0C09D629DD3999007805EF /* Task.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Task.swift; sourceTree = "<group>"; };
 		DD1A605C29E0C05D001AA3D8 /* SignUpRoute.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpRoute.swift; sourceTree = "<group>"; };
 		DD1A605E29E0C067001AA3D8 /* SignUpScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpScreen.swift; sourceTree = "<group>"; };
@@ -59,11 +52,8 @@
 		DD24717A29E62CAF00125846 /* ListDetailsRoute.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListDetailsRoute.swift; sourceTree = "<group>"; };
 		DD24717C29E62D5300125846 /* ListDetailsScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListDetailsScreen.swift; sourceTree = "<group>"; };
 		DD24717E29E6638200125846 /* Board.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Board.swift; sourceTree = "<group>"; };
-		DD24718029E6765600125846 /* HomeNavigationStack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeNavigationStack.swift; sourceTree = "<group>"; };
 		DD6D75D629E772C5005A4B40 /* FriendlyDateFormat.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendlyDateFormat.swift; sourceTree = "<group>"; };
 		DD96350029E0E21F00303FBA /* TypeExt.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TypeExt.swift; sourceTree = "<group>"; };
-		DD96350629E0E3B800303FBA /* ListsRoute.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListsRoute.swift; sourceTree = "<group>"; };
-		DD96350829E0E3E400303FBA /* ListsScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListsScreen.swift; sourceTree = "<group>"; };
 		DD96350E29E2119600303FBA /* ModifyList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModifyList.swift; sourceTree = "<group>"; };
 		DD96351029E21EE500303FBA /* BindingExt.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BindingExt.swift; sourceTree = "<group>"; };
 		DD96351329E2227500303FBA /* ModelExt.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelExt.swift; sourceTree = "<group>"; };
@@ -153,15 +143,6 @@
 			path = UI;
 			sourceTree = "<group>";
 		};
-		DD0C09CF29DD383F007805EF /* Board */ = {
-			isa = PBXGroup;
-			children = (
-				DD0C09D029DD3874007805EF /* BoardRoute.swift */,
-				DD0C09D229DD38B9007805EF /* BoardScreen.swift */,
-			);
-			path = Board;
-			sourceTree = "<group>";
-		};
 		DD0C09D429DD3968007805EF /* Component */ = {
 			isa = PBXGroup;
 			children = (
@@ -212,15 +193,6 @@
 			path = "Sign Up";
 			sourceTree = "<group>";
 		};
-		DD96350529E0E3AF00303FBA /* Lists */ = {
-			isa = PBXGroup;
-			children = (
-				DD96350629E0E3B800303FBA /* ListsRoute.swift */,
-				DD96350829E0E3E400303FBA /* ListsScreen.swift */,
-			);
-			path = Lists;
-			sourceTree = "<group>";
-		};
 		DD96350D29E2118A00303FBA /* Dialog */ = {
 			isa = PBXGroup;
 			children = (
@@ -260,12 +232,9 @@
 		DDCD05E129DF877400316955 /* Home */ = {
 			isa = PBXGroup;
 			children = (
-				DD24718029E6765600125846 /* HomeNavigationStack.swift */,
 				DDCD05D529DF750100316955 /* HomeRoute.swift */,
 				DDB08D7929DCC90600239CE4 /* HomeScreen.swift */,
-				DD0C09CF29DD383F007805EF /* Board */,
 				DD24717929E62CA300125846 /* List Details */,
-				DD96350529E0E3AF00303FBA /* Lists */,
 			);
 			path = Home;
 			sourceTree = "<group>";
@@ -409,7 +378,6 @@
 				DD1A605D29E0C05D001AA3D8 /* SignUpRoute.swift in Sources */,
 				DDDAA23629DCE4800062B5F4 /* Configuration.swift in Sources */,
 				DDCD05E029DF814D00316955 /* WelcomeView.swift in Sources */,
-				DD24718129E6765600125846 /* HomeNavigationStack.swift in Sources */,
 				DD1E5B1A29E49208003F73BA /* CreateTask.swift in Sources */,
 				DD24717D29E62D5300125846 /* ListDetailsScreen.swift in Sources */,
 				DD24717F29E6638200125846 /* Board.swift in Sources */,
@@ -420,15 +388,11 @@
 				DDB08D8129DCC90600239CE4 /* List.swift in Sources */,
 				DDDB2C9E29E36F93004BF254 /* FormElements.swift in Sources */,
 				DD24717B29E62CAF00125846 /* ListDetailsRoute.swift in Sources */,
-				DD96350729E0E3B800303FBA /* ListsRoute.swift in Sources */,
 				DDB08D7D29DCC90600239CE4 /* ContentView.swift in Sources */,
-				DD96350929E0E3E400303FBA /* ListsScreen.swift in Sources */,
 				DDCD05D929DF812600316955 /* SignInRoute.swift in Sources */,
 				DD96351429E2227500303FBA /* ModelExt.swift in Sources */,
 				DDCD05DB29DF813700316955 /* SignInScreen.swift in Sources */,
-				DD0C09D129DD3874007805EF /* BoardRoute.swift in Sources */,
 				DD96350129E0E21F00303FBA /* TypeExt.swift in Sources */,
-				DD0C09D329DD38B9007805EF /* BoardScreen.swift in Sources */,
 				DDCD05D629DF750100316955 /* HomeRoute.swift in Sources */,
 				2152FB042600AC8F00CF470E /* iOSApp.swift in Sources */,
 				DD96350F29E2119600303FBA /* ModifyList.swift in Sources */,

@@ -11,37 +11,22 @@ import SwiftUI
 
 struct HomeScreen: View {
     var state: HomeUiState
-
-    var onCreateTaskPressed: () -> Void
-
-    var onProfilePressed: () -> Void
-
-    var showAddAction: Bool
+    
+    var onCreateListPressed: () -> Void
+    var onUpdateTask: (Task) -> Void
+    
+    var onRefresh: @Sendable () async -> Void
 
     var body: some View {
-        TabView {
-            HomeNavigationStack(
-                content: AnyView(BoardRoute()),
-                onCreateTaskPressed: onCreateTaskPressed,
-                onProfilePressed: onProfilePressed,
-                showAddAction: showAddAction
+        List {
+            BoardSectionsView(
+                sections: state.boardSections,
+                pinnedLists: state.pinnedLists,
+                allLists: state.allLists,
+                onCreateListPressed: onCreateListPressed,
+                onUpdateTask: onUpdateTask
             )
-            .tabItem {
-                Image(systemName: "list.dash.header.rectangle")
-                Text("Board")
-            }
-
-            HomeNavigationStack(
-                content: AnyView(ListsRoute()),
-                onCreateTaskPressed: onCreateTaskPressed,
-                onProfilePressed: onProfilePressed,
-                showAddAction: showAddAction
-            )
-            .tabItem {
-                Image(systemName: "checklist.checked")
-                Text("Lists")
-            }
-        }
+        }.refreshable(action: onRefresh)
     }
 }
 
@@ -54,12 +39,13 @@ struct HomeScreen_Previews: PreviewProvider {
                     firstLoad: false,
                     isAuthenticated: true,
                     profile: nil,
-                    startScreen: StartScreen.board,
-                    taskLists: []
+                    boardSections: [],
+                    pinnedLists: [],
+                    allLists: []
                 ),
-                onCreateTaskPressed: {},
-                onProfilePressed: {},
-                showAddAction: true
+                onCreateListPressed: {},
+                onUpdateTask: { _ in },
+                onRefresh: {}
             )
         }
     }

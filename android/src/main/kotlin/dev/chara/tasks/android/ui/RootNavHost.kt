@@ -23,12 +23,7 @@ import dev.olshevski.navigation.reimagined.replaceAll
 
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
-fun RootNavHost(navController: NavController<RootNavTarget>, windowSizeClass: WindowSizeClass) {
-    val useNavRail = windowSizeClass.widthSizeClass > WindowWidthSizeClass.Compact
-
-    val useEditDialog = windowSizeClass.widthSizeClass > WindowWidthSizeClass.Compact
-            && windowSizeClass.heightSizeClass > WindowHeightSizeClass.Compact
-
+fun RootNavHost(navController: NavController<NavTarget>, windowSizeClass: WindowSizeClass) {
     val useDualPane = windowSizeClass.widthSizeClass == WindowWidthSizeClass.Expanded
             && windowSizeClass.heightSizeClass > WindowHeightSizeClass.Compact
 
@@ -36,35 +31,33 @@ fun RootNavHost(navController: NavController<RootNavTarget>, windowSizeClass: Wi
 
     AnimatedNavHost(navController) { navTarget ->
         when (navTarget) {
-            RootNavTarget.Welcome -> WelcomeRoute(
+            NavTarget.Welcome -> WelcomeRoute(
                 navigateToSignIn = {
-                    navController.navigate(RootNavTarget.SignIn)
+                    navController.navigate(NavTarget.SignIn)
                 },
                 navigateToSignUp = {
-                    navController.navigate(RootNavTarget.SignUp)
+                    navController.navigate(NavTarget.SignUp)
                 }
             )
 
-            is RootNavTarget.Home -> HomeRoute(
-                useNavRail = useNavRail,
-                useEditDialog = useEditDialog,
+            is NavTarget.Home -> HomeRoute(
                 useDualPane = useDualPane,
                 initialNavTarget = navTarget,
                 navigateToWelcome = {
-                    navController.replaceAll(RootNavTarget.Welcome)
+                    navController.replaceAll(NavTarget.Welcome)
                 },
                 navigateToSettings = {
-                    navController.navigate(RootNavTarget.Settings)
+                    navController.navigate(NavTarget.Settings)
                 },
                 navigateToChangeEmail = {
                     // TODO
                 },
                 navigateToChangePassword = {
-                    navController.navigate(RootNavTarget.ChangePassword)
+                    navController.navigate(NavTarget.ChangePassword)
                 }
             )
 
-            RootNavTarget.Settings -> SettingsRoute(
+            NavTarget.Settings -> SettingsRoute(
                 navigateUp = {
                     navController.pop()
                 }
@@ -72,47 +65,47 @@ fun RootNavHost(navController: NavController<RootNavTarget>, windowSizeClass: Wi
 
             // TODO email change + verify
 
-            RootNavTarget.ChangePassword -> ChangePasswordRoute(
+            NavTarget.ChangePassword -> ChangePasswordRoute(
                 viewModel(),
                 navigateToHome = {
-                    navController.replaceAll(RootNavTarget.Home.Default)
+                    navController.replaceAll(NavTarget.Home.Default)
                 },
                 navigateUp = {
                     navController.pop()
                 }
             )
 
-            RootNavTarget.SignIn -> SignInRoute(
+            NavTarget.SignIn -> SignInRoute(
                 navigateToHome = {
-                    navController.replaceAll(RootNavTarget.Home.Default)
+                    navController.replaceAll(NavTarget.Home.Default)
                 },
                 navigateToForgotPassword = {
-                    navController.navigate(RootNavTarget.ForgotPassword)
+                    navController.navigate(NavTarget.ForgotPassword)
                 },
                 navigateUp = {
                     navController.pop()
                 }
             )
 
-            RootNavTarget.SignUp -> SignUpRoute(
+            NavTarget.SignUp -> SignUpRoute(
                 navigateToHome = {
-                    navController.replaceAll(RootNavTarget.Home.Default)
+                    navController.replaceAll(NavTarget.Home.Default)
                 },
                 navigateUp = {
                     navController.pop()
                 }
             )
 
-            RootNavTarget.ForgotPassword -> ForgotPasswordRoute(
+            NavTarget.ForgotPassword -> ForgotPasswordRoute(
                 navigateUp = {
                     navController.pop()
                 }
             )
 
-            is RootNavTarget.ResetPassword -> ResetPasswordRoute(
+            is NavTarget.ResetPassword -> ResetPasswordRoute(
                 navTarget.resetToken,
                 navigateToSignIn = {
-                    navController.replaceAll(listOf(RootNavTarget.Welcome, RootNavTarget.SignIn))
+                    navController.replaceAll(listOf(NavTarget.Welcome, NavTarget.SignIn))
                 }
             )
         }

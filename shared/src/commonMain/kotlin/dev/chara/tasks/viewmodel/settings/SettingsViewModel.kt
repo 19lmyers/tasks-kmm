@@ -2,7 +2,6 @@ package dev.chara.tasks.viewmodel.settings
 
 import dev.chara.tasks.data.Repository
 import dev.chara.tasks.model.BoardSection
-import dev.chara.tasks.model.StartScreen
 import dev.chara.tasks.model.TaskList
 import dev.chara.tasks.model.Theme
 import dev.chara.tasks.viewmodel.util.PopupMessage
@@ -33,16 +32,14 @@ class SettingsViewModel : ViewModel(), KoinComponent {
             combine(
                 repository.getAppTheme(),
                 repository.useVibrantColors(),
-                repository.getStartScreen(),
                 repository.getLists(),
                 repository.getEnabledBoardSections()
-            ) { theme, useVibrantColors, startScreen, taskLists, enabledBoardSections ->
+            ) { theme, useVibrantColors, taskLists, enabledBoardSections ->
                 SettingsUiState(
                     isLoading = false,
                     firstLoad = false,
                     appTheme = theme,
                     useVibrantColors = useVibrantColors,
-                    startScreen = startScreen,
                     taskLists = taskLists,
                     enabledBoardSections = enabledBoardSections
                 )
@@ -61,12 +58,6 @@ class SettingsViewModel : ViewModel(), KoinComponent {
     fun setVibrantColors(useVibrantColors: Boolean) {
         viewModelScope.launch {
             repository.setVibrantColors(useVibrantColors)
-        }
-    }
-
-    fun setStartScreen(startScreen: StartScreen) {
-        viewModelScope.launch {
-            repository.setStartScreen(startScreen)
         }
     }
 
