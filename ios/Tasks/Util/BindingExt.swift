@@ -8,9 +8,6 @@
 
 import SwiftUI
 
-/**
- * Source: https://stackoverflow.com/a/72291242
- */
 public extension Binding where Value: Equatable {
     init(_ source: Binding<Value?>, replacingNilWith nilProxy: Value) {
         self.init(

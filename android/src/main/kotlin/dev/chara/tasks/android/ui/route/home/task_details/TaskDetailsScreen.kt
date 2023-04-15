@@ -14,7 +14,6 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Delete
@@ -26,12 +25,10 @@ import androidx.compose.material.icons.filled.NotificationAdd
 import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.filled.StarOutline
-import androidx.compose.material3.BottomAppBar
+import androidx.compose.material3.Checkbox
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.ExtendedFloatingActionButton
-import androidx.compose.material3.FloatingActionButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconToggleButton
@@ -105,28 +102,11 @@ fun TaskDetailsScreen(
                 onUpClicked = { onUpClicked() },
                 onDeleteClicked = { onDeleteClicked() },
                 onListSelected = {
-                    onUpdateTask(
-                        task.copy(
-                            lastModified = Clock.System.now()
-                        )
-                    )
                     onMoveTask(it)
                 },
                 onUpdateTask = {
                     task = it
                     modified = true
-                }
-            )
-        },
-        bottomBar = {
-            BottomBar(
-                task = task,
-                onUpdateTask = {
-                    task = it
-                    modified = true
-                },
-                onNavigateUp = {
-                    onUpClicked()
                 }
             )
         }
@@ -278,55 +258,6 @@ private fun Preview_TopBarWithListSelector() {
 }
 
 @Composable
-private fun BottomBar(
-    task: Task,
-    onUpdateTask: (Task) -> Unit,
-    onNavigateUp: () -> Unit
-) {
-    BottomAppBar(
-        actions = {},
-        floatingActionButton = {
-            ExtendedFloatingActionButton(
-                elevation = FloatingActionButtonDefaults.bottomAppBarFabElevation(),
-                onClick = {
-                    val isCompleted = !task.isCompleted
-
-                    onUpdateTask(
-                        task.copy(
-                            isCompleted = isCompleted,
-                            lastModified = Clock.System.now()
-                        )
-                    )
-                    if (isCompleted) {
-                        onNavigateUp()
-                    }
-                },
-                icon = {
-                    Icon(Icons.Filled.Check, "Check")
-                },
-                text = {
-                    if (task.isCompleted) {
-                        Text(text = "Mark as incomplete")
-                    } else {
-                        Text(text = "Mark as complete")
-                    }
-                }
-            )
-        }
-    )
-}
-
-@Preview
-@Composable
-private fun Preview_BottomBar() {
-    BottomBar(
-        task = Task("1", "1", "Take out trash"),
-        onUpdateTask = {},
-        onNavigateUp = {}
-    )
-}
-
-@Composable
 private fun ListSelector(
     taskLists: List<TaskList>,
     selectedListId: String,
@@ -389,7 +320,6 @@ private fun TaskDetailsForm(
                 onUpdateTask(
                     task.copy(
                         reminderDate = selectedDate.toInstant(TimeZone.currentSystemDefault()),
-
                         lastModified = Clock.System.now()
                     )
                 )
@@ -408,7 +338,6 @@ private fun TaskDetailsForm(
                 onUpdateTask(
                     task.copy(
                         dueDate = selectedDate.toInstant(TimeZone.currentSystemDefault()),
-
                         lastModified = Clock.System.now()
                     )
                 )
@@ -418,42 +347,52 @@ private fun TaskDetailsForm(
         )
     }
 
-    BasicTextField(
-        modifier = Modifier
-            .padding(16.dp)
-            .fillMaxWidth(),
-        value = task.label,
-        onValueChange = {
-            onUpdateTask(
-                task.copy(
-                    label = it,
-                    lastModified = Clock.System.now()
-                )
-            )
-        },
-        singleLine = false,
-        textStyle = MaterialTheme.typography.titleLarge
-            .copy(color = MaterialTheme.colorScheme.onBackground),
-        cursorBrush = SolidColor(MaterialTheme.colorScheme.primary),
-        decorationBox = { innerTextField ->
-            if (task.label.isEmpty()) {
-                Text(
-                    text = "Enter label",
-                    style = MaterialTheme.typography.titleLarge,
-                    color = MaterialTheme.colorScheme.error
-                )
-            }
-            innerTextField()
-        },
-        keyboardOptions = KeyboardOptions(
-            capitalization = KeyboardCapitalization.Sentences, imeAction = ImeAction.Done,
-        ),
-        keyboardActions = KeyboardActions(
-            onDone = {
-                keyboardController?.hide()
+    Row(modifier = Modifier.padding(horizontal = 4.dp)) {
+        Checkbox(
+            modifier = Modifier.align(Alignment.CenterVertically),
+            checked = task.isCompleted,
+            onCheckedChange = { isChecked ->
+                onUpdateTask(task.copy(isCompleted = isChecked))
             }
         )
-    )
+
+        BasicTextField(
+            modifier = Modifier
+                .padding(vertical = 16.dp, horizontal = 2.dp)
+                .fillMaxWidth(),
+            value = task.label,
+            onValueChange = {
+                onUpdateTask(
+                    task.copy(
+                        label = it,
+                        lastModified = Clock.System.now()
+                    )
+                )
+            },
+            singleLine = false,
+            textStyle = MaterialTheme.typography.titleLarge
+                .copy(color = MaterialTheme.colorScheme.onBackground),
+            cursorBrush = SolidColor(MaterialTheme.colorScheme.primary),
+            decorationBox = { innerTextField ->
+                if (task.label.isEmpty()) {
+                    Text(
+                        text = "Enter label",
+                        style = MaterialTheme.typography.titleLarge,
+                        color = MaterialTheme.colorScheme.error
+                    )
+                }
+                innerTextField()
+            },
+            keyboardOptions = KeyboardOptions(
+                capitalization = KeyboardCapitalization.Sentences, imeAction = ImeAction.Done,
+            ),
+            keyboardActions = KeyboardActions(
+                onDone = {
+                    keyboardController?.hide()
+                }
+            )
+        )
+    }
 
     ListItem(
         headlineContent = {

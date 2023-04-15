@@ -106,7 +106,7 @@ struct ReminderChipView: View {
                     onClick()
                 }
             ) {
-                Image(systemName: "bell.slash")
+                Image(systemName: "bell")
                 Text("Remind me")
             }
         }
@@ -154,7 +154,7 @@ struct DueDateChipView: View {
                     onClick()
                 }
             ) {
-                Image(systemName: "calendar.badge.plus")
+                Image(systemName: "calendar")
                 Text("Set due date")
             }
         }
