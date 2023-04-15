@@ -7,7 +7,6 @@ import androidx.activity.compose.setContent
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
 import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.view.WindowCompat
@@ -33,17 +32,13 @@ class MainActivity : ComponentActivity() {
         setContent {
             val viewModel: BaseViewModel = viewModel()
 
-            val userTheme by viewModel.getAppTheme()
-                .collectAsStateWithLifecycle(initialValue = Theme.SYSTEM_DEFAULT)
+            val state = viewModel.uiState.collectAsStateWithLifecycle()
 
-            val isDarkTheme = when (userTheme) {
+            val isDarkTheme = when (state.value.appTheme) {
                 Theme.SYSTEM_DEFAULT -> isSystemInDarkTheme()
                 Theme.LIGHT -> false
                 Theme.DARK -> true
             }
-
-            val vibrantColors by viewModel.useVibrantColors()
-                .collectAsStateWithLifecycle(initialValue = false)
 
             val navController: NavController<NavTarget> = rememberSaveable(initialBackstack) {
                 navController(initialBackstack = initialBackstack)
@@ -51,7 +46,7 @@ class MainActivity : ComponentActivity() {
 
             val windowSizeClass = calculateWindowSizeClass(this)
 
-            AppTheme(darkTheme = isDarkTheme, vibrantColors = vibrantColors) {
+            AppTheme(darkTheme = isDarkTheme, vibrantColors = state.value.useVibrantColors) {
                 RootNavHost(navController, windowSizeClass = windowSizeClass)
             }
         }

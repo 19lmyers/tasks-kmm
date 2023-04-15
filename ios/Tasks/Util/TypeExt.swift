@@ -11,4 +11,6 @@ import MultiPlatformLibrary
 extension TaskList : Identifiable {}
 extension Task : Identifiable {}
 
+extension Theme : Identifiable {}
+
 extension PopupMessage : Identifiable {}

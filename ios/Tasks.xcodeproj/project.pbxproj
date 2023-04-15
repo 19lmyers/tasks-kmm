@@ -21,6 +21,10 @@
 		DD6D75D729E772C5005A4B40 /* FriendlyDateFormat.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD6D75D629E772C5005A4B40 /* FriendlyDateFormat.swift */; };
 		DD78708329EA2606002D968C /* TaskDetailsRoute.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD78708229EA2606002D968C /* TaskDetailsRoute.swift */; };
 		DD78708529EA268A002D968C /* TaskDetailsScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD78708429EA268A002D968C /* TaskDetailsScreen.swift */; };
+		DD78708829EA3B5F002D968C /* SettingsRoute.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD78708729EA3B5F002D968C /* SettingsRoute.swift */; };
+		DD78708A29EA3B68002D968C /* SettingsScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD78708929EA3B68002D968C /* SettingsScreen.swift */; };
+		DD78708D29EA7C32002D968C /* UserProfileSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD78708C29EA7C32002D968C /* UserProfileSheet.swift */; };
+		DD78708F29EA7C51002D968C /* Profile.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD78708E29EA7C51002D968C /* Profile.swift */; };
 		DD96350129E0E21F00303FBA /* TypeExt.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD96350029E0E21F00303FBA /* TypeExt.swift */; };
 		DD96350F29E2119600303FBA /* ModifyList.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD96350E29E2119600303FBA /* ModifyList.swift */; };
 		DD96351129E21EE500303FBA /* BindingExt.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD96351029E21EE500303FBA /* BindingExt.swift */; };
@@ -57,6 +61,10 @@
 		DD6D75D629E772C5005A4B40 /* FriendlyDateFormat.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendlyDateFormat.swift; sourceTree = "<group>"; };
 		DD78708229EA2606002D968C /* TaskDetailsRoute.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskDetailsRoute.swift; sourceTree = "<group>"; };
 		DD78708429EA268A002D968C /* TaskDetailsScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskDetailsScreen.swift; sourceTree = "<group>"; };
+		DD78708729EA3B5F002D968C /* SettingsRoute.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsRoute.swift; sourceTree = "<group>"; };
+		DD78708929EA3B68002D968C /* SettingsScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsScreen.swift; sourceTree = "<group>"; };
+		DD78708C29EA7C32002D968C /* UserProfileSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserProfileSheet.swift; sourceTree = "<group>"; };
+		DD78708E29EA7C51002D968C /* Profile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Profile.swift; sourceTree = "<group>"; };
 		DD96350029E0E21F00303FBA /* TypeExt.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TypeExt.swift; sourceTree = "<group>"; };
 		DD96350E29E2119600303FBA /* ModifyList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModifyList.swift; sourceTree = "<group>"; };
 		DD96351029E21EE500303FBA /* BindingExt.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BindingExt.swift; sourceTree = "<group>"; };
@@ -150,12 +158,13 @@
 		DD0C09D429DD3968007805EF /* Component */ = {
 			isa = PBXGroup;
 			children = (
-				DD96350D29E2118A00303FBA /* Dialog */,
+				DD96350D29E2118A00303FBA /* Sheet */,
 				DDB08D7C29DCC90600239CE4 /* List.swift */,
 				DD0C09D629DD3999007805EF /* Task.swift */,
 				DDDB2C9D29E36F93004BF254 /* FormElements.swift */,
 				DD1E5B1B29E49FB8003F73BA /* Chips.swift */,
 				DD24717E29E6638200125846 /* Board.swift */,
+				DD78708E29EA7C51002D968C /* Profile.swift */,
 			);
 			path = Component;
 			sourceTree = "<group>";
@@ -163,6 +172,7 @@
 		DD0C09D529DD396C007805EF /* Route */ = {
 			isa = PBXGroup;
 			children = (
+				DD78708629EA3B56002D968C /* Settings */,
 				DDCD05DF29DF814D00316955 /* WelcomeView.swift */,
 				DDCD05D729DF810700316955 /* Auth */,
 				DDCD05E129DF877400316955 /* Home */,
@@ -188,6 +198,23 @@
 			path = "Task Details";
 			sourceTree = "<group>";
 		};
+		DD78708629EA3B56002D968C /* Settings */ = {
+			isa = PBXGroup;
+			children = (
+				DD78708729EA3B5F002D968C /* SettingsRoute.swift */,
+				DD78708929EA3B68002D968C /* SettingsScreen.swift */,
+			);
+			path = Settings;
+			sourceTree = "<group>";
+		};
+		DD78708B29EA7C24002D968C /* Profile */ = {
+			isa = PBXGroup;
+			children = (
+				DD78708C29EA7C32002D968C /* UserProfileSheet.swift */,
+			);
+			path = Profile;
+			sourceTree = "<group>";
+		};
 		DD96350329E0E35300303FBA /* Sign In */ = {
 			isa = PBXGroup;
 			children = (
@@ -206,13 +233,13 @@
 			path = "Sign Up";
 			sourceTree = "<group>";
 		};
-		DD96350D29E2118A00303FBA /* Dialog */ = {
+		DD96350D29E2118A00303FBA /* Sheet */ = {
 			isa = PBXGroup;
 			children = (
 				DD96350E29E2119600303FBA /* ModifyList.swift */,
 				DD1E5B1929E49208003F73BA /* CreateTask.swift */,
 			);
-			path = Dialog;
+			path = Sheet;
 			sourceTree = "<group>";
 		};
 		DD96351229E2225F00303FBA /* Model */ = {
@@ -245,6 +272,7 @@
 		DDCD05E129DF877400316955 /* Home */ = {
 			isa = PBXGroup;
 			children = (
+				DD78708B29EA7C24002D968C /* Profile */,
 				DDCD05D529DF750100316955 /* HomeRoute.swift */,
 				DDB08D7929DCC90600239CE4 /* HomeScreen.swift */,
 				DD24717929E62CA300125846 /* List Details */,
@@ -389,6 +417,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				DDB08D7E29DCC90600239CE4 /* HomeScreen.swift in Sources */,
+				DD78708A29EA3B68002D968C /* SettingsScreen.swift in Sources */,
+				DD78708F29EA7C51002D968C /* Profile.swift in Sources */,
 				DD1A605D29E0C05D001AA3D8 /* SignUpRoute.swift in Sources */,
 				DDDAA23629DCE4800062B5F4 /* Configuration.swift in Sources */,
 				DDCD05E029DF814D00316955 /* WelcomeView.swift in Sources */,
@@ -406,8 +436,10 @@
 				DDB08D7D29DCC90600239CE4 /* ContentView.swift in Sources */,
 				DDCD05D929DF812600316955 /* SignInRoute.swift in Sources */,
 				DD96351429E2227500303FBA /* ModelExt.swift in Sources */,
+				DD78708829EA3B5F002D968C /* SettingsRoute.swift in Sources */,
 				DD78708329EA2606002D968C /* TaskDetailsRoute.swift in Sources */,
 				DDCD05DB29DF813700316955 /* SignInScreen.swift in Sources */,
+				DD78708D29EA7C32002D968C /* UserProfileSheet.swift in Sources */,
 				DD96350129E0E21F00303FBA /* TypeExt.swift in Sources */,
 				DDCD05D629DF750100316955 /* HomeRoute.swift in Sources */,
 				2152FB042600AC8F00CF470E /* iOSApp.swift in Sources */,

@@ -143,7 +143,13 @@ struct TaskDetailsScreen: View {
         .onChange(of: listId) { id in
             onMove(state.task!, id)
         }
-        .onChange(of: [label, details, reminderDate, dueDate]) { _ in
+        .onChange(of: label) { _ in
+            modified = true
+        }.onChange(of: details) { _ in
+            modified = true
+        }.onChange(of: reminderDate) { _ in
+            modified = true
+        }.onChange(of: dueDate) { _ in
             modified = true
         }.onDisappear {
             if modified {

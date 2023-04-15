@@ -248,7 +248,7 @@ fun UserProfileDialog(
                             onLogoutClicked()
                         },
                     headlineContent = {
-                        Text(text = "Log out")
+                        Text(text = "Sign out")
                     },
                     leadingContent = {
                         Icon(Icons.Filled.Logout, contentDescription = "Log out")
