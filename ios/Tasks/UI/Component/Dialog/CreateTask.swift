@@ -20,6 +20,8 @@ struct CreateTaskSheet: View {
     
     @State var label: String
     
+    @State var details: String?
+    
     @State var reminderDate: Date?
     @State var dueDate: Date?
     
@@ -36,6 +38,8 @@ struct CreateTaskSheet: View {
                 
         _label = State(initialValue: current.label)
         
+        _details = State(initialValue: current.details)
+        
         _reminderDate = State(initialValue: current.reminderDate?.toDate())
         _dueDate = State(initialValue: current.dueDate?.toDate())
         
@@ -48,7 +52,7 @@ struct CreateTaskSheet: View {
                 Section {
                     TextField("Label", text: $label, prompt: Text("Enter label (required)"))
                     
-                    if (taskLists.count > 1) {
+                    if taskLists.count > 1 {
                         Picker(
                             selection: $listId,
                             content: {
@@ -64,7 +68,73 @@ struct CreateTaskSheet: View {
                 }
                 
                 Section {
+                    HStack {
+                        Image(systemName: "text.justify.left")
+                        TextField("Details", text: Binding($details, replacingNilWith: ""), prompt: Text("Add details"), axis: .vertical)
+                    }
+                }
+                
+                Section {
+                    HStack {
+                        Image(systemName: "bell")
+
+                        if reminderDate == nil {
+                            Button(action: {
+                                reminderDate = Date.now
+                            }) {
+                                Text("Remind me")
+                            }
+                        } else {
+                            DatePicker(
+                                "Remind me",
+                                selection: Binding(
+                                    $reminderDate,
+                                    replacingNilWith: Date.distantFuture
+                                ),
+                                in: Date.now...Date.distantFuture
+                            )
+                            .labelsHidden()
+                            
+                            Spacer()
+
+                            Button(action: {
+                                reminderDate = nil
+                            }) {
+                                Image(systemName: "xmark")
+                            }
+                        }
+                    }
                     
+                    HStack {
+                        Image(systemName: "calendar")
+                        
+                        if dueDate == nil {
+                            Button(action: {
+                                dueDate = Date.now
+                            }) {
+                                Text("Set due date")
+                            }
+                        } else {
+                            DatePicker(
+                                "Set due date",
+                                selection: Binding(
+                                    $dueDate,
+                                    replacingNilWith: Date.distantFuture
+                                ),
+                                in: Date.now...Date.distantFuture,
+                                displayedComponents: [.date]
+                            )
+                            .labelsHidden()
+                            
+                            Spacer()
+                            
+                            Button(action: {
+                                dueDate = nil
+                            }) {
+                                Image(systemName: "xmark")
+                            }
+                        }
+                    }
                 }
             }.toolbar {
                 ToolbarItem(placement: .cancellationAction) {
@@ -79,6 +149,7 @@ struct CreateTaskSheet: View {
                             current.edit()
                                 .listId(value: listId)
                                 .label(value: label)
+                                .details(value: details)
                                 .reminderDate(value: DateKt.toInstantOrNull(reminderDate))
                                 .dueDate(value: DateKt.toInstantOrNull(dueDate))
                                 .build()

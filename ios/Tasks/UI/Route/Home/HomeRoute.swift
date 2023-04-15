@@ -45,9 +45,9 @@ struct HomeRoute: View {
                         ListDetailsRoute(listId: taskList.id)
                             .navigationBarTitle(Text(taskList.title))
                     }
-                    .navigationDestination(for: Task.self) { task in
-                        Text(task.description())
-                            .navigationBarTitle(Text("Tasks"))
+                    .navigationDestination(for: Task.self) { task in                        
+                        TaskDetailsRoute(taskId: task.id)
+                            .navigationBarTitle(Text("Edit item"))
                     }
                     .toolbar {
                         if !uiState.allLists.isEmpty {

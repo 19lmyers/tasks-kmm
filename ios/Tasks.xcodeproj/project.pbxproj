@@ -19,6 +19,8 @@
 		DD24717D29E62D5300125846 /* ListDetailsScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD24717C29E62D5300125846 /* ListDetailsScreen.swift */; };
 		DD24717F29E6638200125846 /* Board.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD24717E29E6638200125846 /* Board.swift */; };
 		DD6D75D729E772C5005A4B40 /* FriendlyDateFormat.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD6D75D629E772C5005A4B40 /* FriendlyDateFormat.swift */; };
+		DD78708329EA2606002D968C /* TaskDetailsRoute.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD78708229EA2606002D968C /* TaskDetailsRoute.swift */; };
+		DD78708529EA268A002D968C /* TaskDetailsScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD78708429EA268A002D968C /* TaskDetailsScreen.swift */; };
 		DD96350129E0E21F00303FBA /* TypeExt.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD96350029E0E21F00303FBA /* TypeExt.swift */; };
 		DD96350F29E2119600303FBA /* ModifyList.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD96350E29E2119600303FBA /* ModifyList.swift */; };
 		DD96351129E21EE500303FBA /* BindingExt.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD96351029E21EE500303FBA /* BindingExt.swift */; };
@@ -53,6 +55,8 @@
 		DD24717C29E62D5300125846 /* ListDetailsScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListDetailsScreen.swift; sourceTree = "<group>"; };
 		DD24717E29E6638200125846 /* Board.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Board.swift; sourceTree = "<group>"; };
 		DD6D75D629E772C5005A4B40 /* FriendlyDateFormat.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendlyDateFormat.swift; sourceTree = "<group>"; };
+		DD78708229EA2606002D968C /* TaskDetailsRoute.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskDetailsRoute.swift; sourceTree = "<group>"; };
+		DD78708429EA268A002D968C /* TaskDetailsScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskDetailsScreen.swift; sourceTree = "<group>"; };
 		DD96350029E0E21F00303FBA /* TypeExt.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TypeExt.swift; sourceTree = "<group>"; };
 		DD96350E29E2119600303FBA /* ModifyList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModifyList.swift; sourceTree = "<group>"; };
 		DD96351029E21EE500303FBA /* BindingExt.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BindingExt.swift; sourceTree = "<group>"; };
@@ -175,6 +179,15 @@
 			path = "List Details";
 			sourceTree = "<group>";
 		};
+		DD78708129EA25F2002D968C /* Task Details */ = {
+			isa = PBXGroup;
+			children = (
+				DD78708229EA2606002D968C /* TaskDetailsRoute.swift */,
+				DD78708429EA268A002D968C /* TaskDetailsScreen.swift */,
+			);
+			path = "Task Details";
+			sourceTree = "<group>";
+		};
 		DD96350329E0E35300303FBA /* Sign In */ = {
 			isa = PBXGroup;
 			children = (
@@ -235,6 +248,7 @@
 				DDCD05D529DF750100316955 /* HomeRoute.swift */,
 				DDB08D7929DCC90600239CE4 /* HomeScreen.swift */,
 				DD24717929E62CA300125846 /* List Details */,
+				DD78708129EA25F2002D968C /* Task Details */,
 			);
 			path = Home;
 			sourceTree = "<group>";
@@ -387,10 +401,12 @@
 				DD6D75D729E772C5005A4B40 /* FriendlyDateFormat.swift in Sources */,
 				DDB08D8129DCC90600239CE4 /* List.swift in Sources */,
 				DDDB2C9E29E36F93004BF254 /* FormElements.swift in Sources */,
+				DD78708529EA268A002D968C /* TaskDetailsScreen.swift in Sources */,
 				DD24717B29E62CAF00125846 /* ListDetailsRoute.swift in Sources */,
 				DDB08D7D29DCC90600239CE4 /* ContentView.swift in Sources */,
 				DDCD05D929DF812600316955 /* SignInRoute.swift in Sources */,
 				DD96351429E2227500303FBA /* ModelExt.swift in Sources */,
+				DD78708329EA2606002D968C /* TaskDetailsRoute.swift in Sources */,
 				DDCD05DB29DF813700316955 /* SignInScreen.swift in Sources */,
 				DD96350129E0E21F00303FBA /* TypeExt.swift in Sources */,
 				DDCD05D629DF750100316955 /* HomeRoute.swift in Sources */,
