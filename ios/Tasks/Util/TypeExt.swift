@@ -8,9 +8,14 @@
 
 import MultiPlatformLibrary
 
-extension TaskList : Identifiable {}
-extension Task : Identifiable {}
+extension TaskList: Identifiable {
+}
 
-extension Theme : Identifiable {}
+extension Task: Identifiable {
+}
 
-extension PopupMessage : Identifiable {}
+extension Theme: Identifiable {
+}
+
+extension PopupMessage: Identifiable {
+}

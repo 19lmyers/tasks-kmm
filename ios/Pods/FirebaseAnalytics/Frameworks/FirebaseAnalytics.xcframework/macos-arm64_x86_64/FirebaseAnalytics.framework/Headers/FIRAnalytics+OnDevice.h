@@ -12,7 +12,7 @@ API_UNAVAILABLE(macCatalyst, macos, tvos, watchos)
 /// @param emailAddress User email address. Include a domain name for all email addresses
 ///   (e.g. gmail.com or hotmail.co.jp).
 + (void)initiateOnDeviceConversionMeasurementWithEmailAddress:(NSString *)emailAddress
-    NS_SWIFT_NAME(initiateOnDeviceConversionMeasurement(emailAddress:));
+NS_SWIFT_NAME(initiateOnDeviceConversionMeasurement(emailAddress:));
 
 @end
 

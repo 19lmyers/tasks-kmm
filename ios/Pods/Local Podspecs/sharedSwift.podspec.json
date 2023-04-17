@@ -13,7 +13,6 @@
   "static_framework": false,
   "dependencies": {
     "shared": [
-
     ]
   },
   "source_files": "build/cocoapods/framework/sharedSwift/**/*.{h,m,swift}",

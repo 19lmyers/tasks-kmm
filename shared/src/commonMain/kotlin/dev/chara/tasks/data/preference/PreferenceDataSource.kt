@@ -1,8 +1,6 @@
 package dev.chara.tasks.data.preference
 
-import androidx.datastore.core.DataMigration
 import androidx.datastore.preferences.core.PreferenceDataStoreFactory
-import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
@@ -25,7 +23,6 @@ class PreferenceDataSource(private val dataStorePath: DataStorePath) {
 
     private val dataStore = PreferenceDataStoreFactory.createWithPath(
         corruptionHandler = null,
-        migrations = listOf(ProfileMigration()),
         scope = CoroutineScope(Dispatchers.Default + SupervisorJob()),
         produceFile = {
             dataStorePath.get("tasks.preferences_pb").toPath()
@@ -36,6 +33,7 @@ class PreferenceDataSource(private val dataStorePath: DataStorePath) {
         val email = it[KEY_AUTH_USER_EMAIL] ?: return@map null
 
         Profile(
+            id = it[KEY_AUTH_USER_ID] ?: "",
             email = email,
             displayName = it[KEY_AUTH_USER_DISPLAY_NAME] ?: "",
             profilePhotoUri = it[KEY_AUTH_USER_PROFILE_PHOTO_URI],
@@ -44,6 +42,7 @@ class PreferenceDataSource(private val dataStorePath: DataStorePath) {
 
     suspend fun setUserProfile(profile: Profile) {
         dataStore.edit {
+            it[KEY_AUTH_USER_ID] = profile.id
             it[KEY_AUTH_USER_EMAIL] = profile.email
             it[KEY_AUTH_USER_DISPLAY_NAME] = profile.displayName
 
@@ -125,31 +124,8 @@ class PreferenceDataSource(private val dataStorePath: DataStorePath) {
         }
     }
 
-    @Suppress("DEPRECATION")
-    class ProfileMigration : DataMigration<Preferences> {
-        override suspend fun shouldMigrate(currentData: Preferences): Boolean {
-            return currentData.contains(KEY_AUTH_USER_ID)
-        }
-
-        override suspend fun migrate(currentData: Preferences): Preferences {
-            val preferences = currentData.toMutablePreferences()
-
-            val userId = preferences[KEY_AUTH_USER_ID]
-
-            if (userId != null) {
-                preferences[KEY_AUTH_USER_EMAIL] = userId
-            }
-
-            return preferences.toPreferences()
-        }
-
-        override suspend fun cleanUp() {}
-    }
-
     companion object {
-        @Deprecated("Replaced with Profile composite")
         private val KEY_AUTH_USER_ID = stringPreferencesKey("auth_user_id")
-
         private val KEY_AUTH_USER_EMAIL = stringPreferencesKey("auth_user_email")
         private val KEY_AUTH_USER_DISPLAY_NAME = stringPreferencesKey("auth_user_display_name")
         private val KEY_AUTH_USER_PROFILE_PHOTO_URI =
@@ -160,8 +136,6 @@ class PreferenceDataSource(private val dataStorePath: DataStorePath) {
 
         private val KEY_APP_THEME = stringPreferencesKey("app_theme")
         private val KEY_USE_VIBRANT_COLORS = booleanPreferencesKey("use_vibrant_colors")
-
-        private val KEY_START_SCREEN = stringPreferencesKey("start_screen")
 
         private val KEY_BOARD_DISABLED_SECTIONS = stringSetPreferencesKey("board_disabled_sections")
     }

@@ -15,7 +15,7 @@ struct iOSApp: App {
         InitKt.doInitNapierRelease()
         #endif
     }
-    
+
     var body: some Scene {
         WindowGroup {
             ContentView()

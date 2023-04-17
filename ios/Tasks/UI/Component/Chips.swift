@@ -13,7 +13,8 @@ struct ChipView<Content>: View where Content: View {
     var selectable: Bool = false
     @State var selected: Bool = false
 
-    var onClick: (Bool) -> Void = { _ in }
+    var onClick: (Bool) -> Void = { _ in
+    }
 
     @ViewBuilder var content: () -> Content
 
@@ -27,26 +28,26 @@ struct ChipView<Content>: View where Content: View {
             if selected {
                 HStack {
                     content()
-                        .font(.footnote)
+                            .font(.footnote)
                 }
-                .padding(.all, 8)
-                .background(
-                    RoundedRectangle(cornerRadius: 12).fill(.tint.opacity(0.25))
-                )
-                .lineLimit(1)
-                .foregroundColor(.primary)
+                        .padding(.all, 8)
+                        .background(
+                                RoundedRectangle(cornerRadius: 12).fill(.tint.opacity(0.25))
+                        )
+                        .lineLimit(1)
+                        .foregroundColor(.primary)
             } else {
                 HStack {
                     content()
-                        .font(.footnote)
+                            .font(.footnote)
                 }
-                .padding(.all, 8)
-                .background(
-                    RoundedRectangle(cornerRadius: 12)
-                        .strokeBorder(.primary, lineWidth: 1)
-                )
-                .lineLimit(1)
-                .foregroundColor(.primary)
+                        .padding(.all, 8)
+                        .background(
+                                RoundedRectangle(cornerRadius: 12)
+                                        .strokeBorder(.primary, lineWidth: 1)
+                        )
+                        .lineLimit(1)
+                        .foregroundColor(.primary)
             }
         }
     }
@@ -69,18 +70,19 @@ struct ReminderChipView: View {
     var reminderDate: Date?
 
     var selectable: Bool = false
-    var onClick: () -> Void = {}
+    var onClick: () -> Void = {
+    }
 
     var formatter = FriendlyDateFormat()
 
     var body: some View {
         if let date = reminderDate {
             ChipView(
-                selectable: false,
-                selected: selectable,
-                onClick: { _ in
-                    onClick()
-                }
+                    selectable: false,
+                    selected: selectable,
+                    onClick: { _ in
+                        onClick()
+                    }
             ) {
                 if date < Date.now {
                     Group {
@@ -89,7 +91,8 @@ struct ReminderChipView: View {
                         if selectable {
                             Image(systemName: "xmark")
                         }
-                    }.foregroundColor(.red)
+                    }
+                            .foregroundColor(.red)
                 } else {
                     Image(systemName: "bell")
                     Text(formatter.formatDateTime(date: date))
@@ -100,11 +103,11 @@ struct ReminderChipView: View {
             }
         } else {
             ChipView(
-                selectable: false,
-                selected: false,
-                onClick: { _ in
-                    onClick()
-                }
+                    selectable: false,
+                    selected: false,
+                    onClick: { _ in
+                        onClick()
+                    }
             ) {
                 Image(systemName: "bell")
                 Text("Remind me")
@@ -117,18 +120,19 @@ struct DueDateChipView: View {
     var dueDate: Date?
 
     var selectable: Bool = false
-    var onClick: () -> Void = {}
+    var onClick: () -> Void = {
+    }
 
     var formatter = FriendlyDateFormat()
 
     var body: some View {
         if let date = dueDate {
             ChipView(
-                selectable: false,
-                selected: selectable,
-                onClick: { _ in
-                    onClick()
-                }
+                    selectable: false,
+                    selected: selectable,
+                    onClick: { _ in
+                        onClick()
+                    }
             ) {
                 if date < Date.now {
                     Group {
@@ -137,7 +141,8 @@ struct DueDateChipView: View {
                         if selectable {
                             Image(systemName: "xmark")
                         }
-                    }.foregroundColor(.red)
+                    }
+                            .foregroundColor(.red)
                 } else {
                     Image(systemName: "calendar")
                     Text(formatter.formatDate(date: date))
@@ -148,11 +153,11 @@ struct DueDateChipView: View {
             }
         } else {
             ChipView(
-                selectable: false,
-                selected: false,
-                onClick: { _ in
-                    onClick()
-                }
+                    selectable: false,
+                    selected: false,
+                    onClick: { _ in
+                        onClick()
+                    }
             ) {
                 Image(systemName: "calendar")
                 Text("Set due date")
@@ -167,7 +172,7 @@ struct Chips_Previews: PreviewProvider {
             Text("Hello, world!")
         }
         ListChipView(
-            list: TaskListKt.doNew(id: "", title: "My long list name")
+                list: TaskListKt.doNew(id: "", title: "My long list name")
         )
     }
 }

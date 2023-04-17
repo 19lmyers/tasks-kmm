@@ -37,6 +37,7 @@ class Repository(
             onSuccess = { tokenPair ->
                 preferenceDataSource.setUserProfile(
                     Profile(
+                        id = "",
                         email = userId,
                         displayName = "",
                         profilePhotoUri = null

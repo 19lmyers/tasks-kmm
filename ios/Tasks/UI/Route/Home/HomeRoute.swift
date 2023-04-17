@@ -14,6 +14,11 @@ struct HomeRoute: View {
 
     var navigateToWelcome: () -> Void
 
+    @State var path = NavigationPath()
+    var settings: String = "Settings"
+
+    @State var showProfileSheet = false
+
     @State var showCreateListSheet = false
     @State var showCreateTaskSheet = false
 
@@ -26,79 +31,121 @@ struct HomeRoute: View {
                     navigateToWelcome()
                 }
             } else {
-                NavigationStack {
+                NavigationStack(path: $path) {
                     HomeScreen(
-                        state: uiState,
-                        onCreateListPressed: {
-                            showCreateListSheet = true
-                        },
-                        onUpdateTask: { task in
-                            viewModel.updateTask(task: task)
-                        },
-                        onRefresh: {
-                            DispatchQueue.main.sync {
-                                viewModel.refreshCache()
-                            }
-                        }
-                    )
-                    .navigationDestination(for: TaskList.self) { taskList in
-                        ListDetailsRoute(listId: taskList.id)
-                            .navigationBarTitle(Text(taskList.title))
-                    }
-                    .navigationDestination(for: Task.self) { task in                        
-                        TaskDetailsRoute(taskId: task.id)
-                            .navigationBarTitle(Text("Edit item"))
-                    }
-                    .toolbar {
-                        if !uiState.allLists.isEmpty {
-                            ToolbarItem(placement: .navigationBarTrailing) {
-                                Button(action: {
-                                    showCreateTaskSheet = true
-                                }) {
-                                    Image(systemName: "plus")
+                            state: uiState,
+                            onCreateListPressed: {
+                                showCreateListSheet = true
+                            },
+                            onUpdateTask: { task in
+                                viewModel.updateTask(task: task)
+                            },
+                            onRefresh: {
+                                DispatchQueue.main.sync {
+                                    viewModel.refreshCache()
                                 }
                             }
-                        }
-                        ToolbarItem(placement: .navigationBarTrailing) {
-                            Button(action: {
-                                // TODO:
-                            }) {
-                                Image(systemName: "person.crop.circle.fill")
+                    )
+                            .navigationDestination(for: TaskList.self) { taskList in
+                                ListDetailsRoute(listId: taskList.id)
+                                        .navigationBarTitle(Text(taskList.title))
                             }
-                        }
-                    }
-                    .navigationTitle("Tasks")
+                            .navigationDestination(for: Task.self) { task in
+                                TaskDetailsRoute(taskId: task.id)
+                                        .navigationBarTitle(Text("Edit item"))
+                            }
+                            .navigationDestination(for: String.self) { pathSegment in
+                                if pathSegment == settings {
+                                    SettingsRoute()
+                                            .navigationTitle("Settings")
+                                }
+                            }
+                            .toolbar {
+                                if !uiState.allLists.isEmpty {
+                                    ToolbarItem(placement: .navigationBarTrailing) {
+                                        Button(action: {
+                                            showCreateTaskSheet = true
+                                        }) {
+                                            Image(systemName: "plus")
+                                        }
+                                    }
+                                }
+                                ToolbarItem(placement: .navigationBarTrailing) {
+                                    Menu(content: {
+                                        Button(action: {
+                                            showProfileSheet = true
+                                        }) {
+                                            Text("Edit profile")
+                                            Image(systemName: "person")
+                                        }
+                                        Button(action: {
+                                            path.append(settings)
+                                        }) {
+                                            Text("Settings")
+                                            Image(systemName: "gearshape")
+                                        }
+                                        Button(action: {
+                                            viewModel.logout()
+                                        }) {
+                                            Text("Sign out")
+                                            Image(systemName: "rectangle.portrait.and.arrow.forward")
+                                        }
+                                    }) {
+                                        ProfileImageView(email: uiState.profile!.email, profilePhotoUrl: uiState.profile!.profilePhotoUri)
+                                                .frame(width: 24, height: 24)
+                                    }
+                                }
+                            }
+                            .navigationTitle("Tasks")
                 }
-                .sheet(isPresented: $showCreateListSheet) {
-                    ModifyListSheet(
-                        title: "Create list",
-                        current: TaskListKt.doNew(id: "", title: ""),
-                        onDismiss: {
-                            showCreateListSheet = false
-                        },
-                        onSave: { list in
-                            viewModel.createList(taskList: list)
-                            showCreateListSheet = false
+                        .sheet(isPresented: $showProfileSheet) {
+                            UserProfileSheet(
+                                    profile: uiState.profile!,
+                                    onChangePhotoPressed: {
+                                        // TODO
+                                    },
+                                    onChangeEmailPressed: {
+                                        // TODO
+                                    },
+                                    onChangePasswordPressed: {
+                                        // TODO
+                                    },
+                                    onUpdateUserProfile: { profile in
+                                        viewModel.updateUserProfile(profile: profile)
+                                    }
+                            )
+                                    .presentationDetents([.medium, .large])
                         }
-                    )
-                }
-                .sheet(isPresented: $showCreateTaskSheet) {
-                    CreateTaskSheet(
-                        taskLists: uiState.allLists,
-                        current: TaskKt.doNew(id: "", listId: uiState.allLists.first!.id, label: "")
-                            .edit()
-                            .lastModified(value: DateKt.toInstant(Date.now))
-                            .build(),
-                        onDismiss: {
-                            showCreateTaskSheet = false
-                        },
-                        onSave: { task in
-                            viewModel.createTask(listId: task.listId, task: task)
-                            showCreateTaskSheet = false
+                        .sheet(isPresented: $showCreateListSheet) {
+                            ModifyListSheet(
+                                    title: "Create list",
+                                    current: TaskListKt.doNew(id: "", title: ""),
+                                    onDismiss: {
+                                        showCreateListSheet = false
+                                    },
+                                    onSave: { list in
+                                        viewModel.createList(taskList: list)
+                                        showCreateListSheet = false
+                                    }
+                            )
                         }
-                    )
-                    .presentationDetents([.medium, .large])
-                }
+                        .sheet(isPresented: $showCreateTaskSheet) {
+                            CreateTaskSheet(
+                                    taskLists: uiState.allLists,
+                                    current: TaskKt.doNew(id: "", listId: uiState.allLists.first!.id, label: "")
+                                            .edit()
+                                            .lastModified(value: DateKt.toInstant(Date.now))
+                                            .build(),
+                                    onDismiss: {
+                                        showCreateTaskSheet = false
+                                    },
+                                    onSave: { task in
+                                        viewModel.createTask(listId: task.listId, task: task)
+                                        showCreateTaskSheet = false
+                                    }
+                            )
+                                    .presentationDetents([.medium, .large])
+                        }
             }
         } else {
             ProgressView()

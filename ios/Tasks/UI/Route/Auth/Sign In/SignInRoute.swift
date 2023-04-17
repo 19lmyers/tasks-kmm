@@ -25,25 +25,25 @@ struct SignInRoute: View {
             }
         } else {
             SignInScreen(
-                state: uiState,
-                onSignInClicked: { email, password in
-                    viewModel.signIn(email: email, password: password)
-                },
-                validateEmail: { email in
-                    viewModel.validateEmail(email: email)
-                }
-            )
-            .navigationBarBackButtonHidden(uiState.isLoading)
-            .alert(item: $currentAlert) { message in
-                Alert(title: Text(message.text), message: nil)
-            }
-            .onAppear {
-                viewModel.messages.subscribe(
-                    onCollect: { message in
-                        currentAlert = message
+                    state: uiState,
+                    onSignInClicked: { email, password in
+                        viewModel.signIn(email: email, password: password)
+                    },
+                    validateEmail: { email in
+                        viewModel.validateEmail(email: email)
                     }
-                )
-            }
+            )
+                    .navigationBarBackButtonHidden(uiState.isLoading)
+                    .alert(item: $currentAlert) { message in
+                        Alert(title: Text(message.text), message: nil)
+                    }
+                    .onAppear {
+                        viewModel.messages.subscribe(
+                                onCollect: { message in
+                                    currentAlert = message
+                                }
+                        )
+                    }
         }
     }
 }

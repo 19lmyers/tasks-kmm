@@ -9,6 +9,28 @@
 import MultiPlatformLibrary
 import SwiftUI
 
+extension Theme {
+    var colorScheme: ColorScheme? {
+        switch self {
+        case .light: return .light
+        case .dark: return .dark
+        case .systemDefault: return .none
+        default: return .none
+        }
+    }
+}
+
+extension BoardSection.Type_ {
+    var icon: String {
+        switch self {
+        case .overdue: return "clock"
+        case .starred: return "star.fill"
+        case .upcoming: return "calendar"
+        default: return "checklist"
+        }
+    }
+}
+
 extension TaskList.Color: Identifiable {
     var ui: Color {
         switch self {

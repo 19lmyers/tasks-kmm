@@ -12,8 +12,6 @@ restricted system.
 * **Downloads:** https://jpa.kapsi.fi/nanopb/download/
 * **Forum:** https://groups.google.com/forum/#!forum/nanopb
 
-
-
 Using the nanopb library
 ------------------------
 To use the nanopb library, you need to do two things:
@@ -49,8 +47,6 @@ one of the binary distributions of it. In either case, if you use a separate
 `protoc`, you need to manually give the path to nanopb generator:
 
     protoc --plugin=protoc-gen-nanopb=nanopb/generator/protoc-gen-nanopb ...
-
-
 
 Running the tests
 -----------------

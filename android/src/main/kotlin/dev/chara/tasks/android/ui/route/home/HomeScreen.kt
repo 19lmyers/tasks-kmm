@@ -18,7 +18,12 @@ import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Logout
+import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.Icon
@@ -31,6 +36,10 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.tooling.preview.Preview
@@ -46,9 +55,8 @@ import dev.chara.tasks.viewmodel.home.HomeUiState
 
 @OptIn(
     ExperimentalMaterial3Api::class,
-    ExperimentalMaterialApi::class,
     ExperimentalLayoutApi::class,
-    ExperimentalAnimationApi::class
+    ExperimentalAnimationApi::class, ExperimentalMaterialApi::class
 )
 @Composable
 fun HomeScreen(
@@ -56,6 +64,8 @@ fun HomeScreen(
     modifier: Modifier = Modifier,
     showCreateTaskButton: Boolean,
     onAccountPressed: () -> Unit,
+    onSettingsPressed: () -> Unit,
+    onSignOutPressed: () -> Unit,
     onCreateListPressed: () -> Unit,
     onCreateTaskPressed: () -> Unit,
     navigateToListDetails: (TaskList) -> Unit,
@@ -68,16 +78,21 @@ fun HomeScreen(
     val refreshState = rememberPullRefreshState(state.isLoading, onRefresh)
 
     Scaffold(modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection), topBar = {
-        TopBar(scrollBehavior, state.profile!!) {
-            onAccountPressed()
-        }
+        TopBar(
+            scrollBehavior,
+            state.profile!!,
+            onAccountPressed,
+            onSettingsPressed,
+            onSignOutPressed
+        )
     }, floatingActionButton = {
         AnimatedVisibility(
             visible = showCreateTaskButton,
             enter = scaleIn(),
             exit = scaleOut(),
         ) {
-            ExtendedFloatingActionButton(text = { Text(text = "New task") },
+            ExtendedFloatingActionButton(
+                text = { Text(text = "New task") },
                 icon = { Icon(Icons.Filled.Add, contentDescription = "New task") },
                 onClick = { onCreateTaskPressed() },
                 expanded = scrollBehavior.state.collapsedFraction == 0.0f
@@ -113,6 +128,8 @@ fun HomeScreenWithDetailPane(
     state: HomeUiState,
     showCreateTaskButton: Boolean,
     onAccountPressed: () -> Unit,
+    onSettingsPressed: () -> Unit,
+    onSignOutPressed: () -> Unit,
     onCreateListPressed: () -> Unit,
     onCreateTaskPressed: () -> Unit,
     navigateToListDetails: (TaskList) -> Unit,
@@ -129,6 +146,8 @@ fun HomeScreenWithDetailPane(
             modifier = Modifier.width(homePaneWidth),
             showCreateTaskButton = showCreateTaskButton && detailPaneWidth == 0.dp,
             onAccountPressed = onAccountPressed,
+            onSettingsPressed = onSettingsPressed,
+            onSignOutPressed = onSignOutPressed,
             onCreateListPressed = onCreateListPressed,
             onCreateTaskPressed = onCreateTaskPressed,
             navigateToListDetails = { taskList -> navigateToListDetails(taskList) },
@@ -155,13 +174,62 @@ fun HomeScreenWithDetailPane(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TopBar(
-    scrollBehavior: TopAppBarScrollBehavior, profile: Profile, onAccountClicked: () -> Unit
+    scrollBehavior: TopAppBarScrollBehavior,
+    profile: Profile,
+    onEditProfileClicked: () -> Unit,
+    onSettingsClicked: () -> Unit,
+    onSignOutClicked: () -> Unit
 ) {
-    TopAppBar(title = { Text(text = "Tasks") }, actions = {
-        IconButton(onClick = { onAccountClicked() }) {
-            ProfileImage(profile.email, profile.profilePhotoUri, Modifier.requiredSize(24.dp))
-        }
-    }, scrollBehavior = scrollBehavior
+    var showOverflowMenu by remember { mutableStateOf(false) }
+
+    TopAppBar(
+        title = { Text(text = "Tasks") },
+        actions = {
+            IconButton(onClick = { showOverflowMenu = true }) {
+                ProfileImage(profile.email, profile.profilePhotoUri, Modifier.requiredSize(24.dp))
+            }
+            DropdownMenu(
+                expanded = showOverflowMenu,
+                onDismissRequest = { showOverflowMenu = false }) {
+                DropdownMenuItem(
+                    onClick = {
+                        showOverflowMenu = false
+                        onEditProfileClicked()
+                    },
+                    text = {
+                        Text("Edit profile")
+                    },
+                    leadingIcon = {
+                        Icon(Icons.Filled.Person, contentDescription = "Profile")
+                    },
+                )
+                DropdownMenuItem(
+                    onClick = {
+                        showOverflowMenu = false
+                        onSettingsClicked()
+                    },
+                    text = {
+                        Text("Settings")
+                    },
+                    leadingIcon = {
+                        Icon(Icons.Filled.Settings, contentDescription = "Settings")
+                    }
+                )
+                DropdownMenuItem(
+                    onClick = {
+                        showOverflowMenu = false
+                        onSignOutClicked()
+                    },
+                    text = {
+                        Text("Sign out")
+                    },
+                    leadingIcon = {
+                        Icon(Icons.Filled.Logout, contentDescription = "Sign out")
+                    }
+                )
+            }
+        },
+        scrollBehavior = scrollBehavior
     )
 }
 
@@ -169,7 +237,13 @@ fun TopBar(
 @Preview
 @Composable
 private fun Preview_TopBar() {
-    TopBar(scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(), profile = Profile(
-        email = "user@email.com", displayName = "User", profilePhotoUri = null
-    ), onAccountClicked = {})
+    TopBar(
+        scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(),
+        profile = Profile(
+            id = "1", email = "user@email.com", displayName = "User", profilePhotoUri = null
+        ),
+        onEditProfileClicked = {},
+        onSettingsClicked = {},
+        onSignOutClicked = {}
+    )
 }

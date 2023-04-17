@@ -13,7 +13,7 @@ struct TaskDetailsRoute: View {
     @Environment(\.presentationMode) var presentation
 
     @StateObject var viewModel: TaskDetailsViewModel
-    
+
     @State var showAlert = false
 
     init(taskId: String) {
@@ -38,43 +38,43 @@ struct TaskDetailsRoute: View {
                 } onMove: { task, newListId in
                     viewModel.moveTask(oldListId: task.listId, newListId: newListId, taskId: task.id, lastModified: DateKt.toInstant(Date.now))
                 }
-                .tint(parentList!.color?.ui ?? Color.accentColor)
-                .toolbar {
-                    ToolbarItem(placement: .primaryAction) {
-                        StarView(isStarred: uiState.task!.isStarred) { isStarred in
-                            viewModel.updateTask(
-                                listId: uiState.task!.listId,
-                                taskId: uiState.task!.id,
-                                task: uiState.task!.edit()
-                                    .isStarred(value: isStarred)
-                                    .lastModified(value: DateKt.toInstant(Date.now))
-                                    .build()
+                        .tint(parentList!.color?.ui ?? Color.accentColor)
+                        .toolbar {
+                            ToolbarItem(placement: .primaryAction) {
+                                StarView(isStarred: uiState.task!.isStarred) { isStarred in
+                                    viewModel.updateTask(
+                                            listId: uiState.task!.listId,
+                                            taskId: uiState.task!.id,
+                                            task: uiState.task!.edit()
+                                                    .isStarred(value: isStarred)
+                                                    .lastModified(value: DateKt.toInstant(Date.now))
+                                                    .build()
+                                    )
+                                }
+                            }
+
+                            ToolbarItem(placement: .secondaryAction) {
+                                Button(role: .destructive, action: {
+                                    showAlert = true
+                                }) {
+                                    Image(systemName: "trash")
+                                    Text("Delete item")
+                                }
+                            }
+                        }
+                        .alert(isPresented: $showAlert) {
+                            Alert(
+                                    title: Text("Delete item?"),
+                                    message: Text("This item will be permanently deleted"),
+                                    primaryButton: .destructive(Text("Delete")) {
+                                        viewModel.deleteTask(listId: uiState.task!.listId, taskId: uiState.task!.id)
+                                        showAlert = false
+                                    },
+                                    secondaryButton: .cancel {
+                                        showAlert = false
+                                    }
                             )
                         }
-                    }
-                    
-                    ToolbarItem(placement: .secondaryAction) {
-                        Button(role: .destructive, action: {
-                            showAlert = true
-                        }) {
-                            Image(systemName: "trash")
-                            Text("Delete item")
-                        }
-                    }
-                }
-                .alert(isPresented: $showAlert) {
-                    Alert(
-                        title: Text("Delete item?"),
-                        message: Text("This item will be permanently deleted"),
-                        primaryButton: .destructive(Text("Delete")) {
-                            viewModel.deleteTask(listId: uiState.task!.listId, taskId: uiState.task!.id)
-                            showAlert = false
-                        },
-                        secondaryButton: .cancel {
-                            showAlert = false
-                        }
-                    )
-                }
             }
         }
     }

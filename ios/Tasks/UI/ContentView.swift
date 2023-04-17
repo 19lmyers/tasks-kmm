@@ -12,10 +12,11 @@ import SwiftUI
 struct ContentView: View {
     @ObservedObject var viewModel = BaseViewModel()
 
-    var onCreateTaskPressed = {}
+    var onCreateTaskPressed = {
+    }
 
     @State var colorScheme: ColorScheme? = .none
-    
+
     @State var showAuthenticationFlow = false
 
     var body: some View {
@@ -23,18 +24,18 @@ struct ContentView: View {
 
         if showAuthenticationFlow {
             WelcomeView(
-                navigateToHome: {
-                    showAuthenticationFlow = false
-                }
+                    navigateToHome: {
+                        showAuthenticationFlow = false
+                    }
             )
-            .preferredColorScheme(uiState.appTheme.colorScheme)
+                    .preferredColorScheme(uiState.appTheme.colorScheme)
         } else {
             HomeRoute(
-                navigateToWelcome: {
-                    showAuthenticationFlow = true
-                }
+                    navigateToWelcome: {
+                        showAuthenticationFlow = true
+                    }
             )
-            .preferredColorScheme(uiState.appTheme.colorScheme)
+                    .preferredColorScheme(uiState.appTheme.colorScheme)
         }
     }
 }

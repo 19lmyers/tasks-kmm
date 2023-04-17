@@ -10,29 +10,33 @@ import SwiftUI
 
 struct CheckboxView: View {
     var isChecked: Bool
-    
-    var onChange: (Bool) -> Void = { _ in }
+
+    var onChange: (Bool) -> Void = { _ in
+    }
 
     var body: some View {
         Button(action: {
             onChange(!isChecked)
         }) {
             Image(systemName: isChecked ? "checkmark.square" : "square").foregroundStyle(.tint)
-        }.buttonStyle(PlainButtonStyle())
+        }
+                .buttonStyle(PlainButtonStyle())
     }
 }
 
 struct StarView: View {
     var isStarred: Bool
-    
-    var onChange: (Bool) -> Void = { _ in }
-    
+
+    var onChange: (Bool) -> Void = { _ in
+    }
+
     var body: some View {
         Button(action: {
             onChange(!isStarred)
         }) {
             Image(systemName: isStarred ? "star.fill" : "star").foregroundStyle(.tint)
-        }.buttonStyle(PlainButtonStyle())
+        }
+                .buttonStyle(PlainButtonStyle())
     }
 }
 

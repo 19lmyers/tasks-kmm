@@ -1,6 +1,5 @@
 package dev.chara.tasks.android.ui.route.home.profile
 
-import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -14,16 +13,11 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AddPhotoAlternate
-import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.HideImage
-import androidx.compose.material.icons.filled.Logout
 import androidx.compose.material.icons.filled.Password
 import androidx.compose.material.icons.filled.Person
-import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.ListItem
@@ -46,7 +40,6 @@ import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -58,13 +51,10 @@ import dev.chara.tasks.model.Profile
 fun UserProfileDialog(
     userProfile: Profile,
     onDismiss: () -> Unit,
-    onSettingsClicked: () -> Unit,
-    onLogoutClicked: () -> Unit,
     onChangePhotoClicked: () -> Unit,
     onChangeEmailClicked: () -> Unit,
     onChangePasswordClicked: () -> Unit,
     onUpdateUserProfile: (Profile) -> Unit,
-    defaultEditMode: Boolean = false
 ) {
     var showEditNameDialog by remember { mutableStateOf(false) }
 
@@ -80,8 +70,6 @@ fun UserProfileDialog(
             }
         )
     }
-
-    var editMode by remember { mutableStateOf(defaultEditMode) }
 
     MaterialDialog(semanticTitle = userProfile.displayName, onClose = { onDismiss() }) {
         Column(
@@ -100,165 +88,93 @@ fun UserProfileDialog(
                         .requiredSize(48.dp)
                         .clip(MaterialTheme.shapes.extraLarge)
                         .clickable {
-                            if (editMode) {
-                                onChangePhotoClicked()
-                            } else {
-                                editMode = true
-                            }
+                            onChangePhotoClicked()
                         }
                 )
-                if (editMode) {
-                    IconButton(
-                        onClick = { editMode = false },
-                        modifier = Modifier
-                            .align(Alignment.TopStart)
-                            .padding(start = 16.dp)
-                    ) {
-                        Icon(Icons.Filled.ArrowBack, contentDescription = "Back")
-                    }
-                    IconButton(
-                        onClick = {
-                            if (userProfile.profilePhotoUri == null) {
-                                onChangePhotoClicked()
-                            } else {
-                                onUpdateUserProfile(userProfile.copy(profilePhotoUri = null))
-                            }
-                        },
-                        modifier = Modifier
-                            .align(Alignment.TopEnd)
-                            .padding(end = 16.dp)
-                    ) {
-                        if (userProfile.profilePhotoUri == null) {
-                            Icon(
-                                Icons.Filled.AddPhotoAlternate,
-                                contentDescription = "Add profile picture"
-                            )
-                        } else {
-                            Icon(
-                                Icons.Filled.HideImage,
-                                contentDescription = "Remove profile picture"
-                            )
-                        }
-                    }
+                IconButton(
+                    onClick = {
+                        onChangePhotoClicked()
+                    },
+                    modifier = Modifier
+                        .align(Alignment.TopStart)
+                        .padding(start = 16.dp)
+                ) {
+                    Icon(Icons.Filled.AddPhotoAlternate, contentDescription = "Add profile picture")
+                }
+                IconButton(
+                    onClick = {
+                        onUpdateUserProfile(userProfile.copy(profilePhotoUri = null))
+                    },
+                    modifier = Modifier
+                        .align(Alignment.TopEnd)
+                        .padding(end = 16.dp)
+                ) {
+                    Icon(
+                        Icons.Filled.HideImage,
+                        contentDescription = "Remove profile picture"
+                    )
                 }
             }
-            if (editMode) {
-                ListItem(
-                    modifier = Modifier
-                        .padding(horizontal = 24.dp)
-                        .clip(MaterialTheme.shapes.extraLarge)
-                        .clickable {
-                            showEditNameDialog = true
-                        },
-                    headlineContent = {
-                        Text(
-                            text = userProfile.displayName,
-                            overflow = TextOverflow.Ellipsis,
-                            maxLines = 1
-                        )
-                    },
-                    supportingContent = {
-                        Text(text = "Edit name")
-                    },
-                    leadingContent = {
-                        Icon(Icons.Filled.Person, contentDescription = "Display Name")
-                    }
-                )
-                ListItem(
-                    modifier = Modifier
-                        .padding(horizontal = 24.dp)
-                        .clip(MaterialTheme.shapes.extraLarge)
-                        .clickable {
-                            //onChangeEmailClicked() TODO
-                        },
-                    headlineContent = {
-                        Text(
-                            text = userProfile.email,
-                            overflow = TextOverflow.Ellipsis,
-                            maxLines = 1
-                        )
-                    },
-                    supportingContent = {
-                        //Text(text = "Change email") TODO
-                    },
-                    leadingContent = {
-                        Icon(Icons.Filled.Email, contentDescription = "Email")
-                    }
-                )
-                ListItem(
-                    modifier = Modifier
-                        .padding(horizontal = 24.dp)
-                        .clip(MaterialTheme.shapes.extraLarge)
-                        .clickable {
-                            onChangePasswordClicked()
-                        },
-                    headlineContent = {
-                        Text(text = "Password")
-                    },
-                    supportingContent = {
-                        Text(text = "Change password")
-                    },
-                    leadingContent = {
-                        Icon(Icons.Filled.Password, contentDescription = "Password")
-                    }
-                )
-            } else {
-                Text(
-                    text = userProfile.displayName,
-                    style = MaterialTheme.typography.headlineSmall,
-                    textAlign = TextAlign.Center,
-                    modifier = Modifier
-                        .align(Alignment.CenterHorizontally)
-                        .padding(horizontal = 24.dp)
-                        .padding(bottom = 16.dp)
-                )
-                ListItem(
-                    modifier = Modifier
-                        .padding(horizontal = 24.dp)
-                        .clip(MaterialTheme.shapes.extraLarge)
-                        .clickable {
-                            editMode = true
-                        },
-                    headlineContent = {
-                        Text(text = "Edit profile")
-                    },
-                    leadingContent = {
-                        Icon(Icons.Filled.Edit, contentDescription = "Edit")
-                    }
-                )
-                ListItem(
-                    modifier = Modifier
-                        .padding(horizontal = 24.dp)
-                        .clip(MaterialTheme.shapes.extraLarge)
-                        .clickable {
-                            onSettingsClicked()
-                        },
-                    headlineContent = {
-                        Text(text = "Settings")
-                    },
-                    leadingContent = {
-                        Icon(Icons.Filled.Settings, contentDescription = "Settings")
-                    }
-                )
-                ListItem(
-                    modifier = Modifier
-                        .padding(horizontal = 24.dp)
-                        .clip(MaterialTheme.shapes.extraLarge)
-                        .clickable {
-                            onLogoutClicked()
-                        },
-                    headlineContent = {
-                        Text(text = "Sign out")
-                    },
-                    leadingContent = {
-                        Icon(Icons.Filled.Logout, contentDescription = "Log out")
-                    }
-                )
-            }
-        }
 
-        BackHandler(enabled = editMode) {
-            editMode = false
+            ListItem(
+                modifier = Modifier
+                    .padding(horizontal = 24.dp)
+                    .clip(MaterialTheme.shapes.extraLarge)
+                    .clickable {
+                        showEditNameDialog = true
+                    },
+                headlineContent = {
+                    Text(
+                        text = userProfile.displayName,
+                        overflow = TextOverflow.Ellipsis,
+                        maxLines = 1
+                    )
+                },
+                supportingContent = {
+                    Text(text = "Edit name")
+                },
+                leadingContent = {
+                    Icon(Icons.Filled.Person, contentDescription = "Display Name")
+                }
+            )
+            ListItem(
+                modifier = Modifier
+                    .padding(horizontal = 24.dp)
+                    .clip(MaterialTheme.shapes.extraLarge)
+                    .clickable {
+                        //onChangeEmailClicked() TODO
+                    },
+                headlineContent = {
+                    Text(
+                        text = userProfile.email,
+                        overflow = TextOverflow.Ellipsis,
+                        maxLines = 1
+                    )
+                },
+                supportingContent = {
+                    //Text(text = "Change email") TODO
+                },
+                leadingContent = {
+                    Icon(Icons.Filled.Email, contentDescription = "Email")
+                }
+            )
+            ListItem(
+                modifier = Modifier
+                    .padding(horizontal = 24.dp)
+                    .clip(MaterialTheme.shapes.extraLarge)
+                    .clickable {
+                        onChangePasswordClicked()
+                    },
+                headlineContent = {
+                    Text(text = "Password")
+                },
+                supportingContent = {
+                    Text(text = "Change password")
+                },
+                leadingContent = {
+                    Icon(Icons.Filled.Password, contentDescription = "Password")
+                }
+            )
         }
     }
 }
@@ -268,13 +184,12 @@ fun UserProfileDialog(
 private fun Preview_AccountInfoDialog() {
     UserProfileDialog(
         userProfile = Profile(
+            id = "1",
             email = "username@email.com",
             displayName = "User McUserface",
             profilePhotoUri = null
         ),
         onDismiss = {},
-        onSettingsClicked = {},
-        onLogoutClicked = {},
         onChangePhotoClicked = {},
         onChangeEmailClicked = {},
         onChangePasswordClicked = {},
@@ -282,28 +197,7 @@ private fun Preview_AccountInfoDialog() {
     )
 }
 
-@Preview
-@Composable
-private fun Preview_AccountInfoDialog_EditMode() {
-    UserProfileDialog(
-        userProfile = Profile(
-            email = "username@email.com",
-            displayName = "User McUserface",
-            profilePhotoUri = null
-        ),
-        onDismiss = {},
-        onSettingsClicked = {},
-        onLogoutClicked = {},
-        onChangePhotoClicked = {},
-        onChangeEmailClicked = {},
-        onChangePasswordClicked = {},
-        onUpdateUserProfile = {},
-        defaultEditMode = true,
-    )
-}
-
-
-@OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun EditNameDialog(
     oldDisplayName: String,

@@ -33,7 +33,7 @@ struct ListDetailsScreen: View {
                 ForEach(Array(state.currentTasks.enumerated()), id: \.element.id) { index, task in
                     TaskView(task: task, onUpdate: onUpdateTask, showIndexNumbers: state.selectedList!.showIndexNumbers, indexNumber: index + 1)
                 }
-                .onMove(perform: state.selectedList!.sortType == .ordinal ? reorder : nil)
+                        .onMove(perform: state.selectedList!.sortType == .ordinal ? reorder : nil)
 
                 CreateTaskView(onCreateTaskPressed: onCreateTaskPressed)
             }
@@ -41,39 +41,39 @@ struct ListDetailsScreen: View {
             if !state.completedTasks.isEmpty {
                 Section {
                     DisclosureGroup(
-                        isExpanded: $showCompletedTasks,
-                        content: {
-                            ForEach(state.completedTasks) { task in
-                                TaskView(task: task, onUpdate: onUpdateTask)
-                                    .id(task.id)
+                            isExpanded: $showCompletedTasks,
+                            content: {
+                                ForEach(state.completedTasks) { task in
+                                    TaskView(task: task, onUpdate: onUpdateTask)
+                                            .id(task.id)
+                                }
+                            },
+                            label: {
+                                Text("Completed (\(state.completedTasks.count))")
                             }
-                        },
-                        label: {
-                            Text("Completed (\(state.completedTasks.count))")
-                        }
                     )
                 }
             }
         }
-        .listStyle(.insetGrouped)
-        .refreshable(action: onRefresh)
+                .listStyle(.insetGrouped)
+                .refreshable(action: onRefresh)
     }
 }
 
 struct ListDetailsScreen_Previews: PreviewProvider {
     static var previews: some View {
         ListDetailsScreen(
-            state: ListDetailsUiState(
-                isLoading: false,
-                firstLoad: false,
-                selectedList: nil,
-                currentTasks: [],
-                completedTasks: []
-            ),
-            onRefresh: {},
-            onCreateTaskPressed: {},
-            onUpdateTask: { _ in },
-            onReorderTask: { _, _, _ in }
+                state: ListDetailsUiState(
+                        isLoading: false,
+                        firstLoad: false,
+                        selectedList: nil,
+                        currentTasks: [],
+                        completedTasks: []
+                ),
+                onRefresh: {},
+                onCreateTaskPressed: {},
+                onUpdateTask: { _ in },
+                onReorderTask: { _, _, _ in }
         )
     }
 }

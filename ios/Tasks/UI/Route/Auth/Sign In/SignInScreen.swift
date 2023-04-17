@@ -28,35 +28,35 @@ struct SignInScreen: View {
 
         VStack {
             TextField("Email", text: $email, prompt: Text("Email"))
-                .textFieldStyle(RoundedBorderTextFieldStyle())
-                .keyboardType(.emailAddress)
-                .autocorrectionDisabled(true)
-                .textInputAutocapitalization(.never)
-                .submitLabel(.next)
-                .focused($field, equals: .email)
-                .padding(.horizontal)
-                .padding(.top)
+                    .textFieldStyle(RoundedBorderTextFieldStyle())
+                    .keyboardType(.emailAddress)
+                    .autocorrectionDisabled(true)
+                    .textInputAutocapitalization(.never)
+                    .submitLabel(.next)
+                    .focused($field, equals: .email)
+                    .padding(.horizontal)
+                    .padding(.top)
 
             if !email.isEmpty && emailResult.isErr() {
                 Text(emailResult.getError() as! String)
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    .padding(.leading)
-                    .foregroundColor(.red)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .padding(.leading)
+                        .foregroundColor(.red)
             }
 
             HStack {
                 if showPassword {
                     TextField("Password", text: $password, prompt: Text("Password"))
-                        .textFieldStyle(RoundedBorderTextFieldStyle())
-                        .submitLabel(.done)
-                        .focused($field, equals: .password)
-                        .padding()
+                            .textFieldStyle(RoundedBorderTextFieldStyle())
+                            .submitLabel(.done)
+                            .focused($field, equals: .password)
+                            .padding()
                 } else {
                     SecureField("Password", text: $password, prompt: Text("Password"))
-                        .textFieldStyle(RoundedBorderTextFieldStyle())
-                        .submitLabel(.done)
-                        .focused($field, equals: .password)
-                        .padding()
+                            .textFieldStyle(RoundedBorderTextFieldStyle())
+                            .submitLabel(.done)
+                            .focused($field, equals: .password)
+                            .padding()
                 }
 
                 Button(action: { showPassword.toggle() }) {
@@ -65,46 +65,49 @@ struct SignInScreen: View {
                     } else {
                         Image(systemName: "eye")
                     }
-                }.padding(.trailing)
+                }
+                        .padding(.trailing)
             }
 
             Spacer()
-        }.safeAreaInset(edge: .bottom) {
-            HStack {
-                NavigationLink(destination: Text("TODO")) {
-                    Text("Forgot password?")
-                }
-                .disabled(state.isLoading)
-                .buttonStyle(DefaultButtonStyle())
-                .padding()
+        }
+                .safeAreaInset(edge: .bottom) {
+                    HStack {
+                        NavigationLink(destination: Text("TODO")) {
+                            Text("Forgot password?")
+                        }
+                                .disabled(state.isLoading)
+                                .buttonStyle(DefaultButtonStyle())
+                                .padding()
 
-                Spacer()
+                        Spacer()
 
-                Button(action: {
-                    onSignInClicked(email, password)
-                }) {
-                    Text("Sign In")
+                        Button(action: {
+                            onSignInClicked(email, password)
+                        }) {
+                            Text("Sign In")
+                        }
+                                .disabled(email.isEmpty || emailResult.isErr() || password.isEmpty || state.isLoading)
+                                .buttonStyle(BorderedProminentButtonStyle())
+                                .padding()
+                    }
+                            .background(.bar)
                 }
-                .disabled(email.isEmpty || emailResult.isErr() || password.isEmpty || state.isLoading)
-                .buttonStyle(BorderedProminentButtonStyle())
-                .padding()
-            }.background(.bar)
-        }
-        .onAppear {
-            field = .email
-        }
-        .onSubmit {
-            switch field {
-            case .email:
-                field = .password
-            default:
-                if !email.isEmpty && emailResult.isOk() && !password.isEmpty && !state.isLoading {
-                    field = nil
-                    onSignInClicked(email, password)
+                .onAppear {
+                    field = .email
                 }
-            }
-        }
-        .navigationTitle("Sign in")
+                .onSubmit {
+                    switch field {
+                    case .email:
+                        field = .password
+                    default:
+                        if !email.isEmpty && emailResult.isOk() && !password.isEmpty && !state.isLoading {
+                            field = nil
+                            onSignInClicked(email, password)
+                        }
+                    }
+                }
+                .navigationTitle("Sign in")
     }
 
     enum Field {
@@ -116,14 +119,14 @@ struct SignInScreen_Previews: PreviewProvider {
     static var previews: some View {
         NavigationStack {
             SignInScreen(
-                state: SignInUiState(
-                    isLoading: false,
-                    isAuthenticated: false
-                ),
-                onSignInClicked: { _, _ in },
-                validateEmail: { _ in
-                    ResultKt.success(value: KotlinUnit()) as! Result<KotlinUnit, NSString>
-                }
+                    state: SignInUiState(
+                            isLoading: false,
+                            isAuthenticated: false
+                    ),
+                    onSignInClicked: { _, _ in },
+                    validateEmail: { _ in
+                        ResultKt.success(value: KotlinUnit()) as! Result<KotlinUnit, NSString>
+                    }
             )
         }
     }

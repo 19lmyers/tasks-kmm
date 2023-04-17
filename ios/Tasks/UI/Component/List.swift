@@ -9,11 +9,11 @@
 import MultiPlatformLibrary
 import SwiftUI
 
-struct ListsView : View {
+struct ListsView: View {
     var taskLists: [TaskList]
-    
+
     var onCreateListPressed: () -> Void
-    
+
     var body: some View {
         Section("Lists") {
             ForEach(taskLists, id: \.id) { taskList in
@@ -33,17 +33,17 @@ struct ListView: View {
         NavigationLink(value: taskList) {
             HStack {
                 Image(systemName: "checklist")
-                    .foregroundStyle(.tint)
-                
+                        .foregroundStyle(.tint)
+
                 VStack(alignment: .leading) {
                     Text(taskList.title)
-                        .font(.body)
-                        .multilineTextAlignment(.leading)
-                    
+                            .font(.body)
+                            .multilineTextAlignment(.leading)
+
                     if taskList.description_ != nil {
                         Text(taskList.description_!)
-                            .font(.caption)
-                            .multilineTextAlignment(.leading)
+                                .font(.caption)
+                                .multilineTextAlignment(.leading)
                     }
                 }
             }
@@ -59,8 +59,9 @@ struct CreateListView: View {
             HStack {
                 Image(systemName: "plus")
                 Text("New list")
-                    .multilineTextAlignment(.leading)
-            }.foregroundStyle(.tint)
+                        .multilineTextAlignment(.leading)
+            }
+                    .foregroundStyle(.tint)
         }
     }
 }
@@ -68,20 +69,21 @@ struct CreateListView: View {
 struct ListView_Previews: PreviewProvider {
     static var previews: some View {
         ListView(
-            taskList: TaskList(
-                id: "1",
-                title: "Tasks",
-                color: nil,
-                icon: nil,
-                description: "This is a list description",
-                isPinned: false,
-                showIndexNumbers: false,
-                sortType: TaskList.SortType.ordinal,
-                sortDirection: TaskList.SortDirection.ascending,
-                dateCreated: DateKt.toInstant(Date.now),
-                lastModified: DateKt.toInstant(Date.now)
-            )
+                taskList: TaskList(
+                        id: "1",
+                        title: "Tasks",
+                        color: nil,
+                        icon: nil,
+                        description: "This is a list description",
+                        isPinned: false,
+                        showIndexNumbers: false,
+                        sortType: TaskList.SortType.ordinal,
+                        sortDirection: TaskList.SortDirection.ascending,
+                        dateCreated: DateKt.toInstant(Date.now),
+                        lastModified: DateKt.toInstant(Date.now)
+                )
         )
-        CreateListView {}
+        CreateListView {
+        }
     }
 }

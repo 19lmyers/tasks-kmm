@@ -114,11 +114,6 @@ fun HomeRoute(
                 onDismiss = {
                     showProfileDialog = false
                 },
-                onSettingsClicked = {
-                    showProfileDialog = false
-                    navigateToSettings()
-                },
-                onLogoutClicked = viewModel::logout,
                 onChangePhotoClicked = {
                     selectProfilePhoto.launch(
                         PickVisualMediaRequest(
@@ -222,6 +217,10 @@ fun HomeRoute(
                         state = state.value,
                         showCreateTaskButton = state.value.allLists.isNotEmpty(),
                         onAccountPressed = { showProfileDialog = true },
+                        onSettingsPressed = navigateToSettings,
+                        onSignOutPressed = {
+                            viewModel.logout()
+                        },
                         onCreateListPressed = {
                             showCreateListDialog = true
                         },
@@ -297,6 +296,7 @@ fun HomeRoute(
                                 isTaskShown = false
                             }
                         }
+
                         ScreenState.SHOW_LIST -> {
                             ListDetailsRoute(
                                 selectedListId,
@@ -317,11 +317,16 @@ fun HomeRoute(
                                 isListShown = false
                             }
                         }
+
                         else -> {
                             HomeScreen(
                                 state = state.value,
                                 showCreateTaskButton = state.value.allLists.isNotEmpty(),
                                 onAccountPressed = { showProfileDialog = true },
+                                onSettingsPressed = navigateToSettings,
+                                onSignOutPressed = {
+                                    viewModel.logout()
+                                },
                                 onCreateListPressed = {
                                     showCreateListDialog = true
                                 },

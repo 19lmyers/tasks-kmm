@@ -13,7 +13,7 @@ struct BoardSectionsView: View {
     var sections: [BoardSection]
     var pinnedLists: [PinnedList]
     var allLists: [TaskList]
-    
+
     var onCreateListPressed: () -> Void
     var onUpdateTask: (Task) -> Void
 
@@ -25,7 +25,7 @@ struct BoardSectionsView: View {
         ForEach(pinnedLists, id: \.taskList.id) { pinnedList in
             PinnedListView(pinnedList: pinnedList, onUpdateTask: onUpdateTask)
         }
-    
+
         ListsView(taskLists: allLists, onCreateListPressed: onCreateListPressed)
     }
 }
@@ -33,7 +33,7 @@ struct BoardSectionsView: View {
 struct BoardSectionView: View {
     var section: BoardSection
     var allLists: [TaskList]
-    
+
     var onUpdateTask: (Task) -> Void
 
     var body: some View {
@@ -42,8 +42,8 @@ struct BoardSectionView: View {
                 let parentList = allLists.first(where: { each in each.id == task.listId })
 
                 TaskView(task: task, parentList: parentList, onUpdate: onUpdateTask)
-                    .tint(parentList?.color?.ui ?? Color.accentColor)
-                    .id("\(section.type.name)/\(task.id)")
+                        .tint(parentList?.color?.ui ?? Color.accentColor)
+                        .id("\(section.type.name)/\(task.id)")
             }
         }
     }
@@ -58,7 +58,7 @@ struct PinnedListView: View {
         Section(header: Text(pinnedList.taskList.title)) {
             ForEach(Array(pinnedList.topTasks.enumerated()), id: \.element.id) { index, task in
                 TaskView(task: task, onUpdate: onUpdateTask, showIndexNumbers: pinnedList.taskList.showIndexNumbers, indexNumber: index + 1)
-                    .id("\(pinnedList.taskList.id)/\(task.id)")
+                        .id("\(pinnedList.taskList.id)/\(task.id)")
             }
 
             let count = pinnedList.totalTaskCount - Int32(pinnedList.topTasks.count)
@@ -66,7 +66,8 @@ struct PinnedListView: View {
             if count > 0 {
                 ViewMoreView(pinnedList: pinnedList, count: Int(count))
             }
-        }.tint(pinnedList.taskList.color?.ui ?? Color.accentColor)
+        }
+                .tint(pinnedList.taskList.color?.ui ?? Color.accentColor)
     }
 }
 
@@ -77,7 +78,7 @@ struct ViewMoreView: View {
     var body: some View {
         NavigationLink(value: pinnedList.taskList) {
             Text("View \(count) more...")
-                .foregroundStyle(.tint)
+                    .foregroundStyle(.tint)
         }
     }
 }

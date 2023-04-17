@@ -11,22 +11,23 @@ import SwiftUI
 
 struct HomeScreen: View {
     var state: HomeUiState
-    
+
     var onCreateListPressed: () -> Void
     var onUpdateTask: (Task) -> Void
-    
+
     var onRefresh: @Sendable () async -> Void
 
     var body: some View {
         List {
             BoardSectionsView(
-                sections: state.boardSections,
-                pinnedLists: state.pinnedLists,
-                allLists: state.allLists,
-                onCreateListPressed: onCreateListPressed,
-                onUpdateTask: onUpdateTask
+                    sections: state.boardSections,
+                    pinnedLists: state.pinnedLists,
+                    allLists: state.allLists,
+                    onCreateListPressed: onCreateListPressed,
+                    onUpdateTask: onUpdateTask
             )
-        }.refreshable(action: onRefresh)
+        }
+                .refreshable(action: onRefresh)
     }
 }
 
@@ -34,18 +35,18 @@ struct HomeScreen_Previews: PreviewProvider {
     static var previews: some View {
         NavigationView {
             HomeScreen(
-                state: HomeUiState(
-                    isLoading: false,
-                    firstLoad: false,
-                    isAuthenticated: true,
-                    profile: nil,
-                    boardSections: [],
-                    pinnedLists: [],
-                    allLists: []
-                ),
-                onCreateListPressed: {},
-                onUpdateTask: { _ in },
-                onRefresh: {}
+                    state: HomeUiState(
+                            isLoading: false,
+                            firstLoad: false,
+                            isAuthenticated: true,
+                            profile: nil,
+                            boardSections: [],
+                            pinnedLists: [],
+                            allLists: []
+                    ),
+                    onCreateListPressed: {},
+                    onUpdateTask: { _ in },
+                    onRefresh: {}
             )
         }
     }

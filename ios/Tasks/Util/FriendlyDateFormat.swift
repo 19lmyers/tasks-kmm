@@ -23,7 +23,7 @@ class FriendlyDateFormat {
         let formatter = DateFormatter()
 
         formatter.dateStyle = Calendar.current.isDateInToday(date) ? .none : .medium
-        
+
         formatter.timeStyle = .short
         formatter.locale = Locale.current
 

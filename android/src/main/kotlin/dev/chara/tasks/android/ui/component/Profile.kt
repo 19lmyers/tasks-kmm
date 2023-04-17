@@ -76,6 +76,7 @@ fun ProfileCard(
 fun Preview_ProfileCard() {
     ProfileCard(
         profile = Profile(
+            id = "1",
             email = "user@email.com",
             displayName = "User",
             profilePhotoUri = null

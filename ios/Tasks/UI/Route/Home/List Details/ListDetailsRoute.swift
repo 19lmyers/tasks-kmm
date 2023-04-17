@@ -40,154 +40,156 @@ struct ListDetailsRoute: View {
                 }
             } else {
                 ListDetailsScreen(
-                    state: uiState,
-                    onRefresh: {
-                        DispatchQueue.main.sync {
-                            viewModel.refreshCache()
+                        state: uiState,
+                        onRefresh: {
+                            DispatchQueue.main.sync {
+                                viewModel.refreshCache()
+                            }
+                        },
+                        onCreateTaskPressed: {
+                            showCreateTaskSheet = true
+                        },
+                        onUpdateTask: { task in
+                            viewModel.updateTask(listId: uiState.selectedList!.id, taskId: task.id, task: task)
+                        },
+                        onReorderTask: { id, from, to in
+                            viewModel.reorderTask(
+                                    listId: uiState.selectedList!.id,
+                                    taskId: id,
+                                    fromIndex: Int32(from),
+                                    toIndex: Int32(to),
+                                    lastModified: DateKt.toInstant(Date.now)
+                            )
                         }
-                    },
-                    onCreateTaskPressed: {
-                        showCreateTaskSheet = true
-                    },
-                    onUpdateTask: { task in
-                        viewModel.updateTask(listId: uiState.selectedList!.id, taskId: task.id, task: task)
-                    },
-                    onReorderTask: { id, from, to in
-                        viewModel.reorderTask(
-                            listId: uiState.selectedList!.id,
-                            taskId: id,
-                            fromIndex: Int32(from),
-                            toIndex: Int32(to),
-                            lastModified: DateKt.toInstant(Date.now)
-                        )
-                    }
                 )
-                .tint(uiState.selectedList!.color?.ui ?? Color.accentColor)
-                .navigationTitle(uiState.selectedList!.title)
-                .toolbar {
-                    ToolbarItem(placement: .primaryAction) {
-                        Button(action: {
-                            showModifyListSheet = true
-                        }) {
-                            Image(systemName: "pencil.line")
-                        }
-                    }
+                        .tint(uiState.selectedList!.color?.ui ?? Color.accentColor)
+                        .navigationTitle(uiState.selectedList!.title)
+                        .toolbar {
+                            ToolbarItem(placement: .primaryAction) {
+                                Button(action: {
+                                    showModifyListSheet = true
+                                }) {
+                                    Image(systemName: "square.and.pencil")
+                                }
+                            }
 
-                    ToolbarItem(placement: .secondaryAction) {
-                        Button(action: {
-                            alertType = .clearTasks
-                            showAlert = true
-                        }) {
-                            Image(systemName: "checkmark.circle")
-                            Text("Delete completed items")
-                        }
-                    }
+                            ToolbarItem(placement: .secondaryAction) {
+                                Button(action: {
+                                    alertType = .clearTasks
+                                    showAlert = true
+                                }) {
+                                    Image(systemName: "checkmark.circle")
+                                    Text("Delete completed items")
+                                }
+                            }
 
-                    ToolbarItem(placement: .secondaryAction) {
-                        Button(role: .destructive, action: {
-                            alertType = .deleteList
-                            showAlert = true
-                        }) {
-                            Image(systemName: "trash")
-                            Text("Delete list")
-                        }
-                    }
+                            ToolbarItem(placement: .secondaryAction) {
+                                Button(role: .destructive, action: {
+                                    alertType = .deleteList
+                                    showAlert = true
+                                }) {
+                                    Image(systemName: "trash")
+                                    Text("Delete list")
+                                }
+                            }
 
-                    ToolbarItem(placement: .bottomBar) {
-                        HStack {
-                            Menu {
-                                ForEach(TaskListKt.sortTypes(), id: \.self) { sortType in
-                                    Button(action: {
-                                        viewModel.updateList(
-                                            listId: uiState.selectedList!.id,
-                                            taskList: uiState.selectedList!.edit()
-                                                .sortType(value: sortType)
-                                                .build()
-                                        )
-                                    }) {
-                                        Image(systemName: sortType.icon)
-                                        Text(sortType.description())
+                            ToolbarItem(placement: .bottomBar) {
+                                HStack {
+                                    Menu {
+                                        ForEach(TaskListKt.sortTypes(), id: \.self) { sortType in
+                                            Button(action: {
+                                                viewModel.updateList(
+                                                        listId: uiState.selectedList!.id,
+                                                        taskList: uiState.selectedList!.edit()
+                                                                .sortType(value: sortType)
+                                                                .build()
+                                                )
+                                            }) {
+                                                Image(systemName: sortType.icon)
+                                                Text(sortType.description())
+                                            }
+                                        }
+                                    } label: {
+                                        HStack {
+                                            Image(systemName: uiState.selectedList!.sortType.icon)
+                                            Text(uiState.selectedList!.sortType.description())
+                                        }
+                                    }
+
+                                    if uiState.selectedList!.sortType != .ordinal {
+                                        Button(action: {
+                                            viewModel.updateList(
+                                                    listId: uiState.selectedList!.id,
+                                                    taskList: uiState.selectedList!.edit()
+                                                            .sortDirection(value: uiState.selectedList!.sortDirection == .ascending ? .descending : .ascending)
+                                                            .build()
+                                            )
+                                        }) {
+                                            Image(systemName: uiState.selectedList!.sortDirection.icon)
+                                            Text(uiState.selectedList!.sortDirection.description())
+                                        }
                                     }
                                 }
-                            } label: {
-                                HStack {
-                                    Image(systemName: uiState.selectedList!.sortType.icon)
-                                    Text(uiState.selectedList!.sortType.description())
-                                }
-                            }
-
-                            if uiState.selectedList!.sortType != .ordinal {
-                                Button(action: {
-                                    viewModel.updateList(
-                                        listId: uiState.selectedList!.id,
-                                        taskList: uiState.selectedList!.edit()
-                                            .sortDirection(value: uiState.selectedList!.sortDirection == .ascending ? .descending : .ascending)
-                                            .build()
-                                    )
-                                }) {
-                                    Image(systemName: uiState.selectedList!.sortDirection.icon)
-                                    Text(uiState.selectedList!.sortDirection.description())
-                                }
                             }
                         }
-                    }
-                }
-                .sheet(isPresented: $showModifyListSheet) {
-                    ModifyListSheet(
-                        title: "Edit list",
-                        current: uiState.selectedList!,
-                        onDismiss: {
-                            showModifyListSheet = false
-                        },
-                        onSave: { taskList in
-                            viewModel.updateList(listId: uiState.selectedList!.id, taskList: taskList)
-                            showModifyListSheet = false
+                        .sheet(isPresented: $showModifyListSheet) {
+                            ModifyListSheet(
+                                    title: "Edit list",
+                                    current: uiState.selectedList!,
+                                    onDismiss: {
+                                        showModifyListSheet = false
+                                    },
+                                    onSave: { taskList in
+                                        viewModel.updateList(listId: uiState.selectedList!.id, taskList: taskList)
+                                        showModifyListSheet = false
+                                    }
+                            )
+                                    .presentationDetents([.medium, .large])
                         }
-                    ).presentationDetents([.medium, .large])
-                }
-                .sheet(isPresented: $showCreateTaskSheet) {
-                    CreateTaskSheet(
-                        taskLists: [uiState.selectedList!],
-                        current: TaskKt.doNew(id: "", listId: uiState.selectedList!.id, label: "")
-                            .edit()
-                            .lastModified(value: DateKt.toInstant(Date.now))
-                            .build(),
-                        onDismiss: {
-                            showCreateTaskSheet = false
-                        },
-                        onSave: { task in
-                            viewModel.createTask(listId: task.listId, task: task)
-                            showCreateTaskSheet = false
+                        .sheet(isPresented: $showCreateTaskSheet) {
+                            CreateTaskSheet(
+                                    taskLists: [uiState.selectedList!],
+                                    current: TaskKt.doNew(id: "", listId: uiState.selectedList!.id, label: "")
+                                            .edit()
+                                            .lastModified(value: DateKt.toInstant(Date.now))
+                                            .build(),
+                                    onDismiss: {
+                                        showCreateTaskSheet = false
+                                    },
+                                    onSave: { task in
+                                        viewModel.createTask(listId: task.listId, task: task)
+                                        showCreateTaskSheet = false
+                                    }
+                            )
+                                    .presentationDetents([.medium, .large])
                         }
-                    )
-                    .presentationDetents([.medium, .large])
-                }.alert(isPresented: $showAlert) {
-                    if alertType == .deleteList {
-                        return Alert(
-                            title: Text("Delete list?"),
-                            message: Text("All items in this list will be permanently deleted"),
-                            primaryButton: .destructive(Text("Delete")) {
-                                viewModel.deleteList(listId: uiState.selectedList!.id)
-                                showAlert = false
-                            },
-                            secondaryButton: .cancel {
-                                showAlert = false
+                        .alert(isPresented: $showAlert) {
+                            if alertType == .deleteList {
+                                return Alert(
+                                        title: Text("Delete list?"),
+                                        message: Text("All items in this list will be permanently deleted"),
+                                        primaryButton: .destructive(Text("Delete")) {
+                                            viewModel.deleteList(listId: uiState.selectedList!.id)
+                                            showAlert = false
+                                        },
+                                        secondaryButton: .cancel {
+                                            showAlert = false
+                                        }
+                                )
+                            } else {
+                                return Alert(
+                                        title: Text("Delete all completed items?"),
+                                        message: Text("Completed items will be permanently deleted from this list"),
+                                        primaryButton: .destructive(Text("Delete")) {
+                                            viewModel.clearCompletedTasks(listId: uiState.selectedList!.id)
+                                            showAlert = false
+                                        },
+                                        secondaryButton: .cancel {
+                                            showAlert = false
+                                        }
+                                )
                             }
-                        )
-                    } else {
-                        return Alert(
-                            title: Text("Delete all completed items?"),
-                            message: Text("Completed items will be permanently deleted from this list"),
-                            primaryButton: .destructive(Text("Delete")) {
-                                viewModel.clearCompletedTasks(listId: uiState.selectedList!.id)
-                                showAlert = false
-                            },
-                            secondaryButton: .cancel {
-                                showAlert = false
-                            }
-                        )
-                    }
-                }
+                        }
             }
         }
     }
