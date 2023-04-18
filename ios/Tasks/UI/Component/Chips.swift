@@ -59,7 +59,7 @@ struct ListChipView: View {
     var body: some View {
         ChipView(selectable: false) {
             HStack {
-                Image(systemName: "checklist")
+                Image(systemName: list.icon?.ui ?? "checklist")
                 Text(list.title)
             }
         }

@@ -64,7 +64,7 @@ struct SettingsScreen: View {
                         )
                     })) {
                         HStack {
-                            Image(systemName: "checklist")
+                            Image(systemName: taskList.icon?.ui ?? "checklist")
                             Text(taskList.title)
                         }
                     }

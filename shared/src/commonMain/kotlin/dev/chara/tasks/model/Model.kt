@@ -70,11 +70,9 @@ data class TaskList(
         PETS,
         PIANO,
         RESTAURANT,
-        ROCKET_LAUNCH,
         SCISSORS,
         SHOPPING_CART,
         SMILE,
-        STORE,
         WORK
     }
 

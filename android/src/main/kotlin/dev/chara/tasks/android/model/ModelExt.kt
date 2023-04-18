@@ -31,14 +31,12 @@ import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Pets
 import androidx.compose.material.icons.filled.Piano
 import androidx.compose.material.icons.filled.Restaurant
-import androidx.compose.material.icons.filled.RocketLaunch
 import androidx.compose.material.icons.filled.Schedule
 import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.material.icons.filled.Sort
 import androidx.compose.material.icons.filled.SortByAlpha
 import androidx.compose.material.icons.filled.SportsFootball
 import androidx.compose.material.icons.filled.Star
-import androidx.compose.material.icons.filled.Store
 import androidx.compose.material.icons.filled.Work
 import androidx.compose.ui.graphics.vector.ImageVector
 import dev.chara.tasks.android.R
@@ -81,11 +79,9 @@ val TaskList.Icon?.vector: ImageVector
         TaskList.Icon.PETS -> Icons.Filled.Pets
         TaskList.Icon.PIANO -> Icons.Filled.Piano
         TaskList.Icon.RESTAURANT -> Icons.Filled.Restaurant
-        TaskList.Icon.ROCKET_LAUNCH -> Icons.Filled.RocketLaunch
         TaskList.Icon.SCISSORS -> Icons.Filled.ContentCut
         TaskList.Icon.SHOPPING_CART -> Icons.Filled.ShoppingCart
         TaskList.Icon.SMILE -> Icons.Filled.Mood
-        TaskList.Icon.STORE -> Icons.Filled.Store
         TaskList.Icon.WORK -> Icons.Filled.Work
         else -> Icons.Filled.Checklist
     }
@@ -116,11 +112,9 @@ val TaskList.Icon?.drawable: Int
         TaskList.Icon.PETS -> R.drawable.pets_48px
         TaskList.Icon.PIANO -> R.drawable.piano_48px
         TaskList.Icon.RESTAURANT -> R.drawable.restaurant_48px
-        TaskList.Icon.ROCKET_LAUNCH -> R.drawable.rocket_launch_48px
         TaskList.Icon.SCISSORS -> R.drawable.content_cut_48px
         TaskList.Icon.SHOPPING_CART -> R.drawable.shopping_cart_48px
         TaskList.Icon.SMILE -> R.drawable.mood_48px
-        TaskList.Icon.STORE -> R.drawable.store_48px
         TaskList.Icon.WORK -> R.drawable.work_48px
         else -> R.drawable.checklist_48px
     }

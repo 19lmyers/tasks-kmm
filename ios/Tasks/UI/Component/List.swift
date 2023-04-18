@@ -32,7 +32,7 @@ struct ListView: View {
     var body: some View {
         NavigationLink(value: taskList) {
             HStack {
-                Image(systemName: "checklist")
+                Image(systemName: taskList.icon?.ui ?? "checklist")
                         .foregroundStyle(.tint)
 
                 VStack(alignment: .leading) {

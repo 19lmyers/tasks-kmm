@@ -99,7 +99,7 @@ fun ModifyListDialog(
                         modifier = Modifier
                             .padding(horizontal = 16.dp, vertical = 8.dp)
                             .fillMaxWidth(),
-                        columns = GridCells.Adaptive(72.dp)
+                        columns = GridCells.Adaptive(56.dp)
                     ) {
                         item {
                             IconSwatch(

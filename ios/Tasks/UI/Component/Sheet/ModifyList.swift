@@ -57,31 +57,85 @@ struct ModifyListSheet: View {
                     )
                 }
 
-                Section("Theme color") {
-                    ScrollView(.horizontal) {
-                        HStack {
-                            ColorSwatch(
-                                    color: Color.gray.opacity(0.25),
-                                    outline: Color.primary.opacity(0.25),
-                                    selection: Color.gray,
-                                    selected: listColor == nil
-                            ) {
-                                listColor = nil
-                            }
+                Section("Appearance") {
+                    let columns = [GridItem(.flexible()), GridItem(.flexible()), GridItem(.flexible()), GridItem(.flexible())]
 
-                            ForEach(TaskListKt.colors()) { color in
-                                ColorSwatch(
-                                        color: color.ui.opacity(0.25),
-                                        outline: Color.primary.opacity(0.25),
-                                        selection: color.ui,
-                                        selected: listColor == color
-                                ) {
-                                    listColor = color
+                    DisclosureGroup(
+                            content: {
+                                ScrollView {
+                                    LazyVGrid(columns: columns, alignment: .center) {
+                                        Button(action: {
+                                            listIcon = nil
+                                        }) {
+                                            IconSwatch(
+                                                    icon: "checklist",
+                                                    outline: Color.primary.opacity(0.25),
+                                                    selection: Color.accentColor,
+                                                    selected: listIcon == nil
+                                            ) {
+                                                listIcon = nil
+                                            }
+                                        }
+                                                .padding(.all, 4)
+
+                                        ForEach(TaskListKt.icons()) { icon in
+                                            IconSwatch(
+                                                    icon: icon.ui,
+                                                    outline: Color.primary.opacity(0.25),
+                                                    selection: Color.accentColor,
+                                                    selected: listIcon == icon
+                                            ) {
+                                                listIcon = icon
+                                            }
+                                                    .padding(.all, 4)
+                                        }
+                                    }
+                                }
+                            },
+                            label: {
+                                HStack {
+                                    Text("Icon")
+                                    Spacer()
+                                    Image(systemName: listIcon?.ui ?? "checklist")
                                 }
                             }
-                        }
-                                .padding(.all, 4)
-                    }
+                    )
+
+
+                    DisclosureGroup(
+                            content: {
+                                ScrollView(.horizontal) {
+                                    HStack {
+                                        ColorSwatch(
+                                                color: Color.gray.opacity(0.25),
+                                                outline: Color.primary.opacity(0.25),
+                                                selection: Color.gray,
+                                                selected: listColor == nil
+                                        ) {
+                                            listColor = nil
+                                        }
+                                                .padding(.all, 4)
+
+                                        ForEach(TaskListKt.colors()) { color in
+                                            ColorSwatch(
+                                                    color: color.ui.opacity(0.25),
+                                                    outline: Color.primary.opacity(0.25),
+                                                    selection: color.ui,
+                                                    selected: listColor == color
+                                            ) {
+                                                listColor = color
+                                            }
+                                        }
+                                    }
+                                            .padding(.all, 4)
+                                }
+                            },
+                            label: {
+                                HStack {
+                                    Text("Theme Color")
+                                }
+                            }
+                    )
                 }
 
                 Section("List options") {
@@ -129,6 +183,30 @@ struct ModifyListSheet: View {
                     .navigationTitle(title)
                     .navigationBarTitleDisplayMode(.inline)
                     .navigationViewStyle(.stack)
+        }
+    }
+}
+
+struct IconSwatch: View {
+    var icon: String
+    var outline: Color
+    var selection: Color
+
+    var selected: Bool
+
+    var onSelection: () -> Void
+
+    var body: some View {
+        Button(action: onSelection) {
+            ZStack {
+                let outlineColor = selected ? selection : outline
+
+                RoundedRectangle(cornerRadius: 12, style: .continuous)
+                        .stroke(outlineColor, lineWidth: 2)
+                        .frame(width: 48, height: 48)
+
+                Image(systemName: icon).tint(outlineColor)
+            }
         }
     }
 }
