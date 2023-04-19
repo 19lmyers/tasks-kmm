@@ -16,7 +16,6 @@
   "static_framework": false,
   "dependencies": {
     "MultiPlatformLibrary": [
-
     ]
   },
   "source_files": "build/cocoapods/framework/MultiPlatformLibrarySwift/**/*.{h,m,swift}"

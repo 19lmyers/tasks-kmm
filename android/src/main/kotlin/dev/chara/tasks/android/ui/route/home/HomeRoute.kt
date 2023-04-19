@@ -6,12 +6,9 @@ import android.app.NotificationManager
 import android.content.Context
 import android.content.Context.NOTIFICATION_SERVICE
 import android.content.pm.PackageManager
-import android.graphics.Bitmap
 import android.os.Build
-import android.provider.MediaStore
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.Crossfade
 import androidx.compose.animation.core.animateDpAsState
@@ -25,7 +22,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
@@ -40,23 +36,19 @@ import dev.chara.tasks.android.ui.component.dialog.CreateTaskDialog
 import dev.chara.tasks.android.ui.component.dialog.ModifyListDialog
 import dev.chara.tasks.android.ui.component.util.SnackbarLayout
 import dev.chara.tasks.android.ui.route.home.list_details.ListDetailsRoute
-import dev.chara.tasks.android.ui.route.home.profile.UserProfileDialog
 import dev.chara.tasks.android.ui.route.home.task_details.TaskDetailsRoute
 import dev.chara.tasks.model.Task
 import dev.chara.tasks.model.TaskList
 import dev.chara.tasks.viewmodel.home.HomeViewModel
-import kotlinx.coroutines.launch
 import kotlinx.datetime.Clock
-import java.io.ByteArrayOutputStream
 
 @Composable
 fun HomeRoute(
     useDualPane: Boolean,
     initialNavTarget: NavTarget.Home,
     navigateToWelcome: () -> Unit,
+    navigateToProfile: () -> Unit,
     navigateToSettings: () -> Unit,
-    navigateToChangeEmail: () -> Unit,
-    navigateToChangePassword: () -> Unit
 ) {
     val viewModel: HomeViewModel = viewModel()
     val state = viewModel.uiState.collectAsStateWithLifecycle()
@@ -83,56 +75,10 @@ fun HomeRoute(
         }
     }
 
-    val coroutineScope = rememberCoroutineScope()
-    val selectProfilePhoto = rememberLauncherForActivityResult(
-        ActivityResultContracts.PickVisualMedia()
-    ) { uri ->
-        if (uri != null) {
-            // TODO should I do this in a different class?
-            coroutineScope.launch {
-                val bitmap = MediaStore.Images.Media.getBitmap(context.contentResolver, uri)
-                val stream = ByteArrayOutputStream()
-                bitmap.compress(Bitmap.CompressFormat.JPEG, 0, stream)
-                viewModel.updateUserProfilePhoto(stream.toByteArray())
-            }
-        }
-    }
-
     if (!state.value.firstLoad) {
         if (!state.value.isAuthenticated) {
             navigateToWelcome()
             return
-        }
-
-        val profile = state.value.profile!!
-
-        var showProfileDialog by remember { mutableStateOf(false) }
-
-        if (showProfileDialog) {
-            UserProfileDialog(
-                profile,
-                onDismiss = {
-                    showProfileDialog = false
-                },
-                onChangePhotoClicked = {
-                    selectProfilePhoto.launch(
-                        PickVisualMediaRequest(
-                            ActivityResultContracts.PickVisualMedia.ImageOnly
-                        )
-                    )
-                },
-                onChangeEmailClicked = {
-                    showProfileDialog = false
-                    navigateToChangeEmail()
-                },
-                onChangePasswordClicked = {
-                    showProfileDialog = false
-                    navigateToChangePassword()
-                },
-                onUpdateUserProfile = {
-                    viewModel.updateUserProfile(it)
-                }
-            )
         }
 
         var showCreateListDialog by remember { mutableStateOf(false) }
@@ -216,7 +162,7 @@ fun HomeRoute(
                     HomeScreenWithDetailPane(
                         state = state.value,
                         showCreateTaskButton = state.value.allLists.isNotEmpty(),
-                        onAccountPressed = { showProfileDialog = true },
+                        onAccountPressed = navigateToProfile,
                         onSettingsPressed = navigateToSettings,
                         onSignOutPressed = {
                             viewModel.logout()
@@ -322,7 +268,7 @@ fun HomeRoute(
                             HomeScreen(
                                 state = state.value,
                                 showCreateTaskButton = state.value.allLists.isNotEmpty(),
-                                onAccountPressed = { showProfileDialog = true },
+                                onAccountPressed = navigateToProfile,
                                 onSettingsPressed = navigateToSettings,
                                 onSignOutPressed = {
                                     viewModel.logout()

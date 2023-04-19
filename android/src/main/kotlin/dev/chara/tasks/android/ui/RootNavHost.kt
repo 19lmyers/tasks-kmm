@@ -11,7 +11,8 @@ import dev.chara.tasks.android.ui.route.auth.reset_password.ResetPasswordRoute
 import dev.chara.tasks.android.ui.route.auth.sign_in.SignInRoute
 import dev.chara.tasks.android.ui.route.auth.sign_up.SignUpRoute
 import dev.chara.tasks.android.ui.route.home.HomeRoute
-import dev.chara.tasks.android.ui.route.home.profile.change_password.ChangePasswordRoute
+import dev.chara.tasks.android.ui.route.profile.ProfileRoute
+import dev.chara.tasks.android.ui.route.profile.change_password.ChangePasswordRoute
 import dev.chara.tasks.android.ui.route.settings.SettingsRoute
 import dev.chara.tasks.android.ui.route.welcome.WelcomeRoute
 import dev.olshevski.navigation.reimagined.AnimatedNavHost
@@ -46,11 +47,20 @@ fun RootNavHost(navController: NavController<NavTarget>, windowSizeClass: Window
                 navigateToWelcome = {
                     navController.replaceAll(NavTarget.Welcome)
                 },
+                navigateToProfile = {
+                    navController.navigate(NavTarget.Profile)
+                },
                 navigateToSettings = {
                     navController.navigate(NavTarget.Settings)
                 },
+            )
+
+            NavTarget.Profile -> ProfileRoute(
+                navigateUp = {
+                    navController.pop()
+                },
                 navigateToChangeEmail = {
-                    // TODO
+                    //navController.navigate(NavTarget.ChangeEmail)
                 },
                 navigateToChangePassword = {
                     navController.navigate(NavTarget.ChangePassword)

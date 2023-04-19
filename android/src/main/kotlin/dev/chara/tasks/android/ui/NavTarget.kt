@@ -24,6 +24,9 @@ sealed class NavTarget : Parcelable {
     }
 
     @Parcelize
+    object Profile : NavTarget()
+
+    @Parcelize
     object Settings : NavTarget()
 
     // ChangeEmail

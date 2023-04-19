@@ -15,9 +15,10 @@ struct HomeRoute: View {
     var navigateToWelcome: () -> Void
 
     @State var path = NavigationPath()
+    var profile: String = "Profile"
     var settings: String = "Settings"
-
-    @State var showProfileSheet = false
+    var changeEmail: String = "ChangeEmail"
+    var changePassword: String = "ChangePassword"
 
     @State var showCreateListSheet = false
     @State var showCreateTaskSheet = false
@@ -55,9 +56,25 @@ struct HomeRoute: View {
                                         .navigationBarTitle(Text("Edit item"))
                             }
                             .navigationDestination(for: String.self) { pathSegment in
-                                if pathSegment == settings {
+                                if pathSegment == profile {
+                                    ProfileRoute(
+                                            navigateToChangeEmail: {
+                                                path.append(changeEmail)
+                                            },
+                                            navigateToChangePassword: {
+                                                path.append(changePassword)
+                                            }
+                                    )
+                                            .navigationBarBackButtonHidden(true)
+                                            .navigationTitle("Edit profile")
+                                } else if pathSegment == settings {
                                     SettingsRoute()
                                             .navigationTitle("Settings")
+                                } else if pathSegment == changeEmail {
+                                    Text("Change Email")
+                                } else if pathSegment == changePassword {
+                                    ChangePasswordRoute()
+                                            .navigationTitle("Change password")
                                 }
                             }
                             .toolbar {
@@ -73,7 +90,7 @@ struct HomeRoute: View {
                                 ToolbarItem(placement: .navigationBarTrailing) {
                                     Menu(content: {
                                         Button(action: {
-                                            showProfileSheet = true
+                                            path.append(profile)
                                         }) {
                                             Text("Edit profile")
                                             Image(systemName: "person")
@@ -91,31 +108,13 @@ struct HomeRoute: View {
                                             Image(systemName: "rectangle.portrait.and.arrow.forward")
                                         }
                                     }) {
-                                        ProfileImageView(email: uiState.profile!.email, profilePhotoUrl: uiState.profile!.profilePhotoUri)
+                                        ProfileImageView(email: uiState.profile!.email, profilePhotoUri: uiState.profile!.profilePhotoUri)
                                                 .frame(width: 24, height: 24)
                                     }
                                 }
                             }
                             .navigationTitle("Tasks")
                 }
-                        .sheet(isPresented: $showProfileSheet) {
-                            UserProfileSheet(
-                                    profile: uiState.profile!,
-                                    onChangePhotoPressed: {
-                                        // TODO
-                                    },
-                                    onChangeEmailPressed: {
-                                        // TODO
-                                    },
-                                    onChangePasswordPressed: {
-                                        // TODO
-                                    },
-                                    onUpdateUserProfile: { profile in
-                                        viewModel.updateUserProfile(profile: profile)
-                                    }
-                            )
-                                    .presentationDetents([.medium, .large])
-                        }
                         .sheet(isPresented: $showCreateListSheet) {
                             ModifyListSheet(
                                     title: "Create list",

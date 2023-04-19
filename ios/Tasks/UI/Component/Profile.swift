@@ -12,8 +12,8 @@ import SwiftUI
 struct ProfileImageView: View {
     var imageUrl: String
 
-    init(email: String, profilePhotoUrl: String? = nil) {
-        imageUrl = profilePhotoUrl ?? GravatarKt.getGravatarUrl(email: email)
+    init(email: String, profilePhotoUri: String? = nil) {
+        imageUrl = profilePhotoUri ?? GravatarKt.getGravatarUrl(email: email)
     }
 
     var body: some View {

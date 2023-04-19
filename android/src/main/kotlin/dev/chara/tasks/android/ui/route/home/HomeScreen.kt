@@ -186,7 +186,7 @@ fun TopBar(
         title = { Text(text = "Tasks") },
         actions = {
             IconButton(onClick = { showOverflowMenu = true }) {
-                ProfileImage(profile.email, profile.profilePhotoUri, Modifier.requiredSize(24.dp))
+                ProfileImage(profile.email, profile.profilePhotoUri, Modifier.requiredSize(28.dp))
             }
             DropdownMenu(
                 expanded = showOverflowMenu,

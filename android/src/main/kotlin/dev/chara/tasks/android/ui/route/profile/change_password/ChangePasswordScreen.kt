@@ -1,4 +1,4 @@
-package dev.chara.tasks.android.ui.route.home.profile.change_password
+package dev.chara.tasks.android.ui.route.profile.change_password
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column

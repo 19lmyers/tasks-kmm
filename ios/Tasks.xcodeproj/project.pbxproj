@@ -18,12 +18,15 @@
 		DD24717B29E62CAF00125846 /* ListDetailsRoute.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD24717A29E62CAF00125846 /* ListDetailsRoute.swift */; };
 		DD24717D29E62D5300125846 /* ListDetailsScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD24717C29E62D5300125846 /* ListDetailsScreen.swift */; };
 		DD24717F29E6638200125846 /* Board.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD24717E29E6638200125846 /* Board.swift */; };
+		DD5AE70529EF50E4006D9044 /* ChangePasswordScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD5AE70429EF50E4006D9044 /* ChangePasswordScreen.swift */; };
+		DD5AE70829EF5136006D9044 /* ChangePasswordRoute.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD5AE70729EF5136006D9044 /* ChangePasswordRoute.swift */; };
+		DD5AE70A29EF5B15006D9044 /* ProfileRoute.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD5AE70929EF5B15006D9044 /* ProfileRoute.swift */; };
 		DD6D75D729E772C5005A4B40 /* FriendlyDateFormat.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD6D75D629E772C5005A4B40 /* FriendlyDateFormat.swift */; };
 		DD78708329EA2606002D968C /* TaskDetailsRoute.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD78708229EA2606002D968C /* TaskDetailsRoute.swift */; };
 		DD78708529EA268A002D968C /* TaskDetailsScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD78708429EA268A002D968C /* TaskDetailsScreen.swift */; };
 		DD78708829EA3B5F002D968C /* SettingsRoute.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD78708729EA3B5F002D968C /* SettingsRoute.swift */; };
 		DD78708A29EA3B68002D968C /* SettingsScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD78708929EA3B68002D968C /* SettingsScreen.swift */; };
-		DD78708D29EA7C32002D968C /* UserProfileSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD78708C29EA7C32002D968C /* UserProfileSheet.swift */; };
+		DD78708D29EA7C32002D968C /* ProfileScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD78708C29EA7C32002D968C /* ProfileScreen.swift */; };
 		DD78708F29EA7C51002D968C /* Profile.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD78708E29EA7C51002D968C /* Profile.swift */; };
 		DD96350129E0E21F00303FBA /* TypeExt.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD96350029E0E21F00303FBA /* TypeExt.swift */; };
 		DD96350F29E2119600303FBA /* ModifyList.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD96350E29E2119600303FBA /* ModifyList.swift */; };
@@ -58,12 +61,15 @@
 		DD24717A29E62CAF00125846 /* ListDetailsRoute.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListDetailsRoute.swift; sourceTree = "<group>"; };
 		DD24717C29E62D5300125846 /* ListDetailsScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListDetailsScreen.swift; sourceTree = "<group>"; };
 		DD24717E29E6638200125846 /* Board.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Board.swift; sourceTree = "<group>"; };
+		DD5AE70429EF50E4006D9044 /* ChangePasswordScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChangePasswordScreen.swift; sourceTree = "<group>"; };
+		DD5AE70729EF5136006D9044 /* ChangePasswordRoute.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChangePasswordRoute.swift; sourceTree = "<group>"; };
+		DD5AE70929EF5B15006D9044 /* ProfileRoute.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileRoute.swift; sourceTree = "<group>"; };
 		DD6D75D629E772C5005A4B40 /* FriendlyDateFormat.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendlyDateFormat.swift; sourceTree = "<group>"; };
 		DD78708229EA2606002D968C /* TaskDetailsRoute.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskDetailsRoute.swift; sourceTree = "<group>"; };
 		DD78708429EA268A002D968C /* TaskDetailsScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskDetailsScreen.swift; sourceTree = "<group>"; };
 		DD78708729EA3B5F002D968C /* SettingsRoute.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsRoute.swift; sourceTree = "<group>"; };
 		DD78708929EA3B68002D968C /* SettingsScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsScreen.swift; sourceTree = "<group>"; };
-		DD78708C29EA7C32002D968C /* UserProfileSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserProfileSheet.swift; sourceTree = "<group>"; };
+		DD78708C29EA7C32002D968C /* ProfileScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileScreen.swift; sourceTree = "<group>"; };
 		DD78708E29EA7C51002D968C /* Profile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Profile.swift; sourceTree = "<group>"; };
 		DD96350029E0E21F00303FBA /* TypeExt.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TypeExt.swift; sourceTree = "<group>"; };
 		DD96350E29E2119600303FBA /* ModifyList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModifyList.swift; sourceTree = "<group>"; };
@@ -172,6 +178,7 @@
 		DD0C09D529DD396C007805EF /* Route */ = {
 			isa = PBXGroup;
 			children = (
+				DD78708B29EA7C24002D968C /* Profile */,
 				DD78708629EA3B56002D968C /* Settings */,
 				DDCD05DF29DF814D00316955 /* WelcomeView.swift */,
 				DDCD05D729DF810700316955 /* Auth */,
@@ -187,6 +194,15 @@
 				DD24717C29E62D5300125846 /* ListDetailsScreen.swift */,
 			);
 			path = "List Details";
+			sourceTree = "<group>";
+		};
+		DD5AE70629EF511F006D9044 /* Change Password */ = {
+			isa = PBXGroup;
+			children = (
+				DD5AE70429EF50E4006D9044 /* ChangePasswordScreen.swift */,
+				DD5AE70729EF5136006D9044 /* ChangePasswordRoute.swift */,
+			);
+			path = "Change Password";
 			sourceTree = "<group>";
 		};
 		DD78708129EA25F2002D968C /* Task Details */ = {
@@ -210,7 +226,9 @@
 		DD78708B29EA7C24002D968C /* Profile */ = {
 			isa = PBXGroup;
 			children = (
-				DD78708C29EA7C32002D968C /* UserProfileSheet.swift */,
+				DD5AE70629EF511F006D9044 /* Change Password */,
+				DD78708C29EA7C32002D968C /* ProfileScreen.swift */,
+				DD5AE70929EF5B15006D9044 /* ProfileRoute.swift */,
 			);
 			path = Profile;
 			sourceTree = "<group>";
@@ -272,7 +290,6 @@
 		DDCD05E129DF877400316955 /* Home */ = {
 			isa = PBXGroup;
 			children = (
-				DD78708B29EA7C24002D968C /* Profile */,
 				DDCD05D529DF750100316955 /* HomeRoute.swift */,
 				DDB08D7929DCC90600239CE4 /* HomeScreen.swift */,
 				DD24717929E62CA300125846 /* List Details */,
@@ -422,11 +439,14 @@
 				DD1A605D29E0C05D001AA3D8 /* SignUpRoute.swift in Sources */,
 				DDDAA23629DCE4800062B5F4 /* Configuration.swift in Sources */,
 				DDCD05E029DF814D00316955 /* WelcomeView.swift in Sources */,
+				DD5AE70829EF5136006D9044 /* ChangePasswordRoute.swift in Sources */,
 				DD1E5B1A29E49208003F73BA /* CreateTask.swift in Sources */,
 				DD24717D29E62D5300125846 /* ListDetailsScreen.swift in Sources */,
+				DD5AE70529EF50E4006D9044 /* ChangePasswordScreen.swift in Sources */,
 				DD24717F29E6638200125846 /* Board.swift in Sources */,
 				DD0C09D729DD3999007805EF /* Task.swift in Sources */,
 				DD1A605F29E0C067001AA3D8 /* SignUpScreen.swift in Sources */,
+				DD5AE70A29EF5B15006D9044 /* ProfileRoute.swift in Sources */,
 				DD1E5B1C29E49FB8003F73BA /* Chips.swift in Sources */,
 				DD6D75D729E772C5005A4B40 /* FriendlyDateFormat.swift in Sources */,
 				DDB08D8129DCC90600239CE4 /* List.swift in Sources */,
@@ -439,7 +459,7 @@
 				DD78708829EA3B5F002D968C /* SettingsRoute.swift in Sources */,
 				DD78708329EA2606002D968C /* TaskDetailsRoute.swift in Sources */,
 				DDCD05DB29DF813700316955 /* SignInScreen.swift in Sources */,
-				DD78708D29EA7C32002D968C /* UserProfileSheet.swift in Sources */,
+				DD78708D29EA7C32002D968C /* ProfileScreen.swift in Sources */,
 				DD96350129E0E21F00303FBA /* TypeExt.swift in Sources */,
 				DDCD05D629DF750100316955 /* HomeRoute.swift in Sources */,
 				2152FB042600AC8F00CF470E /* iOSApp.swift in Sources */,

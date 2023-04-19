@@ -1,4 +1,4 @@
-package dev.chara.tasks.android.ui.route.home.profile.change_password
+package dev.chara.tasks.android.ui.route.profile.change_password
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.material3.SnackbarDuration
@@ -11,11 +11,11 @@ import dev.chara.tasks.viewmodel.profile.change_password.ChangePasswordViewModel
 
 @Composable
 fun ChangePasswordRoute(
-    presenter: ChangePasswordViewModel,
+    viewModel: ChangePasswordViewModel,
     navigateToHome: () -> Unit,
     navigateUp: () -> Unit
 ) {
-    val state = presenter.uiState.collectAsStateWithLifecycle()
+    val state = viewModel.uiState.collectAsStateWithLifecycle()
 
     val snackbarHostState = remember { SnackbarHostState() }
 
@@ -31,13 +31,13 @@ fun ChangePasswordRoute(
                 }
             },
             onChangePasswordClicked = { current, new ->
-                presenter.changePassword(current, new)
+                viewModel.changePassword(current, new)
             }
         )
     }
 
-    LaunchedEffect(presenter.messages) {
-        presenter.messages.collect { message ->
+    LaunchedEffect(viewModel.messages) {
+        viewModel.messages.collect { message ->
             snackbarHostState.showSnackbar(
                 message = message.text,
                 duration = SnackbarDuration.Short,
