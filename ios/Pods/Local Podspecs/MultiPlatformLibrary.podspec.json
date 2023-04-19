@@ -15,12 +15,16 @@
   },
   "dependencies": {
     "FirebaseAnalytics": [
+
     ],
     "FirebaseCore": [
+
     ],
     "FirebaseCrashlytics": [
+
     ],
     "FirebaseMessaging": [
+
     ]
   },
   "pod_target_xcconfig": {

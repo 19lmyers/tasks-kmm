@@ -177,7 +177,6 @@ fun Tasks(
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TaskItem(
     modifier: Modifier = Modifier,

@@ -3,8 +3,10 @@ package dev.chara.tasks.android.ui.route.profile.change_password
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -12,6 +14,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
+import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.Icon
@@ -44,7 +47,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import dev.chara.tasks.viewmodel.profile.change_password.ChangePasswordUiState
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class,
+    ExperimentalComposeUiApi::class
+)
 @Composable
 fun ChangePasswordScreen(
     state: ChangePasswordUiState,
@@ -52,6 +57,8 @@ fun ChangePasswordScreen(
     onUpClicked: () -> Unit,
     onChangePasswordClicked: (String, String) -> Unit,
 ) {
+    val keyboardController = LocalSoftwareKeyboardController.current
+
     var currentPassword by rememberSaveable { mutableStateOf("") }
     var newPassword by rememberSaveable { mutableStateOf("") }
 
@@ -66,6 +73,22 @@ fun ChangePasswordScreen(
                     }
                 }
             )
+        },
+        bottomBar = {
+            BottomAppBar(modifier = Modifier.imePadding()) {
+                Spacer(Modifier.weight(1f, true))
+
+                FilledTonalButton(
+                    modifier = Modifier.padding(16.dp, 8.dp),
+                    onClick = {
+                        keyboardController?.hide()
+                        onChangePasswordClicked(currentPassword, newPassword)
+                    },
+                    enabled = currentPassword.isNotBlank() && newPassword.isNotBlank() && newPassword != currentPassword && !state.isLoading
+                ) {
+                    Text(text = "Change")
+                }
+            }
         },
         content = { innerPadding ->
             Column(
@@ -106,7 +129,7 @@ private fun Preview_SignUpScreen() {
     )
 }
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 private fun ChangePasswordForm(
     currentPassword: String,
@@ -179,19 +202,6 @@ private fun ChangePasswordForm(
             }
         }
     )
-
-    FilledTonalButton(
-        modifier = Modifier
-            .padding(16.dp, 8.dp)
-            .fillMaxWidth(),
-        onClick = {
-            keyboardController?.hide()
-            onChangePasswordClicked()
-        },
-        enabled = currentPassword.isNotBlank() && newPassword.isNotBlank() && newPassword != currentPassword && !changePasswordPending
-    ) {
-        Text(text = "Change")
-    }
 
     LaunchedEffect(focusRequester) {
         focusRequester.requestFocus()

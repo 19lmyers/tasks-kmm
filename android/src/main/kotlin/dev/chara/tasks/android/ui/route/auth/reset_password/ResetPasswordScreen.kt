@@ -94,7 +94,7 @@ private fun Preview_ResetPasswordScreen() {
     )
 }
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 private fun ResetPasswordForm(
     password: String,

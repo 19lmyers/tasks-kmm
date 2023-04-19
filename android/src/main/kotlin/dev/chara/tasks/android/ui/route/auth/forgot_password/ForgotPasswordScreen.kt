@@ -100,7 +100,7 @@ private fun Preview_ForgotPasswordScreen() {
     )
 }
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 private fun ForgotPasswordForm(
     email: String,
