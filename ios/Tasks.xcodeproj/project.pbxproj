@@ -32,6 +32,8 @@
 		DD96350F29E2119600303FBA /* ModifyList.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD96350E29E2119600303FBA /* ModifyList.swift */; };
 		DD96351129E21EE500303FBA /* BindingExt.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD96351029E21EE500303FBA /* BindingExt.swift */; };
 		DD96351429E2227500303FBA /* ModelExt.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD96351329E2227500303FBA /* ModelExt.swift */; };
+		DD9B80CA29F10FC90063F5A6 /* ForgotPasswordRoute.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD9B80C929F10FC90063F5A6 /* ForgotPasswordRoute.swift */; };
+		DD9B80CC29F10FDA0063F5A6 /* ForgotPasswordScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD9B80CB29F10FDA0063F5A6 /* ForgotPasswordScreen.swift */; };
 		DDB08D7D29DCC90600239CE4 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDB08D7829DCC90600239CE4 /* ContentView.swift */; };
 		DDB08D7E29DCC90600239CE4 /* HomeScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDB08D7929DCC90600239CE4 /* HomeScreen.swift */; };
 		DDB08D8129DCC90600239CE4 /* List.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDB08D7C29DCC90600239CE4 /* List.swift */; };
@@ -75,6 +77,8 @@
 		DD96350E29E2119600303FBA /* ModifyList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModifyList.swift; sourceTree = "<group>"; };
 		DD96351029E21EE500303FBA /* BindingExt.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BindingExt.swift; sourceTree = "<group>"; };
 		DD96351329E2227500303FBA /* ModelExt.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelExt.swift; sourceTree = "<group>"; };
+		DD9B80C929F10FC90063F5A6 /* ForgotPasswordRoute.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForgotPasswordRoute.swift; sourceTree = "<group>"; };
+		DD9B80CB29F10FDA0063F5A6 /* ForgotPasswordScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForgotPasswordScreen.swift; sourceTree = "<group>"; };
 		DDB08D7829DCC90600239CE4 /* ContentView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		DDB08D7929DCC90600239CE4 /* HomeScreen.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HomeScreen.swift; sourceTree = "<group>"; };
 		DDB08D7C29DCC90600239CE4 /* List.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = List.swift; sourceTree = "<group>"; };
@@ -122,9 +126,9 @@
 			children = (
 				DDDAA23729DCF6F80062B5F4 /* GoogleService-Info.plist */,
 				239A01E4B2307B195753640F /* Frameworks */,
-				7555FF7D242A565900829871 /* Tasks */,
 				52BDF2260276F391C8E58C9F /* Pods */,
 				7555FF7C242A565900829871 /* Products */,
+				7555FF7D242A565900829871 /* Tasks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -268,6 +272,22 @@
 			path = Model;
 			sourceTree = "<group>";
 		};
+		DD9B80C829F10FAF0063F5A6 /* Forgot Password */ = {
+			isa = PBXGroup;
+			children = (
+				DD9B80C929F10FC90063F5A6 /* ForgotPasswordRoute.swift */,
+				DD9B80CB29F10FDA0063F5A6 /* ForgotPasswordScreen.swift */,
+			);
+			path = "Forgot Password";
+			sourceTree = "<group>";
+		};
+		DD9B80CD29F116CD0063F5A6 /* Reset Password */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = "Reset Password";
+			sourceTree = "<group>";
+		};
 		DDAEF3F429E36500003C8E27 /* Util */ = {
 			isa = PBXGroup;
 			children = (
@@ -281,6 +301,8 @@
 		DDCD05D729DF810700316955 /* Auth */ = {
 			isa = PBXGroup;
 			children = (
+				DD9B80CD29F116CD0063F5A6 /* Reset Password */,
+				DD9B80C829F10FAF0063F5A6 /* Forgot Password */,
 				DD96350429E0E35C00303FBA /* Sign Up */,
 				DD96350329E0E35300303FBA /* Sign In */,
 			);
@@ -456,10 +478,12 @@
 				DDB08D7D29DCC90600239CE4 /* ContentView.swift in Sources */,
 				DDCD05D929DF812600316955 /* SignInRoute.swift in Sources */,
 				DD96351429E2227500303FBA /* ModelExt.swift in Sources */,
+				DD9B80CC29F10FDA0063F5A6 /* ForgotPasswordScreen.swift in Sources */,
 				DD78708829EA3B5F002D968C /* SettingsRoute.swift in Sources */,
 				DD78708329EA2606002D968C /* TaskDetailsRoute.swift in Sources */,
 				DDCD05DB29DF813700316955 /* SignInScreen.swift in Sources */,
 				DD78708D29EA7C32002D968C /* ProfileScreen.swift in Sources */,
+				DD9B80CA29F10FC90063F5A6 /* ForgotPasswordRoute.swift in Sources */,
 				DD96350129E0E21F00303FBA /* TypeExt.swift in Sources */,
 				DDCD05D629DF750100316955 /* HomeRoute.swift in Sources */,
 				2152FB042600AC8F00CF470E /* iOSApp.swift in Sources */,

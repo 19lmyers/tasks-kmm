@@ -14,12 +14,6 @@ struct HomeRoute: View {
 
     var navigateToWelcome: () -> Void
 
-    @State var path = NavigationPath()
-    var profile: String = "Profile"
-    var settings: String = "Settings"
-    var changeEmail: String = "ChangeEmail"
-    var changePassword: String = "ChangePassword"
-
     @State var showCreateListSheet = false
     @State var showCreateTaskSheet = false
 
@@ -32,7 +26,7 @@ struct HomeRoute: View {
                     navigateToWelcome()
                 }
             } else {
-                NavigationStack(path: $path) {
+                NavigationStack {
                     HomeScreen(
                             state: uiState,
                             onCreateListPressed: {
@@ -55,28 +49,6 @@ struct HomeRoute: View {
                                 TaskDetailsRoute(taskId: task.id)
                                         .navigationBarTitle(Text("Edit item"))
                             }
-                            .navigationDestination(for: String.self) { pathSegment in
-                                if pathSegment == profile {
-                                    ProfileRoute(
-                                            navigateToChangeEmail: {
-                                                path.append(changeEmail)
-                                            },
-                                            navigateToChangePassword: {
-                                                path.append(changePassword)
-                                            }
-                                    )
-                                            .navigationBarBackButtonHidden(true)
-                                            .navigationTitle("Edit profile")
-                                } else if pathSegment == settings {
-                                    SettingsRoute()
-                                            .navigationTitle("Settings")
-                                } else if pathSegment == changeEmail {
-                                    Text("Change Email")
-                                } else if pathSegment == changePassword {
-                                    ChangePasswordRoute()
-                                            .navigationTitle("Change password")
-                                }
-                            }
                             .toolbar {
                                 if !uiState.allLists.isEmpty {
                                     ToolbarItem(placement: .navigationBarTrailing) {
@@ -89,14 +61,18 @@ struct HomeRoute: View {
                                 }
                                 ToolbarItem(placement: .navigationBarTrailing) {
                                     Menu(content: {
-                                        Button(action: {
-                                            path.append(profile)
+                                        NavigationLink(destination: {
+                                            ProfileRoute()
+                                                    .navigationBarBackButtonHidden(true)
+                                                    .navigationTitle("Edit profile")
                                         }) {
                                             Text("Edit profile")
                                             Image(systemName: "person")
                                         }
-                                        Button(action: {
-                                            path.append(settings)
+                                        
+                                        NavigationLink(destination: {
+                                            SettingsRoute()
+                                                    .navigationTitle("Settings")
                                         }) {
                                             Text("Settings")
                                             Image(systemName: "gearshape")

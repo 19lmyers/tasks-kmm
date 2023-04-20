@@ -3,12 +3,16 @@ package dev.chara.tasks.android.ui.route.auth.forgot_password
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.Icon
@@ -44,7 +48,7 @@ import dev.chara.tasks.viewmodel.auth.forgot_password.ForgotPasswordUiState
 
 
 @OptIn(
-    ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class
+    ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class, ExperimentalComposeUiApi::class
 )
 @Composable
 fun ForgotPasswordScreen(
@@ -54,7 +58,11 @@ fun ForgotPasswordScreen(
     onResetClicked: (String) -> Unit,
     validateEmail: (String) -> Result<Unit, String>,
 ) {
+    val keyboardController = LocalSoftwareKeyboardController.current
+
     var email by rememberSaveable { mutableStateOf("") }
+
+    val emailResult = validateEmail(email)
 
     Scaffold(
         snackbarHost = { SnackbarHost(snackbarHostState) },
@@ -67,6 +75,23 @@ fun ForgotPasswordScreen(
                     }
                 }
             )
+        },
+        bottomBar = {
+            BottomAppBar(modifier = Modifier.imePadding()) {
+                Spacer(Modifier.weight(1f, true))
+
+                FilledTonalButton(
+                    modifier = Modifier.padding(16.dp, 8.dp),
+                    onClick = {
+                        keyboardController?.hide()
+                        onResetClicked(email)
+                    },
+                    enabled = emailResult is Ok && !state.isLoading
+
+                ) {
+                    Text(text = "Confirm")
+                }
+            }
         },
         content = { innerPadding ->
             Column(
@@ -84,7 +109,7 @@ fun ForgotPasswordScreen(
                     onEmailChanged = { email = it },
                     resetPending = state.isLoading,
                     onResetClicked = { onResetClicked(email) },
-                    validateEmail = { validateEmail(it) }
+                    emailResult = emailResult
                 )
             }
         }
@@ -110,12 +135,10 @@ private fun ForgotPasswordForm(
     onEmailChanged: (String) -> Unit,
     resetPending: Boolean,
     onResetClicked: () -> Unit,
-    validateEmail: (String) -> Result<Unit, String>
+    emailResult: Result<Unit, String>
 ) {
     val keyboardController = LocalSoftwareKeyboardController.current
     val focusRequester = remember { FocusRequester() }
-
-    val emailResult = validateEmail(email)
 
     OutlinedTextField(
         modifier = Modifier
@@ -129,6 +152,14 @@ private fun ForgotPasswordForm(
         keyboardOptions = KeyboardOptions(
             keyboardType = KeyboardType.Email, imeAction = ImeAction.Next
         ),
+        keyboardActions = KeyboardActions(
+            onDone = {
+                if (emailResult is Ok && !resetPending) {
+                    keyboardController?.hide()
+                    onResetClicked()
+                }
+            }
+            ),
         isError = email.isNotEmpty() && emailResult is Err,
         supportingText = {
             if (email.isNotEmpty() && emailResult is Err) {
@@ -136,19 +167,6 @@ private fun ForgotPasswordForm(
             }
         }
     )
-
-    FilledTonalButton(
-        modifier = Modifier
-            .padding(16.dp, 8.dp)
-            .fillMaxWidth(),
-        onClick = {
-            keyboardController?.hide()
-            onResetClicked()
-        },
-        enabled = emailResult is Ok && !resetPending
-    ) {
-        Text(text = "Confirm")
-    }
 
     LaunchedEffect(focusRequester) {
         focusRequester.requestFocus()

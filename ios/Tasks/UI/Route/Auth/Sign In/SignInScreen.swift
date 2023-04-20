@@ -73,7 +73,10 @@ struct SignInScreen: View {
         }
                 .safeAreaInset(edge: .bottom) {
                     HStack {
-                        NavigationLink(destination: Text("TODO")) {
+                        NavigationLink(destination: {
+                            ForgotPasswordRoute()
+                                .navigationTitle("Forgot password?")
+                        }) {
                             Text("Forgot password?")
                         }
                                 .disabled(state.isLoading)

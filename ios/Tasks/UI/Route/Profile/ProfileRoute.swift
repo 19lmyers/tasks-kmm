@@ -14,9 +14,6 @@ struct ProfileRoute: View {
 
     @StateObject var viewModel = ProfileViewModel()
 
-    var navigateToChangeEmail: () -> Void
-    var navigateToChangePassword: () -> Void
-
     var body: some View {
         let uiState = viewModel.state(\.uiState, equals: { $0 == $1 }, mapper: { $0 })
 
@@ -29,8 +26,6 @@ struct ProfileRoute: View {
                             viewModel.updateUserProfilePhoto(photo: DataKt.toByteArray(compressed))
                         }
                     },
-                    onChangeEmailPressed: navigateToChangeEmail,
-                    onChangePasswordPressed: navigateToChangePassword,
                     onUpdateUserProfile: { profile in
                         viewModel.updateUserProfile(profile: profile)
                     }

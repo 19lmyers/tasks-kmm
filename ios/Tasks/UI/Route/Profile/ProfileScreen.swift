@@ -20,20 +20,15 @@ struct ProfileScreen: View {
     @State var selectedPhoto: PhotosPickerItem?
 
     var onChangePhoto: (Data) -> Void
-    
-    var onChangeEmailPressed: () -> Void
-    var onChangePasswordPressed: () -> Void
 
     var onUpdateUserProfile: (Profile) -> Void
 
-    init(state: ProfileUiState, onChangePhoto: @escaping (Data) -> Void, onChangeEmailPressed: @escaping () -> Void, onChangePasswordPressed: @escaping () -> Void, onUpdateUserProfile: @escaping (Profile) -> Void) {
+    init(state: ProfileUiState, onChangePhoto: @escaping (Data) -> Void, onUpdateUserProfile: @escaping (Profile) -> Void) {
         self.state = state
 
         _displayName = State(initialValue: state.profile!.displayName)
 
         self.onChangePhoto = onChangePhoto
-        self.onChangeEmailPressed = onChangeEmailPressed
-        self.onChangePasswordPressed = onChangePasswordPressed
         self.onUpdateUserProfile = onUpdateUserProfile
     }
 
@@ -104,18 +99,24 @@ struct ProfileScreen: View {
             }
 
             Section("Authentication") {
-                Button(action: onChangeEmailPressed) {
+                NavigationLink(destination: {
+                    Text("TODO")
+                            .navigationTitle("Change email")
+                }) {
                     HStack {
                         Image(systemName: "at")
                         Text("Change email")
-                    }
+                    }.foregroundColor(.accentColor)
                 }
 
-                Button(action: onChangePasswordPressed) {
+                NavigationLink(destination: {
+                    ChangePasswordRoute()
+                            .navigationTitle("Change password")
+                }) {
                     HStack {
                         Image(systemName: "ellipsis.rectangle")
                         Text("Change password")
-                    }
+                    }.foregroundColor(.accentColor)
                 }
             }
         }
@@ -154,8 +155,6 @@ struct ProfileScreen_Previews: PreviewProvider {
                         )
                 ),
                 onChangePhoto: { _ in },
-                onChangeEmailPressed: {},
-                onChangePasswordPressed: {},
                 onUpdateUserProfile: { _ in }
         )
     }
