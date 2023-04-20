@@ -41,9 +41,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import dev.chara.tasks.android.model.icon
 import dev.chara.tasks.android.model.vector
-import dev.chara.tasks.model.BoardSection
 import dev.chara.tasks.model.TaskList
-import dev.chara.tasks.model.Theme
+import dev.chara.tasks.model.board.BoardSection
+import dev.chara.tasks.model.preference.Theme
 import dev.chara.tasks.viewmodel.settings.SettingsUiState
 import kotlinx.datetime.Clock
 

@@ -14,7 +14,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import dev.chara.tasks.android.notification.service.MessagingService
 import dev.chara.tasks.android.ui.theme.AppTheme
-import dev.chara.tasks.model.Theme
+import dev.chara.tasks.model.preference.Theme
 import dev.chara.tasks.viewmodel.BaseViewModel
 import dev.olshevski.navigation.reimagined.NavController
 import dev.olshevski.navigation.reimagined.navController

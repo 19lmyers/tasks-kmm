@@ -1,13 +1,12 @@
 package dev.chara.tasks.data.rest
 
+import com.github.michaelbull.result.Err
+import com.github.michaelbull.result.Ok
+import com.github.michaelbull.result.mapBoth
+import dev.chara.tasks.data.ApiError
+import dev.chara.tasks.data.ClientError
 import dev.chara.tasks.data.preference.PreferenceDataSource
-import dev.chara.tasks.model.LoginCredentials
-import dev.chara.tasks.model.Move
-import dev.chara.tasks.model.PasswordChange
-import dev.chara.tasks.model.PasswordReset
 import dev.chara.tasks.model.Profile
-import dev.chara.tasks.model.RegisterCredentials
-import dev.chara.tasks.model.Reorder
 import dev.chara.tasks.model.Task
 import dev.chara.tasks.model.TaskList
 import dev.chara.tasks.model.TokenPair
@@ -34,6 +33,7 @@ import io.ktor.http.contentType
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.coroutines.flow.first
 import kotlinx.datetime.Instant
+import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 
 expect fun createHttpClient(config: HttpClientConfig<*>.() -> Unit = {}): HttpClient
@@ -72,16 +72,17 @@ class RestDataSource(
                             ?: preferenceDataSource.getApiTokens().first()?.refresh
                             ?: return@refreshTokens null
 
-                        val result = refreshAuth(refreshToken)
-
-                        if (result.isSuccess) {
-                            val tokenPair = result.getOrThrow()
-                            preferenceDataSource.setApiTokens(tokenPair)
-                            BearerTokens(tokenPair.access, tokenPair.refresh)
-                        } else {
-                            preferenceDataSource.clearAuthFields()
-                            null
-                        }
+                        refreshAuth(refreshToken)
+                            .mapBoth(
+                                success = { tokenPair ->
+                                    preferenceDataSource.setApiTokens(tokenPair)
+                                    BearerTokens(tokenPair.access, tokenPair.refresh)
+                                },
+                                failure = {
+                                    preferenceDataSource.clearAuthFields()
+                                    null
+                                }
+                            )
                     }
                     sendWithoutRequest {
                         /* We don't want to hammer the server with credential requests for every request we make */
@@ -92,25 +93,25 @@ class RestDataSource(
         }
     }
 
-    suspend fun getUserProfile(): Result<Profile> = try {
+    suspend fun getUserProfile() = try {
         val response = client.get("$endpointUrl/profile")
 
         when (response.status) {
             HttpStatusCode.OK -> {
                 val profile: Profile = response.body()
-                Result.success(profile)
+                Ok(profile)
             }
 
             HttpStatusCode.BadRequest -> {
-                Result.failure(ApiError.InvalidQuery(response.body()))
+                Err(ApiError.InvalidQuery(response.body()))
             }
 
             else -> {
-                Result.failure(ApiError.OtherServerError(response.body()))
+                Err(ApiError.OtherServerError(response.body()))
             }
         }
     } catch (ex: Throwable) {
-        Result.failure(ex)
+        Err(ClientError(ex))
     }
 
     suspend fun updateUserProfile(profile: Profile) = try {
@@ -121,19 +122,19 @@ class RestDataSource(
 
         when (response.status) {
             HttpStatusCode.OK -> {
-                Result.success(Unit)
+                Ok(Unit)
             }
 
             HttpStatusCode.BadRequest -> {
-                Result.failure(ApiError.InvalidQuery(response.body()))
+                Err(ApiError.InvalidQuery(response.body()))
             }
 
             else -> {
-                Result.failure(response.body())
+                Err(ApiError.OtherServerError(response.body()))
             }
         }
     } catch (ex: Throwable) {
-        Result.failure(ex)
+        Err(ClientError(ex))
     }
 
     suspend fun updateUserProfilePhoto(photo: ByteArray) = try {
@@ -149,22 +150,25 @@ class RestDataSource(
 
         when (response.status) {
             HttpStatusCode.OK -> {
-                Result.success(Unit)
+                Ok(Unit)
             }
 
             HttpStatusCode.BadRequest -> {
-                Result.failure(ApiError.InvalidQuery(response.body()))
+                Err(ApiError.InvalidQuery(response.body()))
             }
 
             else -> {
-                Result.failure(response.body())
+                Err(ApiError.OtherServerError(response.body()))
             }
         }
     } catch (ex: Throwable) {
-        Result.failure(ex)
+        Err(ClientError(ex))
     }
 
-    suspend fun createUser(email: String, displayName: String, password: String): Result<Unit> =
+    @Serializable
+    data class RegisterCredentials(val email: String, val displayName: String, val password: String)
+
+    suspend fun createUser(email: String, displayName: String, password: String) =
         try {
             val response = client.post("$endpointUrl/auth/register") {
                 contentType(ContentType.Application.Json)
@@ -173,22 +177,25 @@ class RestDataSource(
 
             when (response.status) {
                 HttpStatusCode.Created -> {
-                    Result.success(Unit)
+                    Ok(Unit)
                 }
 
                 HttpStatusCode.BadRequest, HttpStatusCode.Conflict -> {
-                    Result.failure(ApiError.InvalidQuery(response.body()))
+                    Err(ApiError.InvalidQuery(response.body()))
                 }
 
                 else -> {
-                    Result.failure(response.body())
+                    Err(ApiError.OtherServerError(response.body()))
                 }
             }
         } catch (ex: Throwable) {
-            Result.failure(ex)
+            Err(ClientError(ex))
         }
 
-    suspend fun authenticateUser(email: String, password: String): Result<TokenPair> = try {
+    @Serializable
+    data class LoginCredentials(val email: String, val password: String)
+
+    suspend fun authenticateUser(email: String, password: String) = try {
         val response = client.post("$endpointUrl/auth/login") {
             contentType(ContentType.Application.Json)
             setBody(LoginCredentials(email, password))
@@ -197,22 +204,22 @@ class RestDataSource(
         when (response.status) {
             HttpStatusCode.OK -> {
                 val tokenPair: TokenPair = response.body()
-                Result.success(tokenPair)
+                Ok(tokenPair)
             }
 
             HttpStatusCode.BadRequest, HttpStatusCode.Unauthorized -> {
-                Result.failure(ApiError.InvalidQuery(response.body()))
+                Err(ApiError.InvalidQuery(response.body()))
             }
 
             else -> {
-                Result.failure(response.body())
+                Err(ApiError.OtherServerError(response.body()))
             }
         }
     } catch (ex: Throwable) {
-        Result.failure(ex)
+        Err(ClientError(ex))
     }
 
-    private suspend fun RefreshTokensParams.refreshAuth(refreshToken: String): Result<TokenPair> =
+    private suspend fun RefreshTokensParams.refreshAuth(refreshToken: String) =
         try {
             val response = client.post("$endpointUrl/auth/refresh") {
                 contentType(ContentType.Text.Plain)
@@ -223,20 +230,23 @@ class RestDataSource(
             when (response.status) {
                 HttpStatusCode.OK -> {
                     val tokenPair: TokenPair = response.body()
-                    Result.success(tokenPair)
+                    Ok(tokenPair)
                 }
 
                 HttpStatusCode.BadRequest -> {
-                    Result.failure(ApiError.InvalidQuery(response.body()))
+                    Err(ApiError.InvalidQuery(response.body()))
                 }
 
                 else -> {
-                    Result.failure(ApiError.OtherServerError(response.body()))
+                    Err(ApiError.OtherServerError(response.body()))
                 }
             }
         } catch (ex: Throwable) {
-            Result.failure(ex)
+            Err(ClientError(ex))
         }
+
+    @Serializable
+    data class PasswordChange(val currentPassword: String, val newPassword: String)
 
     suspend fun changePassword(currentPassword: String, newPassword: String) = try {
         val response = client.post("$endpointUrl/auth/password") {
@@ -246,19 +256,19 @@ class RestDataSource(
 
         when (response.status) {
             HttpStatusCode.OK -> {
-                Result.success(Unit)
+                Ok(Unit)
             }
 
             HttpStatusCode.BadRequest -> {
-                Result.failure(ApiError.InvalidQuery(response.body()))
+                Err(ApiError.InvalidQuery(response.body()))
             }
 
             else -> {
-                Result.failure(ApiError.OtherServerError(response.body()))
+                Err(ApiError.OtherServerError(response.body()))
             }
         }
     } catch (ex: Throwable) {
-        Result.failure(ex)
+        Err(ClientError(ex))
     }
 
     suspend fun requestPasswordResetEmail(email: String) = try {
@@ -269,25 +279,28 @@ class RestDataSource(
 
         when (response.status) {
             HttpStatusCode.Accepted -> {
-                Result.success(Unit)
+                Ok(Unit)
             }
 
             HttpStatusCode.BadRequest, HttpStatusCode.Unauthorized -> {
-                Result.failure(ApiError.InvalidQuery(response.body()))
+                Err(ApiError.InvalidQuery(response.body()))
             }
 
             else -> {
-                Result.failure(response.body())
+                Err(ApiError.OtherServerError(response.body()))
             }
         }
     } catch (ex: Throwable) {
-        Result.failure(ex)
+        Err(ClientError(ex))
     }
+
+    @Serializable
+    data class PasswordReset(val resetToken: String, val newPassword: String)
 
     suspend fun resetPassword(
         resetToken: String,
         newPassword: String
-    ): Result<Unit> = try {
+    ) = try {
         val response = client.post("$endpointUrl/auth/reset") {
             contentType(ContentType.Application.Json)
             setBody(PasswordReset(resetToken, newPassword))
@@ -295,43 +308,43 @@ class RestDataSource(
 
         when (response.status) {
             HttpStatusCode.OK -> {
-                Result.success(Unit)
+                Ok(Unit)
             }
 
             HttpStatusCode.BadRequest, HttpStatusCode.Unauthorized -> {
-                Result.failure(ApiError.InvalidQuery(response.body()))
+                Err(ApiError.InvalidQuery(response.body()))
             }
 
             else -> {
-                Result.failure(response.body())
+                Err(ApiError.OtherServerError(response.body()))
             }
         }
     } catch (ex: Throwable) {
-        Result.failure(ex)
+        Err(ClientError(ex))
     }
 
-    suspend fun getLists(): Result<List<TaskList>> = try {
+    suspend fun getLists() = try {
         val response = client.get("$endpointUrl/lists")
 
         when (response.status) {
             HttpStatusCode.OK -> {
-                val taskList: List<TaskList> = response.body()
-                Result.success(taskList)
+                val taskLists: List<TaskList> = response.body()
+                Ok(taskLists)
             }
 
             HttpStatusCode.BadRequest -> {
-                Result.failure(ApiError.InvalidQuery(response.body()))
+                Err(ApiError.InvalidQuery(response.body()))
             }
 
             else -> {
-                Result.failure(ApiError.OtherServerError(response.body()))
+                Err(ApiError.OtherServerError(response.body()))
             }
         }
     } catch (ex: Throwable) {
-        Result.failure(ex)
+        Err(ClientError(ex))
     }
 
-    suspend fun createList(taskList: TaskList): Result<Unit> = try {
+    suspend fun createList(taskList: TaskList) = try {
         val response = client.post("$endpointUrl/lists") {
             contentType(ContentType.Application.Json)
             setBody(taskList)
@@ -339,22 +352,22 @@ class RestDataSource(
 
         when (response.status) {
             HttpStatusCode.Created -> {
-                Result.success(Unit)
+                Ok(Unit)
             }
 
             HttpStatusCode.BadRequest -> {
-                Result.failure(ApiError.InvalidQuery(response.body()))
+                Err(ApiError.InvalidQuery(response.body()))
             }
 
             else -> {
-                Result.failure(response.body())
+                Err(ApiError.OtherServerError(response.body()))
             }
         }
     } catch (ex: Throwable) {
-        Result.failure(ex)
+        Err(ClientError(ex))
     }
 
-    suspend fun updateList(listId: String, taskList: TaskList): Result<Unit> = try {
+    suspend fun updateList(listId: String, taskList: TaskList) = try {
         val response = client.put("$endpointUrl/lists/$listId") {
             contentType(ContentType.Application.Json)
             setBody(taskList)
@@ -362,63 +375,63 @@ class RestDataSource(
 
         when (response.status) {
             HttpStatusCode.OK -> {
-                Result.success(Unit)
+                Ok(Unit)
             }
 
             HttpStatusCode.BadRequest -> {
-                Result.failure(ApiError.InvalidQuery(response.body()))
+                Err(ApiError.InvalidQuery(response.body()))
             }
 
             else -> {
-                Result.failure(response.body())
+                Err(ApiError.OtherServerError(response.body()))
             }
         }
     } catch (ex: Throwable) {
-        Result.failure(ex)
+        Err(ClientError(ex))
     }
 
-    suspend fun deleteList(listId: String): Result<Unit> = try {
+    suspend fun deleteList(listId: String) = try {
         val response = client.delete("$endpointUrl/lists/$listId")
 
         when (response.status) {
             HttpStatusCode.Accepted -> {
-                Result.success(Unit)
+                Ok(Unit)
             }
 
             HttpStatusCode.BadRequest -> {
-                Result.failure(ApiError.InvalidQuery(response.body()))
+                Err(ApiError.InvalidQuery(response.body()))
             }
 
             else -> {
-                Result.failure(response.body())
+                Err(ApiError.OtherServerError(response.body()))
             }
         }
     } catch (ex: Throwable) {
-        Result.failure(ex)
+        Err(ClientError(ex))
     }
 
-    suspend fun getTasks(listId: String): Result<List<Task>> = try {
+    suspend fun getTasks(listId: String) = try {
         val response = client.get("$endpointUrl/lists/$listId/tasks")
 
         when (response.status) {
             HttpStatusCode.OK -> {
                 val tasks: List<Task> = response.body()
-                Result.success(tasks)
+                Ok(tasks)
             }
 
             HttpStatusCode.BadRequest -> {
-                Result.failure(ApiError.InvalidQuery(response.body()))
+                Err(ApiError.InvalidQuery(response.body()))
             }
 
             else -> {
-                Result.failure(ApiError.OtherServerError(response.body()))
+                Err(ApiError.OtherServerError(response.body()))
             }
         }
     } catch (ex: Throwable) {
-        Result.failure(ex)
+        Err(ClientError(ex))
     }
 
-    suspend fun createTask(listId: String, task: Task): Result<Unit> = try {
+    suspend fun createTask(listId: String, task: Task) = try {
         val response = client.post("$endpointUrl/lists/$listId/tasks") {
             contentType(ContentType.Application.Json)
             setBody(task)
@@ -426,22 +439,22 @@ class RestDataSource(
 
         when (response.status) {
             HttpStatusCode.Created -> {
-                Result.success(Unit)
+                Ok(Unit)
             }
 
             HttpStatusCode.BadRequest -> {
-                Result.failure(ApiError.InvalidQuery(response.body()))
+                Err(ApiError.InvalidQuery(response.body()))
             }
 
             else -> {
-                Result.failure(response.body())
+                Err(ApiError.OtherServerError(response.body()))
             }
         }
     } catch (ex: Throwable) {
-        Result.failure(ex)
+        Err(ClientError(ex))
     }
 
-    suspend fun updateTask(listId: String, taskId: String, task: Task): Result<Unit> = try {
+    suspend fun updateTask(listId: String, taskId: String, task: Task) = try {
         val response = client.put("$endpointUrl/lists/$listId/tasks/$taskId") {
             contentType(ContentType.Application.Json)
             setBody(task)
@@ -449,47 +462,50 @@ class RestDataSource(
 
         when (response.status) {
             HttpStatusCode.OK -> {
-                Result.success(Unit)
+                Ok(Unit)
             }
 
             HttpStatusCode.BadRequest -> {
-                Result.failure(ApiError.InvalidQuery(response.body()))
+                Err(ApiError.InvalidQuery(response.body()))
             }
 
             else -> {
-                Result.failure(response.body())
+                Err(ApiError.OtherServerError(response.body()))
             }
         }
     } catch (ex: Throwable) {
-        Result.failure(ex)
+        Err(ClientError(ex))
     }
 
-    suspend fun deleteTask(listId: String, taskId: String): Result<Unit> = try {
+    suspend fun deleteTask(listId: String, taskId: String) = try {
         val response = client.delete("$endpointUrl/lists/$listId/tasks/$taskId")
 
         when (response.status) {
             HttpStatusCode.Accepted -> {
-                Result.success(Unit)
+                Ok(Unit)
             }
 
             HttpStatusCode.BadRequest -> {
-                Result.failure(ApiError.InvalidQuery(response.body()))
+                Err(ApiError.InvalidQuery(response.body()))
             }
 
             else -> {
-                Result.failure(response.body())
+                Err(ApiError.OtherServerError(response.body()))
             }
         }
     } catch (ex: Throwable) {
-        Result.failure(ex)
+        Err(ClientError(ex))
     }
+
+    @Serializable
+    data class Move(val newListId: String, val lastModified: Instant)
 
     suspend fun moveTask(
         oldListId: String,
         newListId: String,
         taskId: String,
         lastModified: Instant
-    ): Result<Unit> = try {
+    ) = try {
         val response = client.post("$endpointUrl/lists/$oldListId/tasks/$taskId/move") {
             contentType(ContentType.Application.Json)
             setBody(Move(newListId, lastModified))
@@ -497,20 +513,23 @@ class RestDataSource(
 
         when (response.status) {
             HttpStatusCode.OK -> {
-                Result.success(Unit)
+                Ok(Unit)
             }
 
             HttpStatusCode.BadRequest -> {
-                Result.failure(ApiError.InvalidQuery(response.body()))
+                Err(ApiError.InvalidQuery(response.body()))
             }
 
             else -> {
-                Result.failure(response.body())
+                Err(ApiError.OtherServerError(response.body()))
             }
         }
     } catch (ex: Throwable) {
-        Result.failure(ex)
+        Err(ClientError(ex))
     }
+
+    @Serializable
+    data class Reorder(val fromIndex: Int, val toIndex: Int, val lastModified: Instant)
 
     suspend fun reorderTask(
         listId: String,
@@ -518,7 +537,7 @@ class RestDataSource(
         fromIndex: Int,
         toIndex: Int,
         lastModified: Instant
-    ): Result<Unit> = try {
+    ) = try {
         val response = client.post("$endpointUrl/lists/$listId/tasks/$taskId/reorder") {
             contentType(ContentType.Application.Json)
             setBody(Reorder(fromIndex, toIndex, lastModified))
@@ -526,89 +545,84 @@ class RestDataSource(
 
         when (response.status) {
             HttpStatusCode.OK -> {
-                Result.success(Unit)
+                Ok(Unit)
             }
 
             HttpStatusCode.BadRequest -> {
-                Result.failure(ApiError.InvalidQuery(response.body()))
+                Err(ApiError.InvalidQuery(response.body()))
             }
 
             else -> {
-                Result.failure(response.body())
+                Err(ApiError.OtherServerError(response.body()))
             }
         }
     } catch (ex: Throwable) {
-        Result.failure(ex)
+        Err(ClientError(ex))
     }
 
-    suspend fun clearCompletedTasks(listId: String): Result<Unit> = try {
+    suspend fun clearCompletedTasks(listId: String) = try {
         val response = client.post("$endpointUrl/lists/$listId/tasks/clear")
 
         when (response.status) {
             HttpStatusCode.OK -> {
-                Result.success(Unit)
+                Ok(Unit)
             }
 
             HttpStatusCode.BadRequest -> {
-                Result.failure(ApiError.InvalidQuery(response.body()))
+                Err(ApiError.InvalidQuery(response.body()))
             }
 
             else -> {
-                Result.failure(response.body())
+                Err(ApiError.OtherServerError(response.body()))
             }
         }
     } catch (ex: Throwable) {
-        Result.failure(ex)
+        Err(ClientError(ex))
     }
 
-    suspend fun linkFCMToken(fcmToken: String): Result<Unit> = try {
+    suspend fun linkFCMToken(fcmToken: String) = try {
         val response = client.post("$endpointUrl/fcm/link") {
             setBody(fcmToken)
         }
 
         when (response.status) {
             HttpStatusCode.OK -> {
-                Result.success(Unit)
+                Ok(Unit)
             }
 
             HttpStatusCode.BadRequest -> {
-                Result.failure(ApiError.InvalidQuery(response.body()))
+                Err(ApiError.InvalidQuery(response.body()))
             }
 
             else -> {
-                Result.failure(response.body())
+                Err(ApiError.OtherServerError(response.body()))
             }
         }
     } catch (ex: Throwable) {
-        Result.failure(ex)
+        Err(ClientError(ex))
     }
 
-    suspend fun invalidateFcmToken(fcmToken: String): Result<Unit> = try {
+    suspend fun invalidateFcmToken(fcmToken: String) = try {
         val response = client.post("$endpointUrl/fcm/invalidate") {
             setBody(fcmToken)
         }
 
         when (response.status) {
             HttpStatusCode.OK -> {
-                Result.success(Unit)
+                Ok(Unit)
             }
 
             HttpStatusCode.BadRequest -> {
-                Result.failure(ApiError.InvalidQuery(response.body()))
+                Err(ApiError.InvalidQuery(response.body()))
             }
 
             else -> {
-                Result.failure(response.body())
+                Err(ApiError.OtherServerError(response.body()))
             }
         }
     } catch (ex: Throwable) {
-        Result.failure(ex)
+        Err(ClientError(ex))
     }
 }
 
 data class Endpoint(val url: String)
-
-sealed class ApiError(message: String?) : Throwable(message) {
-    class InvalidQuery(message: String?) : ApiError(message)
-    class OtherServerError(message: String?) : ApiError(message)
-}

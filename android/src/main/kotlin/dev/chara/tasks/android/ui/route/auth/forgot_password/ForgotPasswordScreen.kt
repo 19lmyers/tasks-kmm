@@ -37,6 +37,9 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.github.michaelbull.result.Err
+import com.github.michaelbull.result.Ok
+import com.github.michaelbull.result.Result
 import dev.chara.tasks.viewmodel.auth.forgot_password.ForgotPasswordUiState
 
 
@@ -49,7 +52,7 @@ fun ForgotPasswordScreen(
     snackbarHostState: SnackbarHostState,
     onUpClicked: () -> Unit,
     onResetClicked: (String) -> Unit,
-    validateEmail: (String) -> Result<String>,
+    validateEmail: (String) -> Result<Unit, String>,
 ) {
     var email by rememberSaveable { mutableStateOf("") }
 
@@ -96,7 +99,7 @@ private fun Preview_ForgotPasswordScreen() {
         snackbarHostState = SnackbarHostState(),
         onUpClicked = {},
         onResetClicked = {},
-        validateEmail = { Result.success("email@password.com") }
+        validateEmail = { Ok(Unit) }
     )
 }
 
@@ -107,7 +110,7 @@ private fun ForgotPasswordForm(
     onEmailChanged: (String) -> Unit,
     resetPending: Boolean,
     onResetClicked: () -> Unit,
-    validateEmail: (String) -> Result<String>
+    validateEmail: (String) -> Result<Unit, String>
 ) {
     val keyboardController = LocalSoftwareKeyboardController.current
     val focusRequester = remember { FocusRequester() }
@@ -126,10 +129,10 @@ private fun ForgotPasswordForm(
         keyboardOptions = KeyboardOptions(
             keyboardType = KeyboardType.Email, imeAction = ImeAction.Next
         ),
-        isError = email.isNotEmpty() && emailResult.isFailure,
+        isError = email.isNotEmpty() && emailResult is Err,
         supportingText = {
-            if (email.isNotEmpty() && emailResult.isFailure) {
-                Text(text = emailResult.exceptionOrNull()?.message ?: "Invalid email")
+            if (email.isNotEmpty() && emailResult is Err) {
+                Text(text = emailResult.error)
             }
         }
     )
@@ -142,7 +145,7 @@ private fun ForgotPasswordForm(
             keyboardController?.hide()
             onResetClicked()
         },
-        enabled = emailResult.isSuccess && !resetPending
+        enabled = emailResult is Ok && !resetPending
     ) {
         Text(text = "Confirm")
     }

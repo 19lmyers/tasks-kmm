@@ -1,4 +1,6 @@
-package dev.chara.tasks.model
+package dev.chara.tasks.model.board
+
+import dev.chara.tasks.model.Task
 
 data class BoardSection(
     val type: Type,
@@ -11,8 +13,3 @@ data class BoardSection(
     }
 }
 
-data class PinnedList(
-    val taskList: TaskList,
-    val topTasks: List<Task>,
-    val totalTaskCount: Int
-)

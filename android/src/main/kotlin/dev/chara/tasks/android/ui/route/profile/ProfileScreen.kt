@@ -16,7 +16,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AddCircle
 import androidx.compose.material.icons.filled.AlternateEmail
-import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Password
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.RemoveCircle
@@ -235,7 +235,7 @@ private fun TopBar(
         },
         navigationIcon = {
             IconButton(onClick = { onUpClicked() }) {
-                Icon(Icons.Filled.ArrowBack, contentDescription = "Navigate up")
+                Icon(Icons.Filled.Close, contentDescription = "Cancel")
             }
         },
         scrollBehavior = scrollBehavior

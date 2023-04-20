@@ -1,14 +1,18 @@
 package dev.chara.tasks.viewmodel.util
 
-import dev.chara.tasks.data.DataResult
+import com.github.michaelbull.result.Result
+import com.github.michaelbull.result.mapBoth
+import dev.chara.tasks.data.ApiError
+import dev.chara.tasks.data.ClientError
+import dev.chara.tasks.data.DataError
 import kotlinx.coroutines.flow.MutableSharedFlow
 
 data class PopupMessage(val text: String, val action: Action?) {
     data class Action(val text: String, val function: () -> Unit)
 }
 
-suspend fun <T> MutableSharedFlow<PopupMessage>.emitAsMessage(
-    result: DataResult<T>,
+suspend fun <V> MutableSharedFlow<PopupMessage>.emitAsMessage(
+    result: Result<V, DataError>,
     defaultErrorMessage: String = "An unknown error occurred"
 ) {
     emit(
@@ -19,8 +23,8 @@ suspend fun <T> MutableSharedFlow<PopupMessage>.emitAsMessage(
     )
 }
 
-suspend fun <T> MutableSharedFlow<PopupMessage>.emitAsMessage(
-    result: DataResult<T>,
+suspend fun <V> MutableSharedFlow<PopupMessage>.emitAsMessage(
+    result: Result<V, DataError>,
     defaultErrorMessage: String = "An unknown error occurred",
     successMessage: String,
 ) {
@@ -32,8 +36,8 @@ suspend fun <T> MutableSharedFlow<PopupMessage>.emitAsMessage(
     )
 }
 
-suspend fun <T> MutableSharedFlow<PopupMessage>.emitAsMessage(
-    result: DataResult<T>,
+suspend fun <V> MutableSharedFlow<PopupMessage>.emitAsMessage(
+    result: Result<V, DataError>,
     defaultErrorMessage: String = "An unknown error occurred",
     successMessage: String,
     action: PopupMessage.Action? = null,
@@ -46,20 +50,34 @@ suspend fun <T> MutableSharedFlow<PopupMessage>.emitAsMessage(
     )
 }
 
-private suspend fun <T> MutableSharedFlow<PopupMessage>.emit(
-    result: DataResult<T>,
+private suspend fun <V> MutableSharedFlow<PopupMessage>.emit(
+    result: Result<V, DataError>,
     defaultErrorMessage: String,
     successMessage: String? = null,
     action: PopupMessage.Action? = null,
 ) {
-    result.fold(
-        onSuccess = {
+    result.mapBoth(
+        success = {
             successMessage?.let {
                 PopupMessage(successMessage, action)
             }
         },
-        onFailure = { errorMessage ->
-            PopupMessage(errorMessage ?: defaultErrorMessage, action = null)
+        failure = { error ->
+            val message = when (error) {
+                is ApiError -> {
+                    error.message
+                }
+
+                is ClientError -> {
+                    error.exception.message
+                }
+
+                else -> {
+                    null
+                }
+            }
+
+            PopupMessage(message ?: defaultErrorMessage, action = null)
         }
     )?.let { message ->
         emit(message)

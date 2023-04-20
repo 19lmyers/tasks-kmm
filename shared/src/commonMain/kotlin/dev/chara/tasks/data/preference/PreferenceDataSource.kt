@@ -5,10 +5,10 @@ import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.core.stringSetPreferencesKey
-import dev.chara.tasks.model.BoardSection
 import dev.chara.tasks.model.Profile
-import dev.chara.tasks.model.Theme
 import dev.chara.tasks.model.TokenPair
+import dev.chara.tasks.model.board.BoardSection
+import dev.chara.tasks.model.preference.Theme
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob

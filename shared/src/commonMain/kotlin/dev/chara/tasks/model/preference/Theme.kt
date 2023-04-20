@@ -1,4 +1,4 @@
-package dev.chara.tasks.model
+package dev.chara.tasks.model.preference
 
 enum class Theme(private val friendlyName: String) {
     SYSTEM_DEFAULT("System default"),

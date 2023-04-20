@@ -5,7 +5,7 @@ import androidx.compose.material.icons.filled.Event
 import androidx.compose.material.icons.filled.Schedule
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.ui.graphics.vector.ImageVector
-import dev.chara.tasks.model.BoardSection
+import dev.chara.tasks.model.board.BoardSection
 
 val BoardSection.Type.icon: ImageVector
     get() = when (this) {

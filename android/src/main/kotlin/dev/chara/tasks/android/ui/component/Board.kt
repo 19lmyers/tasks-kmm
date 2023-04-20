@@ -25,10 +25,10 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import dev.chara.tasks.android.ui.theme.ColorTheme
-import dev.chara.tasks.model.BoardSection
-import dev.chara.tasks.model.PinnedList
 import dev.chara.tasks.model.Task
 import dev.chara.tasks.model.TaskList
+import dev.chara.tasks.model.board.BoardSection
+import dev.chara.tasks.model.board.PinnedList
 
 private const val CONTENT_TYPE_HEADER = "CONTENT_TYPE_HEADER"
 private const val CONTENT_TYPE_TASK = "CONTENT_TYPE_TASK"

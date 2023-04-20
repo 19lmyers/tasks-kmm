@@ -88,11 +88,9 @@ kotlin {
                 implementation(libs.okio)
 
                 api(libs.result)
+                implementation(libs.result.coroutines)
 
                 implementation(libs.uuid)
-
-                implementation(libs.validator.core)
-                implementation(libs.validator.email)
             }
         }
         val commonTest by getting {

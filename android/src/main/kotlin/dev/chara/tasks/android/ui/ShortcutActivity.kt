@@ -21,7 +21,7 @@ import dev.chara.tasks.android.ui.component.dialog.CreateTaskDialog
 import dev.chara.tasks.android.ui.component.util.MaterialDialog
 import dev.chara.tasks.android.ui.theme.AppTheme
 import dev.chara.tasks.model.Task
-import dev.chara.tasks.model.Theme
+import dev.chara.tasks.model.preference.Theme
 import dev.chara.tasks.viewmodel.shortcut.ShortcutViewModel
 import kotlinx.datetime.Clock
 
@@ -93,12 +93,12 @@ class ShortcutActivity : ComponentActivity() {
 
             LaunchedEffect(viewModel.statuses) {
                 viewModel.statuses.collect { status ->
-                    if (status.first) {
+                    if (status.isNullOrBlank()) {
                         Toast.makeText(this@ShortcutActivity, "Task created", Toast.LENGTH_LONG)
                             .show()
                         finish()
                     } else {
-                        Toast.makeText(this@ShortcutActivity, status.second, Toast.LENGTH_LONG)
+                        Toast.makeText(this@ShortcutActivity, status, Toast.LENGTH_LONG)
                             .show()
                     }
                 }

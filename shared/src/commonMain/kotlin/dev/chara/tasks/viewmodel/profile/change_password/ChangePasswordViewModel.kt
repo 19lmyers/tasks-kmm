@@ -1,5 +1,6 @@
 package dev.chara.tasks.viewmodel.profile.change_password
 
+import com.github.michaelbull.result.Ok
 import dev.chara.tasks.data.Repository
 import dev.chara.tasks.viewmodel.util.PopupMessage
 import dev.chara.tasks.viewmodel.util.emitAsMessage
@@ -31,7 +32,7 @@ class ChangePasswordViewModel : ViewModel(), KoinComponent {
             _messages.emitAsMessage(result)
 
             _uiState.value =
-                _uiState.value.copy(isLoading = false, passwordChanged = result.isSuccess)
+                _uiState.value.copy(isLoading = false, passwordChanged = result is Ok)
         }
     }
 }

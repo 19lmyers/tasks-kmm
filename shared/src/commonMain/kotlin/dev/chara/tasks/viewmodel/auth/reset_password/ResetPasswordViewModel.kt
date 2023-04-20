@@ -1,5 +1,6 @@
 package dev.chara.tasks.viewmodel.auth.reset_password
 
+import com.github.michaelbull.result.Ok
 import dev.chara.tasks.data.Repository
 import dev.chara.tasks.viewmodel.util.PopupMessage
 import dev.chara.tasks.viewmodel.util.emitAsMessage
@@ -28,7 +29,7 @@ class ResetPasswordViewModel(private val resetToken: String) : ViewModel(), Koin
             val result = repository.resetPassword(resetToken, newPassword)
             _messages.emitAsMessage(result)
 
-            _uiState.value = _uiState.value.copy(isLoading = false, passwordReset = result.isSuccess)
+            _uiState.value = _uiState.value.copy(isLoading = false, passwordReset = result is Ok)
         }
     }
 }

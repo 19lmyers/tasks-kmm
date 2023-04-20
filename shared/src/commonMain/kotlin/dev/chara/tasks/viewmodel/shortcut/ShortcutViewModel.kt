@@ -1,8 +1,11 @@
 package dev.chara.tasks.viewmodel.shortcut
 
+import com.github.michaelbull.result.mapBoth
+import dev.chara.tasks.data.ApiError
+import dev.chara.tasks.data.ClientError
 import dev.chara.tasks.data.Repository
 import dev.chara.tasks.model.Task
-import dev.chara.tasks.model.Theme
+import dev.chara.tasks.model.preference.Theme
 import dev.icerock.moko.mvvm.flow.cFlow
 import dev.icerock.moko.mvvm.flow.cStateFlow
 import dev.icerock.moko.mvvm.viewmodel.ViewModel
@@ -23,7 +26,7 @@ class ShortcutViewModel : ViewModel(), KoinComponent {
     private var _uiState = MutableStateFlow(ShortcutUiState(isLoading = true, firstLoad = true))
     val uiState = _uiState.asStateFlow().cStateFlow()
 
-    private val _statuses = MutableSharedFlow<Pair<Boolean, String?>>()
+    private val _statuses = MutableSharedFlow<String?>()
     val statuses = _statuses.asSharedFlow().cFlow()
 
     init {
@@ -55,14 +58,24 @@ class ShortcutViewModel : ViewModel(), KoinComponent {
 
     fun createTask(listId: String, task: Task) {
         viewModelScope.launch {
-            val result = repository.createTask(listId, task)
-
-            result.fold(
-                onSuccess = {
-                    true to null
+            repository.createTask(listId, task).mapBoth(
+                success = {
+                    null
                 },
-                onFailure = { errorMessage ->
-                    false to errorMessage
+                failure = { error ->
+                    when (error) {
+                        is ApiError -> {
+                            error.message
+                        }
+
+                        is ClientError -> {
+                            error.exception.message
+                        }
+
+                        else -> {
+                            "An unknown error occured"
+                        }
+                    }
                 }
             ).let { status ->
                 _statuses.emit(status)

@@ -5,8 +5,10 @@ import android.widget.Toast
 import androidx.core.app.NotificationManagerCompat
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
+import com.github.michaelbull.result.Err
+import com.github.michaelbull.result.mapBoth
+import com.github.michaelbull.result.mapError
 import dev.chara.tasks.android.notification.service.MessagingService
-import dev.chara.tasks.data.DataResult
 import dev.chara.tasks.data.Repository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
@@ -26,22 +28,24 @@ class CompleteTaskWorker(context: Context, workerParams: WorkerParameters) :
         val result = withContext(Dispatchers.IO) {
             val task =
                 repository.getTaskById(taskId).first()
-                    ?: return@withContext DataResult.Failure("No task found for id")
+                    ?: return@withContext Err("No task found for id")
 
             repository.updateTask(
                 task.listId, task.id, task.copy(
                     isCompleted = true,
                     lastModified = Clock.System.now()
                 )
-            )
+            ).mapError {
+                "TODO map this"
+            }
         }
 
         return withContext(Dispatchers.Main) {
             NotificationManagerCompat.from(applicationContext)
                 .cancel(taskId, MessagingService.NOTIFICATION_TYPE_REMINDER)
 
-            result.fold(
-                onSuccess = {
+            result.mapBoth(
+                success = {
                     Toast.makeText(
                         applicationContext,
                         "Task marked as complete",
@@ -49,10 +53,10 @@ class CompleteTaskWorker(context: Context, workerParams: WorkerParameters) :
                     ).show()
                     Result.success()
                 },
-                onFailure = {
+                failure = {
                     Toast.makeText(
                         applicationContext,
-                        it ?: "An unknown error occurred",
+                        it,
                         Toast.LENGTH_SHORT
                     ).show()
                     Result.failure()

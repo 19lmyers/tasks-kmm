@@ -128,7 +128,7 @@ struct SignUpScreen_Previews: PreviewProvider {
                     ),
                     onSignUpClicked: { _, _, _ in },
                     validateEmail: { _ in
-                        ResultKt.success(value: KotlinUnit()) as! Result<KotlinUnit, NSString>
+                        ResultKt.ok(value: KotlinUnit()) as! Result<KotlinUnit, NSString>
                     }
             )
         }

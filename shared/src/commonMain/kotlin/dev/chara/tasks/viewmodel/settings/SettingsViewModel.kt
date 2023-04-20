@@ -1,9 +1,9 @@
 package dev.chara.tasks.viewmodel.settings
 
 import dev.chara.tasks.data.Repository
-import dev.chara.tasks.model.BoardSection
 import dev.chara.tasks.model.TaskList
-import dev.chara.tasks.model.Theme
+import dev.chara.tasks.model.board.BoardSection
+import dev.chara.tasks.model.preference.Theme
 import dev.chara.tasks.viewmodel.util.PopupMessage
 import dev.chara.tasks.viewmodel.util.emitAsMessage
 import dev.icerock.moko.mvvm.flow.cFlow
