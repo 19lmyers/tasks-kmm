@@ -47,7 +47,7 @@ struct HomeRoute: View {
                             }
                             .navigationDestination(for: Task.self) { task in
                                 TaskDetailsRoute(taskId: task.id)
-                                        .navigationBarTitle(Text("Edit item"))
+                                        .navigationBarTitle(Text("Edit task"))
                             }
                             .toolbar {
                                 if !uiState.allLists.isEmpty {
@@ -93,7 +93,7 @@ struct HomeRoute: View {
                 }
                         .sheet(isPresented: $showCreateListSheet) {
                             ModifyListSheet(
-                                    title: "Create list",
+                                    title: "New list",
                                     current: TaskListKt.doNew(id: "", title: ""),
                                     onDismiss: {
                                         showCreateListSheet = false

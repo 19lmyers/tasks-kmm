@@ -16,7 +16,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
-import dev.chara.tasks.android.ui.component.dialog.ModifyListDialog
+import dev.chara.tasks.android.ui.component.sheet.ModifyListDialog
 import dev.chara.tasks.android.ui.theme.ColorTheme
 import dev.chara.tasks.model.Task
 import dev.chara.tasks.model.TaskList

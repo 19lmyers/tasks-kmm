@@ -32,8 +32,8 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import dev.chara.tasks.android.R
 import dev.chara.tasks.android.ui.NavTarget
-import dev.chara.tasks.android.ui.component.dialog.CreateTaskDialog
-import dev.chara.tasks.android.ui.component.dialog.ModifyListDialog
+import dev.chara.tasks.android.ui.component.sheet.CreateTaskSheet
+import dev.chara.tasks.android.ui.component.sheet.ModifyListDialog
 import dev.chara.tasks.android.ui.component.util.SnackbarLayout
 import dev.chara.tasks.android.ui.route.home.list_details.ListDetailsRoute
 import dev.chara.tasks.android.ui.route.home.task_details.TaskDetailsRoute
@@ -81,7 +81,7 @@ fun HomeRoute(
             return
         }
 
-        var showCreateListDialog by remember { mutableStateOf(false) }
+        var showCreateListDialog by rememberSaveable { mutableStateOf(false) }
 
         if (showCreateListDialog) {
             ModifyListDialog(
@@ -97,11 +97,11 @@ fun HomeRoute(
             )
         }
 
-        var showCreateTaskDialog by remember { mutableStateOf(false) }
-        var defaultListIdForCreatedTask by remember { mutableStateOf<String?>(null) }
+        var showCreateTaskSheet by rememberSaveable(initialNavTarget) { mutableStateOf(initialNavTarget is NavTarget.Home.WithNewTask) }
+        var defaultListIdForCreatedTask by rememberSaveable { mutableStateOf<String?>(null) }
 
-        if (showCreateTaskDialog) {
-            CreateTaskDialog(
+        if (showCreateTaskSheet) {
+            CreateTaskSheet(
                 taskLists = state.value.allLists,
                 current = Task(
                     id = "",
@@ -110,11 +110,11 @@ fun HomeRoute(
                     lastModified = Clock.System.now()
                 ),
                 onDismiss = {
-                    showCreateTaskDialog = false
+                    showCreateTaskSheet = false
                 },
                 onSave = { task ->
                     viewModel.createTask(task.listId, task)
-                    showCreateTaskDialog = false
+                    showCreateTaskSheet = false
                 }
             )
         }
@@ -171,7 +171,7 @@ fun HomeRoute(
                             showCreateListDialog = true
                         },
                         onCreateTaskPressed = {
-                            showCreateTaskDialog = true
+                            showCreateTaskSheet = true
                         },
                         navigateToListDetails = { taskList ->
                             selectedListId = taskList.id
@@ -211,7 +211,7 @@ fun HomeRoute(
                                     },
                                     onCreateTaskClicked = {
                                         defaultListIdForCreatedTask = it.id
-                                        showCreateTaskDialog = true
+                                        showCreateTaskSheet = true
                                     }
                                 )
                             }
@@ -255,7 +255,7 @@ fun HomeRoute(
                                 },
                                 onCreateTaskClicked = {
                                     defaultListIdForCreatedTask = it.id
-                                    showCreateTaskDialog = true
+                                    showCreateTaskSheet = true
                                 }
                             )
 
@@ -277,7 +277,7 @@ fun HomeRoute(
                                     showCreateListDialog = true
                                 },
                                 onCreateTaskPressed = {
-                                    showCreateTaskDialog = true
+                                    showCreateTaskSheet = true
                                 },
                                 navigateToListDetails = { taskList ->
                                     selectedListId = taskList.id

@@ -27,7 +27,7 @@ class MainActivity : ComponentActivity() {
 
         WindowCompat.setDecorFitsSystemWindows(window, false)
 
-        val initialBackstack: List<NavTarget> = parseDeepLinks()
+        val initialBackstack: List<NavTarget> = parseIntent()
 
         setContent {
             val viewModel: BaseViewModel = viewModel()
@@ -52,7 +52,7 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-    private fun parseDeepLinks(): List<NavTarget> =
+    private fun parseIntent(): List<NavTarget> =
         if (intent.data != null && intent.data!!.host == DEEP_LINK_HOST) {
 
             when (intent.data!!.path) {
@@ -96,6 +96,8 @@ class MainActivity : ComponentActivity() {
                     listOf(NavTarget.Home.Default)
                 }
             }
+        } else if (intent.action == ACTION_NEW_TASK) {
+            listOf(NavTarget.Home.WithNewTask)
         } else {
             listOf(NavTarget.Home.Default)
         }
@@ -111,5 +113,7 @@ class MainActivity : ComponentActivity() {
 
         const val PATH_VIEW_TASK = "/task"
         const val QUERY_TASK_ID = "id"
+
+        const val ACTION_NEW_TASK = "dev.chara.tasks.android.ACTION_NEW_TASK"
     }
 }

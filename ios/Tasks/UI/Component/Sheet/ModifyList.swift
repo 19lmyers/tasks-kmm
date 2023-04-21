@@ -58,7 +58,7 @@ struct ModifyListSheet: View {
                 }
 
                 Section("Appearance") {
-                    let columns = [GridItem(.flexible()), GridItem(.flexible()), GridItem(.flexible()), GridItem(.flexible())]
+                    let columns = [GridItem(.flexible()), GridItem(.flexible()), GridItem(.flexible()), GridItem(.flexible()), GridItem(.flexible())]
 
                     DisclosureGroup(
                             content: {

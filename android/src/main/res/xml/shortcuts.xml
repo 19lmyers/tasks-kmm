@@ -11,7 +11,7 @@
         tools:targetApi="n_mr1">
         <intent
             android:action="dev.chara.tasks.android.ACTION_NEW_TASK"
-            android:targetClass="dev.chara.tasks.android.ui.ShortcutActivity"
+            android:targetClass="dev.chara.tasks.android.ui.MainActivity"
             android:targetPackage="dev.chara.tasks.android" />
     </shortcut>
     <!-- Specify more shortcuts here. -->

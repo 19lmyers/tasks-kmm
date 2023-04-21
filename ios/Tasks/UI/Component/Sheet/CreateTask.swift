@@ -145,7 +145,7 @@ struct CreateTaskSheet: View {
                         }
 
                         ToolbarItem(placement: .confirmationAction) {
-                            Button("Create") {
+                            Button("Save") {
                                 onSave(
                                         current.edit()
                                                 .listId(value: listId)
@@ -160,7 +160,7 @@ struct CreateTaskSheet: View {
                         }
                     }
                     .tint(parentList?.color?.ui ?? Color.accentColor)
-                    .navigationTitle("New item")
+                    .navigationTitle("New task")
                     .navigationBarTitleDisplayMode(.inline)
         }
                 .onChange(of: listId) { id in

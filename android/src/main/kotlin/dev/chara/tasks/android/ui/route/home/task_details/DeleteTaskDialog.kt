@@ -13,9 +13,9 @@ fun DeleteTaskDialog(
 ) {
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text(text = "Delete item?") },
+        title = { Text(text = "Delete task?") },
         text = {
-            Text(text = "This item will be permanently deleted")
+            Text(text = "This task will be permanently deleted")
         },
         dismissButton = {
             TextButton(onClick = onDismiss) {

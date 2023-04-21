@@ -244,7 +244,7 @@ private fun TopBar(
                 onDismissRequest = { setOverflowShown(false) },
             ) {
                 DropdownMenuItem(
-                    text = { Text(text = "Delete completed items") },
+                    text = { Text(text = "Delete completed tasks") },
                     leadingIcon = {
                         Icon(Icons.Filled.CheckCircleOutline, contentDescription = "Delete")
                     },

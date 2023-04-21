@@ -70,7 +70,7 @@ fun ListChip(modifier: Modifier = Modifier, list: TaskList?, onClick: (TaskList?
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ReminderChip(reminderDate: Instant?, selectable: Boolean, onClick: () -> Unit) {
+fun ReminderChip(reminderDate: Instant?, selectable: Boolean, withIcon: Boolean = true, onClick: () -> Unit) {
     val context = LocalContext.current
     val formatter = FriendlyDateFormat(context)
     val currentTime = Clock.System.now()
@@ -94,10 +94,12 @@ fun ReminderChip(reminderDate: Instant?, selectable: Boolean, onClick: () -> Uni
             }
         },
         leadingIcon = {
-            if (reminderDate != null) {
-                Icon(Icons.Filled.Notifications, contentDescription = "Reminder")
-            } else {
-                Icon(Icons.Filled.NotificationAdd, contentDescription = "Reminder")
+            if (withIcon) {
+                if (reminderDate != null) {
+                    Icon(Icons.Filled.Notifications, contentDescription = "Reminder")
+                } else {
+                    Icon(Icons.Filled.NotificationAdd, contentDescription = "Reminder")
+                }
             }
         },
         trailingIcon = {
@@ -113,7 +115,7 @@ fun ReminderChip(reminderDate: Instant?, selectable: Boolean, onClick: () -> Uni
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DueDateChip(dueDate: Instant?, selectable: Boolean, onClick: () -> Unit) {
+fun DueDateChip(dueDate: Instant?, selectable: Boolean, withIcon: Boolean = true, onClick: () -> Unit) {
     val context = LocalContext.current
     val formatter = FriendlyDateFormat(context)
     val currentTime = Clock.System.now()
@@ -137,7 +139,9 @@ fun DueDateChip(dueDate: Instant?, selectable: Boolean, onClick: () -> Unit) {
             }
         },
         leadingIcon = {
-            Icon(Icons.Filled.Event, contentDescription = "Due date")
+            if (withIcon) {
+                Icon(Icons.Filled.Event, contentDescription = "Due date")
+            }
         },
         trailingIcon = {
             if (selectable && dueDate != null) {

@@ -13,9 +13,9 @@ fun DeleteCompletedTasksDialog(
 ) {
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text(text = "Delete all completed items?") },
+        title = { Text(text = "Delete all completed tasks?") },
         text = {
-            Text(text = "Completed items will be permanently deleted from this list")
+            Text(text = "Completed tasks will be permanently deleted from this list")
         },
         dismissButton = {
             TextButton(onClick = onDismiss) {

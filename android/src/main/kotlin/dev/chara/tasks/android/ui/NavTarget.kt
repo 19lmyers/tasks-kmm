@@ -21,6 +21,9 @@ sealed class NavTarget : Parcelable {
 
         @Parcelize
         class WithTask(val taskId: String) : Home()
+
+        @Parcelize
+        object WithNewTask : Home()
     }
 
     @Parcelize

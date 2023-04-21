@@ -58,14 +58,14 @@ struct TaskDetailsRoute: View {
                                     showAlert = true
                                 }) {
                                     Image(systemName: "trash")
-                                    Text("Delete item")
+                                    Text("Delete task")
                                 }
                             }
                         }
                         .alert(isPresented: $showAlert) {
                             Alert(
-                                    title: Text("Delete item?"),
-                                    message: Text("This item will be permanently deleted"),
+                                    title: Text("Delete task?"),
+                                    message: Text("This task will be permanently deleted"),
                                     primaryButton: .destructive(Text("Delete")) {
                                         viewModel.deleteTask(listId: uiState.task!.listId, taskId: uiState.task!.id)
                                         showAlert = false

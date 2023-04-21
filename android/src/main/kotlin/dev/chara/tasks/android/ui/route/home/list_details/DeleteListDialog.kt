@@ -15,7 +15,7 @@ fun DeleteListDialog(
         onDismissRequest = onDismiss,
         title = { Text(text = "Delete list?") },
         text = {
-            Text(text = "All items in this list will be permanently deleted")
+            Text(text = "All tasks in this list will be permanently deleted")
         },
         dismissButton = {
             TextButton(onClick = onDismiss) {

@@ -79,7 +79,7 @@ struct ListDetailsRoute: View {
                                     showAlert = true
                                 }) {
                                     Image(systemName: "checkmark.circle")
-                                    Text("Delete completed items")
+                                    Text("Delete completed tasks")
                                 }
                             }
 
@@ -167,7 +167,7 @@ struct ListDetailsRoute: View {
                             if alertType == .deleteList {
                                 return Alert(
                                         title: Text("Delete list?"),
-                                        message: Text("All items in this list will be permanently deleted"),
+                                        message: Text("All tasks in this list will be permanently deleted"),
                                         primaryButton: .destructive(Text("Delete")) {
                                             viewModel.deleteList(listId: uiState.selectedList!.id)
                                             showAlert = false
@@ -178,8 +178,8 @@ struct ListDetailsRoute: View {
                                 )
                             } else {
                                 return Alert(
-                                        title: Text("Delete all completed items?"),
-                                        message: Text("Completed items will be permanently deleted from this list"),
+                                        title: Text("Delete all completed tasks?"),
+                                        message: Text("Completed tasks will be permanently deleted from this list"),
                                         primaryButton: .destructive(Text("Delete")) {
                                             viewModel.clearCompletedTasks(listId: uiState.selectedList!.id)
                                             showAlert = false

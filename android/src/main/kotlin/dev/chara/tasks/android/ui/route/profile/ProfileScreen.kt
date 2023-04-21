@@ -37,8 +37,10 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.input.nestedscroll.nestedScroll
@@ -63,7 +65,7 @@ fun ProfileScreen(
 
     val scrollState = rememberScrollState()
 
-    val displayName =
+    var displayName by
         rememberSaveable(state.profile!!.displayName) { mutableStateOf(state.profile!!.displayName) }
 
     Scaffold(
@@ -81,13 +83,13 @@ fun ProfileScreen(
                     onClick = {
                         onUpdateProfile(
                             state.profile!!.copy(
-                                displayName = displayName.value,
+                                displayName = displayName,
                                 profilePhotoUri = state.profile!!.profilePhotoUri
                             )
                         )
                     },
-                    enabled = !state.isLoading && displayName.value.isNotBlank()
-                            && displayName.value != state.profile!!.displayName
+                    enabled = !state.isLoading && displayName.isNotBlank()
+                            && displayName != state.profile!!.displayName
                 ) {
                     Text(text = "Save")
                 }
@@ -136,10 +138,10 @@ fun ProfileScreen(
                     modifier = Modifier
                         .padding(16.dp, 8.dp)
                         .fillMaxWidth(),
-                    value = displayName.value,
+                    value = displayName,
                     singleLine = true,
                     onValueChange = {
-                        displayName.value = it
+                        displayName = it
                     },
                     label = { Text(text = "Display Name") },
                     leadingIcon = {

@@ -1,11 +1,11 @@
 [versions]
-android = "8.1.0-alpha11"
-kotlin = "1.8.10"
+android = "8.1.0-beta01"
+kotlin = "1.8.20"
 
 coroutines = "1.6.4"
 koin = "3.4.0"
 kswift = "0.6.1"
-ktor = "2.2.4"
+ktor = "2.3.0"
 mvvm = "0.16.0"
 result = "1.1.17"
 sqldelight = "2.0.0-alpha05"
@@ -17,7 +17,7 @@ material3 = "1.1.0-rc01"
 android-application = { id = "com.android.application", version.ref = "android" }
 android-library = { id = "com.android.library", version.ref = "android" }
 
-crashlytics = { id = "com.google.firebase.crashlytics", version = "2.9.4" }
+crashlytics = { id = "com.google.firebase.crashlytics", version = "2.9.5" }
 
 google-services = { id = "com.google.gms.google-services", version = "4.3.15" }
 
@@ -76,7 +76,7 @@ firebase-crashlytics = { module = "com.google.firebase:firebase-crashlytics-ktx"
 koin-core = { module = "io.insert-koin:koin-core", version.ref = "koin" }
 
 koin-android = { module = "io.insert-koin:koin-android", version.ref = "koin" }
-koin-androidx-compose = { module = "io.insert-koin:koin-androidx-compose", version = "3.4.3" }
+koin-androidx-compose = { module = "io.insert-koin:koin-androidx-compose", version = "3.4.4" }
 
 kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "coroutines" }
 
