@@ -6,8 +6,10 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
@@ -25,6 +27,8 @@ import androidx.compose.material.icons.filled.NotificationAdd
 import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.filled.StarOutline
+import androidx.compose.material3.BottomAppBar
+import androidx.compose.material3.Button
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
@@ -43,7 +47,6 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -54,16 +57,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleEventObserver
 import dev.chara.tasks.android.model.vector
+import dev.chara.tasks.android.ui.component.DueDateChip
+import dev.chara.tasks.android.ui.component.ReminderChip
 import dev.chara.tasks.android.ui.component.dialog.PickDueDateDialog
 import dev.chara.tasks.android.ui.component.dialog.PickReminderDateDialog
 import dev.chara.tasks.android.ui.util.FriendlyDateFormat
@@ -79,7 +81,6 @@ import kotlinx.datetime.toInstant
 fun TaskDetailsScreen(
     state: TaskDetailsUiState,
     snackbarHostState: SnackbarHostState,
-    upAsCloseButton: Boolean,
     onUpClicked: () -> Unit,
     onDeleteClicked: () -> Unit,
     onUpdateTask: (Task) -> Unit,
@@ -98,17 +99,36 @@ fun TaskDetailsScreen(
                 taskLists = state.taskLists,
                 selectedListId = task.listId,
                 scrollBehavior = scrollBehavior,
-                upAsCloseButton = upAsCloseButton,
+                upAsCloseButton = true,
                 onUpClicked = { onUpClicked() },
                 onDeleteClicked = { onDeleteClicked() },
                 onListSelected = {
+                    onUpdateTask(task)
                     onMoveTask(it)
+                    modified = false
                 },
                 onUpdateTask = {
                     task = it
                     modified = true
                 }
             )
+        },
+        bottomBar = {
+            BottomAppBar(modifier = Modifier.imePadding()) {
+                Spacer(Modifier.weight(1f, true))
+
+                Button(
+                    modifier = Modifier.padding(16.dp, 0.dp),
+                    onClick = {
+                        onUpdateTask(task)
+                        modified = false
+                        onUpClicked()
+                    },
+                    enabled = !state.isLoading && task.label.isNotBlank() && modified
+                ) {
+                    Text(text = "Save")
+                }
+            }
         }
     ) { innerPadding ->
         Box(
@@ -126,36 +146,6 @@ fun TaskDetailsScreen(
                     modified = true
                 }
             }
-        }
-    }
-
-    val lifecycleOwner = LocalLifecycleOwner.current
-
-    DisposableEffect(lifecycleOwner) {
-        val observer = LifecycleEventObserver { _, event ->
-            if ((event == Lifecycle.Event.ON_PAUSE || event == Lifecycle.Event.ON_STOP) && modified) {
-                onUpdateTask(
-                    task.copy(
-                        lastModified = Clock.System.now()
-                    )
-                )
-                modified = false
-            }
-        }
-
-        lifecycleOwner.lifecycle.addObserver(observer)
-
-        onDispose {
-            if (modified) {
-                onUpdateTask(
-                    task.copy(
-                        lastModified = Clock.System.now()
-                    )
-                )
-                modified = false
-            }
-
-            lifecycleOwner.lifecycle.removeObserver(observer)
         }
     }
 }
@@ -176,7 +166,6 @@ private fun Preview_TaskDetailsScreen() {
             ),
         ),
         snackbarHostState = SnackbarHostState(),
-        upAsCloseButton = false,
         onUpClicked = {},
         onDeleteClicked = {},
         onUpdateTask = {},
@@ -471,11 +460,7 @@ private fun TaskDetailsForm(
 
     ListItem(
         headlineContent = {
-            if (task.reminderDate != null) {
-                Text(formatter.formatDateTime(task.reminderDate!!))
-            } else {
-                Text("Remind me")
-            }
+            Text("Remind me")
         },
         leadingContent = {
             if (task.reminderDate != null) {
@@ -486,17 +471,13 @@ private fun TaskDetailsForm(
         },
         trailingContent = {
             if (task.reminderDate != null) {
-                IconButton(
-                    onClick = {
-                        onUpdateTask(
-                            task.copy(
-                                reminderDate = null,
-                                lastModified = Clock.System.now()
-                            )
+                ReminderChip(task.reminderDate, selectable = true, withIcon = false) {
+                    onUpdateTask(
+                        task.copy(
+                            reminderDate = null,
+                            lastModified = Clock.System.now()
                         )
-                    }
-                ) {
-                    Icon(Icons.Filled.Clear, contentDescription = "Clear")
+                    )
                 }
             }
         },
@@ -523,28 +504,20 @@ private fun TaskDetailsForm(
 
     ListItem(
         headlineContent = {
-            if (task.dueDate != null) {
-                Text(formatter.formatDate(task.dueDate!!))
-            } else {
-                Text("Set due date")
-            }
+            Text("Set due date")
         },
         leadingContent = {
-            Icon(Icons.Filled.Event, contentDescription = "Remind me")
+            Icon(Icons.Filled.Event, contentDescription = "Due date")
         },
         trailingContent = {
             if (task.dueDate != null) {
-                IconButton(
-                    onClick = {
-                        onUpdateTask(
-                            task.copy(
-                                dueDate = null,
-                                lastModified = Clock.System.now()
-                            )
+                DueDateChip(task.dueDate, selectable = true, withIcon = false) {
+                    onUpdateTask(
+                        task.copy(
+                            dueDate = null,
+                            lastModified = Clock.System.now()
                         )
-                    }
-                ) {
-                    Icon(Icons.Filled.Clear, contentDescription = "Clear")
+                    )
                 }
             }
         },

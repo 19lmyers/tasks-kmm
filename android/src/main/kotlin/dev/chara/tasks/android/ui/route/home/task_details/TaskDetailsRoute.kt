@@ -60,7 +60,6 @@ fun TaskDetailsRoute(
             TaskDetailsScreen(
                 state.value,
                 snackbarHostState = snackbarHostState,
-                upAsCloseButton = upAsCloseButton,
                 onUpClicked = { navigateUp() },
                 onUpdateTask = {
                     viewModel.updateTask(

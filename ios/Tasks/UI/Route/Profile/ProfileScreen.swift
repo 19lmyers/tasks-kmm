@@ -55,6 +55,7 @@ struct ProfileScreen: View {
             Section("Display name") {
                 HStack {
                     Image(systemName: "person")
+                        .frame(width: 18, height: 18)
                     VStack(alignment: .leading) {
                         TextField("Display name", text: $displayName, prompt: Text("Enter display name (required)"))
                     }
@@ -76,6 +77,7 @@ struct ProfileScreen: View {
                        photoLibrary: .shared()) {
                     HStack {
                         Image(systemName: "plus.circle")
+                            .frame(width: 18, height: 18)
                         if state.profile!.profilePhotoUri != nil {
                             Text("Change profile picture")
                         } else {
@@ -92,6 +94,7 @@ struct ProfileScreen: View {
                     }) {
                         HStack {
                             Image(systemName: "xmark.circle")
+                                .frame(width: 18, height: 18)
                             Text("Remove profile photo")
                         }
                     }
@@ -105,6 +108,7 @@ struct ProfileScreen: View {
                 }) {
                     HStack {
                         Image(systemName: "at")
+                            .frame(width: 18, height: 18)
                         Text("Change email")
                     }.foregroundColor(.accentColor)
                 }
@@ -115,6 +119,7 @@ struct ProfileScreen: View {
                 }) {
                     HStack {
                         Image(systemName: "ellipsis.rectangle")
+                            .frame(width: 18, height: 18)
                         Text("Change password")
                     }.foregroundColor(.accentColor)
                 }

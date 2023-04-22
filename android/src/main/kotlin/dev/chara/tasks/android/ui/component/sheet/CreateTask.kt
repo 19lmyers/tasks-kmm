@@ -20,7 +20,9 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -72,6 +74,8 @@ fun CreateTaskSheet(
         listId = null
     }
 
+    val sheetState = rememberModalBottomSheetState()
+
     ColorTheme(color = parentList?.color) {
         if (showReminderDatePickerDialog) {
             PickReminderDateDialog(
@@ -100,7 +104,8 @@ fun CreateTaskSheet(
         }
 
         ModalBottomSheet(
-            onDismissRequest = onDismiss
+            onDismissRequest = onDismiss,
+            sheetState = sheetState
         ) {
             Text(
                 "New task",
@@ -145,13 +150,13 @@ fun CreateTaskSheet(
                 expanded = listsExpanded,
                 onExpandedChange = { listsExpanded = !listsExpanded },
             ) {
-                val taskList = taskLists.first { it.id == listId}
+                val taskList = taskLists.first { it.id == listId }
 
                 OutlinedTextField(
                     value = taskList.title,
                     onValueChange = {},
                     readOnly = true,
-                    modifier = Modifier.menuAnchor(),
+                    modifier = Modifier.fillMaxWidth().menuAnchor(),
                     leadingIcon = {
                         Icon(
                             taskList.icon.vector,
@@ -252,6 +257,11 @@ fun CreateTaskSheet(
                 Text("Save")
             }
         }
+    }
+
+    // We need to do this explicitly to show the sheet on shortcut launch
+    LaunchedEffect(sheetState) {
+        sheetState.show()
     }
 }
 

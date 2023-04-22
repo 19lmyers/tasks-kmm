@@ -101,41 +101,31 @@ struct ModifyListSheet: View {
                             }
                     )
 
+                    ScrollView(.horizontal) {
+                        HStack {
+                            ColorSwatch(
+                                    color: Color.gray.opacity(0.25),
+                                    outline: Color.primary.opacity(0.25),
+                                    selection: Color.gray,
+                                    selected: listColor == nil
+                            ) {
+                                listColor = nil
+                            }
+                                    .padding(.all, 4)
 
-                    DisclosureGroup(
-                            content: {
-                                ScrollView(.horizontal) {
-                                    HStack {
-                                        ColorSwatch(
-                                                color: Color.gray.opacity(0.25),
-                                                outline: Color.primary.opacity(0.25),
-                                                selection: Color.gray,
-                                                selected: listColor == nil
-                                        ) {
-                                            listColor = nil
-                                        }
-                                                .padding(.all, 4)
-
-                                        ForEach(TaskListKt.colors()) { color in
-                                            ColorSwatch(
-                                                    color: color.ui.opacity(0.25),
-                                                    outline: Color.primary.opacity(0.25),
-                                                    selection: color.ui,
-                                                    selected: listColor == color
-                                            ) {
-                                                listColor = color
-                                            }
-                                        }
-                                    }
-                                            .padding(.all, 4)
-                                }
-                            },
-                            label: {
-                                HStack {
-                                    Text("Theme Color")
+                            ForEach(TaskListKt.colors()) { color in
+                                ColorSwatch(
+                                        color: color.ui.opacity(0.25),
+                                        outline: Color.primary.opacity(0.25),
+                                        selection: color.ui,
+                                        selected: listColor == color
+                                ) {
+                                    listColor = color
                                 }
                             }
-                    )
+                        }
+                                .padding(.all, 4)
+                    }
                 }
 
                 Section("List options") {
@@ -231,7 +221,7 @@ struct ColorSwatch: View {
                                 RoundedRectangle(cornerRadius: 12, style: .continuous)
                                         .stroke(outlineColor, lineWidth: 2)
                         )
-                        .frame(width: 72, height: 72)
+                        .frame(width: 48, height: 48)
 
                 if selected {
                     Image(systemName: "checkmark").tint(selection)

@@ -40,6 +40,14 @@ struct TaskDetailsRoute: View {
                 }
                         .tint(parentList!.color?.ui ?? Color.accentColor)
                         .toolbar {
+                            ToolbarItem(placement: .cancellationAction) {
+                                Button(action: {
+                                    presentation.wrappedValue.dismiss()
+                                }) {
+                                    Text("Cancel")
+                                }
+                            }
+                            
                             ToolbarItem(placement: .primaryAction) {
                                 StarView(isStarred: uiState.task!.isStarred) { isStarred in
                                     viewModel.updateTask(

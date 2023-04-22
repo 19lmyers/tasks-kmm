@@ -48,6 +48,7 @@ struct HomeRoute: View {
                             .navigationDestination(for: Task.self) { task in
                                 TaskDetailsRoute(taskId: task.id)
                                         .navigationBarTitle(Text("Edit task"))
+                                        .navigationBarBackButtonHidden(true)
                             }
                             .toolbar {
                                 if !uiState.allLists.isEmpty {

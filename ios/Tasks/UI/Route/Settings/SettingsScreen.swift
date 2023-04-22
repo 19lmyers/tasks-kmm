@@ -47,6 +47,7 @@ struct SettingsScreen: View {
                     Toggle(isOn: Binding(get: { state.enabledBoardSections.contains(boardSection) }, set: { value in setEnabledForBoardSection(boardSection, value) })) {
                         HStack {
                             Image(systemName: boardSection.icon)
+                                .frame(width: 18, height: 18)
                             Text(boardSection.title)
                         }
                     }
@@ -65,6 +66,7 @@ struct SettingsScreen: View {
                     })) {
                         HStack {
                             Image(systemName: taskList.icon?.ui ?? "checklist")
+                                .frame(width: 18, height: 18)
                             Text(taskList.title)
                         }
                     }

@@ -10,6 +10,8 @@ import MultiPlatformLibrary
 import SwiftUI
 
 struct TaskDetailsScreen: View {
+    @Environment(\.presentationMode) var presentation
+
     var state: TaskDetailsUiState
 
     var onUpdate: (Task) -> Void
@@ -140,7 +142,41 @@ struct TaskDetailsScreen: View {
                 }
             }
         }
+                .safeAreaInset(edge: .bottom) {
+                    HStack {
+                        Spacer()
+
+                        Button(action: {
+                            onUpdate(
+                                    state.task!.edit()
+                                            .label(value: label)
+                                            .details(value: details)
+                                            .reminderDate(value: DateKt.toInstantOrNull(reminderDate))
+                                            .dueDate(value: DateKt.toInstantOrNull(dueDate))
+                                            .lastModified(value: DateKt.toInstant(Date.now))
+                                            .build()
+                            )
+                            modified = false
+                            presentation.wrappedValue.dismiss()
+                        }) {
+                            Text("Save")
+                        }
+                                .disabled(!modified || label.isEmpty)
+                                .buttonStyle(BorderedProminentButtonStyle())
+                                .padding()
+                    }
+                            .background(.bar)
+                }
                 .onChange(of: listId) { id in
+                    onUpdate(
+                            state.task!.edit()
+                                    .label(value: label)
+                                    .details(value: details)
+                                    .reminderDate(value: DateKt.toInstantOrNull(reminderDate))
+                                    .dueDate(value: DateKt.toInstantOrNull(dueDate))
+                                    .lastModified(value: DateKt.toInstant(Date.now))
+                                    .build()
+                    )
                     onMove(state.task!, id)
                 }
                 .onChange(of: label) { _ in
@@ -155,36 +191,24 @@ struct TaskDetailsScreen: View {
                 .onChange(of: dueDate) { _ in
                     modified = true
                 }
-                .onDisappear {
-                    if modified {
-                        onUpdate(
-                                state.task!.edit()
-                                        .label(value: label)
-                                        .details(value: details)
-                                        .reminderDate(value: DateKt.toInstantOrNull(reminderDate))
-                                        .dueDate(value: DateKt.toInstantOrNull(dueDate))
-                                        .lastModified(value: DateKt.toInstant(Date.now))
-                                        .build()
-                        )
-                        modified = false
-                    }
-                }
     }
 }
 
 struct TaskDetailsScreen_Previews: PreviewProvider {
     static var previews: some View {
-        TaskDetailsScreen(
-                state: TaskDetailsUiState(
-                        isLoading: false,
-                        firstLoad: false,
-                        task: TaskKt.doNew(id: "1", listId: "1", label: "My task"),
-                        taskLists: [
-                            TaskListKt.doNew(id: "1", title: "My list")
-                        ]
-                ),
-                onUpdate: { _ in },
-                onMove: { _, _ in }
-        )
+        NavigationStack {
+            TaskDetailsScreen(
+                    state: TaskDetailsUiState(
+                            isLoading: false,
+                            firstLoad: false,
+                            task: TaskKt.doNew(id: "1", listId: "1", label: "My task"),
+                            taskLists: [
+                                TaskListKt.doNew(id: "1", title: "My list")
+                            ]
+                    ),
+                    onUpdate: { _ in },
+                    onMove: { _, _ in }
+            )
+        }
     }
 }

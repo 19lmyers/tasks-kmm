@@ -33,7 +33,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import dev.chara.tasks.android.R
 import dev.chara.tasks.android.ui.NavTarget
 import dev.chara.tasks.android.ui.component.sheet.CreateTaskSheet
-import dev.chara.tasks.android.ui.component.sheet.ModifyListDialog
+import dev.chara.tasks.android.ui.component.sheet.ModifyListSheet
 import dev.chara.tasks.android.ui.component.util.SnackbarLayout
 import dev.chara.tasks.android.ui.route.home.list_details.ListDetailsRoute
 import dev.chara.tasks.android.ui.route.home.task_details.TaskDetailsRoute
@@ -81,18 +81,18 @@ fun HomeRoute(
             return
         }
 
-        var showCreateListDialog by rememberSaveable { mutableStateOf(false) }
+        var showCreateListSheet by rememberSaveable { mutableStateOf(false) }
 
-        if (showCreateListDialog) {
-            ModifyListDialog(
+        if (showCreateListSheet) {
+            ModifyListSheet(
                 title = "New list",
                 current = TaskList(id = "", title = ""),
                 onDismiss = {
-                    showCreateListDialog = false
+                    showCreateListSheet = false
                 },
                 onSave = { taskList ->
                     viewModel.createList(taskList)
-                    showCreateListDialog = false
+                    showCreateListSheet = false
                 }
             )
         }
@@ -168,7 +168,7 @@ fun HomeRoute(
                             viewModel.logout()
                         },
                         onCreateListPressed = {
-                            showCreateListDialog = true
+                            showCreateListSheet = true
                         },
                         onCreateTaskPressed = {
                             showCreateTaskSheet = true
@@ -274,7 +274,7 @@ fun HomeRoute(
                                     viewModel.logout()
                                 },
                                 onCreateListPressed = {
-                                    showCreateListDialog = true
+                                    showCreateListSheet = true
                                 },
                                 onCreateTaskPressed = {
                                     showCreateTaskSheet = true

@@ -33,6 +33,7 @@ struct ListView: View {
         NavigationLink(value: taskList) {
             HStack {
                 Image(systemName: taskList.icon?.ui ?? "checklist")
+                        .frame(width: 18, height: 18)
                         .foregroundStyle(.tint)
 
                 VStack(alignment: .leading) {
@@ -47,6 +48,9 @@ struct ListView: View {
                     }
                 }
             }
+                    .listRowInsets(
+                            EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0)
+                    )
         }
     }
 }
