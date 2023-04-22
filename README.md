@@ -28,8 +28,6 @@ Some brief notes:
 
 - I use SQLDelight 2.0 (alpha) for its support of newer SQLite language features (I pull in a newer
   version as a dependency).
-- The version of Jetpack DataStore I use is an out-of-band release, which I adopted for testing
-  reasons. I'll probably move the project to a comparable third-party library at some point.
 - For my specific use case, I found some open-source libraries (mainly Navigation Reimagined and
   Compose Reorderable) that were a better fit for my project or implemented important functionality
   that hasn't yet made its way into Compose proper.
@@ -83,9 +81,3 @@ If I were to start this project over, there are two major things I'd do differen
 
 1. I'd use Source Control (Git) from the beginning and practice a more Agile development cycle.
 2. I'd add unit and integration testing to the list of concepts to teach myself during the project.
-
-## A note on iOS
-
-The iOS platform is currently unimplemented, as I do not own a Mac (yet). I do plan to revisit the
-architecture of the app once I know more about the Kotlin/Native memory model, and how coroutines
-and Flows work in Swift.
