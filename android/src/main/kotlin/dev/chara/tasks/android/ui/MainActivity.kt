@@ -47,7 +47,11 @@ class MainActivity : ComponentActivity() {
             val windowSizeClass = calculateWindowSizeClass(this)
 
             AppTheme(darkTheme = isDarkTheme, vibrantColors = state.value.useVibrantColors) {
-                RootNavHost(navController, windowSizeClass = windowSizeClass)
+                RootNavHost(
+                    navController,
+                    windowSizeClass = windowSizeClass,
+                    showCreateTaskSheet = intent.action == ACTION_NEW_TASK
+                )
             }
         }
     }
@@ -96,8 +100,6 @@ class MainActivity : ComponentActivity() {
                     listOf(NavTarget.Home.Default)
                 }
             }
-        } else if (intent.action == ACTION_NEW_TASK) {
-            listOf(NavTarget.Home.WithNewTask)
         } else {
             listOf(NavTarget.Home.Default)
         }

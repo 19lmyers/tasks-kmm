@@ -24,7 +24,7 @@ import dev.olshevski.navigation.reimagined.replaceAll
 
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
-fun RootNavHost(navController: NavController<NavTarget>, windowSizeClass: WindowSizeClass) {
+fun RootNavHost(navController: NavController<NavTarget>, windowSizeClass: WindowSizeClass, showCreateTaskSheet: Boolean) {
     val useDualPane = windowSizeClass.widthSizeClass == WindowWidthSizeClass.Expanded
             && windowSizeClass.heightSizeClass > WindowHeightSizeClass.Compact
 
@@ -53,6 +53,7 @@ fun RootNavHost(navController: NavController<NavTarget>, windowSizeClass: Window
                 navigateToSettings = {
                     navController.navigate(NavTarget.Settings)
                 },
+                initCreateTaskSheet = showCreateTaskSheet
             )
 
             NavTarget.Profile -> ProfileRoute(

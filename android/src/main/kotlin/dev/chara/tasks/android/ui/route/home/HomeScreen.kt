@@ -10,10 +10,10 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.consumeWindowInsets
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.requiredSize
 import androidx.compose.foundation.layout.systemBars
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.icons.Icons
@@ -43,7 +43,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import dev.chara.tasks.android.ui.component.Dashboard
 import dev.chara.tasks.android.ui.component.ProfileImage
@@ -126,7 +125,6 @@ fun HomeScreen(
 @Composable
 fun HomeScreenWithDetailPane(
     state: HomeUiState,
-    showCreateTaskButton: Boolean,
     onAccountPressed: () -> Unit,
     onSettingsPressed: () -> Unit,
     onSignOutPressed: () -> Unit,
@@ -136,15 +134,13 @@ fun HomeScreenWithDetailPane(
     navigateToTaskDetails: (Task) -> Unit,
     onUpdateTask: (Task) -> Unit,
     onRefresh: () -> Unit,
-    homePaneWidth: Dp,
-    detailPaneWidth: Dp,
     detailPaneContent: @Composable () -> Unit
 ) {
-    Row {
+    Row(modifier = Modifier.fillMaxWidth()) {
         HomeScreen(
             state = state,
-            modifier = Modifier.width(homePaneWidth),
-            showCreateTaskButton = showCreateTaskButton && detailPaneWidth == 0.dp,
+            modifier = Modifier.weight(1f),
+            showCreateTaskButton = false,
             onAccountPressed = onAccountPressed,
             onSettingsPressed = onSettingsPressed,
             onSignOutPressed = onSignOutPressed,
@@ -156,7 +152,7 @@ fun HomeScreenWithDetailPane(
             onRefresh = onRefresh
         )
         Surface(
-            modifier = Modifier.width(detailPaneWidth)
+            modifier = Modifier.weight(1f)
         ) {
             Surface(
                 modifier = Modifier

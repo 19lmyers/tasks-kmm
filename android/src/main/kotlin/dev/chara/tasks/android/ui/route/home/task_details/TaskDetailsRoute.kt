@@ -23,7 +23,6 @@ import kotlinx.datetime.Clock
 @Composable
 fun TaskDetailsRoute(
     taskId: String,
-    upAsCloseButton: Boolean,
     navigateUp: () -> Unit
 ) {
     val viewModel: TaskDetailsViewModel = viewModel(key = taskId) {

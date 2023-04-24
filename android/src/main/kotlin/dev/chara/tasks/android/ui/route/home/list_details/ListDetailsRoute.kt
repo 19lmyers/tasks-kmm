@@ -27,7 +27,6 @@ import kotlinx.datetime.Clock
 fun ListDetailsRoute(
     listId: String,
     snackbarHostState: SnackbarHostState,
-    upAsCloseButton: Boolean,
     navigateUp: () -> Unit,
     navigateToTaskDetails: (Task) -> Unit,
     onCreateTaskClicked: (TaskList) -> Unit
@@ -114,7 +113,7 @@ fun ListDetailsRoute(
 
             ListDetailsScreen(
                 state = state.value,
-                upAsCloseButton = upAsCloseButton,
+                upAsCloseButton = false,
                 onRefresh = viewModel::refreshCache,
                 onUpClicked = { navigateUp() },
                 onEditClicked = { showEditDialog = true },
