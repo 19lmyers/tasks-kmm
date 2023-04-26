@@ -12,12 +12,12 @@ import SwiftUI
 struct TaskDetailsRoute: View {
     @Environment(\.presentationMode) var presentation
 
-    @StateObject var viewModel: TaskDetailsViewModel
+    @ObservedObject var viewModel: TaskDetailsViewModel
 
     @State var showAlert = false
 
     init(taskId: String) {
-        _viewModel = StateObject(wrappedValue: TaskDetailsViewModel(taskId: taskId))
+        _viewModel = ObservedObject(wrappedValue: TaskDetailsViewModel(taskId: taskId))
     }
 
     var body: some View {

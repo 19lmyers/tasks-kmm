@@ -76,7 +76,7 @@ struct ViewMoreView: View {
     var count: Int
 
     var body: some View {
-        NavigationLink(value: pinnedList.taskList) {
+        NavigationLink(value: DetailNavTarget.listDetails(pinnedList.taskList.id)) {
             Text("View \(count) more...")
                     .foregroundStyle(.tint)
         }

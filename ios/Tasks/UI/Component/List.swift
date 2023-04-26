@@ -30,7 +30,7 @@ struct ListView: View {
     var taskList: TaskList
 
     var body: some View {
-        NavigationLink(value: taskList) {
+        NavigationLink(value: DetailNavTarget.listDetails(taskList.id)) {
             HStack {
                 Image(systemName: taskList.icon?.ui ?? "checklist")
                         .frame(width: 18, height: 18)

@@ -17,9 +17,9 @@ struct ListDetailsScreen: View {
     var onRefresh: @Sendable () async -> Void
 
     var onCreateTaskPressed: () -> Void
-
+    
+    var onUpdateList: (TaskList) -> Void
     var onUpdateTask: (Task) -> Void
-
     var onReorderTask: (String, Int, Int) -> Void
 
     func reorder(from: IndexSet, to: Int) {
@@ -28,35 +28,79 @@ struct ListDetailsScreen: View {
     }
 
     var body: some View {
-        List {
-            Section {
-                ForEach(Array(state.currentTasks.enumerated()), id: \.element.id) { index, task in
-                    TaskView(task: task, onUpdate: onUpdateTask, showIndexNumbers: state.selectedList!.showIndexNumbers, indexNumber: index + 1)
-                }
-                        .onMove(perform: state.selectedList!.sortType == .ordinal ? reorder : nil)
-
-                CreateTaskView(onCreateTaskPressed: onCreateTaskPressed)
-            }
-
-            if !state.completedTasks.isEmpty {
+        if state.firstLoad {
+            ProgressView()
+        } else {
+            List {
                 Section {
-                    DisclosureGroup(
+                    ForEach(Array(state.currentTasks.enumerated()), id: \.element.id) { index, task in
+                        TaskView(task: task, onUpdate: onUpdateTask, showIndexNumbers: state.selectedList!.showIndexNumbers, indexNumber: index + 1)
+                    }
+                    .onMove(perform: state.selectedList!.sortType == .ordinal ? reorder : nil)
+                    
+                    CreateTaskView(onCreateTaskPressed: onCreateTaskPressed)
+                }
+                
+                if !state.completedTasks.isEmpty {
+                    Section {
+                        DisclosureGroup(
                             isExpanded: $showCompletedTasks,
                             content: {
                                 ForEach(state.completedTasks) { task in
                                     TaskView(task: task, onUpdate: onUpdateTask)
-                                            .id(task.id)
+                                        .id(task.id)
                                 }
                             },
                             label: {
                                 Text("Completed (\(state.completedTasks.count))")
                             }
-                    )
+                        )
+                    }
                 }
+            }.safeAreaInset(edge: .bottom) {
+                HStack {
+                    Menu {
+                        ForEach(TaskListKt.sortTypes(), id: \.self) { sortType in
+                            Button(action: {
+                                onUpdateList(
+                                    state.selectedList!.edit()
+                                        .sortType(value: sortType)
+                                        .build()
+                                )
+                            }) {
+                                Image(systemName: sortType.icon)
+                                Text(sortType.description())
+                            }
+                        }
+                    } label: {
+                        HStack {
+                            Image(systemName: state.selectedList!.sortType.icon )
+                            Text(state.selectedList!.sortType.description())
+                        }
+                    }
+                    .buttonStyle(BorderedButtonStyle())
+                    .padding()
+                    
+                    if state.selectedList?.sortType != .ordinal {
+                        Button(action: {
+                            onUpdateList(
+                                state.selectedList!.edit()
+                                    .sortDirection(value: state.selectedList!.sortDirection == .ascending ? .descending : .ascending)
+                                    .build()
+                            )
+                        }) {
+                            Image(systemName: state.selectedList!.sortDirection.icon)
+                            Text(state.selectedList!.sortDirection.description())
+                        }
+                        .padding()
+                    }
+                    
+                    Spacer()
+                }.background(.bar)
             }
+            .listStyle(.insetGrouped)
+            .refreshable(action: onRefresh)
         }
-                .listStyle(.insetGrouped)
-                .refreshable(action: onRefresh)
     }
 }
 
@@ -72,6 +116,7 @@ struct ListDetailsScreen_Previews: PreviewProvider {
                 ),
                 onRefresh: {},
                 onCreateTaskPressed: {},
+                onUpdateList: { _ in },
                 onUpdateTask: { _ in },
                 onReorderTask: { _, _, _ in }
         )

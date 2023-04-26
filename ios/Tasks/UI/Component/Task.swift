@@ -19,7 +19,7 @@ struct TaskView: View {
     var indexNumber: Int = 0
 
     var body: some View {
-        NavigationLink(value: task) {
+        NavigationLink(value: DetailNavTarget.taskDetails(task.id)) {
             ZStack(alignment: .taskAlignmentGuide) {
                 VStack(alignment: .leading) {
                     HStack {

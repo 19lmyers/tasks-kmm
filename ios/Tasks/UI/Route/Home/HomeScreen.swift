@@ -18,16 +18,20 @@ struct HomeScreen: View {
     var onRefresh: @Sendable () async -> Void
 
     var body: some View {
-        List {
-            BoardSectionsView(
+        if state.firstLoad {
+            ProgressView()
+        } else {
+            List {
+                BoardSectionsView(
                     sections: state.boardSections,
                     pinnedLists: state.pinnedLists,
                     allLists: state.allLists,
                     onCreateListPressed: onCreateListPressed,
                     onUpdateTask: onUpdateTask
-            )
+                )
+            }
+            .refreshable(action: onRefresh)
         }
-                .refreshable(action: onRefresh)
     }
 }
 

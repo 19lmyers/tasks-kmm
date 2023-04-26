@@ -10,7 +10,7 @@ import SwiftUI
 import MultiPlatformLibrary
 
 struct SettingsRoute: View {
-    @StateObject var viewModel = SettingsViewModel()
+    @ObservedObject var viewModel = SettingsViewModel()
 
     var body: some View {
         let uiState = viewModel.state(\.uiState, equals: { $0 == $1 }, mapper: { $0 })

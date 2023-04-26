@@ -12,7 +12,7 @@ import MultiPlatformLibrary
 struct ProfileRoute: View {
     @Environment(\.presentationMode) var presentation
 
-    @StateObject var viewModel = ProfileViewModel()
+    @ObservedObject var viewModel = ProfileViewModel()
 
     var body: some View {
         let uiState = viewModel.state(\.uiState, equals: { $0 == $1 }, mapper: { $0 })

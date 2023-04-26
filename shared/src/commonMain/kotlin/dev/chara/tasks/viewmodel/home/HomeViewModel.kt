@@ -98,6 +98,13 @@ class HomeViewModel : ViewModel(), KoinComponent {
         }
     }
 
+    fun updateList(taskList: TaskList) {
+        viewModelScope.launch {
+            val result = repository.updateList(taskList.id, taskList)
+            _messages.emitAsMessage(result)
+        }
+    }
+
     fun createTask(listId: String, task: Task) {
         viewModelScope.launch {
             val result = repository.createTask(listId, task)
