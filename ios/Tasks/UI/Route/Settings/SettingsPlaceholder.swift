@@ -1,20 +1,15 @@
 //
-//  SettingsRoute.swift
+//  SettingsPlaceholder.swift
 //  Tasks
 //
-//  Created by Luke Myers on 4/14/23.
+//  Created by Luke Myers on 4/26/23.
 //  Copyright © 2023 orgName. All rights reserved.
 //
 
 import SwiftUI
-import MultiPlatformLibrary
 
-struct SettingsRoute: View {
-    @StateObject var viewModel = SettingsViewModel()
-
+struct SettingsPlaceholder: View {
     var body: some View {
-        let uiState = viewModel.state(\.uiState, equals: { $0 == $1 }, mapper: { $0 })
-
         SettingsScreen(state: uiState) { theme in
             viewModel.setAppTheme(theme: theme)
         } setEnabledForBoardSection: { boardSection, enabled in
@@ -22,5 +17,11 @@ struct SettingsRoute: View {
         } updateList: { list in
             viewModel.updateList(taskList: list)
         }
+    }
+}
+
+struct SettingsPlaceholder_Previews: PreviewProvider {
+    static var previews: some View {
+        SettingsPlaceholder()
     }
 }

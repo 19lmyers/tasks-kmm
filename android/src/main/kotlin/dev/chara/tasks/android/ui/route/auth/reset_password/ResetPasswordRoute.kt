@@ -18,8 +18,8 @@ fun ResetPasswordRoute(
     resetToken: String,
     navigateToSignIn: () -> Unit
 ) {
-    val viewModel: ResetPasswordViewModel = viewModel(key = resetToken) {
-        ResetPasswordViewModel(resetToken)
+    val viewModel: ResetPasswordViewModel = viewModel {
+        ResetPasswordViewModel()
     }
     val state = viewModel.uiState.collectAsStateWithLifecycle()
 
@@ -42,7 +42,7 @@ fun ResetPasswordRoute(
         state = state.value,
         snackbarHostState = snackbarHostState,
         onResetClicked = { password ->
-            viewModel.resetPassword(password)
+            viewModel.resetPassword(resetToken, password)
         }
     )
 

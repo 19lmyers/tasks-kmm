@@ -81,6 +81,8 @@ struct ListDetailsScreen: View {
                     .buttonStyle(BorderedButtonStyle())
                     .padding()
                     
+                    Spacer()
+                    
                     if state.selectedList?.sortType != .ordinal {
                         Button(action: {
                             onUpdateList(
@@ -94,8 +96,6 @@ struct ListDetailsScreen: View {
                         }
                         .padding()
                     }
-                    
-                    Spacer()
                 }.background(.bar)
             }
             .listStyle(.insetGrouped)

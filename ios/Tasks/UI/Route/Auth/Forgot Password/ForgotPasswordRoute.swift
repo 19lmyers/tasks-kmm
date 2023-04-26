@@ -12,7 +12,7 @@ import MultiPlatformLibrary
 struct ForgotPasswordRoute: View {
     @Environment(\.presentationMode) var presentation
 
-    @ObservedObject var viewModel = ForgotPasswordViewModel()
+    @StateObject var viewModel = ForgotPasswordViewModel()
     
     @State var showAlert: Bool = false
     

@@ -8,6 +8,7 @@ import dev.chara.tasks.viewmodel.util.emitAsMessage
 import dev.icerock.moko.mvvm.flow.cFlow
 import dev.icerock.moko.mvvm.flow.cStateFlow
 import dev.icerock.moko.mvvm.viewmodel.ViewModel
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
@@ -18,7 +19,8 @@ import kotlinx.datetime.Instant
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
-class ListDetailsViewModel(private val listId: String) : ViewModel(), KoinComponent {
+class ListDetailsViewModel : ViewModel(), KoinComponent {
+    private var observer: Job? = null
 
     private val repository: Repository by inject()
 
@@ -28,8 +30,9 @@ class ListDetailsViewModel(private val listId: String) : ViewModel(), KoinCompon
     private val _messages = MutableSharedFlow<PopupMessage>()
     val messages = _messages.asSharedFlow().cFlow()
 
-    init {
-        viewModelScope.launch {
+    fun observeList(listId: String) = apply {
+        observer?.cancel()
+        observer = viewModelScope.launch {
             combine(
                 repository.getListById(listId),
                 repository.getTasksByList(listId, isCompleted = false),

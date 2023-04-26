@@ -18,7 +18,7 @@ import org.koin.core.component.inject
 class ProfileViewModel : ViewModel(), KoinComponent {
     private val repository: Repository by inject()
 
-    private var _uiState = MutableStateFlow(ProfileUiState(isLoading = true))
+    private var _uiState = MutableStateFlow(ProfileUiState(firstLoad = true, isLoading = true))
     val uiState = _uiState.asStateFlow().cStateFlow()
 
     private val _messages = MutableSharedFlow<PopupMessage>()
@@ -28,6 +28,7 @@ class ProfileViewModel : ViewModel(), KoinComponent {
         viewModelScope.launch {
             repository.getUserProfile().collect { profile ->
                 _uiState.value = ProfileUiState(
+                    firstLoad = false,
                     isLoading = false,
                     profile = profile
                 )

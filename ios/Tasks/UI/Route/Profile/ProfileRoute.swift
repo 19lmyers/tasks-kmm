@@ -12,12 +12,14 @@ import MultiPlatformLibrary
 struct ProfileRoute: View {
     @Environment(\.presentationMode) var presentation
 
-    @ObservedObject var viewModel = ProfileViewModel()
+    @StateObject var viewModel = ProfileViewModel()
 
     var body: some View {
         let uiState = viewModel.state(\.uiState, equals: { $0 == $1 }, mapper: { $0 })
 
-        if (!uiState.isLoading) {
+        if uiState.isLoading {
+            ProgressView()
+        } else {
             ProfileScreen(
                     state: uiState,
                     onChangePhoto: { data in
@@ -39,8 +41,6 @@ struct ProfileRoute: View {
                             }
                         }
                     }
-        } else {
-            ProgressView()
         }
     }
 }

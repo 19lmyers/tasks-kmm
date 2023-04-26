@@ -26,7 +26,7 @@ fun TaskDetailsRoute(
     navigateUp: () -> Unit
 ) {
     val viewModel: TaskDetailsViewModel = viewModel(key = taskId) {
-        TaskDetailsViewModel(taskId)
+        TaskDetailsViewModel().observeTask(taskId)
     }
     val state = viewModel.uiState.collectAsStateWithLifecycle()
 

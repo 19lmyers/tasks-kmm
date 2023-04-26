@@ -15,7 +15,7 @@ import kotlinx.coroutines.launch
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
-class ResetPasswordViewModel(private val resetToken: String) : ViewModel(), KoinComponent {
+class ResetPasswordViewModel : ViewModel(), KoinComponent {
     private val repository: Repository by inject()
 
     private var _uiState = MutableStateFlow(ResetPasswordUiState())
@@ -24,7 +24,7 @@ class ResetPasswordViewModel(private val resetToken: String) : ViewModel(), Koin
     private val _messages = MutableSharedFlow<PopupMessage>()
     val messages = _messages.asSharedFlow().cFlow()
 
-    fun resetPassword(newPassword: String) {
+    fun resetPassword(resetToken: String, newPassword: String) {
         viewModelScope.launch {
             val result = repository.resetPassword(resetToken, newPassword)
             _messages.emitAsMessage(result)

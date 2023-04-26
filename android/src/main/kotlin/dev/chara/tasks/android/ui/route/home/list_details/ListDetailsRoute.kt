@@ -32,8 +32,9 @@ fun ListDetailsRoute(
     onCreateTaskClicked: (TaskList) -> Unit
 ) {
     val viewModel: ListDetailsViewModel = viewModel(key = listId) {
-        ListDetailsViewModel(listId)
+        ListDetailsViewModel().observeList(listId)
     }
+
     val state = viewModel.uiState.collectAsStateWithLifecycle()
 
     val selectedList = state.value.selectedList

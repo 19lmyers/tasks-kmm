@@ -160,8 +160,8 @@
 		DD0C09CE29DD3828007805EF /* UI */ = {
 			isa = PBXGroup;
 			children = (
-				DDB08D7829DCC90600239CE4 /* ContentView.swift */,
 				DD0C09D429DD3968007805EF /* Component */,
+				DDB08D7829DCC90600239CE4 /* ContentView.swift */,
 				DD0C09D529DD396C007805EF /* Route */,
 			);
 			path = UI;
@@ -184,11 +184,11 @@
 		DD0C09D529DD396C007805EF /* Route */ = {
 			isa = PBXGroup;
 			children = (
+				DDCD05D729DF810700316955 /* Auth */,
+				DDCD05E129DF877400316955 /* Home */,
 				DD78708B29EA7C24002D968C /* Profile */,
 				DD78708629EA3B56002D968C /* Settings */,
 				DDCD05DF29DF814D00316955 /* WelcomeScreen.swift */,
-				DDCD05D729DF810700316955 /* Auth */,
-				DDCD05E129DF877400316955 /* Home */,
 			);
 			path = Route;
 			sourceTree = "<group>";
@@ -314,11 +314,11 @@
 		DDCD05E129DF877400316955 /* Home */ = {
 			isa = PBXGroup;
 			children = (
+				DDB44C5B29F89595004FEE4D /* DetailNavTarget.swift */,
 				DDCD05D529DF750100316955 /* HomeRoute.swift */,
 				DDB08D7929DCC90600239CE4 /* HomeScreen.swift */,
 				DD24717929E62CA300125846 /* List Details */,
 				DD78708129EA25F2002D968C /* Task Details */,
-				DDB44C5B29F89595004FEE4D /* DetailNavTarget.swift */,
 			);
 			path = Home;
 			sourceTree = "<group>";

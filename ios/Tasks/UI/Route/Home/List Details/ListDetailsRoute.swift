@@ -11,8 +11,9 @@ import SwiftUI
 
 struct ListDetailsRoute: View {
     @Environment(\.presentationMode) var presentation
-
-    @ObservedObject var viewModel: ListDetailsViewModel
+    
+    var listId: String
+    @StateObject var viewModel = ListDetailsViewModel()
 
     var onModifyList: (TaskList) -> Void
     var onCreateTask: (Task) -> Void
@@ -23,13 +24,6 @@ struct ListDetailsRoute: View {
 
     @State var showAlert: Bool = false
     @State var alertType: AlertType = .deleteList
-
-    init(listId: String, onModifyList: @escaping (TaskList) -> Void, onCreateTask: @escaping (Task) -> Void) {
-        _viewModel = ObservedObject(wrappedValue: ListDetailsViewModel(listId: listId))
-
-        self.onModifyList = onModifyList
-        self.onCreateTask = onCreateTask
-    }
 
     var body: some View {
         let uiState = viewModel.state(\.uiState, equals: { $0!.isEqual($1) }, mapper: { $0 })
@@ -64,7 +58,12 @@ struct ListDetailsRoute: View {
                                 lastModified: DateKt.toInstant(Date.now)
                         )
                     }
-            )
+            ).onAppear {
+                viewModel.observeList(listId: listId)
+            }.onChange(of: listId) { listId in
+                viewModel.observeList(listId: listId)
+            }
+                
                     .tint(uiState.selectedList?.color?.ui ?? Color.accentColor)
                     .navigationTitle(uiState.selectedList?.title ?? "")
                     .toolbar {

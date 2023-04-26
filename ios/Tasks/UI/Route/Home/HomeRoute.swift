@@ -12,7 +12,7 @@ import SwiftUI
 struct HomeRoute: View {
     @Environment(\.horizontalSizeClass) var horizontalSizeClass
 
-    @ObservedObject var viewModel = HomeViewModel()
+    @StateObject var viewModel = HomeViewModel()
 
     var navigateToWelcome: () -> Void
 

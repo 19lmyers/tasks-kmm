@@ -10,7 +10,7 @@ import MultiPlatformLibrary
 import SwiftUI
 
 struct ContentView: View {
-    @ObservedObject var viewModel = BaseViewModel()
+    @StateObject var viewModel = BaseViewModel()
 
     @State var showAuthenticationFlow = false
 

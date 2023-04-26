@@ -12,7 +12,7 @@ import MultiPlatformLibrary
 struct ChangePasswordRoute: View {
     @Environment(\.presentationMode) var presentation
 
-    @ObservedObject var viewModel = ChangePasswordViewModel()
+    @StateObject var viewModel = ChangePasswordViewModel()
 
     @State var currentAlert: PopupMessage? = nil
 

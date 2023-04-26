@@ -10,7 +10,7 @@ import MultiPlatformLibrary
 import SwiftUI
 
 struct SignUpRoute: View {
-    @ObservedObject var viewModel = SignUpViewModel()
+    @StateObject var viewModel = SignUpViewModel()
 
     @State var currentAlert: PopupMessage? = nil
 

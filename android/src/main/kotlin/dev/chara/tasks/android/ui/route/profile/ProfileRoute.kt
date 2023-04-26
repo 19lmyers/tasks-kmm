@@ -49,7 +49,7 @@ fun ProfileRoute(
         }
     }
 
-    if (!state.value.isLoading) {
+    if (!state.value.firstLoad) {
         ProfileScreen(
             state = state.value,
             snackbarHostState = snackbarHostState,
