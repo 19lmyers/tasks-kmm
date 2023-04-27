@@ -1,0 +1,6 @@
+framework module FirebaseMessaging {
+  umbrella header "FirebaseMessaging-macOS-umbrella.h"
+
+  export *
+  module * { export * }
+}

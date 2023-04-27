@@ -1,5 +1,7 @@
 @file:Suppress("UNUSED_VARIABLE")
 
+import org.jetbrains.kotlin.gradle.targets.native.tasks.PodGenTask
+
 plugins {
     alias(libs.plugins.kotlin.multiplatform)
     alias(libs.plugins.kotlin.plugin.serialization)
@@ -24,6 +26,9 @@ kotlin {
     iosArm64()
     iosSimulatorArm64()
 
+    macosX64()
+    macosArm64()
+
     /*
     @OptIn(org.jetbrains.kotlin.gradle.targets.js.dsl.ExperimentalWasmDsl::class)
     wasm {
@@ -39,8 +44,9 @@ kotlin {
         version = "1.0"
 
         ios.deploymentTarget = "16.0"
+        osx.deploymentTarget = "13.3"
 
-        podfile = project.file("../ios/Podfile")
+        podfile = project.file("../apple/Podfile")
 
         pod("FirebaseCore")
         pod("FirebaseAnalytics")
@@ -114,12 +120,16 @@ kotlin {
         val iosX64Main by getting
         val iosArm64Main by getting
         val iosSimulatorArm64Main by getting
+        val macosX64Main by getting
+        val macosArm64Main by getting
 
         val iosMain by creating {
             dependsOn(commonMain)
             iosX64Main.dependsOn(this)
             iosArm64Main.dependsOn(this)
             iosSimulatorArm64Main.dependsOn(this)
+            macosX64Main.dependsOn(this)
+            macosArm64Main.dependsOn(this)
 
             dependencies {
                 implementation(libs.ktor.client.darwin)
@@ -132,12 +142,16 @@ kotlin {
         val iosX64Test by getting
         val iosArm64Test by getting
         val iosSimulatorArm64Test by getting
+        val macosX64Test by getting
+        val macosArm64Test by getting
 
         val iosTest by creating {
             dependsOn(commonTest)
             iosX64Test.dependsOn(this)
             iosArm64Test.dependsOn(this)
             iosSimulatorArm64Test.dependsOn(this)
+            macosX64Test.dependsOn(this)
+            macosArm64Test.dependsOn(this)
         }
     }
 }
@@ -145,7 +159,6 @@ kotlin {
 // For whatever reason, these must be here and not in androidMain
 dependencies {
     coreLibraryDesugaring(libs.desugar.jdk.libs)
-    implementation(platform(libs.firebase.bom))
 }
 
 android {
@@ -174,6 +187,35 @@ sqldelight {
     }
 }
 
-kswift {
-    iosDeploymentTarget.set("16.0")
+// Workaround for KMM bug https://youtrack.jetbrains.com/issue/KT-57741
+tasks.withType<PodGenTask>() {
+    doLast {
+        val xcodeProjFiles = listOf(
+            "Pods/Pods.xcodeproj",
+            "synthetic.xcodeproj",
+        )
+
+        for (xcodeProjFile in xcodeProjFiles) {
+            val file = project.buildDir.resolve("cocoapods/synthetic/${family.name}/$xcodeProjFile/project.pbxproj")
+            setMacosDeploymentTarget(file)
+        }
+    }
+}
+
+fun Project.setMacosDeploymentTarget(
+    xcodeProjFile: File,
+    target: String = "13.3",
+) {
+    val lines = xcodeProjFile.readLines()
+    val out = xcodeProjFile.bufferedWriter()
+    out.use {
+        for (line in lines) {
+            if (line.contains("MACOSX_DEPLOYMENT_TARGET")) {
+                out.write("MACOSX_DEPLOYMENT_TARGET = $target;")
+            } else {
+                out.write(line)
+            }
+            out.write(("\n"))
+        }
+    }
 }

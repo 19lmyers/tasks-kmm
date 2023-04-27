@@ -1,0 +1,14 @@
+def import_pods
+  use_frameworks!
+  pod 'MultiPlatformLibrary', :path => '../shared'
+end
+
+target :iOS do
+  platform :ios, '16.0'
+  import_pods
+end
+
+target :macOS do
+  platform :osx, '13.3'
+  import_pods
+end

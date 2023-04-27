@@ -6,7 +6,7 @@ coroutines = "1.6.4"
 koin = "3.4.0"
 kswift = "0.6.1"
 ktor = "2.3.0"
-mvvm = "0.16.0"
+mvvm = "0.16.1"
 result = "1.1.17"
 sqldelight = "2.0.0-alpha05"
 
@@ -67,11 +67,9 @@ datastore = { module = "androidx.datastore:datastore-preferences-core", version 
 
 desugar_jdk_libs = { module = "com.android.tools:desugar_jdk_libs", version = "2.0.3" }
 
-firebase-bom = { module = "com.google.firebase:firebase-bom", version = "31.5.0" }
-
-firebase-analytics = { module = "com.google.firebase:firebase-analytics-ktx" }
-firebase-messaging = { module = "com.google.firebase:firebase-messaging-ktx" }
-firebase-crashlytics = { module = "com.google.firebase:firebase-crashlytics-ktx" }
+firebase-analytics = { module = "com.google.firebase:firebase-analytics-ktx", version = "21.2.2" }
+firebase-messaging = { module = "com.google.firebase:firebase-messaging-ktx", version = "23.1.2" }
+firebase-crashlytics = { module = "com.google.firebase:firebase-crashlytics-ktx", version = "18.3.6" }
 
 koin-core = { module = "io.insert-koin:koin-core", version.ref = "koin" }
 

@@ -9,6 +9,7 @@ Pod::Spec.new do |spec|
     spec.vendored_frameworks      = 'build/cocoapods/framework/MultiPlatformLibrary.framework'
     spec.libraries                = 'c++'
     spec.ios.deployment_target = '16.0'
+    spec.osx.deployment_target = '13.3'
     spec.dependency 'FirebaseAnalytics'
     spec.dependency 'FirebaseCore'
     spec.dependency 'FirebaseCrashlytics'

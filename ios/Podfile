@@ -1,7 +1,0 @@
-target 'Tasks' do
-  use_frameworks!
-  platform :ios, '16.0'
-  pod 'MultiPlatformLibrary', :path => '../shared'
-  pod 'MultiPlatformLibrarySwift', :path => '../shared'
-  pod 'mokoMvvmFlowSwiftUI', :podspec => 'https://raw.githubusercontent.com/icerockdev/moko-mvvm/release/0.15.0/mokoMvvmFlowSwiftUI.podspec'
-end
