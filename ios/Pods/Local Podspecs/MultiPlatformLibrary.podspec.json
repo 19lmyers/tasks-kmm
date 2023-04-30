@@ -11,8 +11,7 @@
   "vendored_frameworks": "build/cocoapods/framework/MultiPlatformLibrary.framework",
   "libraries": "c++",
   "platforms": {
-    "ios": "16.0",
-    "osx": "13.3"
+    "ios": "16.0"
   },
   "dependencies": {
     "FirebaseAnalytics": [

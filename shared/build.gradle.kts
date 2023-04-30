@@ -1,7 +1,5 @@
 @file:Suppress("UNUSED_VARIABLE")
 
-import org.jetbrains.kotlin.gradle.targets.native.tasks.PodGenTask
-
 plugins {
     alias(libs.plugins.kotlin.multiplatform)
     alias(libs.plugins.kotlin.plugin.serialization)
@@ -41,7 +39,6 @@ kotlin {
         version = "1.0"
 
         ios.deploymentTarget = "16.0"
-        osx.deploymentTarget = "13.3"
 
         podfile = project.file("../ios/Podfile")
 
@@ -172,39 +169,6 @@ sqldelight {
 
             deriveSchemaFromMigrations.set(true)
             verifyMigrations.set(true)
-        }
-    }
-}
-
-// Workaround for KMM bug https://youtrack.jetbrains.com/issue/KT-57741
-tasks.withType<PodGenTask> {
-    doLast {
-        val xcodeProjFiles = listOf(
-            "Pods/Pods.xcodeproj",
-            "synthetic.xcodeproj",
-        )
-
-        for (xcodeProjFile in xcodeProjFiles) {
-            val file = project.buildDir.resolve("cocoapods/synthetic/${family.name}/$xcodeProjFile/project.pbxproj")
-            setDeploymentTarget(file)
-        }
-    }
-}
-
-fun setDeploymentTarget(
-    xcodeProjFile: File,
-    target: String = "16.0",
-) {
-    val lines = xcodeProjFile.readLines()
-    val out = xcodeProjFile.bufferedWriter()
-    out.use {
-        for (line in lines) {
-            if (line.contains("IPHONEOS_DEPLOYMENT_TARGET")) {
-                out.write("IPHONEOS_DEPLOYMENT_TARGET = $target;")
-            } else {
-                out.write(line)
-            }
-            out.write(("\n"))
         }
     }
 }
