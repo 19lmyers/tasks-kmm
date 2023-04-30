@@ -1,6 +1,0 @@
-framework module GoogleDataTransport {
-  umbrella header "GoogleDataTransport-macOS-umbrella.h"
-
-  export *
-  module * { export * }
-}

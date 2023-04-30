@@ -1,6 +1,0 @@
-framework module FirebaseSessions {
-  umbrella header "FirebaseSessions-iOS-umbrella.h"
-
-  export *
-  module * { export * }
-}
