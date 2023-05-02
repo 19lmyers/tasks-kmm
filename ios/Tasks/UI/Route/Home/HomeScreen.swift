@@ -39,18 +39,18 @@ struct HomeScreen_Previews: PreviewProvider {
     static var previews: some View {
         NavigationView {
             HomeScreen(
-                    state: HomeUiState(
-                            isLoading: false,
-                            firstLoad: false,
-                            isAuthenticated: true,
-                            profile: nil,
-                            boardSections: [],
-                            pinnedLists: [],
-                            allLists: []
-                    ),
-                    onCreateListPressed: {},
-                    onUpdateTask: { _ in },
-                    onRefresh: {}
+                state: HomeUiState(
+                    isLoading: false,
+                    firstLoad: false,
+                    isAuthenticated: true,
+                    profile: nil,
+                    boardSections: [],
+                    pinnedLists: [],
+                    allLists: []
+                ),
+                onCreateListPressed: {},
+                onUpdateTask: { _ in },
+                onRefresh: {}
             )
         }
     }

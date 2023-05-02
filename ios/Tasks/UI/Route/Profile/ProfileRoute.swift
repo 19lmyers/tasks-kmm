@@ -6,8 +6,8 @@
 //  Copyright © 2023 orgName. All rights reserved.
 //
 
-import SwiftUI
 import MultiPlatformLibrary
+import SwiftUI
 
 struct ProfileRoute: View {
     @Environment(\.presentationMode) var presentation
@@ -21,26 +21,26 @@ struct ProfileRoute: View {
             ProgressView()
         } else {
             ProfileScreen(
-                    state: uiState,
-                    onChangePhoto: { data in
-                        let image = UIImage(data: data)
-                        if let compressed = image?.jpegData(compressionQuality: 0.25) {
-                            viewModel.updateUserProfilePhoto(photo: DataKt.toByteArray(compressed))
-                        }
-                    },
-                    onUpdateUserProfile: { profile in
-                        viewModel.updateUserProfile(profile: profile)
+                state: uiState,
+                onChangePhoto: { data in
+                    let image = UIImage(data: data)
+                    if let compressed = image?.jpegData(compressionQuality: 0.25) {
+                        viewModel.updateUserProfilePhoto(photo: DataKt.toByteArray(compressed))
                     }
+                },
+                onUpdateUserProfile: { profile in
+                    viewModel.updateUserProfile(profile: profile)
+                }
             )
-                    .toolbar {
-                        ToolbarItem(placement: .cancellationAction) {
-                            Button(action: {
-                                presentation.wrappedValue.dismiss()
-                            }) {
-                                Text("Cancel")
-                            }
-                        }
+            .toolbar {
+                ToolbarItem(placement: .cancellationAction) {
+                    Button(action: {
+                        presentation.wrappedValue.dismiss()
+                    }) {
+                        Text("Cancel")
                     }
+                }
+            }
         }
     }
 }

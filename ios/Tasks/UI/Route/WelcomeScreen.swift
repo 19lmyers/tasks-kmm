@@ -16,28 +16,27 @@ struct WelcomeScreen: View {
             Spacer()
 
             Text("TODO put onboarding here")
-            
+
             Spacer()
         }
-                .safeAreaInset(edge: .bottom) {
-                    HStack {
-                        NavigationLink(destination: SignInRoute(navigateToHome: navigateToHome)) {
-                            Text("Sign In")
-
-                        }
-                                .buttonStyle(DefaultButtonStyle())
-                                .padding()
-
-                        Spacer()
-
-                        NavigationLink(destination: SignUpRoute(navigateToHome: navigateToHome)) {
-                            Text("Sign Up")
-                        }
-                                .buttonStyle(BorderedProminentButtonStyle())
-                                .padding()
-                    }
-                    .background(.bar)
+        .safeAreaInset(edge: .bottom) {
+            HStack {
+                NavigationLink(destination: SignInRoute(navigateToHome: navigateToHome)) {
+                    Text("Sign In")
                 }
+                .buttonStyle(DefaultButtonStyle())
+                .padding()
+
+                Spacer()
+
+                NavigationLink(destination: SignUpRoute(navigateToHome: navigateToHome)) {
+                    Text("Sign Up")
+                }
+                .buttonStyle(BorderedProminentButtonStyle())
+                .padding()
+            }
+            .background(.bar)
+        }
     }
 }
 

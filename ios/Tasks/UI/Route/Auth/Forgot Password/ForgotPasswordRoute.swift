@@ -6,19 +6,19 @@
 //  Copyright © 2023 orgName. All rights reserved.
 //
 
-import SwiftUI
 import MultiPlatformLibrary
+import SwiftUI
 
 struct ForgotPasswordRoute: View {
     @Environment(\.presentationMode) var presentation
 
     @StateObject var viewModel = ForgotPasswordViewModel()
-    
+
     @State var showAlert: Bool = false
-    
+
     var body: some View {
         let uiState = viewModel.state(\.uiState, equals: { $0 == $1 }, mapper: { $0 })
-    
+
         ForgotPasswordScreen(
             state: uiState,
             onResetClicked: { email in
@@ -28,7 +28,7 @@ struct ForgotPasswordRoute: View {
                 viewModel.validateEmail(email: email)
             }
         ).onChange(of: uiState.passwordResetLinkSent) { value in
-            if (value) {
+            if value {
                 showAlert = true
             }
         }
@@ -43,4 +43,3 @@ struct ForgotPasswordRoute: View {
         }
     }
 }
-

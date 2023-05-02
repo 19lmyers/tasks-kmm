@@ -33,32 +33,32 @@ struct SettingsScreen: View {
 struct SettingsScreen_Previews: PreviewProvider {
     static var previews: some View {
         SettingsScreen(
-                state: SettingsUiState(
-                        isLoading: false,
-                        firstLoad: false,
-                        appTheme: .systemDefault,
-                        useVibrantColors: false,
-                        taskLists: [
-                            TaskListKt.doNew(id: "", title: "My list")
-                        ],
-                        enabledBoardSections: []
-                ),
-                setTheme: { _ in },
-                setEnabledForBoardSection: { _, _ in },
-                updateList: { _ in }
+            state: SettingsUiState(
+                isLoading: false,
+                firstLoad: false,
+                appTheme: .systemDefault,
+                useVibrantColors: false,
+                taskLists: [
+                    TaskListKt.doNew(id: "", title: "My list"),
+                ],
+                enabledBoardSections: []
+            ),
+            setTheme: { _ in },
+            setEnabledForBoardSection: { _, _ in },
+            updateList: { _ in }
         )
     }
 }
 
-struct SettingsForm : View {
+struct SettingsForm: View {
     var state: SettingsUiState
 
     var setTheme: (Theme) -> Void
     var setEnabledForBoardSection: (BoardSection.Type_, Bool) -> Void
     var updateList: (TaskList) -> Void
-    
-    @State var appTheme: Theme = Theme.systemDefault
-    
+
+    @State var appTheme: Theme = .systemDefault
+
     var body: some View {
         List {
             Section("Appearance") {
@@ -68,7 +68,7 @@ struct SettingsForm : View {
                     }
                 }
             }
-            
+
             Section("Dashboard Sections") {
                 ForEach(BoardSectionKt.types(), id: \.self) { boardSection in
                     Toggle(isOn: Binding(get: { state.enabledBoardSections.contains(boardSection) }, set: { value in setEnabledForBoardSection(boardSection, value) })) {
@@ -80,7 +80,7 @@ struct SettingsForm : View {
                     }
                 }
             }
-            
+
             Section("Pinned Lists") {
                 ForEach(state.taskLists, id: \.self) { taskList in
                     Toggle(isOn: Binding(get: { taskList.isPinned }, set: {

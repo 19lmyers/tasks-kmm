@@ -17,7 +17,7 @@ struct ListDetailsScreen: View {
     var onRefresh: @Sendable () async -> Void
 
     var onCreateTaskPressed: () -> Void
-    
+
     var onUpdateList: (TaskList) -> Void
     var onUpdateTask: (Task) -> Void
     var onReorderTask: (String, Int, Int) -> Void
@@ -37,10 +37,10 @@ struct ListDetailsScreen: View {
                         TaskView(task: task, onUpdate: onUpdateTask, showIndexNumbers: state.selectedList!.showIndexNumbers, indexNumber: index + 1)
                     }
                     .onMove(perform: state.selectedList!.sortType == .ordinal ? reorder : nil)
-                    
+
                     CreateTaskView(onCreateTaskPressed: onCreateTaskPressed)
                 }
-                
+
                 if !state.completedTasks.isEmpty {
                     Section {
                         DisclosureGroup(
@@ -74,15 +74,15 @@ struct ListDetailsScreen: View {
                         }
                     } label: {
                         HStack {
-                            Image(systemName: state.selectedList!.sortType.icon )
+                            Image(systemName: state.selectedList!.sortType.icon)
                             Text(state.selectedList!.sortType.description())
                         }
                     }
                     .buttonStyle(BorderedButtonStyle())
                     .padding()
-                    
+
                     Spacer()
-                    
+
                     if state.selectedList?.sortType != .ordinal {
                         Button(action: {
                             onUpdateList(
@@ -107,18 +107,18 @@ struct ListDetailsScreen: View {
 struct ListDetailsScreen_Previews: PreviewProvider {
     static var previews: some View {
         ListDetailsScreen(
-                state: ListDetailsUiState(
-                        isLoading: false,
-                        firstLoad: false,
-                        selectedList: nil,
-                        currentTasks: [],
-                        completedTasks: []
-                ),
-                onRefresh: {},
-                onCreateTaskPressed: {},
-                onUpdateList: { _ in },
-                onUpdateTask: { _ in },
-                onReorderTask: { _, _, _ in }
+            state: ListDetailsUiState(
+                isLoading: false,
+                firstLoad: false,
+                selectedList: nil,
+                currentTasks: [],
+                completedTasks: []
+            ),
+            onRefresh: {},
+            onCreateTaskPressed: {},
+            onUpdateList: { _ in },
+            onUpdateTask: { _ in },
+            onReorderTask: { _, _, _ in }
         )
     }
 }

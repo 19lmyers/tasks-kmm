@@ -22,7 +22,7 @@ struct ProfileImageView: View {
         } placeholder: {
             Image(systemName: "person.crop.circle.fill").resizable()
         }
-                .clipShape(Circle())
+        .clipShape(Circle())
     }
 }
 

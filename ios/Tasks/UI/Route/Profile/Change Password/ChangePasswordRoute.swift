@@ -6,8 +6,8 @@
 //  Copyright © 2023 orgName. All rights reserved.
 //
 
-import SwiftUI
 import MultiPlatformLibrary
+import SwiftUI
 
 struct ChangePasswordRoute: View {
     @Environment(\.presentationMode) var presentation
@@ -27,17 +27,17 @@ struct ChangePasswordRoute: View {
             ChangePasswordScreen(state: uiState) { currentPassword, newPassword in
                 viewModel.changePassword(currentPassword: currentPassword, newPassword: newPassword)
             }
-                    .alert(item: $currentAlert) { message in
-                        Alert(title: Text(message.text), message: nil)
+            .alert(item: $currentAlert) { message in
+                Alert(title: Text(message.text), message: nil)
+            }
+            .onAppear {
+                viewModel.messages.subscribe(
+                    onCollect: { message in
+                        currentAlert = message
                     }
-                    .onAppear {
-                        viewModel.messages.subscribe(
-                                onCollect: { message in
-                                    currentAlert = message
-                                }
-                        )
-                    }
-                    .navigationBarBackButtonHidden(uiState.isLoading)
+                )
+            }
+            .navigationBarBackButtonHidden(uiState.isLoading)
         }
     }
 }

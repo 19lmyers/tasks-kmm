@@ -25,37 +25,37 @@ struct TaskView: View {
                     HStack {
                         if showIndexNumbers {
                             Text("\(indexNumber)")
-                                    .font(.subheadline)
+                                .font(.subheadline)
                         }
 
                         CheckboxView(isChecked: task.isCompleted) { isChecked in
                             onUpdate(task.edit()
-                                    .isCompleted(value: isChecked)
-                                    .lastModified(value: DateKt.toInstant(Date.now))
-                                    .build())
+                                .isCompleted(value: isChecked)
+                                .lastModified(value: DateKt.toInstant(Date.now))
+                                .build())
                         }
 
                         VStack(alignment: .leading) {
                             Text(task.label)
-                                    .lineLimit(5)
+                                .lineLimit(5)
+                                .multilineTextAlignment(.leading)
+                                .truncationMode(.tail)
+
+                            if task.details != nil {
+                                Text(task.details!)
+                                    .lineLimit(2)
+                                    .font(.caption)
                                     .multilineTextAlignment(.leading)
                                     .truncationMode(.tail)
-
-                            if (task.details != nil) {
-                                Text(task.details!)
-                                        .lineLimit(2)
-                                        .font(.caption)
-                                        .multilineTextAlignment(.leading)
-                                        .truncationMode(.tail)
                             }
                         }
-                                .alignmentGuide(.taskVerticalAlignment) { context in
-                                    context[.taskVerticalAlignment]
-                                }
+                        .alignmentGuide(.taskVerticalAlignment) { context in
+                            context[.taskVerticalAlignment]
+                        }
                     }
                     TaskChipsView(
-                            task: task,
-                            parentList: parentList
+                        task: task,
+                        parentList: parentList
                     )
                 }
 
@@ -64,14 +64,14 @@ struct TaskView: View {
 
                     StarView(isStarred: task.isStarred) { isStarred in
                         onUpdate(task.edit()
-                                .isStarred(value: isStarred)
-                                .lastModified(value: DateKt.toInstant(Date.now))
-                                .build())
+                            .isStarred(value: isStarred)
+                            .lastModified(value: DateKt.toInstant(Date.now))
+                            .build())
                     }
                 }
-                        .alignmentGuide(.taskVerticalAlignment) { context in
-                            context[.taskVerticalAlignment]
-                        }
+                .alignmentGuide(.taskVerticalAlignment) { context in
+                    context[.taskVerticalAlignment]
+                }
             }
         }
     }
@@ -85,7 +85,7 @@ struct CreateTaskView: View {
             HStack {
                 Image(systemName: "plus")
                 Text("New task")
-                        .multilineTextAlignment(.leading)
+                    .multilineTextAlignment(.leading)
             }
         }
     }
@@ -117,7 +117,7 @@ struct TaskChipsView: View {
 extension VerticalAlignment {
     private enum TaskVerticalAlignment: AlignmentID {
         static func defaultValue(in context: ViewDimensions) -> CGFloat {
-            return context[VerticalAlignment.center]
+            context[VerticalAlignment.center]
         }
     }
 
@@ -127,7 +127,7 @@ extension VerticalAlignment {
 extension HorizontalAlignment {
     private enum TaskHorizontalAlignment: AlignmentID {
         static func defaultValue(in context: ViewDimensions) -> CGFloat {
-            return context[HorizontalAlignment.leading]
+            context[HorizontalAlignment.leading]
         }
     }
 
@@ -141,22 +141,21 @@ extension Alignment {
 struct TaskView_Previews: PreviewProvider {
     static var previews: some View {
         TaskView(
-                task: Task(
-                        id: "1",
-                        listId: "1",
-                        label: "Fix SwiftUI bindings",
-                        isCompleted: false,
-                        isStarred: false,
-                        details: "Sample description",
-                        reminderDate: nil,
-                        dueDate: nil,
-                        dateCreated: DateKt.toInstant(Date.now),
-                        lastModified: DateKt.toInstant(Date.now),
-                        ordinal: 1
-                ),
-                onUpdate: { _ in }
+            task: Task(
+                id: "1",
+                listId: "1",
+                label: "Fix SwiftUI bindings",
+                isCompleted: false,
+                isStarred: false,
+                details: "Sample description",
+                reminderDate: nil,
+                dueDate: nil,
+                dateCreated: DateKt.toInstant(Date.now),
+                lastModified: DateKt.toInstant(Date.now),
+                ordinal: 1
+            ),
+            onUpdate: { _ in }
         )
-        CreateTaskView {
-        }
+        CreateTaskView {}
     }
 }

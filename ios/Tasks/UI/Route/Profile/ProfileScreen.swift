@@ -7,8 +7,8 @@
 //
 
 import MultiPlatformLibrary
-import SwiftUI
 import PhotosUI
+import SwiftUI
 
 typealias UITask = SwiftUI.Task
 
@@ -30,23 +30,23 @@ struct ProfileScreen: View {
 struct ProfileScreen_Previews: PreviewProvider {
     static var previews: some View {
         ProfileScreen(
-                state: ProfileUiState(
-                        firstLoad: false,
-                        isLoading: false,
-                        profile: Profile(
-                                id: "1",
-                                email: "user@email.com",
-                                displayName: "John Smith",
-                                profilePhotoUri: nil
-                        )
-                ),
-                onChangePhoto: { _ in },
-                onUpdateUserProfile: { _ in }
+            state: ProfileUiState(
+                firstLoad: false,
+                isLoading: false,
+                profile: Profile(
+                    id: "1",
+                    email: "user@email.com",
+                    displayName: "John Smith",
+                    profilePhotoUri: nil
+                )
+            ),
+            onChangePhoto: { _ in },
+            onUpdateUserProfile: { _ in }
         )
     }
 }
 
-struct ProfileForm : View {
+struct ProfileForm: View {
     var state: ProfileUiState
 
     @State var displayName: String = ""
@@ -55,27 +55,27 @@ struct ProfileForm : View {
     var onChangePhoto: (Data) -> Void
 
     var onUpdateUserProfile: (Profile) -> Void
-    
+
     var body: some View {
         List {
             Section("Preview") {
                 HStack {
                     ProfileImageView(email: state.profile!.email, profilePhotoUri: state.profile!.profilePhotoUri)
                         .frame(width: 48, height: 48)
-                    
+
                     VStack(alignment: .leading) {
                         Text(displayName)
                             .font(.title3)
-                        
+
                         Text(state.profile!.email)
                             .font(.caption)
                     }
                     .padding([.leading])
-                    
+
                     Spacer()
                 }
             }
-            
+
             Section("Display name") {
                 HStack {
                     Image(systemName: "person")
@@ -93,23 +93,24 @@ struct ProfileForm : View {
                     }
                 }
             }
-            
+
             Section("Profile Picture") {
                 PhotosPicker(
                     selection: $selectedPhoto,
                     matching: .images,
-                    photoLibrary: .shared()) {
-                        HStack {
-                            Image(systemName: "plus.circle")
-                                .frame(width: 18, height: 18)
-                            if state.profile!.profilePhotoUri != nil {
-                                Text("Change profile picture")
-                            } else {
-                                Text("Add profile picture")
-                            }
+                    photoLibrary: .shared()
+                ) {
+                    HStack {
+                        Image(systemName: "plus.circle")
+                            .frame(width: 18, height: 18)
+                        if state.profile!.profilePhotoUri != nil {
+                            Text("Change profile picture")
+                        } else {
+                            Text("Add profile picture")
                         }
                     }
-                
+                }
+
                 if state.profile!.profilePhotoUri != nil {
                     Button(action: {
                         onUpdateUserProfile(state.profile!.edit()
@@ -124,7 +125,7 @@ struct ProfileForm : View {
                     }
                 }
             }
-            
+
             Section("Authentication") {
                 NavigationLink(destination: {
                     Text("TODO")
@@ -136,7 +137,7 @@ struct ProfileForm : View {
                         Text("Change email")
                     }.foregroundColor(.accentColor)
                 }
-                
+
                 NavigationLink(destination: {
                     ChangePasswordRoute()
                         .navigationTitle("Change password")
@@ -152,12 +153,12 @@ struct ProfileForm : View {
             ToolbarItem(placement: .confirmationAction) {
                 Button(action: {
                     onUpdateUserProfile(state.profile!.edit()
-                            .displayName(value: displayName)
-                            .build())
+                        .displayName(value: displayName)
+                        .build())
                 }) {
                     Text("Save")
                 }
-                        .disabled(displayName.isEmpty || displayName == state.profile!.displayName)
+                .disabled(displayName.isEmpty || displayName == state.profile!.displayName)
             }
         }.onAppear {
             displayName = state.profile!.displayName
@@ -170,5 +171,4 @@ struct ProfileForm : View {
             }
         }
     }
-    
 }

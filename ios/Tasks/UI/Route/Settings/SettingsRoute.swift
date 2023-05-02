@@ -6,8 +6,8 @@
 //  Copyright © 2023 orgName. All rights reserved.
 //
 
-import SwiftUI
 import MultiPlatformLibrary
+import SwiftUI
 
 struct SettingsRoute: View {
     @StateObject var viewModel = SettingsViewModel()

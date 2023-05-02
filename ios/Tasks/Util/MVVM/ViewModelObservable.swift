@@ -8,6 +8,4 @@
 import MultiPlatformLibrary
 import SwiftUI
 
-extension ViewModel: ObservableObject {
-    
-}
+extension ViewModel: ObservableObject {}

@@ -44,7 +44,7 @@ struct TaskDetailsScreen: View {
                         }
                         TextField("Label", text: $label, prompt: Text("Enter label (required)"))
                     }
-                    
+
                     if state.taskLists.count > 1 {
                         Picker(
                             selection: $listId,
@@ -59,18 +59,18 @@ struct TaskDetailsScreen: View {
                         )
                     }
                 }
-                
+
                 Section {
                     HStack {
                         Image(systemName: "text.justify.left")
                         TextField("Details", text: Binding($details, replacingNilWith: ""), prompt: Text("Add details"), axis: .vertical)
                     }
                 }
-                
+
                 Section {
                     HStack {
                         Image(systemName: "bell")
-                        
+
                         if reminderDate == nil {
                             Button(action: {
                                 reminderDate = Date.now
@@ -84,12 +84,12 @@ struct TaskDetailsScreen: View {
                                     $reminderDate,
                                     replacingNilWith: Date.distantFuture
                                 ),
-                                in: Date.now...Date.distantFuture
+                                in: Date.now ... Date.distantFuture
                             )
                             .labelsHidden()
-                            
+
                             Spacer()
-                            
+
                             Button(action: {
                                 reminderDate = nil
                             }) {
@@ -97,10 +97,10 @@ struct TaskDetailsScreen: View {
                             }
                         }
                     }
-                    
+
                     HStack {
                         Image(systemName: "calendar")
-                        
+
                         if dueDate == nil {
                             Button(action: {
                                 dueDate = Date.now
@@ -114,13 +114,13 @@ struct TaskDetailsScreen: View {
                                     $dueDate,
                                     replacingNilWith: Date.distantFuture
                                 ),
-                                in: Date.now...Date.distantFuture,
+                                in: Date.now ... Date.distantFuture,
                                 displayedComponents: [.date]
                             )
                             .labelsHidden()
-                            
+
                             Spacer()
-                            
+
                             Button(action: {
                                 dueDate = nil
                             }) {
@@ -133,7 +133,7 @@ struct TaskDetailsScreen: View {
             .safeAreaInset(edge: .bottom) {
                 HStack {
                     Spacer()
-                    
+
                     Button(action: {
                         onUpdate(
                             state.task!.edit()
@@ -207,16 +207,16 @@ struct TaskDetailsScreen_Previews: PreviewProvider {
     static var previews: some View {
         NavigationStack {
             TaskDetailsScreen(
-                    state: TaskDetailsUiState(
-                            isLoading: false,
-                            firstLoad: false,
-                            task: TaskKt.doNew(id: "1", listId: "1", label: "My task"),
-                            taskLists: [
-                                TaskListKt.doNew(id: "1", title: "My list")
-                            ]
-                    ),
-                    onUpdate: { _ in },
-                    onMove: { _, _ in }
+                state: TaskDetailsUiState(
+                    isLoading: false,
+                    firstLoad: false,
+                    task: TaskKt.doNew(id: "1", listId: "1", label: "My task"),
+                    taskLists: [
+                        TaskListKt.doNew(id: "1", title: "My list"),
+                    ]
+                ),
+                onUpdate: { _ in },
+                onMove: { _, _ in }
             )
         }
     }

@@ -6,13 +6,13 @@ struct TasksApp: App {
     init() {
         InitKt.doInitKoin(endpointUrl: Configuration.endpointUrl.absoluteString)
 
-        UserDefaults.standard.register(defaults: ["NSApplicationCrashOnExceptions" : true])
+        UserDefaults.standard.register(defaults: ["NSApplicationCrashOnExceptions": true])
         InitKt.doInitFirebase()
 
         #if DEBUG
-        InitKt.doInitNapierDebug()
+            InitKt.doInitNapierDebug()
         #else
-        InitKt.doInitNapierRelease()
+            InitKt.doInitNapierRelease()
         #endif
     }
 

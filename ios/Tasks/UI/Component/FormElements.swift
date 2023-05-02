@@ -20,7 +20,7 @@ struct CheckboxView: View {
         }) {
             Image(systemName: isChecked ? "checkmark.square" : "square").foregroundStyle(.tint)
         }
-                .buttonStyle(PlainButtonStyle())
+        .buttonStyle(PlainButtonStyle())
     }
 }
 
@@ -36,10 +36,9 @@ struct StarView: View {
         }) {
             Image(systemName: isStarred ? "star.fill" : "star").foregroundStyle(.tint)
         }
-                .buttonStyle(PlainButtonStyle())
+        .buttonStyle(PlainButtonStyle())
     }
 }
-
 
 struct FormElements_Previews: PreviewProvider {
     static var previews: some View {

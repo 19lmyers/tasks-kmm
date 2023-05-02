@@ -50,10 +50,10 @@ struct ModifyListSheet: View {
                 Section {
                     TextField("Title", text: $listTitle, prompt: Text("Enter list title (required)"))
                     TextField(
-                            "Description",
-                            text: Binding($description, replacingNilWith: ""),
-                            prompt: Text("Add description"),
-                            axis: .vertical
+                        "Description",
+                        text: Binding($description, replacingNilWith: ""),
+                        prompt: Text("Add description"),
+                        axis: .vertical
                     )
                 }
 
@@ -61,70 +61,70 @@ struct ModifyListSheet: View {
                     let columns = [GridItem(.flexible()), GridItem(.flexible()), GridItem(.flexible()), GridItem(.flexible()), GridItem(.flexible())]
 
                     DisclosureGroup(
-                            content: {
-                                ScrollView {
-                                    LazyVGrid(columns: columns, alignment: .center) {
-                                        Button(action: {
+                        content: {
+                            ScrollView {
+                                LazyVGrid(columns: columns, alignment: .center) {
+                                    Button(action: {
+                                        listIcon = nil
+                                    }) {
+                                        IconSwatch(
+                                            icon: "checklist",
+                                            outline: Color.primary.opacity(0.25),
+                                            selection: Color.accentColor,
+                                            selected: listIcon == nil
+                                        ) {
                                             listIcon = nil
-                                        }) {
-                                            IconSwatch(
-                                                    icon: "checklist",
-                                                    outline: Color.primary.opacity(0.25),
-                                                    selection: Color.accentColor,
-                                                    selected: listIcon == nil
-                                            ) {
-                                                listIcon = nil
-                                            }
-                                        }
-                                                .padding(.all, 4)
-
-                                        ForEach(TaskListKt.icons()) { icon in
-                                            IconSwatch(
-                                                    icon: icon.ui,
-                                                    outline: Color.primary.opacity(0.25),
-                                                    selection: Color.accentColor,
-                                                    selected: listIcon == icon
-                                            ) {
-                                                listIcon = icon
-                                            }
-                                                    .padding(.all, 4)
                                         }
                                     }
-                                }
-                            },
-                            label: {
-                                HStack {
-                                    Text("Icon")
-                                    Spacer()
-                                    Image(systemName: listIcon?.ui ?? "checklist")
+                                    .padding(.all, 4)
+
+                                    ForEach(TaskListKt.icons()) { icon in
+                                        IconSwatch(
+                                            icon: icon.ui,
+                                            outline: Color.primary.opacity(0.25),
+                                            selection: Color.accentColor,
+                                            selected: listIcon == icon
+                                        ) {
+                                            listIcon = icon
+                                        }
+                                        .padding(.all, 4)
+                                    }
                                 }
                             }
+                        },
+                        label: {
+                            HStack {
+                                Text("Icon")
+                                Spacer()
+                                Image(systemName: listIcon?.ui ?? "checklist")
+                            }
+                        }
                     )
 
                     ScrollView(.horizontal) {
                         HStack {
                             ColorSwatch(
-                                    color: Color.gray.opacity(0.25),
-                                    outline: Color.primary.opacity(0.25),
-                                    selection: Color.gray,
-                                    selected: listColor == nil
+                                color: Color.gray.opacity(0.25),
+                                outline: Color.primary.opacity(0.25),
+                                selection: Color.gray,
+                                selected: listColor == nil
                             ) {
                                 listColor = nil
                             }
-                                    .padding(.all, 4)
+                            .padding(.all, 4)
 
                             ForEach(TaskListKt.colors()) { color in
                                 ColorSwatch(
-                                        color: color.ui.opacity(0.25),
-                                        outline: Color.primary.opacity(0.25),
-                                        selection: color.ui,
-                                        selected: listColor == color
+                                    color: color.ui.opacity(0.25),
+                                    outline: Color.primary.opacity(0.25),
+                                    selection: color.ui,
+                                    selected: listColor == color
                                 ) {
                                     listColor = color
                                 }
                             }
                         }
-                                .padding(.all, 4)
+                        .padding(.all, 4)
                     }
                 }
 
@@ -146,31 +146,31 @@ struct ModifyListSheet: View {
                     }
                 }
             }
-                    .toolbar {
-                        ToolbarItem(placement: .cancellationAction) {
-                            Button("Cancel") {
-                                onDismiss()
-                            }
-                        }
-
-                        ToolbarItem(placement: .confirmationAction) {
-                            Button("Save") {
-                                onSave(
-                                        current.edit()
-                                                .title(value: listTitle)
-                                                .color(value: listColor)
-                                                .icon(value: listIcon)
-                                                .description(value: description)
-                                                .isPinned(value: isPinned)
-                                                .showIndexNumbers(value: showIndexNumbers)
-                                                .build()
-                                )
-                            }
-                                    .disabled(listTitle.isEmpty)
-                        }
+            .toolbar {
+                ToolbarItem(placement: .cancellationAction) {
+                    Button("Cancel") {
+                        onDismiss()
                     }
-                    .tint(listColor?.ui ?? Color.accentColor)
-                    .navigationTitle(title)
+                }
+
+                ToolbarItem(placement: .confirmationAction) {
+                    Button("Save") {
+                        onSave(
+                            current.edit()
+                                .title(value: listTitle)
+                                .color(value: listColor)
+                                .icon(value: listIcon)
+                                .description(value: description)
+                                .isPinned(value: isPinned)
+                                .showIndexNumbers(value: showIndexNumbers)
+                                .build()
+                        )
+                    }
+                    .disabled(listTitle.isEmpty)
+                }
+            }
+            .tint(listColor?.ui ?? Color.accentColor)
+            .navigationTitle(title)
         }
     }
 }
@@ -190,8 +190,8 @@ struct IconSwatch: View {
                 let outlineColor = selected ? selection : outline
 
                 RoundedRectangle(cornerRadius: 12, style: .continuous)
-                        .stroke(outlineColor, lineWidth: 2)
-                        .frame(width: 48, height: 48)
+                    .stroke(outlineColor, lineWidth: 2)
+                    .frame(width: 48, height: 48)
 
                 Image(systemName: icon).tint(outlineColor)
             }
@@ -214,12 +214,12 @@ struct ColorSwatch: View {
                 let outlineColor = selected ? selection : outline
 
                 RoundedRectangle(cornerRadius: 12, style: .continuous)
-                        .fill(color)
-                        .overlay(
-                                RoundedRectangle(cornerRadius: 12, style: .continuous)
-                                        .stroke(outlineColor, lineWidth: 2)
-                        )
-                        .frame(width: 48, height: 48)
+                    .fill(color)
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 12, style: .continuous)
+                            .stroke(outlineColor, lineWidth: 2)
+                    )
+                    .frame(width: 48, height: 48)
 
                 if selected {
                     Image(systemName: "checkmark").tint(selection)
@@ -232,10 +232,10 @@ struct ColorSwatch: View {
 struct ModifyList_Previews: PreviewProvider {
     static var previews: some View {
         ModifyListSheet(
-                title: "Edit list",
-                current: TaskListKt.doNew(id: "", title: ""),
-                onDismiss: {},
-                onSave: { _ in }
+            title: "Edit list",
+            current: TaskListKt.doNew(id: "", title: ""),
+            onDismiss: {},
+            onSave: { _ in }
         )
     }
 }

@@ -54,15 +54,15 @@ struct CreateTaskSheet: View {
 
                     if taskLists.count > 1 {
                         Picker(
-                                selection: $listId,
-                                content: {
-                                    ForEach(taskLists, id: \.id) { list in
-                                        Text(list.title)
-                                    }
-                                },
-                                label: {
-                                    Text("List")
+                            selection: $listId,
+                            content: {
+                                ForEach(taskLists, id: \.id) { list in
+                                    Text(list.title)
                                 }
+                            },
+                            label: {
+                                Text("List")
+                            }
                         )
                     }
                 }
@@ -86,14 +86,14 @@ struct CreateTaskSheet: View {
                             }
                         } else {
                             DatePicker(
-                                    "Remind me",
-                                    selection: Binding(
-                                            $reminderDate,
-                                            replacingNilWith: Date.distantFuture
-                                    ),
-                                    in: Date.now...Date.distantFuture
+                                "Remind me",
+                                selection: Binding(
+                                    $reminderDate,
+                                    replacingNilWith: Date.distantFuture
+                                ),
+                                in: Date.now ... Date.distantFuture
                             )
-                                    .labelsHidden()
+                            .labelsHidden()
 
                             Spacer()
 
@@ -116,15 +116,15 @@ struct CreateTaskSheet: View {
                             }
                         } else {
                             DatePicker(
-                                    "Set due date",
-                                    selection: Binding(
-                                            $dueDate,
-                                            replacingNilWith: Date.distantFuture
-                                    ),
-                                    in: Date.now...Date.distantFuture,
-                                    displayedComponents: [.date]
+                                "Set due date",
+                                selection: Binding(
+                                    $dueDate,
+                                    replacingNilWith: Date.distantFuture
+                                ),
+                                in: Date.now ... Date.distantFuture,
+                                displayedComponents: [.date]
                             )
-                                    .labelsHidden()
+                            .labelsHidden()
 
                             Spacer()
 
@@ -137,53 +137,53 @@ struct CreateTaskSheet: View {
                     }
                 }
             }
-                    .toolbar {
-                        ToolbarItem(placement: .cancellationAction) {
-                            Button("Cancel") {
-                                onDismiss()
-                            }
-                        }
-
-                        ToolbarItem(placement: .confirmationAction) {
-                            Button("Save") {
-                                onSave(
-                                        current.edit()
-                                                .listId(value: listId)
-                                                .label(value: label)
-                                                .details(value: details)
-                                                .reminderDate(value: DateKt.toInstantOrNull(reminderDate))
-                                                .dueDate(value: DateKt.toInstantOrNull(dueDate))
-                                                .build()
-                                )
-                            }
-                                    .disabled(label.isEmpty)
-                        }
+            .toolbar {
+                ToolbarItem(placement: .cancellationAction) {
+                    Button("Cancel") {
+                        onDismiss()
                     }
-                    .tint(parentList?.color?.ui ?? Color.accentColor)
-                    .navigationTitle("New task")
-        }
-                .onChange(of: listId) { id in
-                    parentList = taskLists.first(where: { list in list.id == id })
                 }
+
+                ToolbarItem(placement: .confirmationAction) {
+                    Button("Save") {
+                        onSave(
+                            current.edit()
+                                .listId(value: listId)
+                                .label(value: label)
+                                .details(value: details)
+                                .reminderDate(value: DateKt.toInstantOrNull(reminderDate))
+                                .dueDate(value: DateKt.toInstantOrNull(dueDate))
+                                .build()
+                        )
+                    }
+                    .disabled(label.isEmpty)
+                }
+            }
+            .tint(parentList?.color?.ui ?? Color.accentColor)
+            .navigationTitle("New task")
+        }
+        .onChange(of: listId) { id in
+            parentList = taskLists.first(where: { list in list.id == id })
+        }
     }
 }
 
 struct CreateTaskSheet_Previews: PreviewProvider {
     static var previews: some View {
         CreateTaskSheet(
-                taskLists: [
-                    TaskListKt.doNew(id: "1", title: "Tasks")
-                            .edit()
-                            .color(value: TaskList.Color.green)
-                            .build(),
-                    TaskListKt.doNew(id: "2", title: "Reminders")
-                            .edit()
-                            .color(value: TaskList.Color.orange)
-                            .build()
-                ],
-                current: TaskKt.doNew(id: "10", listId: "1", label: ""),
-                onDismiss: {},
-                onSave: { _ in }
+            taskLists: [
+                TaskListKt.doNew(id: "1", title: "Tasks")
+                    .edit()
+                    .color(value: TaskList.Color.green)
+                    .build(),
+                TaskListKt.doNew(id: "2", title: "Reminders")
+                    .edit()
+                    .color(value: TaskList.Color.orange)
+                    .build(),
+            ],
+            current: TaskKt.doNew(id: "10", listId: "1", label: ""),
+            onDismiss: {},
+            onSave: { _ in }
         )
     }
 }

@@ -6,8 +6,8 @@
 //  Copyright © 2023 orgName. All rights reserved.
 //
 
-import SwiftUI
 import MultiPlatformLibrary
+import SwiftUI
 
 struct ChangePasswordScreen: View {
     var state: ChangePasswordUiState
@@ -25,14 +25,14 @@ struct ChangePasswordScreen: View {
             HStack {
                 if showCurrentPassword {
                     TextField("Current Password", text: $currentPassword, prompt: Text("Current password"))
-                            .textFieldStyle(RoundedBorderTextFieldStyle())
-                            .submitLabel(.next)
-                            .padding()
+                        .textFieldStyle(RoundedBorderTextFieldStyle())
+                        .submitLabel(.next)
+                        .padding()
                 } else {
                     SecureField("Current Password", text: $currentPassword, prompt: Text("Current password"))
-                            .textFieldStyle(RoundedBorderTextFieldStyle())
-                            .submitLabel(.next)
-                            .padding()
+                        .textFieldStyle(RoundedBorderTextFieldStyle())
+                        .submitLabel(.next)
+                        .padding()
                 }
 
                 Button(action: { showCurrentPassword.toggle() }) {
@@ -42,20 +42,20 @@ struct ChangePasswordScreen: View {
                         Image(systemName: "eye")
                     }
                 }
-                        .padding(.trailing)
+                .padding(.trailing)
             }
 
             HStack {
                 if showNewPassword {
                     TextField("New Password", text: $newPassword, prompt: Text("New password"))
-                            .textFieldStyle(RoundedBorderTextFieldStyle())
-                            .submitLabel(.next)
-                            .padding()
+                        .textFieldStyle(RoundedBorderTextFieldStyle())
+                        .submitLabel(.next)
+                        .padding()
                 } else {
                     SecureField("New Password", text: $newPassword, prompt: Text("New password"))
-                            .textFieldStyle(RoundedBorderTextFieldStyle())
-                            .submitLabel(.next)
-                            .padding()
+                        .textFieldStyle(RoundedBorderTextFieldStyle())
+                        .submitLabel(.next)
+                        .padding()
                 }
 
                 Button(action: { showNewPassword.toggle() }) {
@@ -65,37 +65,37 @@ struct ChangePasswordScreen: View {
                         Image(systemName: "eye")
                     }
                 }
-                        .padding(.trailing)
+                .padding(.trailing)
             }
 
             Spacer()
         }
-                .safeAreaInset(edge: .bottom) {
-                    HStack {
-                        Spacer()
+        .safeAreaInset(edge: .bottom) {
+            HStack {
+                Spacer()
 
-                        Button(action: {
-                            onChangePasswordClicked(currentPassword, newPassword)
-                        }) {
-                            Text("Change")
-                        }
-                                .disabled(currentPassword.isEmpty || newPassword.isEmpty || currentPassword == newPassword || state.isLoading)
-                                .buttonStyle(BorderedProminentButtonStyle())
-                                .padding()
-                    }
-                            .background(.bar)
+                Button(action: {
+                    onChangePasswordClicked(currentPassword, newPassword)
+                }) {
+                    Text("Change")
                 }
+                .disabled(currentPassword.isEmpty || newPassword.isEmpty || currentPassword == newPassword || state.isLoading)
+                .buttonStyle(BorderedProminentButtonStyle())
+                .padding()
+            }
+            .background(.bar)
+        }
     }
 }
 
 struct ChangePasswordScreen_Previews: PreviewProvider {
     static var previews: some View {
         ChangePasswordScreen(
-                state: ChangePasswordUiState(
-                        isLoading: false,
-                        passwordChanged: false
-                ),
-                onChangePasswordClicked: { _, _ in }
+            state: ChangePasswordUiState(
+                isLoading: false,
+                passwordChanged: false
+            ),
+            onChangePasswordClicked: { _, _ in }
         )
     }
 }

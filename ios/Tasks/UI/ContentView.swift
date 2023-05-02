@@ -20,21 +20,19 @@ struct ContentView: View {
         if showAuthenticationFlow {
             NavigationStack {
                 WelcomeScreen(
-                        navigateToHome: {
-                            showAuthenticationFlow = false
-                        }
+                    navigateToHome: {
+                        showAuthenticationFlow = false
+                    }
                 )
             }
-                    .preferredColorScheme(uiState.appTheme.colorScheme)
+            .preferredColorScheme(uiState.appTheme.colorScheme)
         } else {
             HomeRoute(
-                    navigateToWelcome: {
-                        showAuthenticationFlow = true
-                    }
+                navigateToWelcome: {
+                    showAuthenticationFlow = true
+                }
             )
-                    .preferredColorScheme(uiState.appTheme.colorScheme)
+            .preferredColorScheme(uiState.appTheme.colorScheme)
         }
     }
 }
-
-

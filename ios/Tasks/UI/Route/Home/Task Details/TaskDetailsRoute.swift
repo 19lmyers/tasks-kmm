@@ -20,7 +20,7 @@ struct TaskDetailsRoute: View {
     var body: some View {
         let uiState = viewModel.state(\.uiState, equals: { $0 == $1 }, mapper: { $0 })
 
-        if !uiState.isLoading && uiState.task == nil {
+        if !uiState.isLoading, uiState.task == nil {
             ProgressView().onAppear {
                 presentation.wrappedValue.dismiss()
             }
@@ -37,51 +37,51 @@ struct TaskDetailsRoute: View {
             }.onChange(of: taskId) { taskId in
                 viewModel.observeTask(taskId: taskId)
             }
-                    .tint(parentList?.color?.ui ?? Color.accentColor)
-                    .toolbar {
-                        ToolbarItem(placement: .cancellationAction) {
-                            Button(action: {
-                                presentation.wrappedValue.dismiss()
-                            }) {
-                                Text("Cancel")
-                            }
-                        }
-
-                        ToolbarItem(placement: .primaryAction) {
-                            StarView(isStarred: uiState.task?.isStarred ?? false) { isStarred in
-                                viewModel.updateTask(
-                                        listId: uiState.task!.listId,
-                                        taskId: uiState.task!.id,
-                                        task: uiState.task!.edit()
-                                                .isStarred(value: isStarred)
-                                                .lastModified(value: DateKt.toInstant(Date.now))
-                                                .build()
-                                )
-                            }
-                        }
-
-                        ToolbarItem(placement: .secondaryAction) {
-                            Button(role: .destructive, action: {
-                                showAlert = true
-                            }) {
-                                Image(systemName: "trash")
-                                Text("Delete task")
-                            }
-                        }
+            .tint(parentList?.color?.ui ?? Color.accentColor)
+            .toolbar {
+                ToolbarItem(placement: .cancellationAction) {
+                    Button(action: {
+                        presentation.wrappedValue.dismiss()
+                    }) {
+                        Text("Cancel")
                     }
-                    .alert(isPresented: $showAlert) {
-                        Alert(
-                                title: Text("Delete task?"),
-                                message: Text("This task will be permanently deleted"),
-                                primaryButton: .destructive(Text("Delete")) {
-                                    viewModel.deleteTask(listId: uiState.task!.listId, taskId: uiState.task!.id)
-                                    showAlert = false
-                                },
-                                secondaryButton: .cancel {
-                                    showAlert = false
-                                }
+                }
+
+                ToolbarItem(placement: .primaryAction) {
+                    StarView(isStarred: uiState.task?.isStarred ?? false) { isStarred in
+                        viewModel.updateTask(
+                            listId: uiState.task!.listId,
+                            taskId: uiState.task!.id,
+                            task: uiState.task!.edit()
+                                .isStarred(value: isStarred)
+                                .lastModified(value: DateKt.toInstant(Date.now))
+                                .build()
                         )
                     }
+                }
+
+                ToolbarItem(placement: .secondaryAction) {
+                    Button(role: .destructive, action: {
+                        showAlert = true
+                    }) {
+                        Image(systemName: "trash")
+                        Text("Delete task")
+                    }
+                }
+            }
+            .alert(isPresented: $showAlert) {
+                Alert(
+                    title: Text("Delete task?"),
+                    message: Text("This task will be permanently deleted"),
+                    primaryButton: .destructive(Text("Delete")) {
+                        viewModel.deleteTask(listId: uiState.task!.listId, taskId: uiState.task!.id)
+                        showAlert = false
+                    },
+                    secondaryButton: .cancel {
+                        showAlert = false
+                    }
+                )
+            }
         }
     }
 }

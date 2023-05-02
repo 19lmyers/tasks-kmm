@@ -8,7 +8,7 @@
 
 import Foundation
 
-enum DetailNavTarget : Hashable {
+enum DetailNavTarget: Hashable {
     case listDetails(String)
     case taskDetails(String)
     case profile, settings

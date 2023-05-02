@@ -25,25 +25,25 @@ struct SignUpRoute: View {
             }
         } else {
             SignUpScreen(
-                    state: uiState,
-                    onSignUpClicked: { email, displayName, password in
-                        viewModel.signUp(email: email, displayName: displayName, password: password)
-                    },
-                    validateEmail: { email in
-                        viewModel.validateEmail(email: email)
-                    }
+                state: uiState,
+                onSignUpClicked: { email, displayName, password in
+                    viewModel.signUp(email: email, displayName: displayName, password: password)
+                },
+                validateEmail: { email in
+                    viewModel.validateEmail(email: email)
+                }
             )
-                    .navigationBarBackButtonHidden(uiState.isLoading)
-                    .alert(item: $currentAlert) { message in
-                        Alert(title: Text(message.text), message: nil)
+            .navigationBarBackButtonHidden(uiState.isLoading)
+            .alert(item: $currentAlert) { message in
+                Alert(title: Text(message.text), message: nil)
+            }
+            .onAppear {
+                viewModel.messages.subscribe(
+                    onCollect: { message in
+                        currentAlert = message
                     }
-                    .onAppear {
-                        viewModel.messages.subscribe(
-                                onCollect: { message in
-                                    currentAlert = message
-                                }
-                        )
-                    }
+                )
+            }
         }
     }
 }
