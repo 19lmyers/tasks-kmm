@@ -17,12 +17,18 @@ import dev.olshevski.navigation.reimagined.pop
 fun HomeNavHost(
     navController: NavController<NavTarget.Home>,
     snackbarHostState: SnackbarHostState,
+    isDualPane: Boolean,
     onCreateTaskClicked: (String?) -> Unit,
     defaultContent: @Composable () -> Unit
 ) {
     NavBackHandler(navController)
 
-    AnimatedNavHost(navController) { navTarget ->
+    AnimatedNavHost(
+        navController,
+        emptyBackstackPlaceholder = {
+            defaultContent()
+        }
+    ) { navTarget ->
         when (navTarget) {
             NavTarget.Home.Default -> {
                 defaultContent()
@@ -32,7 +38,10 @@ fun HomeNavHost(
                 ListDetailsRoute(
                     navTarget.listId,
                     snackbarHostState = snackbarHostState,
-                    navigateUp = { navController.pop() },
+                    upAsCloseButton = isDualPane,
+                    navigateUp = {
+                        navController.pop()
+                    },
                     navigateToTaskDetails = { task ->
                         navController.navigate(NavTarget.Home.WithTask(task.id))
                     },
@@ -51,6 +60,5 @@ fun HomeNavHost(
                 )
             }
         }
-
     }
 }

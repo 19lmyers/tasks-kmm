@@ -42,6 +42,7 @@ import dev.chara.tasks.viewmodel.home.HomeViewModel
 import dev.olshevski.navigation.reimagined.NavController
 import dev.olshevski.navigation.reimagined.navController
 import dev.olshevski.navigation.reimagined.navigate
+import dev.olshevski.navigation.reimagined.replaceAll
 import kotlinx.datetime.Clock
 
 @Composable
@@ -100,7 +101,11 @@ fun HomeRoute(
             )
         }
 
-        var showCreateTaskSheet by rememberSaveable(initCreateTaskSheet) { mutableStateOf(initCreateTaskSheet) }
+        var showCreateTaskSheet by rememberSaveable(initCreateTaskSheet) {
+            mutableStateOf(
+                initCreateTaskSheet
+            )
+        }
         var defaultListIdForCreatedTask by rememberSaveable { mutableStateOf<String?>(null) }
 
         if (showCreateTaskSheet) {
@@ -151,10 +156,14 @@ fun HomeRoute(
                         showCreateTaskSheet = true
                     },
                     navigateToListDetails = { taskList ->
-                        navController.navigate(NavTarget.Home.WithList(taskList.id))
+                        navController.replaceAll(
+                            listOf(NavTarget.Home.WithList(taskList.id))
+                        )
                     },
                     navigateToTaskDetails = { task ->
-                        navController.navigate(NavTarget.Home.WithTask(task.id))
+                        navController.replaceAll(
+                            listOf(NavTarget.Home.WithTask(task.id))
+                        )
                     },
                     onUpdateTask = { task ->
                         viewModel.updateTask(task)
@@ -166,13 +175,17 @@ fun HomeRoute(
                     HomeNavHost(
                         navController,
                         snackbarHostState,
+                        isDualPane = true,
                         onCreateTaskClicked = { listId ->
                             defaultListIdForCreatedTask = listId
                             showCreateTaskSheet = true
                         }
                     ) {
                         Box(modifier = Modifier.fillMaxSize()) {
-                            Text("Select a list or task", modifier = Modifier.align(Alignment.Center))
+                            Text(
+                                "Select a list or task",
+                                modifier = Modifier.align(Alignment.Center)
+                            )
                         }
                     }
                 }
@@ -180,6 +193,7 @@ fun HomeRoute(
                 HomeNavHost(
                     navController,
                     snackbarHostState,
+                    isDualPane = false,
                     onCreateTaskClicked = { listId ->
                         defaultListIdForCreatedTask = listId
                         showCreateTaskSheet = true
@@ -231,15 +245,6 @@ fun HomeRoute(
             }
         }
     }
-}
-
-/**
- * Used for single pane screen transitions.
- */
-enum class ScreenState {
-    HOME,
-    SHOW_LIST,
-    SHOW_TASK
 }
 
 fun initNotifications(context: Context) {
