@@ -7,7 +7,7 @@ import co.touchlab.sqliter.DatabaseConfiguration
 import dev.chara.tasks.data.cache.sql.CacheDatabase
 
 private val dbConfig = DatabaseConfiguration(
-    name = "cache.db",
+    name = "cache_v0.db",
     version = CacheDatabase.Schema.version,
     create = { connection ->
         wrapConnection(connection) { CacheDatabase.Schema.create(it) }

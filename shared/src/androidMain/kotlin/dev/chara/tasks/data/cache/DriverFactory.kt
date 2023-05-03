@@ -11,7 +11,7 @@ import io.requery.android.database.sqlite.RequerySQLiteOpenHelperFactory
 actual class DriverFactory(private val context: Context) {
     actual fun create(): SqlDriver =
         AndroidSqliteDriver(
-            CacheDatabase.Schema, context, "cache.db",
+            CacheDatabase.Schema, context, "cache_v0.db",
             factory = RequerySQLiteOpenHelperFactory(),
             callback = CallbackDelegate(AndroidSqliteDriver.Callback(CacheDatabase.Schema))
         )
@@ -37,6 +37,10 @@ private class CallbackDelegate(
         oldVersion: Int,
         newVersion: Int,
     ) {
+        delegate.onUpgrade(db, oldVersion, newVersion)
+    }
+
+    override fun onDowngrade(db: SupportSQLiteDatabase, oldVersion: Int, newVersion: Int) {
         delegate.onUpgrade(db, oldVersion, newVersion)
     }
 }
