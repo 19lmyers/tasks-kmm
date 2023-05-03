@@ -81,7 +81,7 @@ import kotlinx.datetime.toInstant
 fun TaskDetailsScreen(
     state: TaskDetailsUiState,
     snackbarHostState: SnackbarHostState,
-    onUpClicked: () -> Unit,
+    onUpClicked: (Boolean) -> Unit,
     onDeleteClicked: () -> Unit,
     onUpdateTask: (Task) -> Unit,
     onMoveTask: (String) -> Unit
@@ -100,7 +100,7 @@ fun TaskDetailsScreen(
                 selectedListId = task.listId,
                 scrollBehavior = scrollBehavior,
                 upAsCloseButton = true,
-                onUpClicked = { onUpClicked() },
+                onUpClicked = { onUpClicked(modified) },
                 onDeleteClicked = { onDeleteClicked() },
                 onListSelected = {
                     onUpdateTask(task)
@@ -122,7 +122,7 @@ fun TaskDetailsScreen(
                     onClick = {
                         onUpdateTask(task)
                         modified = false
-                        onUpClicked()
+                        onUpClicked(false)
                     },
                     enabled = !state.isLoading && task.label.isNotBlank() && modified
                 ) {

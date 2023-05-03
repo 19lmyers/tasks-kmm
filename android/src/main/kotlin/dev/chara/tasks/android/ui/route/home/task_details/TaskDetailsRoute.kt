@@ -1,5 +1,6 @@
 package dev.chara.tasks.android.ui.route.home.task_details
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.CircularProgressIndicator
@@ -56,10 +57,28 @@ fun TaskDetailsRoute(
                 )
             }
 
+            var showExitDialog by remember { mutableStateOf(false) }
+
+            if (showExitDialog) {
+                ConfirmExitDialog(
+                    onDismiss = { showExitDialog = false },
+                    onConfirm = {
+                        showExitDialog = false
+                        navigateUp()
+                    }
+                )
+            }
+
             TaskDetailsScreen(
                 state.value,
                 snackbarHostState = snackbarHostState,
-                onUpClicked = { navigateUp() },
+                onUpClicked = { modified ->
+                    if (modified) {
+                        showExitDialog = true
+                    } else {
+                        navigateUp()
+                    }
+                },
                 onUpdateTask = {
                     viewModel.updateTask(
                         task.listId,
@@ -79,6 +98,10 @@ fun TaskDetailsRoute(
                     showDeleteDialog = true
                 }
             )
+
+            BackHandler {
+                showExitDialog = true
+            }
         }
     } else {
         Box(modifier = Modifier.fillMaxSize()) {

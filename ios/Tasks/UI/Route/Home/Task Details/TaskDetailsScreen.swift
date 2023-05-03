@@ -10,9 +10,9 @@ import MultiPlatformLibrary
 import SwiftUI
 
 struct TaskDetailsScreen: View {
-    @Environment(\.presentationMode) var presentation
-
     var state: TaskDetailsUiState
+
+    var onUpClicked: (Bool) -> Void
 
     var onUpdate: (Task) -> Void
     var onMove: (Task, String) -> Void
@@ -22,6 +22,9 @@ struct TaskDetailsScreen: View {
     @State var listId: String = ""
 
     @State var label: String = ""
+
+    @State var isCompleted: Bool = false
+    @State var isStarred: Bool = false
 
     @State var details: String? = nil
 
@@ -35,12 +38,8 @@ struct TaskDetailsScreen: View {
             List {
                 Section {
                     HStack {
-                        CheckboxView(isChecked: state.task!.isCompleted) { isChecked in
-                            onUpdate(state.task!.edit()
-                                .isCompleted(value: isChecked)
-                                .lastModified(value: DateKt.toInstant(Date.now))
-                                .build()
-                            )
+                        CheckboxView(isChecked: isCompleted) { isChecked in
+                            isCompleted = isChecked
                         }
                         TextField("Label", text: $label, prompt: Text("Enter label (required)"))
                     }
@@ -139,13 +138,14 @@ struct TaskDetailsScreen: View {
                             state.task!.edit()
                                 .label(value: label)
                                 .details(value: details)
+                                .isCompleted(value: isCompleted)
+                                .isStarred(value: isStarred)
                                 .reminderDate(value: DateKt.toInstantOrNull(reminderDate))
                                 .dueDate(value: DateKt.toInstantOrNull(dueDate))
                                 .lastModified(value: DateKt.toInstant(Date.now))
                                 .build()
                         )
                         modified = false
-                        presentation.wrappedValue.dismiss()
                     }) {
                         Text("Save")
                     }
@@ -160,6 +160,9 @@ struct TaskDetailsScreen: View {
 
                 label = state.task!.label
 
+                isCompleted = state.task!.isCompleted
+                isStarred = state.task!.isStarred
+
                 details = state.task!.details
 
                 reminderDate = state.task!.reminderDate?.toDate()
@@ -170,15 +173,22 @@ struct TaskDetailsScreen: View {
 
                 label = state.task!.label
 
+                isCompleted = state.task!.isCompleted
+                isStarred = state.task!.isStarred
+
                 details = state.task!.details
 
                 reminderDate = state.task!.reminderDate?.toDate()
                 dueDate = state.task!.dueDate?.toDate()
+
+                modified = false
             }
             .onChange(of: listId) { id in
                 onUpdate(
                     state.task!.edit()
                         .label(value: label)
+                        .isCompleted(value: isCompleted)
+                        .isStarred(value: isStarred)
                         .details(value: details)
                         .reminderDate(value: DateKt.toInstantOrNull(reminderDate))
                         .dueDate(value: DateKt.toInstantOrNull(dueDate))
@@ -186,8 +196,16 @@ struct TaskDetailsScreen: View {
                         .build()
                 )
                 onMove(state.task!, id)
+
+                modified = false
             }
             .onChange(of: label) { _ in
+                modified = true
+            }
+            .onChange(of: isCompleted) { _ in
+                modified = true
+            }
+            .onChange(of: isStarred) { _ in
                 modified = true
             }
             .onChange(of: details) { _ in
@@ -198,6 +216,21 @@ struct TaskDetailsScreen: View {
             }
             .onChange(of: dueDate) { _ in
                 modified = true
+            }
+            .toolbar {
+                ToolbarItem(placement: .cancellationAction) {
+                    Button(action: {
+                        onUpClicked(modified)
+                    }) {
+                        Text("Cancel")
+                    }
+                }
+
+                ToolbarItem(placement: .primaryAction) {
+                    StarView(isStarred: isStarred) { isChecked in
+                        isStarred = isChecked
+                    }
+                }
             }
         }
     }
@@ -215,6 +248,7 @@ struct TaskDetailsScreen_Previews: PreviewProvider {
                         TaskListKt.doNew(id: "1", title: "My list"),
                     ]
                 ),
+                onUpClicked: { _ in },
                 onUpdate: { _ in },
                 onMove: { _, _ in }
             )

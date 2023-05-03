@@ -15,7 +15,12 @@ struct TaskDetailsRoute: View {
     var taskId: String
     @StateObject var viewModel = TaskDetailsViewModel()
 
-    @State var showAlert = false
+    enum AlertType {
+        case deleteTask, confirmExit
+    }
+
+    @State var showAlert: Bool = false
+    @State var alertType: AlertType = .deleteTask
 
     var body: some View {
         let uiState = viewModel.state(\.uiState, equals: { $0 == $1 }, mapper: { $0 })
@@ -27,7 +32,14 @@ struct TaskDetailsRoute: View {
         } else {
             let parentList = uiState.taskLists.first(where: { list in list.id == uiState.task!.listId })
 
-            TaskDetailsScreen(state: uiState) { task in
+            TaskDetailsScreen(state: uiState) { modified in
+                if modified {
+                    alertType = .confirmExit
+                    showAlert = true
+                } else {
+                    presentation.wrappedValue.dismiss()
+                }
+            } onUpdate: { task in
                 viewModel.updateTask(listId: task.listId, taskId: task.id, task: task)
             } onMove: { task, newListId in
                 viewModel.moveTask(oldListId: task.listId, newListId: newListId, taskId: task.id, lastModified: DateKt.toInstant(Date.now))
@@ -39,29 +51,9 @@ struct TaskDetailsRoute: View {
             }
             .tint(parentList?.color?.ui ?? Color.accentColor)
             .toolbar {
-                ToolbarItem(placement: .cancellationAction) {
-                    Button(action: {
-                        presentation.wrappedValue.dismiss()
-                    }) {
-                        Text("Cancel")
-                    }
-                }
-
-                ToolbarItem(placement: .primaryAction) {
-                    StarView(isStarred: uiState.task?.isStarred ?? false) { isStarred in
-                        viewModel.updateTask(
-                            listId: uiState.task!.listId,
-                            taskId: uiState.task!.id,
-                            task: uiState.task!.edit()
-                                .isStarred(value: isStarred)
-                                .lastModified(value: DateKt.toInstant(Date.now))
-                                .build()
-                        )
-                    }
-                }
-
                 ToolbarItem(placement: .secondaryAction) {
                     Button(role: .destructive, action: {
+                        alertType = .deleteTask
                         showAlert = true
                     }) {
                         Image(systemName: "trash")
@@ -70,17 +62,31 @@ struct TaskDetailsRoute: View {
                 }
             }
             .alert(isPresented: $showAlert) {
-                Alert(
-                    title: Text("Delete task?"),
-                    message: Text("This task will be permanently deleted"),
-                    primaryButton: .destructive(Text("Delete")) {
-                        viewModel.deleteTask(listId: uiState.task!.listId, taskId: uiState.task!.id)
-                        showAlert = false
-                    },
-                    secondaryButton: .cancel {
-                        showAlert = false
-                    }
-                )
+                if alertType == .deleteTask {
+                    return Alert(
+                        title: Text("Delete task?"),
+                        message: Text("This task will be permanently deleted"),
+                        primaryButton: .destructive(Text("Delete")) {
+                            viewModel.deleteTask(listId: uiState.task!.listId, taskId: uiState.task!.id)
+                            showAlert = false
+                        },
+                        secondaryButton: .cancel {
+                            showAlert = false
+                        }
+                    )
+                } else {
+                    return Alert(
+                        title: Text("Close without saving?"),
+                        message: Text("Your changes to this task will not be saved"),
+                        primaryButton: .destructive(Text("Close")) {
+                            presentation.wrappedValue.dismiss()
+                            showAlert = false
+                        },
+                        secondaryButton: .cancel {
+                            showAlert = false
+                        }
+                    )
+                }
             }
         }
     }
