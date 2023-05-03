@@ -81,8 +81,6 @@ kotlin {
 
                 implementation(libs.sqldelight.coroutines.extensions)
 
-                implementation(libs.sqlite.android)
-
                 implementation(libs.datastore)
 
                 implementation(libs.okio)
@@ -106,6 +104,8 @@ kotlin {
                 implementation(libs.androidx.lifecycle.viewmodel)
 
                 implementation(libs.ktor.client.okhttp)
+
+                implementation(libs.sqlite.android)
                 implementation(libs.sqldelight.android.driver)
             }
         }

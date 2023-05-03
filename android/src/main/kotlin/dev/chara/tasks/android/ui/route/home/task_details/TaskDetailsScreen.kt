@@ -57,7 +57,6 @@ import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.input.nestedscroll.nestedScroll
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
@@ -69,7 +68,6 @@ import dev.chara.tasks.android.ui.component.DueDateChip
 import dev.chara.tasks.android.ui.component.ReminderChip
 import dev.chara.tasks.android.ui.component.dialog.PickDueDateDialog
 import dev.chara.tasks.android.ui.component.dialog.PickReminderDateDialog
-import dev.chara.tasks.android.ui.util.FriendlyDateFormat
 import dev.chara.tasks.model.Task
 import dev.chara.tasks.model.TaskList
 import dev.chara.tasks.viewmodel.home.task_details.TaskDetailsUiState
@@ -300,7 +298,6 @@ private fun TaskDetailsForm(
     onUpdateTask: (Task) -> Unit,
 ) {
     val keyboardController = LocalSoftwareKeyboardController.current
-    val context = LocalContext.current
 
     var showReminderDateDialog by remember { mutableStateOf(false) }
     var showDueDatePickerDialog by remember { mutableStateOf(false) }
@@ -447,7 +444,6 @@ private fun TaskDetailsForm(
         },
     )
 
-    val formatter = FriendlyDateFormat(context)
     val currentTime = Clock.System.now()
 
     val reminderColors = if (task.reminderDate == null) {

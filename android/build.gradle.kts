@@ -1,7 +1,7 @@
 import java.util.Properties
 
 val localProperties = Properties()
-val propertiesFile = project.rootProject.file("local.properties")
+val propertiesFile: File = project.rootProject.file("local.properties")
 if (propertiesFile.exists()) {
     localProperties.load(propertiesFile.inputStream())
 }
@@ -39,7 +39,7 @@ android {
         buildConfig = true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.4.6"
+        kotlinCompilerExtensionVersion = "1.4.7"
     }
     packaging {
         resources {
