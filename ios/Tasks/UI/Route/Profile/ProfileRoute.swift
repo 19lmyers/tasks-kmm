@@ -14,6 +14,8 @@ struct ProfileRoute: View {
 
     @StateObject var viewModel = ProfileViewModel()
 
+    @State var showAlert: Bool = false
+
     var body: some View {
         let uiState = viewModel.state(\.uiState, equals: { $0 == $1 }, mapper: { $0 })
 
@@ -22,6 +24,13 @@ struct ProfileRoute: View {
         } else {
             ProfileScreen(
                 state: uiState,
+                onUpClicked: { modified in
+                    if modified {
+                        showAlert = true
+                    } else {
+                        presentation.wrappedValue.dismiss()
+                    }
+                },
                 onChangePhoto: { data in
                     let image = UIImage(data: data)
                     if let compressed = image?.jpegData(compressionQuality: 0.25) {
@@ -31,15 +40,18 @@ struct ProfileRoute: View {
                 onUpdateUserProfile: { profile in
                     viewModel.updateUserProfile(profile: profile)
                 }
-            )
-            .toolbar {
-                ToolbarItem(placement: .cancellationAction) {
-                    Button(action: {
+            ).alert(isPresented: $showAlert) {
+                Alert(
+                    title: Text("Close without saving?"),
+                    message: Text("Your changes to your profile will not be saved"),
+                    primaryButton: .destructive(Text("Close")) {
                         presentation.wrappedValue.dismiss()
-                    }) {
-                        Text("Cancel")
+                        showAlert = false
+                    },
+                    secondaryButton: .cancel {
+                        showAlert = false
                     }
-                }
+                )
             }
         }
     }

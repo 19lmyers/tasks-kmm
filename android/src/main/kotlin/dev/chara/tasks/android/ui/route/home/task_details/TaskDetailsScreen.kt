@@ -1,5 +1,6 @@
 package dev.chara.tasks.android.ui.route.home.task_details
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -147,6 +148,10 @@ fun TaskDetailsScreen(
                 }
             }
         }
+    }
+
+    BackHandler {
+        onUpClicked(modified)
     }
 }
 

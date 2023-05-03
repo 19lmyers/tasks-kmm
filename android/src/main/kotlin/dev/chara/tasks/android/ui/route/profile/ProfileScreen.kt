@@ -1,5 +1,6 @@
 package dev.chara.tasks.android.ui.route.profile
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
@@ -19,6 +20,7 @@ import androidx.compose.material.icons.filled.AlternateEmail
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Password
 import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material.icons.filled.RemoveCircle
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Button
@@ -55,7 +57,7 @@ import dev.chara.tasks.viewmodel.profile.ProfileUiState
 fun ProfileScreen(
     state: ProfileUiState,
     snackbarHostState: SnackbarHostState,
-    navigateUp: () -> Unit,
+    navigateUp: (Boolean) -> Unit,
     onChangePhotoClicked: () -> Unit,
     onChangeEmailClicked: () -> Unit,
     onChangePasswordClicked: () -> Unit,
@@ -65,14 +67,22 @@ fun ProfileScreen(
 
     val scrollState = rememberScrollState()
 
-    var displayName by
-        rememberSaveable(state.profile!!.displayName) { mutableStateOf(state.profile!!.displayName) }
+    var displayName by rememberSaveable(state.profile!!.displayName) {
+        mutableStateOf(state.profile!!.displayName)
+    }
+
+    var modified by rememberSaveable { mutableStateOf(false) }
 
     Scaffold(
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         snackbarHost = { SnackbarHost(snackbarHostState) },
         topBar = {
-            TopBar(scrollBehavior = scrollBehavior, onUpClicked = navigateUp)
+            TopBar(
+                scrollBehavior = scrollBehavior,
+                onUpClicked = {
+                    navigateUp(modified)
+                }
+            )
         },
         bottomBar = {
             BottomAppBar(modifier = Modifier.imePadding()) {
@@ -87,9 +97,9 @@ fun ProfileScreen(
                                 profilePhotoUri = state.profile!!.profilePhotoUri
                             )
                         )
+                        modified = false
                     },
-                    enabled = !state.isLoading && displayName.isNotBlank()
-                            && displayName != state.profile!!.displayName
+                    enabled = !state.isLoading && displayName.isNotBlank() && modified
                 ) {
                     Text(text = "Save")
                 }
@@ -114,7 +124,7 @@ fun ProfileScreen(
                 ) {
                     ListItem(
                         headlineContent = {
-                            Text(state.profile!!.displayName)
+                            Text(displayName)
                         },
                         supportingContent = {
                             Text(state.profile!!.email)
@@ -142,6 +152,7 @@ fun ProfileScreen(
                     singleLine = true,
                     onValueChange = {
                         displayName = it
+                        modified = true
                     },
                     label = { Text(text = "Display Name") },
                     leadingIcon = {
@@ -149,6 +160,16 @@ fun ProfileScreen(
                             Icons.Filled.Person,
                             contentDescription = "Person",
                         )
+                    },
+                    trailingIcon = {
+                        if (displayName != state.profile!!.displayName) {
+                            IconButton(onClick = {
+                                displayName = state.profile!!.displayName
+                                modified = false
+                            }) {
+                                Icon(Icons.Filled.Refresh, contentDescription = "Reset")
+                            }
+                        }
                     }
                 )
 
@@ -183,9 +204,11 @@ fun ProfileScreen(
                             .padding(horizontal = 16.dp)
                             .clip(MaterialTheme.shapes.extraLarge)
                             .clickable {
-                                onUpdateProfile(state.profile!!.copy(
-                                    profilePhotoUri = null
-                                ))
+                                onUpdateProfile(
+                                    state.profile!!.copy(
+                                        profilePhotoUri = null
+                                    )
+                                )
                             }
                     )
                 }
@@ -222,6 +245,10 @@ fun ProfileScreen(
             }
         }
     )
+
+    BackHandler {
+        navigateUp(modified)
+    }
 }
 
 

@@ -1,6 +1,5 @@
 package dev.chara.tasks.android.ui.route.home.task_details
 
-import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.CircularProgressIndicator
@@ -98,10 +97,6 @@ fun TaskDetailsRoute(
                     showDeleteDialog = true
                 }
             )
-
-            BackHandler {
-                showExitDialog = true
-            }
         }
     } else {
         Box(modifier = Modifier.fillMaxSize()) {

@@ -15,6 +15,8 @@ typealias UITask = SwiftUI.Task
 struct ProfileScreen: View {
     var state: ProfileUiState
 
+    var onUpClicked: (Bool) -> Void
+
     var onChangePhoto: (Data) -> Void
     var onUpdateUserProfile: (Profile) -> Void
 
@@ -22,7 +24,7 @@ struct ProfileScreen: View {
         if state.firstLoad {
             ProgressView()
         } else {
-            ProfileForm(state: state, onChangePhoto: onChangePhoto, onUpdateUserProfile: onUpdateUserProfile)
+            ProfileForm(state: state, onUpClicked: onUpClicked, onChangePhoto: onChangePhoto, onUpdateUserProfile: onUpdateUserProfile)
         }
     }
 }
@@ -40,6 +42,7 @@ struct ProfileScreen_Previews: PreviewProvider {
                     profilePhotoUri: nil
                 )
             ),
+            onUpClicked: { _ in },
             onChangePhoto: { _ in },
             onUpdateUserProfile: { _ in }
         )
@@ -51,6 +54,10 @@ struct ProfileForm: View {
 
     @State var displayName: String = ""
     @State var selectedPhoto: PhotosPickerItem? = nil
+
+    @State var modified: Bool = false
+
+    var onUpClicked: (Bool) -> Void
 
     var onChangePhoto: (Data) -> Void
 
@@ -155,13 +162,27 @@ struct ProfileForm: View {
                     onUpdateUserProfile(state.profile!.edit()
                         .displayName(value: displayName)
                         .build())
+                    modified = false
                 }) {
                     Text("Save")
                 }
-                .disabled(displayName.isEmpty || displayName == state.profile!.displayName)
+                .disabled(displayName.isEmpty || !modified)
             }
+
+            ToolbarItem(placement: .cancellationAction) {
+                Button(action: {
+                    onUpClicked(modified)
+                }) {
+                    Text("Cancel")
+                }
+            }
+
         }.onAppear {
             displayName = state.profile!.displayName
+            modified = false
+        }
+        .onChange(of: displayName) { displayName in
+            modified = displayName != state.profile!.displayName
         }
         .onChange(of: selectedPhoto) { newPhoto in
             UITask {

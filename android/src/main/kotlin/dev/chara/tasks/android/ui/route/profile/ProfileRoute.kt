@@ -12,8 +12,11 @@ import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -50,10 +53,28 @@ fun ProfileRoute(
     }
 
     if (!state.value.firstLoad) {
+        var showExitDialog by remember { mutableStateOf(false) }
+
+        if (showExitDialog) {
+            ConfirmExitDialog(
+                onDismiss = { showExitDialog = false },
+                onConfirm = {
+                    showExitDialog = false
+                    navigateUp()
+                }
+            )
+        }
+
         ProfileScreen(
             state = state.value,
             snackbarHostState = snackbarHostState,
-            navigateUp = navigateUp,
+            navigateUp = { modified ->
+                if (modified) {
+                    showExitDialog = true
+                } else {
+                    navigateUp()
+                }
+            },
             onChangePhotoClicked = {
                 selectProfilePhoto.launch(
                     PickVisualMediaRequest(
