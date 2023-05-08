@@ -1,5 +1,5 @@
 [versions]
-android = "8.1.0-beta01"
+android = "8.1.0-beta02"
 kotlin = "1.8.21"
 
 coroutines = "1.6.4"

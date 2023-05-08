@@ -222,7 +222,7 @@ struct TaskDetailsScreen: View {
                     Button(action: {
                         onUpClicked(modified)
                     }) {
-                        Text("Cancel")
+                        Text("Close")
                     }
                 }
 
