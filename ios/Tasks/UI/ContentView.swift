@@ -10,6 +10,8 @@ import MultiPlatformLibrary
 import SwiftUI
 
 struct ContentView: View {
+    @EnvironmentObject var delegate: AppDelegate
+
     @StateObject var viewModel = BaseViewModel()
 
     @State var showAuthenticationFlow = false
@@ -17,22 +19,36 @@ struct ContentView: View {
     var body: some View {
         let uiState = viewModel.state(\.uiState, equals: { $0 == $1 }, mapper: { $0 })
 
-        if showAuthenticationFlow {
+        switch delegate.launchAction {
+        case let .reset(resetToken):
             NavigationStack {
-                WelcomeScreen(
-                    navigateToHome: {
-                        showAuthenticationFlow = false
-                    }
-                )
+                Text(resetToken)
+                /* ResetPasswordRoute(
+                     navigateToHome: {
+                         .launchAction = .none
+                         showAuthenticationFlow = false
+                     }
+                 ) */
             }
             .preferredColorScheme(uiState.appTheme.colorScheme)
-        } else {
-            HomeRoute(
-                navigateToWelcome: {
-                    showAuthenticationFlow = true
+        default:
+            if showAuthenticationFlow {
+                NavigationStack {
+                    WelcomeScreen(
+                        navigateToHome: {
+                            showAuthenticationFlow = false
+                        }
+                    )
                 }
-            )
-            .preferredColorScheme(uiState.appTheme.colorScheme)
+                .preferredColorScheme(uiState.appTheme.colorScheme)
+            } else {
+                HomeRoute(
+                    navigateToWelcome: {
+                        showAuthenticationFlow = true
+                    }
+                )
+                .preferredColorScheme(uiState.appTheme.colorScheme)
+            }
         }
     }
 }
