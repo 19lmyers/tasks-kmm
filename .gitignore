@@ -10,5 +10,6 @@ local.properties
 xcuserdata
 
 *.jks
+*.keystore
 google-services.json
 TODO.md

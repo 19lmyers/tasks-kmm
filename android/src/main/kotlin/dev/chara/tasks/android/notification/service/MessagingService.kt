@@ -59,6 +59,8 @@ class MessagingService : FirebaseMessagingService(), LifecycleOwner {
     }
 
     override fun onMessageReceived(message: RemoteMessage) {
+        super.onMessageReceived(message)
+
         Napier.w(message.toString(), tag = "MessagingService")
 
         val messageType = message.data[DATA_MESSAGE_TYPE]

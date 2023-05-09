@@ -4,6 +4,8 @@
 <dict>
 	<key>ENDPOINT_URL</key>
 	<string>${ENDPOINT_URL}</string>
+	<key>ITSAppUsesNonExemptEncryption</key>
+	<false/>
 	<key>UIApplicationSceneManifest</key>
 	<dict>
 		<key>UIApplicationSupportsMultipleScenes</key>

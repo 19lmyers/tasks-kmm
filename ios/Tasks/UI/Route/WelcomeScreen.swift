@@ -37,6 +37,7 @@ struct WelcomeScreen: View {
             }
             .background(.bar)
         }
+        .navigationTitle("Welcome")
     }
 }
 

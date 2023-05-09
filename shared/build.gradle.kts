@@ -144,6 +144,7 @@ kotlin {
 
 // For whatever reason, these must be here and not in androidMain
 dependencies {
+    implementation(platform(libs.firebase.bom))
     coreLibraryDesugaring(libs.desugar.jdk.libs)
 }
 

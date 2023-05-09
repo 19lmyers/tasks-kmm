@@ -113,6 +113,10 @@ PODS:
     - PromisesObjC (= 2.2.0)
 
 DEPENDENCIES:
+  - FirebaseAnalytics
+  - FirebaseCore
+  - FirebaseCrashlytics
+  - FirebaseMessaging
   - MultiPlatformLibrary (from `../shared`)
 
 SPEC REPOS:
@@ -153,6 +157,6 @@ SPEC CHECKSUMS:
   PromisesObjC: 09985d6d70fbe7878040aa746d78236e6946d2ef
   PromisesSwift: cf9eb58666a43bbe007302226e510b16c1e10959
 
-PODFILE CHECKSUM: d227059ce2dd6771c5f04eb4828c0548da68742a
+PODFILE CHECKSUM: 46155df9310ec8226fa40279dd45e336134c994d
 
 COCOAPODS: 1.12.1
