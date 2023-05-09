@@ -30,21 +30,16 @@ func initNotificationCategories() {
 }
 
 extension AppDelegate: UNUserNotificationCenterDelegate {
-    func userNotificationCenter(_: UNUserNotificationCenter,
-                                willPresent _: UNNotification) async
-        -> UNNotificationPresentationOptions
-    {
+    func userNotificationCenter(_: UNUserNotificationCenter, willPresent _: UNNotification) async -> UNNotificationPresentationOptions {
         [[.banner, .list, .sound]]
     }
 
-    func userNotificationCenter(_: UNUserNotificationCenter,
-                                didReceive response: UNNotificationResponse) async
-    {
+    func userNotificationCenter(_: UNUserNotificationCenter, didReceive response: UNNotificationResponse) async {
         let userInfo = response.notification.request.content.userInfo
 
         if userInfo[DATA_MESSAGE_TYPE] as? String == MESSAGE_TYPE_REMINDER {
             guard let taskId = userInfo[DATA_TASK_ID] as? String else { return }
-            launchAction = .task(taskId, response.actionIdentifier == COMPLETE_ACTION_IDENTIFIER)
+            AppState.shared.launchAction = .task(taskId, response.actionIdentifier == COMPLETE_ACTION_IDENTIFIER)
         }
     }
 }

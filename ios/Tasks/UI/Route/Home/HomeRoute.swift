@@ -12,11 +12,7 @@ import SwiftUI
 struct HomeRoute: View {
     @Environment(\.horizontalSizeClass) var horizontalSizeClass
 
-    @EnvironmentObject var delegate: AppDelegate
-
     @StateObject var viewModel = HomeViewModel()
-
-    @State private var columnVisibility = NavigationSplitViewVisibility.automatic
 
     var navigateToWelcome: () -> Void
 
@@ -31,7 +27,7 @@ struct HomeRoute: View {
                 navigateToWelcome()
             }
         } else {
-            NavigationSplitView(columnVisibility: $columnVisibility) {
+            NavigationSplitView {
                 HomeScreen(
                     state: uiState,
                     onCreateListPressed: {
@@ -122,12 +118,12 @@ struct HomeRoute: View {
                         .navigationTitle(Text(""))
                 }
             }
-            .onChange(of: delegate.launchAction) { launchAction in
+            .onChange(of: AppState.shared.launchAction) { launchAction in
                 switch launchAction {
                 case let .task(taskId, markAsComplete):
                     if markAsComplete {
                         viewModel.markTaskAsCompleted(taskId: taskId)
-                        delegate.launchAction = .none
+                        AppState.shared.launchAction = .none
                     }
                 default: break
                 }

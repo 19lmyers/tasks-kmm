@@ -10,7 +10,7 @@ import MultiPlatformLibrary
 import SwiftUI
 
 struct ContentView: View {
-    @EnvironmentObject var delegate: AppDelegate
+    @StateObject var appState = AppState.shared
 
     @StateObject var viewModel = BaseViewModel()
 
@@ -19,14 +19,13 @@ struct ContentView: View {
     var body: some View {
         let uiState = viewModel.state(\.uiState, equals: { $0 == $1 }, mapper: { $0 })
 
-        switch delegate.launchAction {
+        switch appState.launchAction {
         case let .reset(resetToken):
             NavigationStack {
                 Text(resetToken)
                 /* ResetPasswordRoute(
-                     navigateToHome: {
-                         .launchAction = .none
-                         showAuthenticationFlow = false
+                     navigateUp: {
+                         AppState.shared.launchAction = .none
                      }
                  ) */
             }
