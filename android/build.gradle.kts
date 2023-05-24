@@ -28,8 +28,8 @@ android {
         applicationId = "dev.chara.tasks.android"
         minSdk = 24
         targetSdk = 33
-        versionCode = 9
-        versionName = "0.6.1"
+        versionCode = 10
+        versionName = "0.6.2"
     }
     compileOptions {
         isCoreLibraryDesugaringEnabled = true
@@ -100,6 +100,7 @@ dependencies {
     implementation(libs.bundles.compose.material3)
 
     implementation(libs.androidx.glance)
+    implementation(libs.androidx.glance.material3)
 
     implementation(libs.androidx.activity)
     implementation(libs.androidx.lifecycle.runtime)

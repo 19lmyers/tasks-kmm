@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
 
-    <style name="Theme.App" parent="Theme.MaterialComponents.Light.NoActionBar">
+    <style name="Theme.App" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="android:colorPrimary">@color/purple_40</item>
         <item name="android:colorSecondary" tools:targetApi="n_mr1">@color/purple_grey_40</item>
         <item name="android:colorAccent">@color/pink_40</item>

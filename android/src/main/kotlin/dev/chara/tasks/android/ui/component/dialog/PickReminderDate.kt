@@ -21,6 +21,7 @@ import androidx.compose.material3.ListItem
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ProvideTextStyle
+import androidx.compose.material3.SelectableDates
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -55,7 +56,19 @@ fun PickReminderDateDialog(onDismiss: () -> Unit, onConfirm: (LocalDateTime) -> 
     val datePickerState = rememberDatePickerState(
         initialSelectedDateMillis = localDateTime.date
             .atStartOfDayIn(TimeZone.UTC)
-            .toEpochMilliseconds()
+            .toEpochMilliseconds(),
+
+        selectableDates = object : SelectableDates {
+            override fun isSelectableDate(utcTimeMillis: Long): Boolean {
+                return Instant.fromEpochMilliseconds(utcTimeMillis)
+                    .toLocalDateTime(TimeZone.UTC).date >= Clock.System.now()
+                    .toLocalDateTime(TimeZone.currentSystemDefault()).date
+            }
+
+            override fun isSelectableYear(year: Int): Boolean {
+                return year >= Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).year
+            }
+        }
     )
 
     var selectedTime by remember { mutableStateOf<Pair<Int, Int>?>(null) }
@@ -102,11 +115,7 @@ fun PickReminderDateDialog(onDismiss: () -> Unit, onConfirm: (LocalDateTime) -> 
             }
         }
     ) {
-        DatePicker(state = datePickerState, dateValidator = { epochMillis ->
-            Instant.fromEpochMilliseconds(epochMillis)
-                .toLocalDateTime(TimeZone.UTC).date >= Clock.System.now()
-                .toLocalDateTime(TimeZone.currentSystemDefault()).date
-        })
+        DatePicker(state = datePickerState)
 
         Divider()
 

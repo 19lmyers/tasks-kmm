@@ -3,6 +3,7 @@ package dev.chara.tasks.android.ui.component.dialog
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.SelectableDates
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberDatePickerState
@@ -16,7 +17,19 @@ import kotlinx.datetime.toLocalDateTime
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PickDueDateDialog(onDismiss: () -> Unit, onConfirm: (LocalDateTime) -> Unit) {
-    val datePickerState = rememberDatePickerState()
+    val datePickerState = rememberDatePickerState(
+        selectableDates = object : SelectableDates {
+            override fun isSelectableDate(utcTimeMillis: Long): Boolean {
+                return Instant.fromEpochMilliseconds(utcTimeMillis)
+                    .toLocalDateTime(TimeZone.UTC).date > Clock.System.now()
+                    .toLocalDateTime(TimeZone.currentSystemDefault()).date
+            }
+
+            override fun isSelectableYear(year: Int): Boolean {
+                return year >= Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).year
+            }
+        }
+    )
 
     DatePickerDialog(
         onDismissRequest = onDismiss,
@@ -41,10 +54,6 @@ fun PickDueDateDialog(onDismiss: () -> Unit, onConfirm: (LocalDateTime) -> Unit)
             }
         }
     ) {
-        DatePicker(state = datePickerState, dateValidator = { epochMillis ->
-            Instant.fromEpochMilliseconds(epochMillis)
-                .toLocalDateTime(TimeZone.UTC).date > Clock.System.now()
-                .toLocalDateTime(TimeZone.currentSystemDefault()).date
-        })
+        DatePicker(state = datePickerState)
     }
 }

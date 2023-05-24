@@ -1,16 +1,17 @@
 [versions]
-android = "8.1.0-beta02"
+android = "8.1.0-beta03"
 kotlin = "1.8.21"
 
-coroutines = "1.6.4"
+coroutines = "1.7.1"
+glance = "1.0.0-beta01"
 koin = "3.4.0"
 kswift = "0.6.1"
 ktor = "2.3.0"
 mvvm = "0.16.1"
-result = "1.1.17"
+result = "1.1.18"
 sqldelight = "2.0.0-alpha05"
 
-material3 = "1.1.0-rc01"
+material3 = "1.2.0-alpha02"
 
 [plugins]
 
@@ -37,16 +38,20 @@ versions = { id = "com.github.ben-manes.versions", version = "0.46.0" }
 [libraries]
 accompanist-systemuicontroller = { module = "com.google.accompanist:accompanist-systemuicontroller", version = "0.30.1" }
 
-androidx-activity = { module = "androidx.activity:activity-compose", version = "1.7.1" }
-androidx-glance = { module = "androidx.glance:glance-appwidget", version = "1.0.0-alpha05" }
+androidx-activity = { module = "androidx.activity:activity-compose", version = "1.7.2" }
+
+androidx-glance = { module = "androidx.glance:glance-appwidget", version.ref = "glance" }
+androidx-glance-material3 = { module = "androidx.glance:glance-material3", version.ref = "glance" }
+
 androidx-lifecycle-viewmodel = { module = "androidx.lifecycle:lifecycle-viewmodel-ktx", version = "2.6.1" }
 androidx-lifecycle-runtime = { module = "androidx.lifecycle:lifecycle-runtime-compose", version = "2.6.1" }
 androidx-lifecycle-service = { module = "androidx.lifecycle:lifecycle-service", version = "2.6.1" }
+
 androidx-work = { module = "androidx.work:work-runtime-ktx", version = "2.8.1" }
 
-coil-compose = { module = "io.coil-kt:coil-compose-base", version = "2.3.0" }
+coil-compose = { module = "io.coil-kt:coil-compose-base", version = "2.4.0" }
 
-compose-bom = { module = "androidx.compose:compose-bom", version = "2023.05.00" }
+compose-bom = { module = "androidx.compose:compose-bom", version = "2023.05.01" }
 
 compose-ui = { module = "androidx.compose.ui:ui" }
 compose-ui-tooling-preview = { module = "androidx.compose.ui:ui-tooling-preview" }
@@ -83,7 +88,7 @@ kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-c
 kotlinx-coroutines-android = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version.ref = "coroutines" }
 
 kotlinx-datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version = "0.4.0" }
-kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version = "1.5.0" }
+kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version = "1.5.1" }
 
 ktor-client-core = { module = "io.ktor:ktor-client-core", version.ref = "ktor" }
 
@@ -102,13 +107,12 @@ moko-mvvm-flow = { module = "dev.icerock.moko:mvvm-flow", version.ref = "mvvm" }
 
 napier = { module = "io.github.aakira:napier", version = "2.6.1" }
 
-navigation-reimagined = { module = "dev.olshevski.navigation:reimagined", version = "1.4.0" }
+navigation-reimagined = { module = "dev.olshevski.navigation:reimagined", version = "1.5.0-alpha01" }
 
 nserrorkt = { module = "com.rickclephas.kmp:nserror-kt", version = "0.1.0" }
 
 result = { module = "com.michael-bull.kotlin-result:kotlin-result", version.ref = "result" }
 result-coroutines = { module = "com.michael-bull.kotlin-result:kotlin-result-coroutines", version.ref = "result" }
-
 
 okio = { module = "com.squareup.okio:okio", version = "3.3.0" }
 
@@ -118,7 +122,7 @@ sqldelight-coroutines-extensions = { module = "app.cash.sqldelight:coroutines-ex
 sqldelight-android-driver = { module = "app.cash.sqldelight:android-driver", version.ref = "sqldelight" }
 sqldelight-native-driver = { module = "app.cash.sqldelight:native-driver", version.ref = "sqldelight" }
 
-sqlite-android = { module = "com.github.requery:sqlite-android", version = "3.41.1" }
+sqlite-android = { module = "com.github.requery:sqlite-android", version = "3.42.0" }
 
 uuid = { module = "com.benasher44:uuid", version = "0.7.0" }
 
