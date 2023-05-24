@@ -4,7 +4,9 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.ime
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.requiredSize
 import androidx.compose.foundation.lazy.LazyRow
@@ -123,7 +125,10 @@ fun ModifyListSheet(
     }
 
     ColorTheme(color = listColor) {
-        ModalBottomSheet(onDismissRequest = onDismiss) {
+        ModalBottomSheet(
+            onDismissRequest = onDismiss,
+            windowInsets = WindowInsets.ime
+        ) {
             val keyboardController = LocalSoftwareKeyboardController.current
             val focusRequester = remember { FocusRequester() }
 
@@ -255,7 +260,8 @@ fun ModifyListSheet(
 
                 FilledTonalButton(
                     modifier = Modifier
-                        .padding(16.dp, 0.dp)
+                        .padding(horizontal = 16.dp)
+                        .padding(bottom = 16.dp)
                         .align(Alignment.End),
                     onClick = {
                         keyboardController?.hide()

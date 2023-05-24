@@ -1,7 +1,9 @@
 package dev.chara.tasks.android.ui.component.sheet
 
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.ime
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -105,7 +107,8 @@ fun CreateTaskSheet(
 
         ModalBottomSheet(
             onDismissRequest = onDismiss,
-            sheetState = sheetState
+            sheetState = sheetState,
+            windowInsets = WindowInsets.ime
         ) {
             Text(
                 "New task",
@@ -238,7 +241,8 @@ fun CreateTaskSheet(
 
             FilledTonalButton(
                 modifier = Modifier
-                    .padding(16.dp, 0.dp)
+                    .padding(horizontal = 16.dp)
+                    .padding(bottom = 16.dp)
                     .align(Alignment.End),
                 onClick = {
                     keyboardController?.hide()
