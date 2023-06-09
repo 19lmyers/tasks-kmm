@@ -5,6 +5,7 @@ import app.cash.sqldelight.EnumColumnAdapter
 import app.cash.sqldelight.coroutines.asFlow
 import app.cash.sqldelight.coroutines.mapToList
 import app.cash.sqldelight.coroutines.mapToOneOrNull
+import app.cash.sqldelight.db.QueryResult
 import app.cash.sqldelight.db.SqlDriver
 import dev.chara.tasks.data.cache.sql.CacheDatabase
 import dev.chara.tasks.model.Task
@@ -240,7 +241,8 @@ class CacheDataSource(driverFactory: DriverFactory) {
             sql = "PRAGMA user_version;",
             mapper = {
                 it.next()
-                it.getLong(0)
+                val value = it.getLong(0)
+                QueryResult.Value(value)
             },
             parameters = 0,
             binders = null

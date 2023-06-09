@@ -1,15 +1,15 @@
 [versions]
-android = "8.1.0-beta03"
+android = "8.1.0-beta05"
 kotlin = "1.8.21"
 
 coroutines = "1.7.1"
 glance = "1.0.0-beta01"
-koin = "3.4.0"
+koin = "3.4.2"
 kswift = "0.6.1"
-ktor = "2.3.0"
+ktor = "2.3.1"
 mvvm = "0.16.1"
 result = "1.1.18"
-sqldelight = "2.0.0-alpha05"
+sqldelight = "2.0.0-rc01"
 
 material3 = "1.2.0-alpha02"
 
@@ -33,7 +33,7 @@ moko-kswift = { id = "dev.icerock.moko.kswift", version.ref = "kswift" }
 
 sqldelight = { id = "app.cash.sqldelight", version.ref = "sqldelight" }
 
-versions = { id = "com.github.ben-manes.versions", version = "0.46.0" }
+versions = { id = "com.github.ben-manes.versions", version = "0.47.0" }
 
 [libraries]
 accompanist-systemuicontroller = { module = "com.google.accompanist:accompanist-systemuicontroller", version = "0.30.1" }
@@ -51,7 +51,7 @@ androidx-work = { module = "androidx.work:work-runtime-ktx", version = "2.8.1" }
 
 coil-compose = { module = "io.coil-kt:coil-compose-base", version = "2.4.0" }
 
-compose-bom = { module = "androidx.compose:compose-bom", version = "2023.05.01" }
+compose-bom = { module = "androidx.compose:compose-bom", version = "2023.06.00" }
 
 compose-ui = { module = "androidx.compose.ui:ui" }
 compose-ui-tooling-preview = { module = "androidx.compose.ui:ui-tooling-preview" }
@@ -72,7 +72,7 @@ datastore = { module = "androidx.datastore:datastore-preferences-core", version 
 
 desugar_jdk_libs = { module = "com.android.tools:desugar_jdk_libs", version = "2.0.3" }
 
-firebase-bom = { module = "com.google.firebase:firebase-bom", version = "32.0.0" }
+firebase-bom = { module = "com.google.firebase:firebase-bom", version = "32.1.0" }
 
 firebase-analytics = { module = "com.google.firebase:firebase-analytics-ktx" }
 firebase-messaging = { module = "com.google.firebase:firebase-messaging-ktx" }
@@ -81,7 +81,7 @@ firebase-crashlytics = { module = "com.google.firebase:firebase-crashlytics-ktx"
 koin-core = { module = "io.insert-koin:koin-core", version.ref = "koin" }
 
 koin-android = { module = "io.insert-koin:koin-android", version.ref = "koin" }
-koin-androidx-compose = { module = "io.insert-koin:koin-androidx-compose", version = "3.4.4" }
+koin-androidx-compose = { module = "io.insert-koin:koin-androidx-compose", version = "3.4.5" }
 
 kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "coroutines" }
 
@@ -124,7 +124,7 @@ sqldelight-native-driver = { module = "app.cash.sqldelight:native-driver", versi
 
 sqlite-android = { module = "com.github.requery:sqlite-android", version = "3.42.0" }
 
-uuid = { module = "com.benasher44:uuid", version = "0.7.0" }
+uuid = { module = "com.benasher44:uuid", version = "0.7.1" }
 
 [bundles]
 firebase = ["firebase-analytics", "firebase-messaging", "firebase-crashlytics"]
