@@ -22,12 +22,12 @@ struct ContentView: View {
         switch appState.launchAction {
         case let .reset(resetToken):
             NavigationStack {
-                Text(resetToken)
-                /* ResetPasswordRoute(
-                     navigateUp: {
-                         AppState.shared.launchAction = .none
-                     }
-                 ) */
+                ResetPasswordRoute(
+                    resetToken: resetToken,
+                    navigateUp: {
+                        AppState.shared.launchAction = .none
+                    }
+                )
             }
             .preferredColorScheme(uiState.appTheme.colorScheme)
         default:

@@ -1,6 +1,9 @@
 [versions]
 android = "8.1.0-beta05"
-kotlin = "1.8.21"
+kotlin = "1.8.22"
+
+# TODO https://youtrack.jetbrains.com/issue/KTOR-5728
+# Compiler bug blocking iOS releases
 
 coroutines = "1.7.1"
 glance = "1.0.0-beta01"

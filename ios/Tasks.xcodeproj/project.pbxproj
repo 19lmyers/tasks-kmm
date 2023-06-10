@@ -52,6 +52,8 @@
 		DD9E908929FE109700D6DD11 /* ModelExt.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD9E905C29FE109700D6DD11 /* ModelExt.swift */; };
 		DD9E908A29FE109700D6DD11 /* App.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD9E905D29FE109700D6DD11 /* App.swift */; };
 		DD9E908D29FE109700D6DD11 /* Configuration.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD9E906029FE109700D6DD11 /* Configuration.swift */; };
+		DDEBDB182A33ED9400FF9C20 /* ResetPasswordRoute.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDEBDB172A33ED9400FF9C20 /* ResetPasswordRoute.swift */; };
+		DDEBDB1A2A33ED9D00FF9C20 /* ResetPasswordScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDEBDB192A33ED9D00FF9C20 /* ResetPasswordScreen.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -105,6 +107,8 @@
 		DD9E905D29FE109700D6DD11 /* App.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = App.swift; sourceTree = "<group>"; };
 		DD9E906029FE109700D6DD11 /* Configuration.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Configuration.swift; sourceTree = "<group>"; };
 		DD9E909029FE134100D6DD11 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		DDEBDB172A33ED9400FF9C20 /* ResetPasswordRoute.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResetPasswordRoute.swift; sourceTree = "<group>"; };
+		DDEBDB192A33ED9D00FF9C20 /* ResetPasswordScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResetPasswordScreen.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -236,6 +240,7 @@
 		DD9E903229FE109700D6DD11 /* Auth */ = {
 			isa = PBXGroup;
 			children = (
+				DDEBDB162A33ED8700FF9C20 /* Reset Password */,
 				DD9E903329FE109700D6DD11 /* Sign Up */,
 				DD9E903629FE109700D6DD11 /* Forgot Password */,
 				DD9E903929FE109700D6DD11 /* Sign In */,
@@ -349,6 +354,15 @@
 				DD9E905C29FE109700D6DD11 /* ModelExt.swift */,
 			);
 			path = Model;
+			sourceTree = "<group>";
+		};
+		DDEBDB162A33ED8700FF9C20 /* Reset Password */ = {
+			isa = PBXGroup;
+			children = (
+				DDEBDB172A33ED9400FF9C20 /* ResetPasswordRoute.swift */,
+				DDEBDB192A33ED9D00FF9C20 /* ResetPasswordScreen.swift */,
+			);
+			path = "Reset Password";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -496,6 +510,7 @@
 				DD6B61642A098F96001910C6 /* Messaging.swift in Sources */,
 				DD9E907329FE109700D6DD11 /* ProfileRoute.swift in Sources */,
 				DD9E907529FE109700D6DD11 /* ChangePasswordScreen.swift in Sources */,
+				DDEBDB182A33ED9400FF9C20 /* ResetPasswordRoute.swift in Sources */,
 				DD9E906B29FE109700D6DD11 /* SignUpScreen.swift in Sources */,
 				DD9E907129FE109700D6DD11 /* WelcomeScreen.swift in Sources */,
 				DD9E906529FE109700D6DD11 /* ListDetailsRoute.swift in Sources */,
@@ -517,6 +532,7 @@
 				DD9E906C29FE109700D6DD11 /* SignUpRoute.swift in Sources */,
 				DD9E908D29FE109700D6DD11 /* Configuration.swift in Sources */,
 				DD9E908329FE109700D6DD11 /* ViewModelState.swift in Sources */,
+				DDEBDB1A2A33ED9D00FF9C20 /* ResetPasswordScreen.swift in Sources */,
 				DD9E907229FE109700D6DD11 /* ProfileScreen.swift in Sources */,
 				DD9E906F29FE109700D6DD11 /* SignInScreen.swift in Sources */,
 				DD9E906729FE109700D6DD11 /* TaskDetailsScreen.swift in Sources */,
@@ -665,7 +681,7 @@
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
 				CODE_SIGN_ENTITLEMENTS = Tasks/Tasks.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2;
+				CURRENT_PROJECT_VERSION = 3;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_ASSET_PATHS = "\"Tasks/Preview Content\"";
 				DEVELOPMENT_TEAM = N2WQ73MLWJ;
@@ -682,7 +698,7 @@
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited)";
-				MARKETING_VERSION = 0.6.1;
+				MARKETING_VERSION = 0.6.3;
 				PRODUCT_BUNDLE_IDENTIFIER = dev.chara.tasks.ios;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
@@ -704,7 +720,7 @@
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
 				CODE_SIGN_ENTITLEMENTS = Tasks/Tasks.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2;
+				CURRENT_PROJECT_VERSION = 3;
 				DEVELOPMENT_ASSET_PATHS = "\"Tasks/Preview Content\"";
 				DEVELOPMENT_TEAM = N2WQ73MLWJ;
 				ENABLE_PREVIEWS = YES;
@@ -720,7 +736,7 @@
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited)";
-				MARKETING_VERSION = 0.6.1;
+				MARKETING_VERSION = 0.6.3;
 				PRODUCT_BUNDLE_IDENTIFIER = dev.chara.tasks.ios;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
