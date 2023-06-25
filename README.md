@@ -2,6 +2,9 @@
 
 A functional and colorful task / to-do list app built with Kotlin Multiplatform Mobile (KMM)
 
+Looking for the [web app](https://github.com/19lmyers/tasks.chara.dev)
+or [server backend](https://github.com/19lmyers/tasks-backend)?
+
 ## Objectives
 
 My main goal with this project was to teach myself Jetpack Compose.
@@ -67,7 +70,8 @@ There are a few things I have yet to implement, mainly:
 ## Backend
 
 The backend server was concurrently designed with the app, using many of the same libraries (mainly
-SQLDelight and Ktor) as the client code. [You can view the code here.](https://github.com/19lmyers/tasks-backend)
+SQLDelight and Ktor) as the client
+code. [You can view the code here.](https://github.com/19lmyers/tasks-backend)
 
 ## Evolution
 
