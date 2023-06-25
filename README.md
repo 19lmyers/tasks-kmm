@@ -2,8 +2,8 @@
 
 A functional and colorful task / to-do list app built with Kotlin Multiplatform Mobile (KMM)
 
-Looking for the [web app](https://github.com/19lmyers/tasks.chara.dev)
-or [server backend](https://github.com/19lmyers/tasks-backend)?
+_Looking for the [web app](https://github.com/19lmyers/tasks.chara.dev)
+or [server backend](https://github.com/19lmyers/tasks-backend)?_
 
 ## Objectives
 
