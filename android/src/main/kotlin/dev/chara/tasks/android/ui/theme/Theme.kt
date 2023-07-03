@@ -27,10 +27,6 @@ val LocalThemeVariant = staticCompositionLocalOf {
     ThemeVariant.TONAL_SPOT
 }
 
-val LocalThemeColor = staticCompositionLocalOf {
-    Color.Unspecified
-}
-
 @Composable
 fun AppTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
@@ -58,7 +54,6 @@ fun AppTheme(
     CompositionLocalProvider(
         LocalDarkTheme provides darkTheme,
         LocalThemeVariant provides variant,
-        LocalThemeColor provides colorScheme.primaryContainer
     ) {
         MaterialTheme(
             colorScheme = colorScheme,

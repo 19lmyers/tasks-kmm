@@ -1,6 +1,7 @@
 package dev.chara.tasks.android.ui.component.sheet
 
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -46,6 +47,7 @@ import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
@@ -53,10 +55,14 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import dev.chara.tasks.android.model.hct
 import dev.chara.tasks.android.model.vector
 import dev.chara.tasks.android.ui.component.util.MaterialDialog
 import dev.chara.tasks.android.ui.theme.ColorTheme
-import dev.chara.tasks.android.ui.theme.LocalThemeColor
+import dev.chara.tasks.android.ui.theme.LocalDarkTheme
+import dev.chara.tasks.android.ui.theme.LocalThemeVariant
+import dev.chara.tasks.android.ui.theme.dynamic.dynamicColorScheme
+import dev.chara.tasks.android.ui.theme.dynamic.scheme
 import dev.chara.tasks.model.TaskList
 import kotlinx.datetime.Clock
 
@@ -183,7 +189,7 @@ fun ModifyListSheet(
                 ) {
                     item {
                         ColorSwatch(
-                            color = LocalThemeColor.current,
+                            color = null,
                             outline = outlineColor,
                             selection = selectionColor,
                             selected = listColor == null
@@ -295,18 +301,37 @@ fun ModifyListSheet(
 
 @Composable
 fun ColorSwatch(
-    color: Color,
+    color: Color?,
     outline: Color,
     selection: Color,
     selected: Boolean,
     onSelected: () -> Unit,
 ) {
+    val modifier = if (color != null) {
+        Modifier.background(color, MaterialTheme.shapes.medium)
+    } else {
+        val darkTheme = LocalDarkTheme.current
+        val variant = LocalThemeVariant.current
+
+        Modifier.background(
+            Brush.sweepGradient(
+                TaskList.Color.values().map { listColor ->
+                    val scheme = scheme(listColor.hct, darkTheme, variant)
+                    val dynamicColors = dynamicColorScheme(darkTheme, scheme)
+                    dynamicColors.primaryContainer
+                }
+            ),
+            MaterialTheme.shapes.medium
+        )
+    }
+
     Surface(
         modifier = Modifier
             .requiredSize(72.dp)
-            .padding(8.dp),
-        color = color,
+            .padding(8.dp)
+            .then(modifier),
         shape = MaterialTheme.shapes.medium,
+        color = Color.Transparent,
         border = BorderStroke(
             2.dp, if (selected) {
                 selection
