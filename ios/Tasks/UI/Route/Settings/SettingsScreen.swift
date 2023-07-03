@@ -37,7 +37,7 @@ struct SettingsScreen_Previews: PreviewProvider {
                 isLoading: false,
                 firstLoad: false,
                 appTheme: .systemDefault,
-                useVibrantColors: false,
+                appThemeVariant: ThemeVariant.tonalSpot,
                 taskLists: [
                     TaskListKt.doNew(id: "", title: "My list"),
                 ],
