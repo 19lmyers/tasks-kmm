@@ -28,6 +28,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.ListItem
+import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
@@ -120,9 +121,9 @@ fun ProfileScreen(
                 Surface(
                     modifier = Modifier.padding(16.dp),
                     shape = MaterialTheme.shapes.extraLarge,
-                    tonalElevation = 1.dp
                 ) {
                     ListItem(
+                        colors = ListItemDefaults.colors(containerColor = MaterialTheme.colorScheme.surfaceContainerHigh),
                         headlineContent = {
                             Text(displayName)
                         },

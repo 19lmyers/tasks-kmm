@@ -44,6 +44,7 @@ import dev.chara.tasks.android.model.vector
 import dev.chara.tasks.model.TaskList
 import dev.chara.tasks.model.board.BoardSection
 import dev.chara.tasks.model.preference.Theme
+import dev.chara.tasks.model.preference.ThemeVariant
 import dev.chara.tasks.viewmodel.settings.SettingsUiState
 import kotlinx.datetime.Clock
 
@@ -54,7 +55,7 @@ fun SettingsScreen(
     snackbarHostState: SnackbarHostState,
     onUpClicked: () -> Unit,
     onSetTheme: (Theme) -> Unit,
-    onSetVibrantColors: (Boolean) -> Unit,
+    onSetThemeVariant: (ThemeVariant) -> Unit,
     onUpdateBoardSection: (BoardSection.Type, Boolean) -> Unit,
     onUpdateList: (TaskList) -> Unit
 ) {
@@ -83,11 +84,11 @@ fun SettingsScreen(
                     .verticalScroll(scrollState)
                     .padding(paddingBottom),
                 appTheme = state.appTheme,
-                useVibrantColors = state.useVibrantColors,
+                appThemeVariant = state.appThemeVariant,
                 enabledBoardSections = state.enabledBoardSections,
                 taskLists = state.taskLists,
                 onSetTheme = onSetTheme,
-                onSetVibrantColors = onSetVibrantColors,
+                onSetThemeVariant = onSetThemeVariant,
                 onUpdateBoardSection = onUpdateBoardSection,
                 onUpdateList = onUpdateList
             )
@@ -129,11 +130,11 @@ private fun Preview_TopBar() {
 private fun BoardSettings(
     modifier: Modifier = Modifier,
     appTheme: Theme,
-    useVibrantColors: Boolean,
+    appThemeVariant: ThemeVariant,
     enabledBoardSections: List<BoardSection.Type>,
     taskLists: List<TaskList>,
     onSetTheme: (Theme) -> Unit,
-    onSetVibrantColors: (Boolean) -> Unit,
+    onSetThemeVariant: (ThemeVariant) -> Unit,
     onUpdateBoardSection: (BoardSection.Type, Boolean) -> Unit,
     onUpdateList: (TaskList) -> Unit
 ) {
@@ -191,18 +192,48 @@ private fun BoardSettings(
             }
         )
 
+        var showThemeVariantDropdown by remember { mutableStateOf(false) }
+
+
         ListItem(
-            modifier = Modifier.clickable {
-                onSetVibrantColors(!useVibrantColors)
-            },
-            headlineContent = { Text("Use vibrant colors") },
-            trailingContent = {
-                Switch(
-                    checked = useVibrantColors,
-                    onCheckedChange = {
-                        onSetVibrantColors(it)
-                    }
+            modifier = Modifier.clickable { showThemeVariantDropdown = true },
+            headlineContent = {
+                Text(
+                    text = "Color variant",
                 )
+            },
+            trailingContent = {
+                ExposedDropdownMenuBox(
+                    expanded = showThemeVariantDropdown,
+                    onExpandedChange = { showThemeVariantDropdown = it }) {
+                    OutlinedTextField(
+                        modifier = Modifier
+                            .menuAnchor()
+                            .width(200.dp),
+                        readOnly = true,
+                        value = appThemeVariant.toString(),
+                        onValueChange = {},
+                        trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = showThemeVariantDropdown) },
+                        colors = ExposedDropdownMenuDefaults.outlinedTextFieldColors(),
+                        textStyle = MaterialTheme.typography.bodyLarge
+                    )
+                    DropdownMenu(
+                        modifier = Modifier.exposedDropdownSize(true),
+                        expanded = showThemeVariantDropdown,
+                        onDismissRequest = { showThemeVariantDropdown = false },
+                    ) {
+                        for (variant in ThemeVariant.values()) {
+                            DropdownMenuItem(
+                                text = { Text(variant.toString()) },
+                                onClick = {
+                                    onSetThemeVariant(variant)
+                                    showThemeVariantDropdown = false
+                                },
+                                contentPadding = ExposedDropdownMenuDefaults.ItemContentPadding
+                            )
+                        }
+                    }
+                }
             }
         )
 
@@ -282,7 +313,7 @@ private fun BoardSettings(
 private fun Preview_BoardSettings() {
     BoardSettings(
         appTheme = Theme.SYSTEM_DEFAULT,
-        useVibrantColors = false,
+        appThemeVariant = ThemeVariant.TONAL_SPOT,
         enabledBoardSections = listOf(
             BoardSection.Type.STARRED
         ),
@@ -290,7 +321,7 @@ private fun Preview_BoardSettings() {
             TaskList(id = "1", title = "My tasks", isPinned = true)
         ),
         onSetTheme = {},
-        onSetVibrantColors = {},
+        onSetThemeVariant = {},
         onUpdateBoardSection = { _, _ -> },
         onUpdateList = {}
     )

@@ -32,60 +32,6 @@ import dev.chara.tasks.model.Profile
 import org.koin.compose.koinInject
 
 @Composable
-fun ProfileCard(
-    profile: Profile,
-    actions: @Composable RowScope.() -> Unit
-) {
-    Surface(
-        modifier = Modifier.fillMaxWidth(),
-        shape = MaterialTheme.shapes.extraLarge,
-        tonalElevation = 4.dp
-    ) {
-        Row(
-            modifier = Modifier
-                .padding(8.dp)
-        ) {
-            ProfileImage(
-                email = profile.email,
-                profilePhotoUri = profile.profilePhotoUri,
-                modifier = Modifier
-                    .align(Alignment.CenterVertically)
-                    .requiredSize(96.dp)
-            )
-            Column(
-                modifier = Modifier
-                    .padding(16.dp)
-                    .align(Alignment.CenterVertically)
-            ) {
-                Text(
-                    text = profile.displayName,
-                    style = MaterialTheme.typography.titleLarge
-                )
-                Text(
-                    text = profile.email,
-                    style = MaterialTheme.typography.titleMedium
-                )
-            }
-            actions()
-        }
-    }
-}
-
-@Preview
-@Composable
-fun Preview_ProfileCard() {
-    ProfileCard(
-        profile = Profile(
-            id = "1",
-            email = "user@email.com",
-            displayName = "User",
-            profilePhotoUri = null
-        )
-    ) {
-    }
-}
-
-@Composable
 fun ProfileImage(
     email: String,
     profilePhotoUri: String?,

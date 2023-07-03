@@ -23,11 +23,11 @@ kotlin {
 
 android {
     namespace = "dev.chara.tasks.android"
-    compileSdk = 33
+    compileSdk = 34
     defaultConfig {
         applicationId = "dev.chara.tasks.android"
         minSdk = 24
-        targetSdk = 33
+        targetSdk = 34
         versionCode = 11
         versionName = "0.6.3"
     }
@@ -39,7 +39,7 @@ android {
         buildConfig = true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.4.7"
+        kotlinCompilerExtensionVersion = "1.4.8"
     }
     packaging {
         resources {

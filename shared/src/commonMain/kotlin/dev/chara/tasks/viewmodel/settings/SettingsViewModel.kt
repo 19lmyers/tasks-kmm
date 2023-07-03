@@ -4,6 +4,7 @@ import dev.chara.tasks.data.Repository
 import dev.chara.tasks.model.TaskList
 import dev.chara.tasks.model.board.BoardSection
 import dev.chara.tasks.model.preference.Theme
+import dev.chara.tasks.model.preference.ThemeVariant
 import dev.chara.tasks.viewmodel.util.PopupMessage
 import dev.chara.tasks.viewmodel.util.emitAsMessage
 import dev.icerock.moko.mvvm.flow.cFlow
@@ -31,15 +32,15 @@ class SettingsViewModel : ViewModel(), KoinComponent {
         viewModelScope.launch {
             combine(
                 repository.getAppTheme(),
-                repository.useVibrantColors(),
+                repository.getAppThemeVariant(),
                 repository.getLists(),
                 repository.getEnabledBoardSections()
-            ) { theme, useVibrantColors, taskLists, enabledBoardSections ->
+            ) { theme, variant, taskLists, enabledBoardSections ->
                 SettingsUiState(
                     isLoading = false,
                     firstLoad = false,
                     appTheme = theme,
-                    useVibrantColors = useVibrantColors,
+                    appThemeVariant = variant,
                     taskLists = taskLists,
                     enabledBoardSections = enabledBoardSections
                 )
@@ -55,9 +56,9 @@ class SettingsViewModel : ViewModel(), KoinComponent {
         }
     }
 
-    fun setVibrantColors(useVibrantColors: Boolean) {
+    fun setAppThemeVariant(variant: ThemeVariant) {
         viewModelScope.launch {
-            repository.setVibrantColors(useVibrantColors)
+            repository.setAppThemeVariant(variant)
         }
     }
 

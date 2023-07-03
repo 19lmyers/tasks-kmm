@@ -25,7 +25,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import dev.chara.tasks.android.model.vector
 import dev.chara.tasks.android.ui.theme.ColorTheme
-import dev.chara.tasks.android.ui.theme.themedContainer
 import dev.chara.tasks.model.TaskList
 
 private const val CONTENT_TYPE_LIST = "CONTENT_TYPE_LIST"
@@ -64,12 +63,11 @@ fun TaskListItem(
 ) {
     ColorTheme(color = taskList.color) {
         Surface(
-            color = MaterialTheme.colorScheme.themedContainer,
+            color = MaterialTheme.colorScheme.surfaceContainerHigh,
             modifier = modifier
                 .fillMaxWidth()
                 .padding(4.dp),
             onClick = { onClick(taskList) },
-            tonalElevation = 4.dp,
             shape = MaterialTheme.shapes.extraLarge
         ) {
             Row(modifier = modifier.padding(vertical = 16.dp)) {

@@ -19,7 +19,7 @@ actual class DriverFactory(private val context: Context) {
 
 private class CallbackDelegate(
     val delegate: AndroidSqliteDriver.Callback,
-) : SupportSQLiteOpenHelper.Callback(CacheDatabase.Schema.version) {
+) : SupportSQLiteOpenHelper.Callback(CacheDatabase.Schema.version.toInt()) {
     override fun onConfigure(db: SupportSQLiteDatabase) {
         db.setForeignKeyConstraintsEnabled(true)
     }

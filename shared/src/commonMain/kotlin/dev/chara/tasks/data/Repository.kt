@@ -17,6 +17,7 @@ import dev.chara.tasks.model.TaskList
 import dev.chara.tasks.model.board.BoardSection
 import dev.chara.tasks.model.board.PinnedList
 import dev.chara.tasks.model.preference.Theme
+import dev.chara.tasks.model.preference.ThemeVariant
 import dev.chara.tasks.model.toModel
 import dev.chara.tasks.util.FirebaseWrapper
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -307,10 +308,9 @@ class Repository(
 
     suspend fun setAppTheme(theme: Theme) = preferenceDataSource.setAppTheme(theme)
 
-    fun useVibrantColors() = preferenceDataSource.useVibrantColors()
+    fun getAppThemeVariant() = preferenceDataSource.getAppThemeVariant()
 
-    suspend fun setVibrantColors(useVibrantColors: Boolean) =
-        preferenceDataSource.setVibrantColors(useVibrantColors)
+    suspend fun setAppThemeVariant(variant: ThemeVariant) = preferenceDataSource.setAppThemeVariant(variant)
 
     fun getEnabledBoardSections() = preferenceDataSource.getDisabledBoardSections()
         .map { disabledSections ->

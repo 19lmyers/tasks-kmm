@@ -21,7 +21,6 @@ import androidx.compose.material.icons.filled.ExpandMore
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.filled.StarOutline
 import androidx.compose.material3.Checkbox
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconToggleButton
 import androidx.compose.material3.MaterialTheme
@@ -47,8 +46,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import dev.chara.tasks.android.ui.theme.ColorTheme
 import dev.chara.tasks.android.ui.theme.LocalDarkTheme
-import dev.chara.tasks.android.ui.theme.LocalVibrantColors
-import dev.chara.tasks.android.ui.theme.themedContainer
 import dev.chara.tasks.model.Task
 import dev.chara.tasks.model.TaskList
 import kotlinx.datetime.Clock
@@ -202,12 +199,11 @@ fun TaskItem(
             )
         }
         Surface(
-            color = MaterialTheme.colorScheme.themedContainer,
+            color = MaterialTheme.colorScheme.surfaceContainerHigh,
             modifier = Modifier
                 .padding(4.dp)
                 .fillMaxWidth(),
             onClick = { onClick(task) },
-            tonalElevation = 4.dp,
             shadowElevation = shadowElevation.value,
             shape = MaterialTheme.shapes.extraLarge
         ) {
@@ -247,56 +243,8 @@ private fun Preview_TaskItem() {
 
 @Preview
 @Composable
-private fun Preview_TaskItem_Vibrant() {
-    CompositionLocalProvider(LocalVibrantColors provides true) {
-        ColorTheme(color = TaskList.Color.GREEN) {
-            TaskItem(
-                task = Task(
-                    id = "1",
-                    listId = "1",
-                    label = "Take out trash",
-                    details = "Now!!!",
-                ),
-                parentList = TaskList(
-                    id = "1",
-                    title = "List",
-                    color = TaskList.Color.GREEN
-                ),
-                onClick = {},
-                onUpdate = {}
-            )
-        }
-    }
-}
-
-@Preview
-@Composable
 private fun Preview_TaskItem_Dark() {
     CompositionLocalProvider(LocalDarkTheme provides true) {
-        ColorTheme(color = TaskList.Color.GREEN) {
-            TaskItem(
-                task = Task(
-                    id = "1",
-                    listId = "1",
-                    label = "Take out trash",
-                    details = "Now!!!",
-                ),
-                parentList = TaskList(
-                    id = "1",
-                    title = "List",
-                    color = TaskList.Color.GREEN
-                ),
-                onClick = {},
-                onUpdate = {}
-            )
-        }
-    }
-}
-
-@Preview
-@Composable
-private fun Preview_TaskItem_Dark_Vibrant() {
-    CompositionLocalProvider(LocalDarkTheme provides true, LocalVibrantColors provides true) {
         ColorTheme(color = TaskList.Color.GREEN) {
             TaskItem(
                 task = Task(

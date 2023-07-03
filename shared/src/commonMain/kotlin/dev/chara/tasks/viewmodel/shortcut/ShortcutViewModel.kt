@@ -6,6 +6,7 @@ import dev.chara.tasks.data.ClientError
 import dev.chara.tasks.data.Repository
 import dev.chara.tasks.model.Task
 import dev.chara.tasks.model.preference.Theme
+import dev.chara.tasks.model.preference.ThemeVariant
 import dev.icerock.moko.mvvm.flow.cFlow
 import dev.icerock.moko.mvvm.flow.cStateFlow
 import dev.icerock.moko.mvvm.viewmodel.ViewModel
@@ -54,7 +55,7 @@ class ShortcutViewModel : ViewModel(), KoinComponent {
 
     fun getAppTheme(): Flow<Theme> = repository.getAppTheme()
 
-    fun useVibrantColors(): Flow<Boolean> = repository.useVibrantColors()
+    fun appThemeVariant(): Flow<ThemeVariant> = repository.getAppThemeVariant()
 
     fun createTask(listId: String, task: Task) {
         viewModelScope.launch {

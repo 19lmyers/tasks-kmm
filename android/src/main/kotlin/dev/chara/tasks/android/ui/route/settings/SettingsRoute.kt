@@ -33,8 +33,8 @@ fun SettingsRoute(
             onSetTheme = {
                 viewModel.setAppTheme(it)
             },
-            onSetVibrantColors = {
-                viewModel.setVibrantColors(it)
+            onSetThemeVariant = {
+                viewModel.setAppThemeVariant(it)
             },
             onUpdateBoardSection = { boardSection, enabled ->
                 viewModel.setEnabledForBoardSection(boardSection, enabled)

@@ -1,7 +1,6 @@
 package dev.chara.tasks.data.preference
 
 import androidx.datastore.preferences.core.PreferenceDataStoreFactory
-import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.core.stringSetPreferencesKey
@@ -9,6 +8,7 @@ import dev.chara.tasks.model.Profile
 import dev.chara.tasks.model.TokenPair
 import dev.chara.tasks.model.board.BoardSection
 import dev.chara.tasks.model.preference.Theme
+import dev.chara.tasks.model.preference.ThemeVariant
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -92,13 +92,13 @@ class PreferenceDataSource(private val dataStorePath: DataStorePath) {
         }
     }
 
-    fun useVibrantColors() = dataStore.data.map {
-        it[KEY_USE_VIBRANT_COLORS] ?: false
+    fun getAppThemeVariant() = dataStore.data.map {
+        ThemeVariant.valueOf(it[KEY_APP_THEME_VARIANT] ?: ThemeVariant.TONAL_SPOT.name)
     }
 
-    suspend fun setVibrantColors(useVibrantColors: Boolean) {
+    suspend fun setAppThemeVariant(variant: ThemeVariant) {
         dataStore.edit {
-            it[KEY_USE_VIBRANT_COLORS] = useVibrantColors
+            it[KEY_APP_THEME_VARIANT] = variant.name
         }
     }
 
@@ -135,7 +135,7 @@ class PreferenceDataSource(private val dataStorePath: DataStorePath) {
         private val KEY_API_REFRESH_TOKEN = stringPreferencesKey("api_refresh_token")
 
         private val KEY_APP_THEME = stringPreferencesKey("app_theme")
-        private val KEY_USE_VIBRANT_COLORS = booleanPreferencesKey("use_vibrant_colors")
+        private val KEY_APP_THEME_VARIANT = stringPreferencesKey("app_theme_variant")
 
         private val KEY_BOARD_DISABLED_SECTIONS = stringSetPreferencesKey("board_disabled_sections")
     }

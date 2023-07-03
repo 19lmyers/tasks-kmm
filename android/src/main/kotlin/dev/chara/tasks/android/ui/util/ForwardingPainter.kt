@@ -14,7 +14,7 @@ fun forwardingPainter(
     painter: Painter,
     alpha: Float = DefaultAlpha,
     colorFilter: ColorFilter? = null,
-    onDraw: DrawScope.(ForwardingDrawInfo) -> Unit = DefaultOnDraw,
+    onDraw: DrawScope.(ForwardingDrawInfo) -> Unit = defaultOnDraw,
 ): Painter = ForwardingPainter(painter, alpha, colorFilter, onDraw)
 
 data class ForwardingDrawInfo(
@@ -55,7 +55,7 @@ private class ForwardingPainter(
     private fun newInfo() = ForwardingDrawInfo(painter, alpha, colorFilter)
 }
 
-private val DefaultOnDraw: DrawScope.(ForwardingDrawInfo) -> Unit = { info ->
+private val defaultOnDraw: DrawScope.(ForwardingDrawInfo) -> Unit = { info ->
     with(info.painter) {
         draw(size, info.alpha, info.colorFilter)
     }

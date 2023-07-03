@@ -38,9 +38,12 @@ import androidx.compose.material.icons.filled.SortByAlpha
 import androidx.compose.material.icons.filled.SportsFootball
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.filled.Work
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.graphics.vector.ImageVector
 import dev.chara.tasks.android.R
 import dev.chara.tasks.model.TaskList
+import material_color_utilities.hct.Hct
 
 val TaskList.Color.res: Int
     @ColorRes
@@ -52,6 +55,17 @@ val TaskList.Color.res: Int
         TaskList.Color.BLUE -> R.color.blue
         TaskList.Color.PURPLE -> R.color.purple
         TaskList.Color.PINK -> R.color.pink
+    }
+
+val TaskList.Color.hct: Hct
+    get() = when (this) {
+        TaskList.Color.RED -> Hct.fromInt(Color(0xFFAC322C).toArgb())
+        TaskList.Color.ORANGE -> Hct.fromInt(Color(0xFF974800).toArgb())
+        TaskList.Color.YELLOW -> Hct.fromInt(Color(0xFF7C5800).toArgb())
+        TaskList.Color.GREEN -> Hct.fromInt(Color(0xFF356A22).toArgb())
+        TaskList.Color.BLUE -> Hct.fromInt(Color(0xFF00639D).toArgb())
+        TaskList.Color.PURPLE -> Hct.fromInt(Color(0xFF6750A4).toArgb())
+        TaskList.Color.PINK -> Hct.fromInt(Color(0xFF95416E).toArgb())
     }
 
 val TaskList.Icon?.vector: ImageVector

@@ -20,11 +20,11 @@ class BaseViewModel : ViewModel(), KoinComponent {
         viewModelScope.launch {
             combine(
                 repository.getAppTheme(),
-                repository.useVibrantColors()
-            ) { appTheme, useVibrantColors ->
+                repository.getAppThemeVariant()
+            ) { appTheme, variant ->
                 BaseUiState(
                     appTheme = appTheme,
-                    useVibrantColors = useVibrantColors
+                    appThemeVariant = variant
                 )
             }.collect {
                 _uiState.value = it

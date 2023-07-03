@@ -46,7 +46,7 @@ class MainActivity : ComponentActivity() {
 
             val windowSizeClass = calculateWindowSizeClass(this)
 
-            AppTheme(darkTheme = isDarkTheme, vibrantColors = state.value.useVibrantColors) {
+            AppTheme(darkTheme = isDarkTheme, variant = state.value.appThemeVariant) {
                 RootNavHost(
                     navController,
                     windowSizeClass = windowSizeClass,
