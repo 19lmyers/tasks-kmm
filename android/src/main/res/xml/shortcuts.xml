@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools">
     <shortcut
         android:enabled="true"
-        android:icon="@drawable/add_48px"
+        android:icon="@mipmap/ic_new_task"
         android:shortcutDisabledMessage="@string/shortcut_new_disabled"
         android:shortcutId="new_task"
         android:shortcutLongLabel="@string/shortcut_new_label_long"

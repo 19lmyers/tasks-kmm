@@ -52,6 +52,7 @@
 		DD9E908929FE109700D6DD11 /* ModelExt.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD9E905C29FE109700D6DD11 /* ModelExt.swift */; };
 		DD9E908A29FE109700D6DD11 /* App.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD9E905D29FE109700D6DD11 /* App.swift */; };
 		DD9E908D29FE109700D6DD11 /* Configuration.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD9E906029FE109700D6DD11 /* Configuration.swift */; };
+		DDA8F1282A53595200FBC339 /* AppIcon.icns in Resources */ = {isa = PBXBuildFile; fileRef = DDA8F1272A53595200FBC339 /* AppIcon.icns */; };
 		DDEBDB182A33ED9400FF9C20 /* ResetPasswordRoute.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDEBDB172A33ED9400FF9C20 /* ResetPasswordRoute.swift */; };
 		DDEBDB1A2A33ED9D00FF9C20 /* ResetPasswordScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDEBDB192A33ED9D00FF9C20 /* ResetPasswordScreen.swift */; };
 /* End PBXBuildFile section */
@@ -107,6 +108,7 @@
 		DD9E905D29FE109700D6DD11 /* App.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = App.swift; sourceTree = "<group>"; };
 		DD9E906029FE109700D6DD11 /* Configuration.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Configuration.swift; sourceTree = "<group>"; };
 		DD9E909029FE134100D6DD11 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		DDA8F1272A53595200FBC339 /* AppIcon.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = AppIcon.icns; sourceTree = "<group>"; };
 		DDEBDB172A33ED9400FF9C20 /* ResetPasswordRoute.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResetPasswordRoute.swift; sourceTree = "<group>"; };
 		DDEBDB192A33ED9D00FF9C20 /* ResetPasswordScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResetPasswordScreen.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -161,6 +163,7 @@
 		DD9E902129FE109700D6DD11 /* Tasks */ = {
 			isa = PBXGroup;
 			children = (
+				DDA8F1272A53595200FBC339 /* AppIcon.icns */,
 				DD6B61612A098DB1001910C6 /* GoogleService-Info.plist */,
 				DD6B61602A098CA4001910C6 /* Tasks.entitlements */,
 				DD9E909029FE134100D6DD11 /* Info.plist */,
@@ -427,6 +430,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				DD9E908729FE109700D6DD11 /* Assets.xcassets in Resources */,
+				DDA8F1282A53595200FBC339 /* AppIcon.icns in Resources */,
 				DD9E908829FE109700D6DD11 /* Preview Assets.xcassets in Resources */,
 				DD6B61622A098DB1001910C6 /* GoogleService-Info.plist in Resources */,
 			);
