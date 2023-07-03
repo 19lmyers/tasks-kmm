@@ -8,12 +8,12 @@ import dev.chara.tasks.data.cache.sql.CacheDatabase
 
 private val dbConfig = DatabaseConfiguration(
     name = "cache_v0.db",
-    version = CacheDatabase.Schema.version,
+    version = CacheDatabase.Schema.version.toInt(),
     create = { connection ->
         wrapConnection(connection) { CacheDatabase.Schema.create(it) }
     },
     upgrade = { connection, oldVersion, newVersion ->
-        wrapConnection(connection) { CacheDatabase.Schema.migrate(it, oldVersion, newVersion) }
+        wrapConnection(connection) { CacheDatabase.Schema.migrate(it, oldVersion.toLong(), newVersion.toLong()) }
     },
     extendedConfig = DatabaseConfiguration.Extended(
         foreignKeyConstraints = true
