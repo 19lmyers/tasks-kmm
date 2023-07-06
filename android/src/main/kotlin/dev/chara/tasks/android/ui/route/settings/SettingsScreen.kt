@@ -199,7 +199,7 @@ private fun BoardSettings(
             modifier = Modifier.clickable { showThemeVariantDropdown = true },
             headlineContent = {
                 Text(
-                    text = "Color variant",
+                    text = "Color scheme",
                 )
             },
             trailingContent = {
