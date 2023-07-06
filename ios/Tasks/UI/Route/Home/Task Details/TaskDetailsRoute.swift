@@ -15,6 +15,8 @@ struct TaskDetailsRoute: View {
     var taskId: String
     @StateObject var viewModel = TaskDetailsViewModel()
 
+    var onClose: () -> Void
+
     enum AlertType {
         case deleteTask, confirmExit
     }
@@ -27,7 +29,7 @@ struct TaskDetailsRoute: View {
 
         if !uiState.isLoading, uiState.task == nil {
             ProgressView().onAppear {
-                presentation.wrappedValue.dismiss()
+                onClose()
             }
         } else {
             let parentList = uiState.taskLists.first(where: { list in list.id == uiState.task!.listId })
@@ -37,7 +39,7 @@ struct TaskDetailsRoute: View {
                     alertType = .confirmExit
                     showAlert = true
                 } else {
-                    presentation.wrappedValue.dismiss()
+                    onClose()
                 }
             } onUpdate: { task in
                 viewModel.updateTask(listId: task.listId, taskId: task.id, task: task)

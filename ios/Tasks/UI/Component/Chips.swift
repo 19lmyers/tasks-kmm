@@ -56,8 +56,12 @@ struct ChipView<Content>: View where Content: View {
 struct ListChipView: View {
     var list: TaskList
 
+    var onListSelected: (String) -> Void
+
     var body: some View {
-        ChipView(selectable: false) {
+        ChipView(selectable: false, onClick: { _ in
+            onListSelected(list.id)
+        }) {
             HStack {
                 Image(systemName: list.icon?.ui ?? "checklist")
                 Text(list.title)
@@ -170,7 +174,8 @@ struct Chips_Previews: PreviewProvider {
             Text("Hello, world!")
         }
         ListChipView(
-            list: TaskListKt.doNew(id: "", title: "My long list name")
+            list: TaskListKt.doNew(id: "", title: "My long list name"),
+            onListSelected: { _ in }
         )
     }
 }

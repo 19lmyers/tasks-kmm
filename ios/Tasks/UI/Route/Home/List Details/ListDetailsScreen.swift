@@ -16,6 +16,9 @@ struct ListDetailsScreen: View {
 
     var onRefresh: @Sendable () async -> Void
 
+    var onListSelected: (String) -> Void
+    var onTaskSelected: (String) -> Void
+
     var onCreateTaskPressed: () -> Void
 
     var onUpdateList: (TaskList) -> Void
@@ -34,7 +37,7 @@ struct ListDetailsScreen: View {
             List {
                 Section {
                     ForEach(Array(state.currentTasks.enumerated()), id: \.element.id) { index, task in
-                        TaskView(task: task, onUpdate: onUpdateTask, showIndexNumbers: state.selectedList!.showIndexNumbers, indexNumber: index + 1)
+                        TaskView(task: task, onListSelected: onListSelected, onTaskSelected: onTaskSelected, onUpdate: onUpdateTask, showIndexNumbers: state.selectedList!.showIndexNumbers, indexNumber: index + 1)
                     }
                     .onMove(perform: state.selectedList!.sortType == .ordinal ? reorder : nil)
 
@@ -47,7 +50,7 @@ struct ListDetailsScreen: View {
                             isExpanded: $showCompletedTasks,
                             content: {
                                 ForEach(state.completedTasks) { task in
-                                    TaskView(task: task, onUpdate: onUpdateTask)
+                                    TaskView(task: task, onListSelected: onListSelected, onTaskSelected: onTaskSelected, onUpdate: onUpdateTask)
                                         .id(task.id)
                                 }
                             },
@@ -115,6 +118,8 @@ struct ListDetailsScreen_Previews: PreviewProvider {
                 completedTasks: []
             ),
             onRefresh: {},
+            onListSelected: { _ in },
+            onTaskSelected: { _ in },
             onCreateTaskPressed: {},
             onUpdateList: { _ in },
             onUpdateTask: { _ in },

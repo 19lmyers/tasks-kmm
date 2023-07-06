@@ -15,6 +15,9 @@ struct ListDetailsRoute: View {
     var listId: String
     @StateObject var viewModel = ListDetailsViewModel()
 
+    var onListSelected: (String) -> Void
+    var onTaskSelected: (String) -> Void
+
     var onModifyList: (TaskList) -> Void
     var onCreateTask: (Task) -> Void
 
@@ -40,6 +43,8 @@ struct ListDetailsRoute: View {
                         viewModel.refreshCache()
                     }
                 },
+                onListSelected: onListSelected,
+                onTaskSelected: onTaskSelected,
                 onCreateTaskPressed: {
                     onCreateTask(TaskKt.doNew(id: "", listId: uiState.selectedList!.id, label: ""))
                 },

@@ -13,66 +13,72 @@ struct TaskView: View {
     var task: Task
     var parentList: TaskList?
 
+    var onListSelected: (String) -> Void
+    var onTaskSelected: (String) -> Void
+
     var onUpdate: (Task) -> Void
 
     var showIndexNumbers: Bool = false
     var indexNumber: Int = 0
 
     var body: some View {
-        NavigationLink(value: DetailNavTarget.taskDetails(task.id)) {
-            ZStack(alignment: .taskAlignmentGuide) {
-                VStack(alignment: .leading) {
-                    HStack {
-                        if showIndexNumbers {
-                            Text("\(indexNumber)")
-                                .font(.subheadline)
-                        }
-
-                        CheckboxView(isChecked: task.isCompleted) { isChecked in
-                            onUpdate(task.edit()
-                                .isCompleted(value: isChecked)
-                                .lastModified(value: DateKt.toInstant(Date.now))
-                                .build())
-                        }
-
-                        VStack(alignment: .leading) {
-                            Text(task.label)
-                                .lineLimit(5)
-                                .multilineTextAlignment(.leading)
-                                .truncationMode(.tail)
-
-                            if task.details != nil {
-                                Text(task.details!)
-                                    .lineLimit(2)
-                                    .font(.caption)
-                                    .multilineTextAlignment(.leading)
-                                    .truncationMode(.tail)
-                            }
-                        }
-                        .alignmentGuide(.taskVerticalAlignment) { context in
-                            context[.taskVerticalAlignment]
-                        }
-                    }
-                    TaskChipsView(
-                        task: task,
-                        parentList: parentList
-                    )
-                }
-
+        ZStack(alignment: .taskAlignmentGuide) {
+            VStack(alignment: .leading) {
                 HStack {
-                    Spacer()
+                    if showIndexNumbers {
+                        Text("\(indexNumber)")
+                            .font(.subheadline)
+                    }
 
-                    StarView(isStarred: task.isStarred) { isStarred in
+                    CheckboxView(isChecked: task.isCompleted) { isChecked in
                         onUpdate(task.edit()
-                            .isStarred(value: isStarred)
+                            .isCompleted(value: isChecked)
                             .lastModified(value: DateKt.toInstant(Date.now))
                             .build())
                     }
+
+                    VStack(alignment: .leading) {
+                        Text(task.label)
+                            .lineLimit(5)
+                            .multilineTextAlignment(.leading)
+                            .truncationMode(.tail)
+
+                        if task.details != nil {
+                            Text(task.details!)
+                                .lineLimit(2)
+                                .font(.caption)
+                                .multilineTextAlignment(.leading)
+                                .truncationMode(.tail)
+                        }
+                    }
+                    .alignmentGuide(.taskVerticalAlignment) { context in
+                        context[.taskVerticalAlignment]
+                    }
                 }
-                .alignmentGuide(.taskVerticalAlignment) { context in
-                    context[.taskVerticalAlignment]
+                TaskChipsView(
+                    task: task,
+                    parentList: parentList,
+                    onListSelected: onListSelected
+                )
+            }
+
+            HStack {
+                Spacer()
+
+                StarView(isStarred: task.isStarred) { isStarred in
+                    onUpdate(task.edit()
+                        .isStarred(value: isStarred)
+                        .lastModified(value: DateKt.toInstant(Date.now))
+                        .build())
                 }
             }
+            .alignmentGuide(.taskVerticalAlignment) { context in
+                context[.taskVerticalAlignment]
+            }
+        }
+        .contentShape(Rectangle())
+        .onTapGesture {
+            onTaskSelected(task.id)
         }
     }
 }
@@ -95,12 +101,14 @@ struct TaskChipsView: View {
     var task: Task
     var parentList: TaskList?
 
+    var onListSelected: (String) -> Void
+
     var body: some View {
         if parentList != nil || task.reminderDate != nil || task.dueDate != nil {
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack {
                     if parentList != nil {
-                        ListChipView(list: parentList!)
+                        ListChipView(list: parentList!, onListSelected: onListSelected)
                     }
                     if task.reminderDate != nil {
                         ReminderChipView(reminderDate: task.reminderDate!.toDate())
@@ -154,6 +162,8 @@ struct TaskView_Previews: PreviewProvider {
                 lastModified: DateKt.toInstant(Date.now),
                 ordinal: 1
             ),
+            onListSelected: { _ in },
+            onTaskSelected: { _ in },
             onUpdate: { _ in }
         )
         CreateTaskView {}

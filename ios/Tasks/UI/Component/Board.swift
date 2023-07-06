@@ -14,25 +14,31 @@ struct BoardSectionsView: View {
     var pinnedLists: [PinnedList]
     var allLists: [TaskList]
 
+    var onListSelected: (String) -> Void
+    var onTaskSelected: (String) -> Void
+
     var onCreateListPressed: () -> Void
     var onUpdateTask: (Task) -> Void
 
     var body: some View {
         ForEach(sections, id: \.type.name) { section in
-            BoardSectionView(section: section, allLists: allLists, onUpdateTask: onUpdateTask)
+            BoardSectionView(section: section, allLists: allLists, onListSelected: onListSelected, onTaskSelected: onTaskSelected, onUpdateTask: onUpdateTask)
         }
 
         ForEach(pinnedLists, id: \.taskList.id) { pinnedList in
-            PinnedListView(pinnedList: pinnedList, onUpdateTask: onUpdateTask)
+            PinnedListView(pinnedList: pinnedList, onListSelected: onListSelected, onTaskSelected: onTaskSelected, onUpdateTask: onUpdateTask)
         }
 
-        ListsView(taskLists: allLists, onCreateListPressed: onCreateListPressed)
+        ListsView(taskLists: allLists, onListSelected: onListSelected, onCreateListPressed: onCreateListPressed)
     }
 }
 
 struct BoardSectionView: View {
     var section: BoardSection
     var allLists: [TaskList]
+
+    var onListSelected: (String) -> Void
+    var onTaskSelected: (String) -> Void
 
     var onUpdateTask: (Task) -> Void
 
@@ -41,7 +47,7 @@ struct BoardSectionView: View {
             ForEach(section.tasks) { task in
                 let parentList = allLists.first(where: { each in each.id == task.listId })
 
-                TaskView(task: task, parentList: parentList, onUpdate: onUpdateTask)
+                TaskView(task: task, parentList: parentList, onListSelected: onListSelected, onTaskSelected: onTaskSelected, onUpdate: onUpdateTask)
                     .tint(parentList?.color?.ui ?? Color.accentColor)
                     .id("\(section.type.name)/\(task.id)")
             }
@@ -52,12 +58,15 @@ struct BoardSectionView: View {
 struct PinnedListView: View {
     var pinnedList: PinnedList
 
+    var onListSelected: (String) -> Void
+    var onTaskSelected: (String) -> Void
+
     var onUpdateTask: (Task) -> Void
 
     var body: some View {
         Section(header: Text(pinnedList.taskList.title)) {
             ForEach(Array(pinnedList.topTasks.enumerated()), id: \.element.id) { index, task in
-                TaskView(task: task, onUpdate: onUpdateTask, showIndexNumbers: pinnedList.taskList.showIndexNumbers, indexNumber: index + 1)
+                TaskView(task: task, onListSelected: onListSelected, onTaskSelected: onTaskSelected, onUpdate: onUpdateTask, showIndexNumbers: pinnedList.taskList.showIndexNumbers, indexNumber: index + 1)
                     .id("\(pinnedList.taskList.id)/\(task.id)")
             }
 
@@ -65,6 +74,10 @@ struct PinnedListView: View {
 
             if count > 0 {
                 ViewMoreView(pinnedList: pinnedList, count: Int(count))
+                    .contentShape(Rectangle())
+                    .onTapGesture {
+                        onListSelected(pinnedList.taskList.id)
+                    }
             }
         }
         .tint(pinnedList.taskList.color?.ui ?? Color.accentColor)
@@ -76,9 +89,7 @@ struct ViewMoreView: View {
     var count: Int
 
     var body: some View {
-        NavigationLink(value: DetailNavTarget.listDetails(pinnedList.taskList.id)) {
-            Text("View \(count) more...")
-                .foregroundStyle(.tint)
-        }
+        Text("View \(count) more...")
+            .foregroundStyle(.tint)
     }
 }

@@ -12,6 +12,9 @@ import SwiftUI
 struct HomeScreen: View {
     var state: HomeUiState
 
+    var onListSelected: (String) -> Void
+    var onTaskSelected: (String) -> Void
+
     var onCreateListPressed: () -> Void
     var onUpdateTask: (Task) -> Void
 
@@ -26,6 +29,8 @@ struct HomeScreen: View {
                     sections: state.boardSections,
                     pinnedLists: state.pinnedLists,
                     allLists: state.allLists,
+                    onListSelected: onListSelected,
+                    onTaskSelected: onTaskSelected,
                     onCreateListPressed: onCreateListPressed,
                     onUpdateTask: onUpdateTask
                 )
@@ -48,6 +53,8 @@ struct HomeScreen_Previews: PreviewProvider {
                     pinnedLists: [],
                     allLists: []
                 ),
+                onListSelected: { _ in },
+                onTaskSelected: { _ in },
                 onCreateListPressed: {},
                 onUpdateTask: { _ in },
                 onRefresh: {}

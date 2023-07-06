@@ -12,12 +12,14 @@ import SwiftUI
 struct ListsView: View {
     var taskLists: [TaskList]
 
+    var onListSelected: (String) -> Void
+
     var onCreateListPressed: () -> Void
 
     var body: some View {
         Section("Lists") {
             ForEach(taskLists, id: \.id) { taskList in
-                ListView(taskList: taskList)
+                ListView(taskList: taskList, onListSelected: onListSelected)
                     .tint(taskList.color?.ui ?? Color.accentColor)
             }
 
@@ -29,28 +31,30 @@ struct ListsView: View {
 struct ListView: View {
     var taskList: TaskList
 
+    var onListSelected: (String) -> Void
+
     var body: some View {
-        NavigationLink(value: DetailNavTarget.listDetails(taskList.id)) {
-            HStack {
-                Image(systemName: taskList.icon?.ui ?? "checklist")
-                    .frame(width: 18, height: 18)
-                    .foregroundStyle(.tint)
+        HStack {
+            Image(systemName: taskList.icon?.ui ?? "checklist")
+                .frame(width: 18, height: 18)
+                .foregroundStyle(.tint)
 
-                VStack(alignment: .leading) {
-                    Text(taskList.title)
-                        .font(.body)
+            VStack(alignment: .leading) {
+                Text(taskList.title)
+                    .font(.body)
+                    .multilineTextAlignment(.leading)
+
+                if taskList.description_ != nil {
+                    Text(taskList.description_!)
+                        .font(.caption)
                         .multilineTextAlignment(.leading)
-
-                    if taskList.description_ != nil {
-                        Text(taskList.description_!)
-                            .font(.caption)
-                            .multilineTextAlignment(.leading)
-                    }
                 }
             }
-            .listRowInsets(
-                EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0)
-            )
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .contentShape(Rectangle())
+        .onTapGesture {
+            onListSelected(taskList.id)
         }
     }
 }
@@ -85,7 +89,8 @@ struct ListView_Previews: PreviewProvider {
                 sortDirection: TaskList.SortDirection.ascending,
                 dateCreated: DateKt.toInstant(Date.now),
                 lastModified: DateKt.toInstant(Date.now)
-            )
+            ),
+            onListSelected: { _ in }
         )
         CreateListView {}
     }
