@@ -10,10 +10,18 @@ import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.glance.GlanceId
 import androidx.glance.GlanceModifier
 import androidx.glance.GlanceTheme
+import androidx.glance.action.ActionParameters
+import androidx.glance.action.actionParametersOf
 import androidx.glance.appwidget.CheckBox
 import androidx.glance.appwidget.GlanceAppWidget
 import androidx.glance.appwidget.GlanceAppWidgetReceiver
+import androidx.glance.appwidget.action.ActionCallback
+import androidx.glance.appwidget.action.ToggleableStateKey
+import androidx.glance.appwidget.action.actionRunCallback
+import androidx.glance.appwidget.appWidgetBackground
 import androidx.glance.appwidget.cornerRadius
+import androidx.glance.appwidget.lazy.LazyColumn
+import androidx.glance.appwidget.lazy.items
 import androidx.glance.appwidget.provideContent
 import androidx.glance.background
 import androidx.glance.currentState
@@ -26,11 +34,18 @@ import androidx.glance.layout.padding
 import androidx.glance.state.PreferencesGlanceStateDefinition
 import androidx.glance.text.Text
 import androidx.glance.text.TextStyle
+import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.WorkManager
+import androidx.work.WorkRequest
+import androidx.work.workDataOf
+import dev.chara.tasks.android.ui.theme.dynamic.GlanceColorTheme
+import dev.chara.tasks.android.worker.CompleteTaskWorker
 import dev.chara.tasks.data.Repository
 import dev.chara.tasks.model.Task
 import dev.chara.tasks.model.TaskList
 import dev.chara.tasks.model.board.BoardSection
 import dev.chara.tasks.model.board.PinnedList
+import dev.chara.tasks.model.preference.ThemeVariant
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
@@ -43,7 +58,10 @@ class TaskListWidget : GlanceAppWidget(), KoinComponent {
     override suspend fun provideGlance(context: Context, id: GlanceId) {
         provideContent {
             GlanceTheme {
-                val lists = repository.getLists().collectAsState(listOf())
+                val themeVariant = repository.getAppThemeVariant()
+                    .collectAsState(initial = ThemeVariant.TONAL_SPOT)
+
+                val allLists = repository.getLists().collectAsState(listOf())
 
                 val state = currentState<Preferences>()
                 val selectedListId = state[KEY_SELECTED_LIST_ID]
@@ -52,7 +70,12 @@ class TaskListWidget : GlanceAppWidget(), KoinComponent {
                     val boardSections = repository.getBoardSections().collectAsState(listOf())
                     val pinnedLists = repository.getPinnedLists().collectAsState(listOf())
 
-                    Dashboard(boardSections.value, pinnedLists.value)
+                    Dashboard(
+                        boardSections.value,
+                        pinnedLists.value,
+                        allLists.value,
+                        themeVariant.value
+                    )
                 } else {
                     val list = repository.getListById(selectedListId)
                         .collectAsState(null)
@@ -74,29 +97,48 @@ class TaskListWidget : GlanceAppWidget(), KoinComponent {
 }
 
 @Composable
-fun Dashboard(boardSections: List<BoardSection>, pinnedLists: List<PinnedList>) {
-    Column(
+fun Dashboard(
+    boardSections: List<BoardSection>,
+    pinnedLists: List<PinnedList>,
+    allLists: List<TaskList>,
+    themeVariant: ThemeVariant = ThemeVariant.TONAL_SPOT,
+) {
+    LazyColumn(
         modifier = GlanceModifier
             .fillMaxSize()
+            .appWidgetBackground()
             .cornerRadius(12.dp)
             .background(GlanceTheme.colors.background)
             .padding(8.dp)
+            //.clickable(onClick = actionStartActivity<MainActivity>())
     ) {
-        Header(title = "Dashboard")
+        item {
+            Header(title = "Dashboard")
+        }
 
         for (boardSection in boardSections) {
-            Subhead(title = boardSection.type.title)
+            item {
+                Subhead(title = boardSection.type.title)
+            }
 
-            for (task in boardSection.tasks) {
-                Task(task)
+            items(boardSection.tasks) { task ->
+                val list = allLists.find { list -> list.id == task.listId }
+
+                GlanceColorTheme(list?.color, themeVariant) {
+                    Task(task)
+                }
             }
         }
 
         for (pinnedList in pinnedLists) {
-            Subhead(title = pinnedList.taskList.title)
+            item {
+                Subhead(title = pinnedList.taskList.title)
+            }
 
-            for (task in pinnedList.topTasks) {
-                Task(task)
+            items(pinnedList.topTasks) { task ->
+                GlanceColorTheme(pinnedList.taskList.color, themeVariant) {
+                    Task(task)
+                }
             }
         }
     }
@@ -107,9 +149,11 @@ fun TaskList(list: TaskList, tasks: List<Task>) {
     Column(
         modifier = GlanceModifier
             .fillMaxSize()
+            .appWidgetBackground()
             .cornerRadius(12.dp)
             .background(GlanceTheme.colors.background)
             .padding(8.dp)
+            //.clickable(onClick = actionStartActivity<MainActivity>())
     ) {
         Header(title = list.title)
 
@@ -131,14 +175,21 @@ fun Subhead(title: String) {
 
 @Composable
 fun Task(task: Task) {
-    Box(modifier = GlanceModifier.fillMaxWidth()) {
+    Box(
+        modifier = GlanceModifier
+            .fillMaxWidth()
+            .background(GlanceTheme.colors.surfaceVariant)
+            .cornerRadius(24.dp)
+            .padding(12.dp)
+            //.clickable(onClick = actionStartActivity<MainActivity>())
+    ) {
         Column {
             Row {
                 CheckBox(
                     checked = task.isCompleted,
-                    onCheckedChange = {
-                        // TODO
-                    }
+                    onCheckedChange = actionRunCallback<TaskCompleteAction>(
+                        actionParametersOf(taskIdKey to task.id)
+                    )
                 )
                 Column(
                     modifier = GlanceModifier.fillMaxWidth()
@@ -161,6 +212,32 @@ fun Task(task: Task) {
     }
 }
 
+private val taskIdKey = ActionParameters.Key<String>("TaskId")
+
+class TaskCompleteAction : ActionCallback {
+    override suspend fun onAction(
+        context: Context,
+        glanceId: GlanceId,
+        parameters: ActionParameters,
+    ) {
+        val taskId = requireNotNull(parameters[taskIdKey])
+        val checked = requireNotNull(parameters[ToggleableStateKey])
+
+        val completeTaskRequest: WorkRequest =
+            OneTimeWorkRequestBuilder<CompleteTaskWorker>()
+                .setInputData(
+                    workDataOf(
+                        CompleteTaskWorker.TASK_ID to taskId,
+                        CompleteTaskWorker.IS_COMPLETED to checked
+                    )
+                ).build()
+
+        WorkManager.getInstance(context)
+            .enqueue(completeTaskRequest)
+    }
+}
+
 class TaskListWidgetReceiver : GlanceAppWidgetReceiver() {
-    override val glanceAppWidget: GlanceAppWidget = TaskListWidget()
+    override val glanceAppWidget: GlanceAppWidget
+        get() = TaskListWidget()
 }

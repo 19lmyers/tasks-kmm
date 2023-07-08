@@ -12,7 +12,6 @@ import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import dev.chara.tasks.android.model.hct
-import dev.chara.tasks.android.ui.theme.dynamic.DynamicColorTheme
 import dev.chara.tasks.android.ui.theme.dynamic.dynamicColorScheme
 import dev.chara.tasks.android.ui.theme.dynamic.scheme
 import dev.chara.tasks.model.TaskList
@@ -83,10 +82,10 @@ fun ColorTheme(
     val variant = LocalThemeVariant.current
 
     if (color != null) {
-        DynamicColorTheme(
-            seed = color.hct,
-            variant = variant,
-            darkTheme = darkTheme,
+        val colors = dynamicColorScheme(color.hct, variant, darkTheme)
+
+        MaterialTheme(
+            colorScheme = colors,
             shapes = Shapes,
             typography = Typography,
         ) {

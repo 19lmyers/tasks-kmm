@@ -1,10 +1,13 @@
 package dev.chara.tasks.android.notification.service
 
 import android.Manifest
+import android.app.NotificationChannel
+import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
+import android.os.Build
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
@@ -132,6 +135,15 @@ class MessagingService : FirebaseMessagingService(), LifecycleOwner {
                     Manifest.permission.POST_NOTIFICATIONS
                 ) == PackageManager.PERMISSION_GRANTED
             ) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    val mChannel =
+                        NotificationChannel(channelId, "Reminders", NotificationManager.IMPORTANCE_DEFAULT)
+
+                    val notificationManager =
+                        getSystemService(NOTIFICATION_SERVICE) as NotificationManager
+                    notificationManager.createNotificationChannel(mChannel)
+                }
+
                 NotificationManagerCompat.from(this)
                     .notify(taskId, NOTIFICATION_TYPE_REMINDER, builder.build())
             }

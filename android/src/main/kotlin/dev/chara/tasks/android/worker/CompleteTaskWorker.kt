@@ -1,4 +1,4 @@
-package dev.chara.tasks.android.notification.worker
+package dev.chara.tasks.android.worker
 
 import android.content.Context
 import android.widget.Toast
@@ -10,6 +10,7 @@ import com.github.michaelbull.result.mapBoth
 import com.github.michaelbull.result.mapError
 import dev.chara.tasks.android.notification.service.MessagingService
 import dev.chara.tasks.data.Repository
+import dev.chara.tasks.widget.WidgetManager
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.withContext
@@ -21,9 +22,12 @@ class CompleteTaskWorker(context: Context, workerParams: WorkerParameters) :
     CoroutineWorker(context, workerParams), KoinComponent {
 
     private val repository by inject<Repository>()
+    private val widgetManager by inject<WidgetManager>()
 
     override suspend fun doWork(): Result {
         val taskId = inputData.getString(TASK_ID) ?: return Result.failure()
+
+        val isCompleted = inputData.getBoolean(IS_COMPLETED, true)
 
         val result = withContext(Dispatchers.IO) {
             val task =
@@ -32,7 +36,7 @@ class CompleteTaskWorker(context: Context, workerParams: WorkerParameters) :
 
             repository.updateTask(
                 task.listId, task.id, task.copy(
-                    isCompleted = true,
+                    isCompleted = isCompleted,
                     lastModified = Clock.System.now()
                 )
             ).mapError {
@@ -43,6 +47,8 @@ class CompleteTaskWorker(context: Context, workerParams: WorkerParameters) :
         return withContext(Dispatchers.Main) {
             NotificationManagerCompat.from(applicationContext)
                 .cancel(taskId, MessagingService.NOTIFICATION_TYPE_REMINDER)
+
+            widgetManager.update()
 
             result.mapBoth(
                 success = {
@@ -67,5 +73,6 @@ class CompleteTaskWorker(context: Context, workerParams: WorkerParameters) :
 
     companion object {
         const val TASK_ID = "TASK_ID"
+        const val IS_COMPLETED = "IS_COMPLETED"
     }
 }

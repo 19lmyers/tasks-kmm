@@ -1,10 +1,6 @@
 package dev.chara.tasks.android.ui.route.home
 
 import android.Manifest
-import android.app.NotificationChannel
-import android.app.NotificationManager
-import android.content.Context
-import android.content.Context.NOTIFICATION_SERVICE
 import android.content.pm.PackageManager
 import android.os.Build
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -31,7 +27,6 @@ import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
-import dev.chara.tasks.android.R
 import dev.chara.tasks.android.ui.NavTarget
 import dev.chara.tasks.android.ui.component.sheet.CreateTaskSheet
 import dev.chara.tasks.android.ui.component.sheet.ModifyListSheet
@@ -62,10 +57,7 @@ fun HomeRoute(
     val context = LocalContext.current
     val permissionRequestLauncher = rememberLauncherForActivityResult(
         ActivityResultContracts.RequestPermission()
-    ) { isGranted: Boolean ->
-        if (isGranted) {
-            initNotifications(context)
-        }
+    ) { _: Boolean ->
     }
 
     if (!state.value.firstLoad) {
@@ -244,17 +236,5 @@ fun HomeRoute(
                 }
             }
         }
-    }
-}
-
-fun initNotifications(context: Context) {
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-        val channelId = context.getString(R.string.notification_channel_reminders)
-        val mChannel =
-            NotificationChannel(channelId, "Reminders", NotificationManager.IMPORTANCE_DEFAULT)
-
-        val notificationManager =
-            context.getSystemService(NOTIFICATION_SERVICE) as NotificationManager
-        notificationManager.createNotificationChannel(mChannel)
     }
 }

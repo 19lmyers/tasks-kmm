@@ -1,13 +1,14 @@
 package dev.chara.tasks.android.ui.theme.dynamic
 
-import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Shapes
-import androidx.compose.material3.Typography
+import androidx.compose.material3.ColorScheme
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
+import androidx.glance.GlanceTheme
+import androidx.glance.material3.ColorProviders
+import dev.chara.tasks.android.model.hct
+import dev.chara.tasks.model.TaskList
 import dev.chara.tasks.model.preference.ThemeVariant
 import material_color_utilities.dynamiccolor.MaterialDynamicColors
 import material_color_utilities.hct.Hct
@@ -105,22 +106,31 @@ fun dynamicColorScheme(
     )
 }
 
-@Composable
-fun DynamicColorTheme(
+fun dynamicColorScheme(
     seed: Hct,
     variant: ThemeVariant = ThemeVariant.TONAL_SPOT,
-    darkTheme: Boolean = isSystemInDarkTheme(),
-    shapes: Shapes = MaterialTheme.shapes,
-    typography: Typography = MaterialTheme.typography,
+    darkTheme: Boolean
+): ColorScheme {
+    val scheme = scheme(seed, darkTheme, variant)
+    return dynamicColorScheme(darkTheme, scheme)
+}
+
+@Composable
+fun GlanceColorTheme(
+    color: TaskList.Color?,
+    variant: ThemeVariant = ThemeVariant.TONAL_SPOT,
     content: @Composable () -> Unit
 ) {
-    val scheme = scheme(seed, darkTheme, variant)
-    val colors = dynamicColorScheme(darkTheme, scheme)
+    if (color != null) {
+        val lightColors = dynamicColorScheme(color.hct, variant, false)
+        val darkColors = dynamicColorScheme(color.hct, variant, true)
 
-    MaterialTheme(
-        colorScheme = colors,
-        shapes = shapes,
-        typography = typography,
-        content = content
-    )
+        GlanceTheme(
+            colors = ColorProviders(lightColors, darkColors)
+        ) {
+            content()
+        }
+    } else {
+        content()
+    }
 }

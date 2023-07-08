@@ -4,6 +4,7 @@ import coil.ImageLoader
 import coil.disk.DiskCache
 import coil.memory.MemoryCache
 import dev.chara.tasks.android.BuildConfig
+import dev.chara.tasks.android.widget.AndroidWidgetManager
 import dev.chara.tasks.data.cache.DriverFactory
 import dev.chara.tasks.data.preference.DataStorePath
 import dev.chara.tasks.data.rest.Endpoint
@@ -31,5 +32,8 @@ fun androidUiLayer() = module {
                     .build()
             }
             .build()
+    }
+    single {
+        AndroidWidgetManager(androidContext())
     }
 }

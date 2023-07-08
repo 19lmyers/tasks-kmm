@@ -62,7 +62,6 @@ import dev.chara.tasks.android.ui.theme.ColorTheme
 import dev.chara.tasks.android.ui.theme.LocalDarkTheme
 import dev.chara.tasks.android.ui.theme.LocalThemeVariant
 import dev.chara.tasks.android.ui.theme.dynamic.dynamicColorScheme
-import dev.chara.tasks.android.ui.theme.dynamic.scheme
 import dev.chara.tasks.model.TaskList
 import kotlinx.datetime.Clock
 
@@ -316,8 +315,7 @@ fun ColorSwatch(
         Modifier.background(
             Brush.sweepGradient(
                 TaskList.Color.values().map { listColor ->
-                    val scheme = scheme(listColor.hct, darkTheme, variant)
-                    val dynamicColors = dynamicColorScheme(darkTheme, scheme)
+                    val dynamicColors = dynamicColorScheme(listColor.hct, variant, darkTheme)
                     dynamicColors.primaryContainer
                 }
             ),

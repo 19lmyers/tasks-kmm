@@ -11,5 +11,5 @@ fun commonDataLayer() = module {
     single { RestDataSource(get(), get()) }
     single { CacheDataSource(get()) }
 
-    single { Repository(get(), get(), get()) }
+    single { Repository(get(), get(), get(), getOrNull()) }
 }

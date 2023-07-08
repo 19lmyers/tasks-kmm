@@ -20,6 +20,7 @@ import dev.chara.tasks.model.preference.Theme
 import dev.chara.tasks.model.preference.ThemeVariant
 import dev.chara.tasks.model.toModel
 import dev.chara.tasks.util.FirebaseWrapper
+import dev.chara.tasks.widget.WidgetManager
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
@@ -33,7 +34,8 @@ import kotlinx.datetime.Instant
 class Repository(
     private val cacheDataSource: CacheDataSource,
     private val preferenceDataSource: PreferenceDataSource,
-    private val restDataSource: RestDataSource
+    private val restDataSource: RestDataSource,
+    private val widgetManager: WidgetManager?
 ) {
     fun isUserAuthenticated() = preferenceDataSource.getUserProfile().map { it != null }
 
@@ -107,122 +109,124 @@ class Repository(
         Ok(Unit)
     }
 
-    private suspend fun refreshCache(skipIds: MutableList<String> = mutableListOf()): Result<Unit, DataError> = binding {
-        val taskLists = restDataSource.getLists().bind()
+    private suspend fun refreshCache(skipIds: MutableList<String> = mutableListOf()): Result<Unit, DataError> =
+        binding {
+            val taskLists = restDataSource.getLists().bind()
 
-        val tasks = mutableListOf<Task>()
-        for (taskList in taskLists) {
-            val tasksForList = restDataSource.getTasks(taskList.id).bind()
-            tasks.addAll(tasksForList)
-        }
-
-        val freshLists = taskLists
-            .associateBy { it.id }
-            .toMutableMap()
-
-        val freshTasks = tasks
-            .associateBy { it.id }
-            .toMutableMap()
-
-        val staleLists = cacheDataSource.getTaskLists()
-            .first()
-            .toModel()
-
-        val staleTasks = cacheDataSource.getTasks()
-            .first()
-            .toModel()
-
-        // This represents the actions to take on the server to get it "up to speed"
-        val serverDiff = mutableListOf<DiffAction>()
-
-        // Loop over stale task lists
-        for (staleList in staleLists) {
-            // If we have a match from the server...
-            if (freshLists.containsKey(staleList.id)) {
-                val freshList = freshLists.remove(staleList.id)!!
-
-                // If the server's task list is older...
-                if (freshList.lastModified < staleList.lastModified) {
-                    // Update the server's value with our newer value
-                    serverDiff.add(DiffAction.TaskList.Update(staleList))
-                }
+            val tasks = mutableListOf<Task>()
+            for (taskList in taskLists) {
+                val tasksForList = restDataSource.getTasks(taskList.id).bind()
+                tasks.addAll(tasksForList)
             }
-            // Otherwise, it's been deleted, so we can ignore it
-        }
 
-        // Loop over stale tasks
-        for (staleTask in staleTasks) {
-            // If we haven't previously dealt with this task...
-            if (!skipIds.contains(staleTask.id)) {
-                // Otherwise, if we have a match from the server...
-                if (freshTasks.containsKey(staleTask.id)) {
-                    val freshTask = freshTasks.remove(staleTask.id)!!
+            val freshLists = taskLists
+                .associateBy { it.id }
+                .toMutableMap()
 
-                    // If the server's task is older...
-                    if (freshTask.lastModified < staleTask.lastModified) {
-                        // If the task has been moved, move it on the server
-                        if (freshTask.listId != staleTask.listId) {
-                            serverDiff.add(
-                                DiffAction.Task.Move(
-                                    freshTask.listId,
-                                    staleTask
+            val freshTasks = tasks
+                .associateBy { it.id }
+                .toMutableMap()
+
+            val staleLists = cacheDataSource.getTaskLists()
+                .first()
+                .toModel()
+
+            val staleTasks = cacheDataSource.getTasks()
+                .first()
+                .toModel()
+
+            // This represents the actions to take on the server to get it "up to speed"
+            val serverDiff = mutableListOf<DiffAction>()
+
+            // Loop over stale task lists
+            for (staleList in staleLists) {
+                // If we have a match from the server...
+                if (freshLists.containsKey(staleList.id)) {
+                    val freshList = freshLists.remove(staleList.id)!!
+
+                    // If the server's task list is older...
+                    if (freshList.lastModified < staleList.lastModified) {
+                        // Update the server's value with our newer value
+                        serverDiff.add(DiffAction.TaskList.Update(staleList))
+                    }
+                }
+                // Otherwise, it's been deleted, so we can ignore it
+            }
+
+            // Loop over stale tasks
+            for (staleTask in staleTasks) {
+                // If we haven't previously dealt with this task...
+                if (!skipIds.contains(staleTask.id)) {
+                    // Otherwise, if we have a match from the server...
+                    if (freshTasks.containsKey(staleTask.id)) {
+                        val freshTask = freshTasks.remove(staleTask.id)!!
+
+                        // If the server's task is older...
+                        if (freshTask.lastModified < staleTask.lastModified) {
+                            // If the task has been moved, move it on the server
+                            if (freshTask.listId != staleTask.listId) {
+                                serverDiff.add(
+                                    DiffAction.Task.Move(
+                                        freshTask.listId,
+                                        staleTask
+                                    )
                                 )
+                            }
+                            // Update the server's value
+                            serverDiff.add(DiffAction.Task.Update(staleTask))
+                        }
+                    }
+                    // Otherwise, if the ID is a temp ID...
+                    else if (staleTask.isDirty()) {
+                        // Send it to the server
+                        serverDiff.add(DiffAction.Task.Create(staleTask))
+                    }
+                }
+                // Otherwise, it's been deleted, so we can ignore it
+            }
+
+            if (serverDiff.isNotEmpty()) {
+                for (action in serverDiff) {
+                    val result = when (action) {
+                        is DiffAction.TaskList.Update -> {
+                            restDataSource.updateList(action.taskList.id, action.taskList)
+                        }
+
+                        is DiffAction.Task.Create -> {
+                            restDataSource.createTask(action.task.listId, action.task)
+                                .onSuccess {
+                                    skipIds.add(action.task.id)
+                                }
+                        }
+
+                        is DiffAction.Task.Update -> {
+                            restDataSource.updateTask(
+                                action.task.listId,
+                                action.task.id,
+                                action.task
                             )
                         }
-                        // Update the server's value
-                        serverDiff.add(DiffAction.Task.Update(staleTask))
+
+                        is DiffAction.Task.Move -> {
+                            restDataSource.moveTask(
+                                action.oldListID,
+                                action.task.listId,
+                                action.task.id,
+                                Clock.System.now()
+                            )
+                        }
                     }
+
+                    result.bind()
                 }
-                // Otherwise, if the ID is a temp ID...
-                else if (staleTask.isDirty()) {
-                    // Send it to the server
-                    serverDiff.add(DiffAction.Task.Create(staleTask))
-                }
+
+                refreshCache(skipIds)
+            } else {
+                cacheDataSource.clearAndInsert(taskLists, tasks)
+                widgetManager?.update()
+                Ok(Unit)
             }
-            // Otherwise, it's been deleted, so we can ignore it
         }
-
-        if (serverDiff.isNotEmpty()) {
-            for (action in serverDiff) {
-                val result = when (action) {
-                    is DiffAction.TaskList.Update -> {
-                        restDataSource.updateList(action.taskList.id, action.taskList)
-                    }
-
-                    is DiffAction.Task.Create -> {
-                        restDataSource.createTask(action.task.listId, action.task)
-                            .onSuccess {
-                                skipIds.add(action.task.id)
-                            }
-                    }
-
-                    is DiffAction.Task.Update -> {
-                        restDataSource.updateTask(
-                            action.task.listId,
-                            action.task.id,
-                            action.task
-                        )
-                    }
-
-                    is DiffAction.Task.Move -> {
-                        restDataSource.moveTask(
-                            action.oldListID,
-                            action.task.listId,
-                            action.task.id,
-                            Clock.System.now()
-                        )
-                    }
-                }
-
-                result.bind()
-            }
-
-            refreshCache(skipIds)
-        } else {
-            cacheDataSource.clearAndInsert(taskLists, tasks)
-            Ok(Unit)
-        }
-    }
 
     fun getLists() = cacheDataSource.getTaskLists()
         .map { it.toModel() }
@@ -235,6 +239,7 @@ class Repository(
 
     suspend fun updateList(listId: String, taskList: TaskList): Result<Unit, DataError> {
         cacheDataSource.updateTaskList(taskList)
+        widgetManager?.update()
         return restDataSource.updateList(listId, taskList)
     }
 
@@ -242,6 +247,7 @@ class Repository(
         .onSuccess {
             cacheDataSource.deleteTasksByList(id)
             cacheDataSource.deleteTaskList(id)
+            widgetManager?.update()
         }
 
     @OptIn(ExperimentalCoroutinesApi::class)
@@ -269,6 +275,7 @@ class Repository(
 
     suspend fun updateTask(listId: String, taskId: String, task: Task): Result<Unit, DataError> {
         cacheDataSource.updateTask(task)
+        widgetManager?.update()
         return restDataSource.updateTask(listId, taskId, task)
     }
 
@@ -279,6 +286,7 @@ class Repository(
         lastModified: Instant
     ): Result<Unit, DataError> {
         cacheDataSource.moveTask(newListId, taskId, lastModified)
+        widgetManager?.update()
         return restDataSource.moveTask(oldListId, newListId, taskId, lastModified)
     }
 
@@ -290,12 +298,16 @@ class Repository(
         lastModified: Instant
     ): Result<Unit, DataError> {
         cacheDataSource.reorderTask(listId, taskId, fromIndex, toIndex, lastModified)
+        widgetManager?.update()
         return restDataSource.reorderTask(listId, taskId, fromIndex, toIndex, lastModified)
     }
 
     suspend fun deleteTask(listId: String, taskId: String) =
         restDataSource.deleteTask(listId, taskId)
-            .onSuccess { cacheDataSource.deleteTask(taskId) }
+            .onSuccess {
+                cacheDataSource.deleteTask(taskId)
+                widgetManager?.update()
+            }
 
     suspend fun clearCompletedTasks(listId: String) =
         restDataSource.clearCompletedTasks(listId)
@@ -310,7 +322,8 @@ class Repository(
 
     fun getAppThemeVariant() = preferenceDataSource.getAppThemeVariant()
 
-    suspend fun setAppThemeVariant(variant: ThemeVariant) = preferenceDataSource.setAppThemeVariant(variant)
+    suspend fun setAppThemeVariant(variant: ThemeVariant) =
+        preferenceDataSource.setAppThemeVariant(variant)
 
     fun getEnabledBoardSections() = preferenceDataSource.getDisabledBoardSections()
         .map { disabledSections ->
