@@ -6,7 +6,7 @@ enum class ThemeVariant(private val friendlyName: String) {
     TONAL_SPOT("Tonal spot (default)"),
     VIBRANT("Vibrant"),
     EXPRESSIVE("Expressive"),
-    FRUIT_SALAD("Fruit Salad");
+    FRUIT_SALAD("Fruit salad");
 
     override fun toString(): String {
         return friendlyName
