@@ -47,7 +47,7 @@ kotlin {
                 implementation(libs.kotlinx.serialization.json)
                 implementation(libs.kotlinx.coroutines.core)
 
-                api(libs.koin.core)
+                implementation(libs.koin.core)
 
                 implementation(libs.ktor.client.core)
                 implementation(libs.ktor.client.auth)
@@ -121,7 +121,12 @@ kotlin {
 
     targets.withType<KotlinNativeTarget> {
         binaries {
-            framework("TasksShared")
+            framework("TasksShared") {
+                export(libs.moko.mvvm.core)
+                export(libs.moko.mvvm.flow)
+
+                export(libs.result)
+            }
         }
     }
 }

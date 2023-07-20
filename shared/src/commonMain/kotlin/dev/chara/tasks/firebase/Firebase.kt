@@ -4,7 +4,11 @@ object Firebase {
     private lateinit var instance: FirebaseWrapper
 
     fun link(platformWrapper: FirebaseWrapper) {
-        instance = platformWrapper
+        if (!this::instance.isInitialized) {
+            instance = platformWrapper
+        } else {
+            throw IllegalStateException("Firebase has already been linked!")
+        }
     }
 
     suspend fun getMessagingToken(): String? = instance.getMessagingToken()
