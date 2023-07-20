@@ -109,7 +109,7 @@ fun SignInScreen(
                     },
                     enabled = emailResult is Ok && password.isNotBlank() && !state.isLoading
                 ) {
-                    Text(text = "Sign In")
+                    Text(text = "Sign in")
                 }
             }
         },

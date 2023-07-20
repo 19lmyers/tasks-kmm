@@ -3,15 +3,19 @@ package dev.chara.tasks.android.ui.route.home
 import android.Manifest
 import android.content.pm.PackageManager
 import android.os.Build
+import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.SnackbarResult
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -40,6 +44,7 @@ import dev.olshevski.navigation.reimagined.navigate
 import dev.olshevski.navigation.reimagined.replaceAll
 import kotlinx.datetime.Clock
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeRoute(
     useDualPane: Boolean,
@@ -119,6 +124,46 @@ fun HomeRoute(
             )
         }
 
+        var showVerifyEmailDialog by rememberSaveable { mutableStateOf(false) }
+
+        if (showVerifyEmailDialog) {
+            AlertDialog(
+                onDismissRequest = { showVerifyEmailDialog = false },
+                title = { Text("Verify your email") },
+                text = { Text("To unlock the full functionality of Tasks, please verify your email address.") },
+                dismissButton = {
+                    TextButton(onClick = { showVerifyEmailDialog = false }) {
+                        Text("Cancel")
+                    }
+                },
+                confirmButton = {
+                    TextButton(onClick = {
+                        viewModel.requestVerifyEmailResend()
+                        showVerifyEmailDialog = false
+                    }) {
+                        Text("Verify")
+                    }
+                }
+            )
+        }
+
+        if (state.value.verifyEmailSent) {
+            AlertDialog(
+                onDismissRequest = {
+                    viewModel.clearVerifyEmailNotice()
+                },
+                title = { Text("Verification email sent") },
+                text = { Text("Follow the link provided to verify your email address.") },
+                confirmButton = {
+                    TextButton(onClick = {
+                        viewModel.clearVerifyEmailNotice()
+                    }) {
+                        Text("OK")
+                    }
+                }
+            )
+        }
+
         val navController: NavController<NavTarget.Home> = rememberSaveable(initialNavTarget) {
             navController(initialNavTarget)
         }
@@ -136,6 +181,13 @@ fun HomeRoute(
             if (useDualPane) {
                 HomeScreenWithDetailPane(
                     state = state.value,
+                    onNotificationsPressed = {
+                        if (state.value.profile!!.emailVerified) {
+                            Toast.makeText(context, "No notifications", Toast.LENGTH_LONG).show()
+                        } else {
+                            showVerifyEmailDialog = true
+                        }
+                    },
                     onAccountPressed = navigateToProfile,
                     onSettingsPressed = navigateToSettings,
                     onSignOutPressed = {
@@ -194,6 +246,14 @@ fun HomeRoute(
                     HomeScreen(
                         state = state.value,
                         showCreateTaskButton = state.value.allLists.isNotEmpty(),
+                        onNotificationsPressed = {
+                            if (state.value.profile!!.emailVerified) {
+                                Toast.makeText(context, "No notifications", Toast.LENGTH_LONG)
+                                    .show()
+                            } else {
+                                showVerifyEmailDialog = true
+                            }
+                        },
                         onAccountPressed = navigateToProfile,
                         onSettingsPressed = navigateToSettings,
                         onSignOutPressed = {

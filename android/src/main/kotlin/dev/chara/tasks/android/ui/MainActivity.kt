@@ -60,6 +60,17 @@ class MainActivity : ComponentActivity() {
         if (intent.data != null && intent.data!!.host == DEEP_LINK_HOST) {
 
             when (intent.data!!.path) {
+                PATH_VERIFY_EMAIL -> {
+                    val token = intent.data!!.getQueryParameter(QUERY_EMAIL_VERIFY_TOKEN)
+
+                    if (token != null) {
+                        listOf(NavTarget.VerifyEmail(token))
+                    } else {
+                        Toast.makeText(this, "Missing token parameter", Toast.LENGTH_LONG).show()
+                        listOf(NavTarget.Home.Default)
+                    }
+                }
+
                 PATH_RESET_PASSWORD -> {
                     val token = intent.data!!.getQueryParameter(QUERY_PASSWORD_RESET_TOKEN)
 
@@ -106,6 +117,9 @@ class MainActivity : ComponentActivity() {
 
     companion object {
         const val DEEP_LINK_HOST = "tasks.chara.dev"
+
+        const val PATH_VERIFY_EMAIL = "/verify"
+        const val QUERY_EMAIL_VERIFY_TOKEN = "token"
 
         const val PATH_RESET_PASSWORD = "/reset"
         const val QUERY_PASSWORD_RESET_TOKEN = "token"

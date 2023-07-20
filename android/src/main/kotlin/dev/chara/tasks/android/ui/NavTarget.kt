@@ -29,9 +29,8 @@ sealed class NavTarget : Parcelable {
     @Parcelize
     object Settings : NavTarget()
 
-    // ChangeEmail
-
-    // ValidateEmail
+    @Parcelize
+    object ChangeEmail : NavTarget()
 
     @Parcelize
     object ChangePassword : NavTarget()
@@ -44,6 +43,9 @@ sealed class NavTarget : Parcelable {
 
     @Parcelize
     object ForgotPassword : NavTarget()
+
+    @Parcelize
+    class VerifyEmail(val verifyToken: String) : NavTarget()
 
     @Parcelize
     class ResetPassword(val resetToken: String) : NavTarget()

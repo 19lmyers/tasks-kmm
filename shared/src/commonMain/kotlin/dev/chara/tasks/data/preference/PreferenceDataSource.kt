@@ -1,6 +1,7 @@
 package dev.chara.tasks.data.preference
 
 import androidx.datastore.preferences.core.PreferenceDataStoreFactory
+import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.core.stringSetPreferencesKey
@@ -35,6 +36,7 @@ class PreferenceDataSource(private val dataStorePath: DataStorePath) {
         Profile(
             id = it[KEY_AUTH_USER_ID] ?: "",
             email = email,
+            emailVerified = it[KEY_AUTH_USER_EMAIL_VERIFIED] ?: false,
             displayName = it[KEY_AUTH_USER_DISPLAY_NAME] ?: "",
             profilePhotoUri = it[KEY_AUTH_USER_PROFILE_PHOTO_URI],
         )
@@ -44,6 +46,7 @@ class PreferenceDataSource(private val dataStorePath: DataStorePath) {
         dataStore.edit {
             it[KEY_AUTH_USER_ID] = profile.id
             it[KEY_AUTH_USER_EMAIL] = profile.email
+            it[KEY_AUTH_USER_EMAIL_VERIFIED] = profile.emailVerified
             it[KEY_AUTH_USER_DISPLAY_NAME] = profile.displayName
 
             if (profile.profilePhotoUri.isNullOrBlank()) {
@@ -72,8 +75,6 @@ class PreferenceDataSource(private val dataStorePath: DataStorePath) {
     }
 
     suspend fun clearAuthFields() = dataStore.edit {
-        // TODO do we need to empty the strings first
-
         it.remove(KEY_AUTH_USER_EMAIL)
         it.remove(KEY_AUTH_USER_DISPLAY_NAME)
         it.remove(KEY_AUTH_USER_PROFILE_PHOTO_URI)
@@ -127,6 +128,7 @@ class PreferenceDataSource(private val dataStorePath: DataStorePath) {
     companion object {
         private val KEY_AUTH_USER_ID = stringPreferencesKey("auth_user_id")
         private val KEY_AUTH_USER_EMAIL = stringPreferencesKey("auth_user_email")
+        private val KEY_AUTH_USER_EMAIL_VERIFIED = booleanPreferencesKey("auth_user_email_verified")
         private val KEY_AUTH_USER_DISPLAY_NAME = stringPreferencesKey("auth_user_display_name")
         private val KEY_AUTH_USER_PROFILE_PHOTO_URI =
             stringPreferencesKey("auth_user_profile_photo_uri")

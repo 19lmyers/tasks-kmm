@@ -28,7 +28,7 @@ fun WelcomeScreen(
     onSignUpClicked: () -> Unit,
 ) {
     Scaffold(
-        topBar = { LargeTopAppBar(title = { Text("Welcome") }) },
+        topBar = { LargeTopAppBar(title = { Text("Welcome to Tasks") }) },
         bottomBar = {
             BottomAppBar(modifier = Modifier.imePadding()) {
                 TextButton(
@@ -36,7 +36,7 @@ fun WelcomeScreen(
                         .padding(16.dp, 8.dp),
                     onClick = { onSignInClicked() }
                 ) {
-                    Text(text = "Sign In")
+                    Text(text = "Sign in")
                 }
 
                 Spacer(Modifier.weight(1f, true))
@@ -46,7 +46,7 @@ fun WelcomeScreen(
                         .padding(16.dp, 8.dp),
                     onClick = { onSignUpClicked() }
                 ) {
-                    Text(text = "Sign Up")
+                    Text(text = "Sign up")
                 }
             }
         },

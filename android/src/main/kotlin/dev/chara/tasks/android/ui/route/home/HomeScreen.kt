@@ -1,7 +1,6 @@
 package dev.chara.tasks.android.ui.route.home
 
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.scaleIn
 import androidx.compose.animation.scaleOut
 import androidx.compose.foundation.layout.Box
@@ -11,6 +10,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.requiredSize
 import androidx.compose.foundation.layout.systemBars
@@ -19,9 +19,12 @@ import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Logout
+import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
+import androidx.compose.material3.Badge
+import androidx.compose.material3.BadgedBox
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -55,13 +58,14 @@ import dev.chara.tasks.viewmodel.home.HomeUiState
 @OptIn(
     ExperimentalMaterial3Api::class,
     ExperimentalLayoutApi::class,
-    ExperimentalAnimationApi::class, ExperimentalMaterialApi::class
+    ExperimentalMaterialApi::class
 )
 @Composable
 fun HomeScreen(
     state: HomeUiState,
     modifier: Modifier = Modifier,
     showCreateTaskButton: Boolean,
+    onNotificationsPressed: () -> Unit,
     onAccountPressed: () -> Unit,
     onSettingsPressed: () -> Unit,
     onSignOutPressed: () -> Unit,
@@ -80,6 +84,7 @@ fun HomeScreen(
         TopBar(
             scrollBehavior,
             state.profile!!,
+            onNotificationsPressed,
             onAccountPressed,
             onSettingsPressed,
             onSignOutPressed
@@ -125,6 +130,7 @@ fun HomeScreen(
 @Composable
 fun HomeScreenWithDetailPane(
     state: HomeUiState,
+    onNotificationsPressed: () -> Unit,
     onAccountPressed: () -> Unit,
     onSettingsPressed: () -> Unit,
     onSignOutPressed: () -> Unit,
@@ -141,6 +147,7 @@ fun HomeScreenWithDetailPane(
             state = state,
             modifier = Modifier.weight(1f),
             showCreateTaskButton = false,
+            onNotificationsPressed =  onNotificationsPressed,
             onAccountPressed = onAccountPressed,
             onSettingsPressed = onSettingsPressed,
             onSignOutPressed = onSignOutPressed,
@@ -172,6 +179,7 @@ fun HomeScreenWithDetailPane(
 fun TopBar(
     scrollBehavior: TopAppBarScrollBehavior,
     profile: Profile,
+    onNotificationsClicked: () -> Unit,
     onEditProfileClicked: () -> Unit,
     onSettingsClicked: () -> Unit,
     onSignOutClicked: () -> Unit
@@ -181,9 +189,25 @@ fun TopBar(
     TopAppBar(
         title = { Text(text = "Tasks") },
         actions = {
-            IconButton(onClick = { showOverflowMenu = true }) {
-                ProfileImage(profile.email, profile.profilePhotoUri, Modifier.requiredSize(28.dp))
+            IconButton(
+                onClick = onNotificationsClicked,
+            ) {
+                BadgedBox(badge = {
+                    if (!profile.emailVerified) {
+                        Badge(modifier = Modifier.offset(x = (-4).dp, y = 4.dp))
+                    }
+                }) {
+                    Icon(Icons.Filled.Notifications, contentDescription = "Notifications")
+                }
             }
+            IconButton(onClick = { showOverflowMenu = true }) {
+                ProfileImage(
+                    profile.email,
+                    profile.profilePhotoUri,
+                    Modifier.requiredSize(28.dp)
+                )
+            }
+
             DropdownMenu(
                 expanded = showOverflowMenu,
                 onDismissRequest = { showOverflowMenu = false }) {
@@ -238,6 +262,7 @@ private fun Preview_TopBar() {
         profile = Profile(
             id = "1", email = "user@email.com", displayName = "User", profilePhotoUri = null
         ),
+        onNotificationsClicked = {},
         onEditProfileClicked = {},
         onSettingsClicked = {},
         onSignOutClicked = {}

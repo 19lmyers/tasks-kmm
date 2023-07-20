@@ -99,7 +99,7 @@ fun SignUpScreen(
                     },
                     enabled = emailResult is Ok && displayName.isNotBlank() && password.isNotBlank() && !state.isLoading
                 ) {
-                    Text(text = "Sign Up")
+                    Text(text = "Sign up")
                 }
             }
         },

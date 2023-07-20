@@ -120,7 +120,7 @@ fun ChangePasswordScreen(
 
 @Preview
 @Composable
-private fun Preview_SignUpScreen() {
+private fun Preview_ChangePasswordScreen() {
     ChangePasswordScreen(
         ChangePasswordUiState(),
         snackbarHostState = SnackbarHostState(),

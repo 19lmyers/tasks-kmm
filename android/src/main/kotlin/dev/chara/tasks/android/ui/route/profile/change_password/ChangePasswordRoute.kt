@@ -7,14 +7,16 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import dev.chara.tasks.viewmodel.profile.change_password.ChangePasswordViewModel
 
 @Composable
 fun ChangePasswordRoute(
-    viewModel: ChangePasswordViewModel,
     navigateToHome: () -> Unit,
     navigateUp: () -> Unit
 ) {
+    val viewModel: ChangePasswordViewModel = viewModel()
+
     val state = viewModel.uiState.collectAsStateWithLifecycle()
 
     val snackbarHostState = remember { SnackbarHostState() }

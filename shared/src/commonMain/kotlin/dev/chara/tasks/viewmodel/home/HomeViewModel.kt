@@ -1,9 +1,7 @@
 package dev.chara.tasks.viewmodel.home
 
-import com.github.michaelbull.result.Err
-import com.github.michaelbull.result.mapError
+import com.github.michaelbull.result.Ok
 import dev.chara.tasks.data.Repository
-import dev.chara.tasks.model.Profile
 import dev.chara.tasks.model.Task
 import dev.chara.tasks.model.TaskList
 import dev.chara.tasks.viewmodel.util.PopupMessage
@@ -16,9 +14,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
-import kotlinx.datetime.Clock
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
@@ -56,26 +52,17 @@ class HomeViewModel : ViewModel(), KoinComponent {
         }
     }
 
-    fun updateUserProfile(profile: Profile) {
+    fun requestVerifyEmailResend() {
         viewModelScope.launch {
-            val result = repository.updateUserProfile(profile)
+            val result = repository.requestVerifyEmailResend()
+            _messages.emitAsMessage(result)
 
-            _messages.emitAsMessage(
-                result = result,
-                successMessage = "Profile updated"
-            )
+            _uiState.value = _uiState.value.copy(verifyEmailSent = result is Ok)
         }
     }
 
-    fun updateUserProfilePhoto(photo: ByteArray) {
-        viewModelScope.launch {
-            val result = repository.updateUserProfilePhoto(photo)
-
-            _messages.emitAsMessage(
-                result = result,
-                successMessage = "Photo updated"
-            )
-        }
+    fun clearVerifyEmailNotice() {
+        _uiState.value = _uiState.value.copy(verifyEmailSent = false)
     }
 
     fun logout() {
@@ -102,13 +89,6 @@ class HomeViewModel : ViewModel(), KoinComponent {
         }
     }
 
-    fun updateList(taskList: TaskList) {
-        viewModelScope.launch {
-            val result = repository.updateList(taskList.id, taskList)
-            _messages.emitAsMessage(result)
-        }
-    }
-
     fun createTask(listId: String, task: Task) {
         viewModelScope.launch {
             val result = repository.createTask(listId, task)
@@ -120,20 +100,6 @@ class HomeViewModel : ViewModel(), KoinComponent {
         viewModelScope.launch {
             val result = repository.updateTask(task.listId, task.id, task)
             _messages.emitAsMessage(result, successMessage = "Task updated")
-        }
-    }
-
-    fun markTaskAsCompleted(taskId: String) {
-        viewModelScope.launch {
-            val task = repository.getTaskById(taskId).first() ?: return@launch
-
-            val result = repository.updateTask(
-                task.listId, task.id, task.copy(
-                    isCompleted = true,
-                    lastModified = Clock.System.now()
-                )
-            )
-            _messages.emitAsMessage(result, successMessage = "Task completed")
         }
     }
 }

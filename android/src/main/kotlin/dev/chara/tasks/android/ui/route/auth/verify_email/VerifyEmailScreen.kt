@@ -1,4 +1,4 @@
-package dev.chara.tasks.android.ui.route.auth.forgot_password
+package dev.chara.tasks.android.ui.route.auth.verify_email
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -10,13 +10,9 @@ import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilledTonalButton
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
@@ -44,18 +40,17 @@ import androidx.compose.ui.unit.dp
 import com.github.michaelbull.result.Err
 import com.github.michaelbull.result.Ok
 import com.github.michaelbull.result.Result
-import dev.chara.tasks.viewmodel.auth.forgot_password.ForgotPasswordUiState
+import dev.chara.tasks.viewmodel.auth.verify_email.VerifyEmailUiState
 
 
 @OptIn(
     ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class, ExperimentalComposeUiApi::class
 )
 @Composable
-fun ForgotPasswordScreen(
-    state: ForgotPasswordUiState,
+fun VerifyEmailScreen(
+    state: VerifyEmailUiState,
     snackbarHostState: SnackbarHostState,
-    onUpClicked: () -> Unit,
-    onResetClicked: (String) -> Unit,
+    onVerifyClicked: (String) -> Unit,
     validateEmail: (String) -> Result<Unit, String>
 ) {
     val keyboardController = LocalSoftwareKeyboardController.current
@@ -68,12 +63,7 @@ fun ForgotPasswordScreen(
         snackbarHost = { SnackbarHost(snackbarHostState) },
         topBar = {
             TopAppBar(
-                title = { Text("Forgot password?") },
-                navigationIcon = {
-                    IconButton(onClick = onUpClicked) {
-                        Icon(Icons.Filled.ArrowBack, contentDescription = "Navigate up")
-                    }
-                }
+                title = { Text("Confirm email") },
             )
         },
         bottomBar = {
@@ -84,12 +74,12 @@ fun ForgotPasswordScreen(
                     modifier = Modifier.padding(16.dp, 8.dp),
                     onClick = {
                         keyboardController?.hide()
-                        onResetClicked(email)
+                        onVerifyClicked(email)
                     },
                     enabled = emailResult is Ok && !state.isLoading
 
                 ) {
-                    Text(text = "Confirm")
+                    Text(text = "Verify")
                 }
             }
         },
@@ -104,11 +94,11 @@ fun ForgotPasswordScreen(
                 if (state.isLoading) {
                     LinearProgressIndicator(modifier = Modifier.fillMaxWidth())
                 }
-                ForgotPasswordForm(
+                VerifyEmailForm(
                     email = email,
                     onEmailChanged = { email = it },
-                    resetPending = state.isLoading,
-                    onResetClicked = { onResetClicked(email) },
+                    verifyPending = state.isLoading,
+                    onVerifyClicked = { onVerifyClicked(email) },
                     emailResult = emailResult
                 )
             }
@@ -118,23 +108,22 @@ fun ForgotPasswordScreen(
 
 @Preview
 @Composable
-private fun Preview_ForgotPasswordScreen() {
-    ForgotPasswordScreen(
-        state = ForgotPasswordUiState(),
+private fun Preview_VerifyEmailScreen() {
+    VerifyEmailScreen(
+        state = VerifyEmailUiState(),
         snackbarHostState = SnackbarHostState(),
-        onUpClicked = {},
-        onResetClicked = {},
+        onVerifyClicked = {},
         validateEmail = { Ok(Unit) }
     )
 }
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
-private fun ForgotPasswordForm(
+private fun VerifyEmailForm(
     email: String,
     onEmailChanged: (String) -> Unit,
-    resetPending: Boolean,
-    onResetClicked: () -> Unit,
+    verifyPending: Boolean,
+    onVerifyClicked: () -> Unit,
     emailResult: Result<Unit, String>
 ) {
     val keyboardController = LocalSoftwareKeyboardController.current
@@ -154,12 +143,12 @@ private fun ForgotPasswordForm(
         ),
         keyboardActions = KeyboardActions(
             onDone = {
-                if (emailResult is Ok && !resetPending) {
+                if (emailResult is Ok && !verifyPending) {
                     keyboardController?.hide()
-                    onResetClicked()
+                    onVerifyClicked()
                 }
             }
-            ),
+        ),
         isError = email.isNotEmpty() && emailResult is Err,
         supportingText = {
             if (email.isNotEmpty() && emailResult is Err) {

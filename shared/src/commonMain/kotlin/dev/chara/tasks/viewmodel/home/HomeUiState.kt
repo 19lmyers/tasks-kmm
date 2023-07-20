@@ -10,8 +10,9 @@ data class HomeUiState(
     val firstLoad: Boolean = false,
 
     val isAuthenticated: Boolean = false,
+    val verifyEmailSent: Boolean = false,
     val profile: Profile? = null,
     val boardSections: List<BoardSection> = listOf(),
     val pinnedLists: List<PinnedList> = listOf(),
-    val allLists: List<TaskList> = listOf(),
+    val allLists: List<TaskList> = listOf()
 )

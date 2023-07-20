@@ -245,6 +245,49 @@ class RestDataSource(
             Err(ClientError(ex))
         }
 
+    suspend fun changeEmail(newEmail: String) = try {
+        val response = client.post("$endpointUrl/auth/email") {
+            contentType(ContentType.Text.Plain)
+            setBody(newEmail)
+        }
+
+        when (response.status) {
+            HttpStatusCode.OK -> {
+                Ok(Unit)
+            }
+
+            HttpStatusCode.BadRequest, HttpStatusCode.Conflict -> {
+                Err(ApiError.InvalidQuery(response.body()))
+            }
+
+            else -> {
+                Err(ApiError.OtherServerError(response.body()))
+            }
+        }
+    } catch (ex: Throwable) {
+        Err(ClientError(ex))
+    }
+
+    suspend fun requestVerifyEmailResend() = try {
+        val response = client.post("$endpointUrl/auth/email/resend")
+
+        when (response.status) {
+            HttpStatusCode.OK -> {
+                Ok(Unit)
+            }
+
+            HttpStatusCode.BadRequest -> {
+                Err(ApiError.InvalidQuery(response.body()))
+            }
+
+            else -> {
+                Err(ApiError.OtherServerError(response.body()))
+            }
+        }
+    } catch (ex: Throwable) {
+        Err(ClientError(ex))
+    }
+
     @Serializable
     data class PasswordChange(val currentPassword: String, val newPassword: String)
 
@@ -260,6 +303,32 @@ class RestDataSource(
             }
 
             HttpStatusCode.BadRequest -> {
+                Err(ApiError.InvalidQuery(response.body()))
+            }
+
+            else -> {
+                Err(ApiError.OtherServerError(response.body()))
+            }
+        }
+    } catch (ex: Throwable) {
+        Err(ClientError(ex))
+    }
+
+    @Serializable
+    data class EmailVerification(val verifyToken: String, val email: String)
+
+    suspend fun verifyEmail(verifyToken: String, email: String) = try {
+        val response = client.post("$endpointUrl/auth/verify") {
+            contentType(ContentType.Application.Json)
+            setBody(EmailVerification(verifyToken, email))
+        }
+
+        when (response.status) {
+            HttpStatusCode.OK -> {
+                Ok(Unit)
+            }
+
+            HttpStatusCode.BadRequest, HttpStatusCode.Unauthorized -> {
                 Err(ApiError.InvalidQuery(response.body()))
             }
 

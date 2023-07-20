@@ -216,7 +216,14 @@ fun ProfileScreen(
 
                 ListItem(
                     headlineContent = {
-                        Text("Change email")
+                        Text(state.profile!!.email)
+                    },
+                    supportingContent = {
+                        if (state.profile!!.emailVerified) {
+                            Text("Tap to change")
+                        } else {
+                            Text("Unverified")
+                        }
                     },
                     leadingContent = {
                         Icon(Icons.Filled.AlternateEmail, contentDescription = "Email")
@@ -224,25 +231,27 @@ fun ProfileScreen(
                     modifier = Modifier
                         .padding(horizontal = 16.dp)
                         .clip(MaterialTheme.shapes.extraLarge)
-                        .clickable {
+                        .clickable(enabled = state.profile!!.emailVerified) {
                             onChangeEmailClicked()
                         }
                 )
 
-                ListItem(
-                    headlineContent = {
-                        Text("Change password")
-                    },
-                    leadingContent = {
-                        Icon(Icons.Filled.Password, contentDescription = "Email")
-                    },
-                    modifier = Modifier
-                        .padding(horizontal = 16.dp)
-                        .clip(MaterialTheme.shapes.extraLarge)
-                        .clickable {
-                            onChangePasswordClicked()
-                        }
-                )
+                if (state.profile!!.emailVerified) {
+                    ListItem(
+                        headlineContent = {
+                            Text("Change password")
+                        },
+                        leadingContent = {
+                            Icon(Icons.Filled.Password, contentDescription = "Email")
+                        },
+                        modifier = Modifier
+                            .padding(horizontal = 16.dp)
+                            .clip(MaterialTheme.shapes.extraLarge)
+                            .clickable(enabled = state.profile!!.emailVerified) {
+                                onChangePasswordClicked()
+                            }
+                    )
+                }
             }
         }
     )

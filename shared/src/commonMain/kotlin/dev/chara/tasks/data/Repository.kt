@@ -67,8 +67,17 @@ class Repository(
             authenticateUser(email, password)
         }
 
+    suspend fun changeEmail(newEmail: String) =
+        restDataSource.changeEmail(newEmail)
+
+    suspend fun requestVerifyEmailResend() = restDataSource.requestVerifyEmailResend()
+
     suspend fun changePassword(currentPassword: String, newPassword: String) =
         restDataSource.changePassword(currentPassword, newPassword)
+
+    suspend fun verifyEmail(verifyToken: String, email: String) =
+        restDataSource.verifyEmail(verifyToken, email)
+            .andThen { refreshUserProfile() }
 
     suspend fun requestPasswordResetEmail(email: String) =
         restDataSource.requestPasswordResetEmail(email)

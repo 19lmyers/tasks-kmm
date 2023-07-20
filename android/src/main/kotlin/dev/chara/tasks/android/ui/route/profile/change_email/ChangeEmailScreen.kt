@@ -1,4 +1,4 @@
-package dev.chara.tasks.android.ui.route.auth.forgot_password
+package dev.chara.tasks.android.ui.route.profile.change_email
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -44,31 +44,30 @@ import androidx.compose.ui.unit.dp
 import com.github.michaelbull.result.Err
 import com.github.michaelbull.result.Ok
 import com.github.michaelbull.result.Result
-import dev.chara.tasks.viewmodel.auth.forgot_password.ForgotPasswordUiState
+import dev.chara.tasks.viewmodel.profile.change_email.ChangeEmailUiState
 
-
-@OptIn(
-    ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class, ExperimentalComposeUiApi::class
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class,
+    ExperimentalComposeUiApi::class
 )
 @Composable
-fun ForgotPasswordScreen(
-    state: ForgotPasswordUiState,
+fun ChangeEmailScreen(
+    state: ChangeEmailUiState,
     snackbarHostState: SnackbarHostState,
     onUpClicked: () -> Unit,
-    onResetClicked: (String) -> Unit,
+    onChangeEmailClicked: (String) -> Unit,
     validateEmail: (String) -> Result<Unit, String>
 ) {
     val keyboardController = LocalSoftwareKeyboardController.current
 
-    var email by rememberSaveable { mutableStateOf("") }
+    var newEmail by rememberSaveable { mutableStateOf("") }
 
-    val emailResult = validateEmail(email)
+    val emailResult = validateEmail(newEmail)
 
     Scaffold(
         snackbarHost = { SnackbarHost(snackbarHostState) },
         topBar = {
             TopAppBar(
-                title = { Text("Forgot password?") },
+                title = { Text("Change email") },
                 navigationIcon = {
                     IconButton(onClick = onUpClicked) {
                         Icon(Icons.Filled.ArrowBack, contentDescription = "Navigate up")
@@ -84,12 +83,11 @@ fun ForgotPasswordScreen(
                     modifier = Modifier.padding(16.dp, 8.dp),
                     onClick = {
                         keyboardController?.hide()
-                        onResetClicked(email)
+                        onChangeEmailClicked(newEmail)
                     },
                     enabled = emailResult is Ok && !state.isLoading
-
                 ) {
-                    Text(text = "Confirm")
+                    Text(text = "Change")
                 }
             }
         },
@@ -104,37 +102,38 @@ fun ForgotPasswordScreen(
                 if (state.isLoading) {
                     LinearProgressIndicator(modifier = Modifier.fillMaxWidth())
                 }
-                ForgotPasswordForm(
-                    email = email,
-                    onEmailChanged = { email = it },
-                    resetPending = state.isLoading,
-                    onResetClicked = { onResetClicked(email) },
+                ChangeEmailForm(
+                    email = newEmail,
+                    onEmailChanged = { newEmail = it },
+                    changeEmailPending = state.isLoading,
+                    onChangeEmailClicked = {
+                        onChangeEmailClicked(newEmail)
+                    },
                     emailResult = emailResult
                 )
             }
-        }
-    )
+        })
 }
 
 @Preview
 @Composable
-private fun Preview_ForgotPasswordScreen() {
-    ForgotPasswordScreen(
-        state = ForgotPasswordUiState(),
+private fun Preview_ChangeEmailScreen() {
+    ChangeEmailScreen(
+        ChangeEmailUiState(),
         snackbarHostState = SnackbarHostState(),
         onUpClicked = {},
-        onResetClicked = {},
+        onChangeEmailClicked = { _ -> },
         validateEmail = { Ok(Unit) }
     )
 }
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
-private fun ForgotPasswordForm(
+private fun ChangeEmailForm(
     email: String,
     onEmailChanged: (String) -> Unit,
-    resetPending: Boolean,
-    onResetClicked: () -> Unit,
+    changeEmailPending: Boolean,
+    onChangeEmailClicked: () -> Unit,
     emailResult: Result<Unit, String>
 ) {
     val keyboardController = LocalSoftwareKeyboardController.current
@@ -154,12 +153,12 @@ private fun ForgotPasswordForm(
         ),
         keyboardActions = KeyboardActions(
             onDone = {
-                if (emailResult is Ok && !resetPending) {
+                if (emailResult is Ok && !changeEmailPending) {
                     keyboardController?.hide()
-                    onResetClicked()
+                    onChangeEmailClicked()
                 }
             }
-            ),
+        ),
         isError = email.isNotEmpty() && emailResult is Err,
         supportingText = {
             if (email.isNotEmpty() && emailResult is Err) {
