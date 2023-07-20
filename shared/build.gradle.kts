@@ -11,14 +11,17 @@ plugins {
 
     alias(libs.plugins.sqldelight)
 
-    kotlin("native.cocoapods")
+    alias(libs.plugins.kmmbridge)
+
     id("kotlin-parcelize")
+
+    `maven-publish`
 }
 
 kotlin {
     jvmToolchain(8)
 
-    androidTarget()
+    android()
 
     iosX64()
     iosArm64()
@@ -32,31 +35,6 @@ kotlin {
     }
     */
 
-    cocoapods {
-        name = "MultiPlatformLibrary"
-        summary = "Shared components for Tasks"
-        homepage = "https://tasks.chara.dev/"
-        version = "1.0"
-
-        ios.deploymentTarget = "16.0"
-
-        podfile = project.file("../ios/Podfile")
-
-        pod("FirebaseCore")
-        pod("FirebaseAnalytics")
-        pod("FirebaseMessaging")
-        pod("FirebaseCrashlytics")
-
-        framework {
-            baseName = "MultiPlatformLibrary"
-
-            export(libs.moko.mvvm.core)
-            export(libs.moko.mvvm.flow)
-
-            export(libs.result)
-        }
-    }
-
     sourceSets {
         val commonMain by getting {
             dependencies {
@@ -67,7 +45,7 @@ kotlin {
                 implementation(libs.kotlinx.serialization.json)
                 implementation(libs.kotlinx.coroutines.core)
 
-                implementation(libs.koin.core)
+                api(libs.koin.core)
 
                 implementation(libs.ktor.client.core)
                 implementation(libs.ktor.client.auth)
@@ -99,8 +77,6 @@ kotlin {
 
         val androidMain by getting {
             dependencies {
-                implementation(libs.bundles.firebase)
-
                 implementation(libs.androidx.lifecycle.viewmodel)
 
                 implementation(libs.ktor.client.okhttp)
@@ -158,6 +134,14 @@ android {
     compileOptions {
         isCoreLibraryDesugaringEnabled = true
     }
+}
+
+kmmbridge {
+    mavenPublishArtifacts()
+    githubReleaseVersions()
+    spm()
+    versionPrefix.set("0.8")
+    addGithubPackagesRepository()
 }
 
 sqldelight {

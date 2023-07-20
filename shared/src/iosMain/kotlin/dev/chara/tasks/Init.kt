@@ -1,8 +1,5 @@
 package dev.chara.tasks
 
-import cocoapods.FirebaseCore.FIRApp
-import cocoapods.FirebaseMessaging.FIRMessaging
-import cocoapods.FirebaseMessaging.FIRMessagingDelegateProtocol
 import dev.chara.tasks.data.cache.DriverFactory
 import dev.chara.tasks.data.preference.DataStorePath
 import dev.chara.tasks.data.rest.Endpoint

@@ -116,7 +116,7 @@ dependencies {
     implementation(libs.coil.compose)
 
     implementation(platform(libs.firebase.bom))
-    implementation(libs.firebase.messaging)
+    implementation(libs.bundles.firebase)
 
     debugImplementation(libs.compose.ui.tooling)
     debugImplementation(libs.compose.ui.test.manifest)

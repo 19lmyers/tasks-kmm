@@ -1,6 +1,6 @@
 package dev.chara.tasks.logging
 
-import dev.chara.tasks.util.FirebaseWrapper
+import dev.chara.tasks.firebase.Firebase
 import io.github.aakira.napier.Antilog
 import io.github.aakira.napier.LogLevel
 
@@ -14,14 +14,14 @@ class CrashlyticsAntilog : Antilog() {
     ) {
         message?.let {
             if (tag != null) {
-                FirebaseWrapper.log("${priority.name} $tag: $message")
+                Firebase.log("${priority.name} $tag: $message")
             } else {
-                FirebaseWrapper.log("${priority.name}: $message")
+                Firebase.log("${priority.name}: $message")
             }
         }
 
         throwable?.let {
-            FirebaseWrapper.recordException(it)
+            Firebase.recordException(it)
         }
     }
 }

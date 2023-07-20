@@ -11,6 +11,7 @@ import dev.chara.tasks.data.cache.isDirty
 import dev.chara.tasks.data.cache.newDirtyId
 import dev.chara.tasks.data.preference.PreferenceDataSource
 import dev.chara.tasks.data.rest.RestDataSource
+import dev.chara.tasks.firebase.Firebase
 import dev.chara.tasks.model.Profile
 import dev.chara.tasks.model.Task
 import dev.chara.tasks.model.TaskList
@@ -19,7 +20,6 @@ import dev.chara.tasks.model.board.PinnedList
 import dev.chara.tasks.model.preference.Theme
 import dev.chara.tasks.model.preference.ThemeVariant
 import dev.chara.tasks.model.toModel
-import dev.chara.tasks.util.FirebaseWrapper
 import dev.chara.tasks.widget.WidgetManager
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
@@ -52,8 +52,8 @@ class Repository(
         )
         preferenceDataSource.setApiTokens(tokenPair)
 
-        FirebaseWrapper.setUserId(userId)
-        val fcmToken = FirebaseWrapper.getMessagingToken()
+        Firebase.setUserId(userId)
+        val fcmToken = Firebase.getMessagingToken()
         if (fcmToken != null) {
             linkFCMToken(fcmToken).bind()
         }
@@ -86,13 +86,13 @@ class Repository(
         restDataSource.resetPassword(resetToken, newPassword)
 
     suspend fun logout() = binding {
-        FirebaseWrapper.getMessagingToken()?.apply {
+        Firebase.getMessagingToken()?.apply {
             restDataSource.invalidateFcmToken(this).bind()
         }
         preferenceDataSource.clearAuthFields()
         cacheDataSource.deleteAll()
 
-        FirebaseWrapper.setUserId("")
+        Firebase.setUserId("")
     }
 
     fun getUserProfile() = preferenceDataSource.getUserProfile()
