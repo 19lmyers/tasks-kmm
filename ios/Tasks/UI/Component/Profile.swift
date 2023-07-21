@@ -6,8 +6,8 @@
 //  Copyright © 2023 orgName. All rights reserved.
 //
 
-import MultiPlatformLibrary
 import SwiftUI
+import TasksShared
 
 struct ProfileImageView: View {
     var imageUrl: String

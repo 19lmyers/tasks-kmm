@@ -6,9 +6,9 @@
 //  Copyright © 2023 orgName. All rights reserved.
 //
 
-import MultiPlatformLibrary
 import PhotosUI
 import SwiftUI
+import TasksShared
 
 typealias UITask = SwiftUI.Task
 
@@ -38,6 +38,7 @@ struct ProfileScreen_Previews: PreviewProvider {
                 profile: Profile(
                     id: "1",
                     email: "user@email.com",
+                    emailVerified: true,
                     displayName: "John Smith",
                     profilePhotoUri: nil
                 )

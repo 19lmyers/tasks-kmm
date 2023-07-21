@@ -1,8 +1,8 @@
 import FirebaseCore
 import FirebaseMessaging
 import Foundation
-import MultiPlatformLibrary
 import SwiftUI
+import TasksShared
 
 private var DEEP_LINK_HOST = "tasks.chara.dev"
 
@@ -75,6 +75,8 @@ class AppDelegate: NSObject, UIApplicationDelegate {
         UserDefaults.standard.register(defaults: ["NSApplicationCrashOnExceptions": true])
         FirebaseApp.configure()
         Messaging.messaging().delegate = self
+
+        Firebase.shared.link(platformWrapper: AppleFirebaseWrapper())
 
         UNUserNotificationCenter.current().delegate = self
 

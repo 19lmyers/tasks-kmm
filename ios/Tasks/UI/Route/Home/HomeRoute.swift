@@ -6,8 +6,8 @@
 //  Copyright © 2023 orgName. All rights reserved.
 //
 
-import MultiPlatformLibrary
 import SwiftUI
+import TasksShared
 
 struct HomeRoute: View {
     @Environment(\.horizontalSizeClass) var horizontalSizeClass
@@ -81,9 +81,7 @@ struct HomeRoute: View {
                                 viewModel.updateTask(task: task)
                             },
                             onRefresh: {
-                                DispatchQueue.main.sync {
-                                    viewModel.refreshCache()
-                                }
+                                await viewModel.refreshCache()
                             }
                         )
                         .navigationDestination(for: DetailNavTarget.self) { navTarget in
@@ -197,9 +195,7 @@ struct HomeRoute: View {
                             viewModel.updateTask(task: task)
                         },
                         onRefresh: {
-                            DispatchQueue.main.sync {
-                                viewModel.refreshCache()
-                            }
+                            await viewModel.refreshCache()
                         }
                     )
                     .navigationDestination(for: DetailNavTarget.self) { navTarget in

@@ -6,8 +6,8 @@
 //  Copyright © 2023 orgName. All rights reserved.
 //
 
-import MultiPlatformLibrary
 import SwiftUI
+import TasksShared
 
 struct ContentView: View {
     @StateObject var appState = AppState.shared

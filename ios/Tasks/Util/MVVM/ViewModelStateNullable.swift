@@ -5,8 +5,8 @@
 //  Created by mdubkov on 25.09.2022.
 //
 
-import MultiPlatformLibrary
 import SwiftUI
+import TasksShared
 
 extension ObservableObject where Self: ViewModel {
     func stateNullable<T, R>(

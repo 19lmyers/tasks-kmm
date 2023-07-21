@@ -6,8 +6,8 @@
 //  Copyright © 2023 orgName. All rights reserved.
 //
 
-import MultiPlatformLibrary
 import SwiftUI
+import TasksShared
 
 struct SignUpRoute: View {
     @StateObject var viewModel = SignUpViewModel()

@@ -6,7 +6,7 @@
 //  Copyright © 2023 orgName. All rights reserved.
 //
 
-import MultiPlatformLibrary
+import TasksShared
 
 extension TaskList: Identifiable {}
 

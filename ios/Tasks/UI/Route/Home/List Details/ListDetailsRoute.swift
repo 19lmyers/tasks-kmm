@@ -6,8 +6,8 @@
 //  Copyright © 2023 orgName. All rights reserved.
 //
 
-import MultiPlatformLibrary
 import SwiftUI
+import TasksShared
 
 struct ListDetailsRoute: View {
     @Environment(\.presentationMode) var presentation
@@ -39,9 +39,7 @@ struct ListDetailsRoute: View {
             ListDetailsScreen(
                 state: uiState,
                 onRefresh: {
-                    DispatchQueue.main.sync {
-                        viewModel.refreshCache()
-                    }
+                    await viewModel.refreshCache()
                 },
                 onListSelected: onListSelected,
                 onTaskSelected: onTaskSelected,

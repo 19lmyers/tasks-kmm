@@ -6,7 +6,7 @@
 //
 
 import Combine
-import MultiPlatformLibrary
+import TasksShared
 
 public func createPublisher<T>(_ cFlow: CFlow<T>) -> AnyPublisher<T, Never> {
     CFlowPublisher(cFlow: cFlow).eraseToAnyPublisher()

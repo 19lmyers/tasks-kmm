@@ -6,8 +6,8 @@
 //
 
 import Combine
-import MultiPlatformLibrary
 import SwiftUI
+import TasksShared
 
 public extension ObservableObject where Self: ViewModel {
     func binding<T, R>(

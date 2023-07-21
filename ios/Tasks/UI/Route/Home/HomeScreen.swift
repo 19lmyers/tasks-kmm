@@ -6,8 +6,8 @@
 //  Copyright © 2023 orgName. All rights reserved.
 //
 
-import MultiPlatformLibrary
 import SwiftUI
+import TasksShared
 
 struct HomeScreen: View {
     var state: HomeUiState
@@ -48,6 +48,7 @@ struct HomeScreen_Previews: PreviewProvider {
                     isLoading: false,
                     firstLoad: false,
                     isAuthenticated: true,
+                    verifyEmailSent: false,
                     profile: nil,
                     boardSections: [],
                     pinnedLists: [],
