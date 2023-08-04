@@ -30,6 +30,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.ListItem
+import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
@@ -65,6 +66,8 @@ import dev.chara.tasks.shared.ui.theme.ColorTheme
 import dev.chara.tasks.shared.ui.theme.LocalDarkTheme
 import dev.chara.tasks.shared.ui.theme.LocalThemeVariant
 import dev.chara.tasks.shared.ui.theme.color.style
+import dev.chara.tasks.shared.ui.theme.extend.surfaceContainerHigh
+import dev.chara.tasks.shared.ui.theme.extend.surfaceContainerHighest
 import kotlinx.datetime.Clock
 
 @OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterial3Api::class)
@@ -94,8 +97,9 @@ fun ModifyListContent(component: ModifyListComponent) {
                 Surface(
                     modifier = Modifier.padding(24.dp),
                     shape = MaterialTheme.shapes.extraLarge,
-                    color = MaterialTheme.colorScheme.surface,
+                    color = MaterialTheme.colorScheme.surfaceContainerHigh,
                     contentColor = MaterialTheme.colorScheme.onSurface,
+                    border = BorderStroke(1.dp, MaterialTheme.colorScheme.surfaceContainerHighest),
                     tonalElevation = 6.0.dp,
                 ) {
                     Column(modifier = Modifier.padding(24.dp)) {
@@ -183,6 +187,7 @@ fun ModifyListContent(component: ModifyListComponent) {
                 )
 
                 ListItem(
+                    colors = ListItemDefaults.colors(containerColor = MaterialTheme.colorScheme.surfaceContainerHigh),
                     modifier = Modifier.clickable {
                         showIconDialog = true
                     },
@@ -248,6 +253,7 @@ fun ModifyListContent(component: ModifyListComponent) {
                 )
 
                 ListItem(
+                    colors = ListItemDefaults.colors(containerColor = MaterialTheme.colorScheme.surfaceContainerHigh),
                     headlineContent = { Text(text = "Show list numbers") },
                     leadingContent = {
                         Icon(imageVector = Icons.Filled.FormatListNumbered, "List numbers")

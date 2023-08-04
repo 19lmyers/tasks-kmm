@@ -1,5 +1,6 @@
 package dev.chara.tasks.shared.ui.content.home.dialog
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -17,6 +18,7 @@ import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ListItem
+import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ProvideTextStyle
@@ -35,6 +37,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.androidx.material3.polyfill.AlertDialog
 import dev.chara.tasks.shared.domain.FriendlyDateFormatter
+import dev.chara.tasks.shared.ui.theme.extend.surfaceContainerHigh
+import dev.chara.tasks.shared.ui.theme.extend.surfaceContainerHighest
 import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDateTime
@@ -103,11 +107,17 @@ fun PickReminderDateDialog(onDismiss: () -> Unit, onConfirm: (LocalDateTime) -> 
             }
         }
     ) {
-        DatePicker(state = datePickerState)
+        CompositionLocalProvider(LocalContentColor provides MaterialTheme.colorScheme.onSurface) {
+            DatePicker(
+                state = datePickerState,
+                colors = DatePickerDefaults.colors(containerColor = MaterialTheme.colorScheme.surfaceContainerHigh)
+            )
+        }
 
         Divider()
 
         ListItem(
+            colors = ListItemDefaults.colors(containerColor = MaterialTheme.colorScheme.surfaceContainerHigh),
             modifier = Modifier
                 .clickable {
                     showTimePickerDialog = true
@@ -151,7 +161,8 @@ private fun DatePickerDialog(
             modifier = Modifier
                 .requiredWidth(360.dp),
             shape = DatePickerDefaults.shape,
-            color = MaterialTheme.colorScheme.surface,
+            color = MaterialTheme.colorScheme.surfaceContainerHigh,
+            border = BorderStroke(1.dp, MaterialTheme.colorScheme.surfaceContainerHighest),
             tonalElevation = DatePickerDefaults.TonalElevation,
         ) {
             Column(verticalArrangement = Arrangement.SpaceBetween) {

@@ -1,5 +1,6 @@
 package dev.chara.tasks.shared.ui.content.home.dialog
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -25,6 +26,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.androidx.material3.polyfill.AlertDialog
+import dev.chara.tasks.shared.ui.theme.extend.surfaceContainerHigh
+import dev.chara.tasks.shared.ui.theme.extend.surfaceContainerHighest
 import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
@@ -58,7 +61,12 @@ fun PickDueDateDialog(onDismiss: () -> Unit, onConfirm: (LocalDateTime) -> Unit)
             }
         }
     ) {
-        DatePicker(state = datePickerState)
+        CompositionLocalProvider(LocalContentColor provides MaterialTheme.colorScheme.onSurface) {
+            DatePicker(
+                state = datePickerState,
+                colors = DatePickerDefaults.colors(containerColor = MaterialTheme.colorScheme.surfaceContainerHigh)
+            )
+        }
     }
 }
 
@@ -79,7 +87,8 @@ private fun DatePickerDialog(
             modifier = Modifier
                 .requiredWidth(360.dp),
             shape = DatePickerDefaults.shape,
-            color = MaterialTheme.colorScheme.surface,
+            color = MaterialTheme.colorScheme.surfaceContainerHigh,
+            border = BorderStroke(1.dp, MaterialTheme.colorScheme.surfaceContainerHighest),
             tonalElevation = DatePickerDefaults.TonalElevation,
         ) {
             Column(verticalArrangement = Arrangement.SpaceBetween) {

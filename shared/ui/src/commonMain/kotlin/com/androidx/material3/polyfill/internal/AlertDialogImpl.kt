@@ -17,6 +17,7 @@
 
 package com.androidx.material3.polyfill.internal
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -53,12 +54,14 @@ internal fun AlertDialogContent(
     iconContentColor: Color,
     titleContentColor: Color,
     textContentColor: Color,
+    border: BorderStroke,
 ) {
     Surface(
         modifier = modifier,
         shape = shape,
         color = containerColor,
         tonalElevation = tonalElevation,
+        border = border
     ) {
         Column(
             modifier = Modifier.padding(DialogPadding)

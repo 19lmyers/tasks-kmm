@@ -16,9 +16,9 @@
 
 package com.androidx.material3.polyfill
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.sizeIn
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -36,8 +36,9 @@ import com.androidx.material3.polyfill.internal.ButtonsCrossAxisSpacing
 import com.androidx.material3.polyfill.internal.ButtonsMainAxisSpacing
 import com.androidx.material3.polyfill.internal.DialogMaxWidth
 import com.androidx.material3.polyfill.internal.DialogMinWidth
+import dev.chara.tasks.shared.ui.theme.extend.surfaceContainerHigh
+import dev.chara.tasks.shared.ui.theme.extend.surfaceContainerHighest
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AlertDialog(
     onDismissRequest: () -> Unit,
@@ -70,10 +71,11 @@ fun AlertDialog(
     title: @Composable (() -> Unit)? = null,
     text: @Composable (() -> Unit)? = null,
     shape: Shape = MaterialTheme.shapes.extraLarge,
-    containerColor: Color = MaterialTheme.colorScheme.surface,
+    containerColor: Color = MaterialTheme.colorScheme.surfaceContainerHigh,
     iconContentColor: Color = MaterialTheme.colorScheme.secondary,
     titleContentColor: Color = MaterialTheme.colorScheme.onSurface,
     textContentColor: Color = MaterialTheme.colorScheme.onSurfaceVariant,
+    border: BorderStroke = BorderStroke(1.dp, MaterialTheme.colorScheme.surfaceContainerHighest),
     tonalElevation: Dp = 6.0.dp,
     properties: DialogProperties = DialogProperties()
 ) = AlertDialog(onDismissRequest = onDismissRequest, modifier = modifier, properties = properties) {
@@ -97,5 +99,6 @@ fun AlertDialog(
         iconContentColor = iconContentColor,
         titleContentColor = titleContentColor,
         textContentColor = textContentColor,
+        border = border
     )
 }

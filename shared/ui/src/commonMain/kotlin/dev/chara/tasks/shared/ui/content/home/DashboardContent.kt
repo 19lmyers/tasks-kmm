@@ -25,7 +25,6 @@ import androidx.compose.foundation.lazy.LazyItemScope
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.IconButton
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.OpenInNew
@@ -35,6 +34,7 @@ import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Surface
@@ -42,6 +42,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -66,6 +67,7 @@ import dev.chara.tasks.shared.ui.theme.extend.surfaceContainer
 import dev.chara.tasks.shared.ui.theme.extend.surfaceContainerHigh
 import dev.chara.tasks.shared.ui.theme.extend.surfaceContainerHighest
 import dev.chara.tasks.shared.ui.theme.extend.surfaceContainerLow
+import kotlinx.coroutines.launch
 
 private const val CONTENT_TYPE_HEADER = "CONTENT_TYPE_HEADER"
 private const val CONTENT_TYPE_SECTION = "CONTENT_TYPE_SECTION"
@@ -90,6 +92,8 @@ fun DashboardContent(
     val pullRefreshState =
         rememberPullRefreshState(state.value.isRefreshing, { component.onRefresh() })
 
+    val coroutineScope = rememberCoroutineScope()
+
     Box(
         modifier = Modifier
             .padding(paddingTop)
@@ -113,10 +117,13 @@ fun DashboardContent(
                     )
 
                     SectionHeader(
-                        modifier = Modifier.padding(horizontal = 8.dp),
                         title = "Dashboard",
                         elevation = elevation
-                    )
+                    ) {
+                        coroutineScope.launch {
+                            listState.animateScrollToItem(0)
+                        }
+                    }
                 }
             }
 
@@ -162,10 +169,13 @@ fun DashboardContent(
                     )
 
                     SectionHeader(
-                        modifier = Modifier.padding(horizontal = 8.dp),
                         title = "Lists",
                         elevation = elevation
-                    )
+                    ) {
+                        coroutineScope.launch {
+                            listState.animateScrollToItem(state.value.boardSections.size + 1)
+                        }
+                    }
                 }
             }
 
@@ -251,17 +261,19 @@ fun DashboardContent(
 }
 
 @Composable
-private fun SectionHeader(modifier: Modifier = Modifier, title: String, elevation: Dp) {
+private fun SectionHeader(title: String, elevation: Dp, onClick: () -> Unit) {
     Surface(
-        modifier = Modifier.fillMaxWidth().height(64.dp),
+        modifier = Modifier.height(64.dp).fillMaxWidth(),
         tonalElevation = elevation,
-        //border = BorderStroke(1.dp, MaterialTheme.colorScheme.surfaceContainerHighest)
+        onClick = onClick
     ) {
-        Text(
-            modifier = modifier.padding(8.dp),
-            text = title,
-            style = MaterialTheme.typography.titleLarge,
-        )
+        Box(modifier = Modifier.fillMaxSize()) {
+            Text(
+                modifier = Modifier.padding(horizontal = 16.dp).align(Alignment.CenterStart),
+                text = title,
+                style = MaterialTheme.typography.titleLarge
+            )
+        }
     }
 }
 

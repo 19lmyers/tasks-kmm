@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		DD11AAEF2A7CC12C00DE262A /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = DD9E909029FE134100D6DD11 /* Info.plist */; };
 		DD5DF8CD2A762CF200E84B85 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD5DF8CC2A762CF200E84B85 /* ContentView.swift */; };
 		DD5E05862A7C47C2005A2B6A /* lato_medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = DD5E05742A7C47C2005A2B6A /* lato_medium.ttf */; };
 		DD5E05872A7C47C2005A2B6A /* lato_bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = DD5E05752A7C47C2005A2B6A /* lato_bold.ttf */; };
@@ -187,7 +186,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				DD11AAEF2A7CC12C00DE262A /* Info.plist in Resources */,
 				DD9E908729FE109700D6DD11 /* Assets.xcassets in Resources */,
 				DD5E05862A7C47C2005A2B6A /* lato_medium.ttf in Resources */,
 				DDA8F1282A53595200FBC339 /* AppIcon.icns in Resources */,

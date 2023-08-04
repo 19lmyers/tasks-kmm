@@ -16,6 +16,7 @@ import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.ListItem
+import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
@@ -47,6 +48,7 @@ import dev.chara.tasks.shared.ui.item.DueDateChip
 import dev.chara.tasks.shared.ui.item.ReminderChip
 import dev.chara.tasks.shared.ui.model.icon
 import dev.chara.tasks.shared.ui.theme.ColorTheme
+import dev.chara.tasks.shared.ui.theme.extend.surfaceContainerHigh
 import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
 import kotlinx.datetime.TimeZone
@@ -206,6 +208,7 @@ fun CreateTaskContent(component: CreateTaskComponent) {
             }
 
             ListItem(
+                colors = ListItemDefaults.colors(containerColor = MaterialTheme.colorScheme.surfaceContainerHigh),
                 modifier = Modifier.clickable(enabled = !state.value.isLoading) {
                     showReminderDatePickerDialog = true
                 },
@@ -234,6 +237,7 @@ fun CreateTaskContent(component: CreateTaskComponent) {
             )
 
             ListItem(
+                colors = ListItemDefaults.colors(containerColor = MaterialTheme.colorScheme.surfaceContainerHigh),
                 modifier = Modifier.clickable(enabled = !state.value.isLoading) {
                     showDueDatePickerDialog = true
                 },

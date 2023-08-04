@@ -45,6 +45,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.movableContentOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveableStateHolder
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -60,6 +61,7 @@ import dev.chara.tasks.shared.model.Profile
 import dev.chara.tasks.shared.ui.content.home.sheet.CreateTaskContent
 import dev.chara.tasks.shared.ui.content.home.sheet.ModifyListContent
 import dev.chara.tasks.shared.ui.item.ProfileImage
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -82,6 +84,8 @@ fun HomeContent(
     val snackbarHostState = remember { SnackbarHostState() }
 
     val saveableStateHolder = rememberSaveableStateHolder()
+
+    val coroutineScope = rememberCoroutineScope()
 
     var showVerifyEmailDialog by remember { mutableStateOf(false) }
 
@@ -134,6 +138,10 @@ fun HomeContent(
                             onNotificationsClicked = {
                                 if (state.value.profile?.emailVerified == false) {
                                     showVerifyEmailDialog = true
+                                } else {
+                                    coroutineScope.launch {
+                                        snackbarHostState.showSnackbar("No notifications")
+                                    }
                                 }
                             },
                             onEditProfileClicked = {
@@ -149,7 +157,8 @@ fun HomeContent(
                     }
                 ) { innerPadding ->
                     val paddingTop = PaddingValues(top = innerPadding.calculateTopPadding())
-                    val paddingBottom = PaddingValues(bottom = innerPadding.calculateBottomPadding())
+                    val paddingBottom =
+                        PaddingValues(bottom = innerPadding.calculateBottomPadding())
 
                     when (child) {
                         is HomeComponent.Child.Main.Dashboard -> DashboardContent(
@@ -267,7 +276,9 @@ fun TopBar(
     var showOverflowMenu by remember { mutableStateOf(false) }
 
     TopAppBar(
-        title = { Text(text = "Tasks") },
+        title = {
+            Text(text = "Tasks")
+        },
         actions = {
             IconButton(
                 onClick = onNotificationsClicked,

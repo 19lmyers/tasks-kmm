@@ -1,5 +1,6 @@
 package dev.chara.tasks.shared.ui.content.home.dialog
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -33,6 +34,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.androidx.material3.polyfill.AlertDialog
+import dev.chara.tasks.shared.ui.theme.extend.surfaceContainerHigh
+import dev.chara.tasks.shared.ui.theme.extend.surfaceContainerHighest
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -123,7 +126,8 @@ private fun TimePickerDialog(
     ) {
         Surface(
             shape = DatePickerDefaults.shape,
-            color = MaterialTheme.colorScheme.surface,
+            color = MaterialTheme.colorScheme.surfaceContainerHigh,
+            border = BorderStroke(1.dp, MaterialTheme.colorScheme.surfaceContainerHighest),
             tonalElevation = DatePickerDefaults.TonalElevation,
         ) {
             Column(verticalArrangement = Arrangement.SpaceBetween) {

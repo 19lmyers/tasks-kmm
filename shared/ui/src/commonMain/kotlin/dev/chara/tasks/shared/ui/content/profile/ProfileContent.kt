@@ -1,5 +1,6 @@
 package dev.chara.tasks.shared.ui.content.profile
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
@@ -60,6 +61,7 @@ import dev.chara.tasks.shared.component.profile.ProfileComponent
 import dev.chara.tasks.shared.ui.item.ProfileImage
 import dev.chara.tasks.shared.ui.picker.photoPicker
 import dev.chara.tasks.shared.ui.theme.extend.surfaceContainerHigh
+import dev.chara.tasks.shared.ui.theme.extend.surfaceContainerHighest
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
 @Composable
@@ -157,6 +159,7 @@ fun ProfileContent(component: ProfileComponent) {
                 Surface(
                     modifier = Modifier.padding(16.dp),
                     shape = MaterialTheme.shapes.extraLarge,
+                    border = BorderStroke(1.dp, MaterialTheme.colorScheme.surfaceContainerHighest)
                 ) {
                     ListItem(
                         colors = ListItemDefaults.colors(containerColor = MaterialTheme.colorScheme.surfaceContainerHigh),
