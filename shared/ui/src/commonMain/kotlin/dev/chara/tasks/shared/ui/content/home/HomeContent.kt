@@ -4,6 +4,7 @@ import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.togetherWith
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -61,6 +62,8 @@ import dev.chara.tasks.shared.model.Profile
 import dev.chara.tasks.shared.ui.content.home.sheet.CreateTaskContent
 import dev.chara.tasks.shared.ui.content.home.sheet.ModifyListContent
 import dev.chara.tasks.shared.ui.item.ProfileImage
+import dev.chara.tasks.shared.ui.theme.extend.surfaceContainer
+import dev.chara.tasks.shared.ui.theme.extend.surfaceContainerHighest
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -238,6 +241,8 @@ fun HomeContent(
                         .windowInsetsPadding(WindowInsets.systemBars)
                         .padding(16.dp),
                     shape = MaterialTheme.shapes.extraLarge,
+                    color = MaterialTheme.colorScheme.surfaceContainer,
+                    border = BorderStroke(1.dp, MaterialTheme.colorScheme.surfaceContainerHighest),
                     tonalElevation = 1.dp
                 ) {
                     stackContent(children.stack)
