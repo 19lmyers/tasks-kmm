@@ -7,49 +7,15 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		DD1BFC8A2A6A001700F93E6E /* TasksShared in Frameworks */ = {isa = PBXBuildFile; productRef = DD1BFC892A6A001700F93E6E /* TasksShared */; };
+		DD11AAEF2A7CC12C00DE262A /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = DD9E909029FE134100D6DD11 /* Info.plist */; };
+		DD5DF8CD2A762CF200E84B85 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD5DF8CC2A762CF200E84B85 /* ContentView.swift */; };
+		DD5E05862A7C47C2005A2B6A /* lato_medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = DD5E05742A7C47C2005A2B6A /* lato_medium.ttf */; };
+		DD5E05872A7C47C2005A2B6A /* lato_bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = DD5E05752A7C47C2005A2B6A /* lato_bold.ttf */; };
+		DD5E05882A7C47C2005A2B6A /* lato_regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = DD5E05762A7C47C2005A2B6A /* lato_regular.ttf */; };
 		DD6B61622A098DB1001910C6 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = DD6B61612A098DB1001910C6 /* GoogleService-Info.plist */; };
 		DD6B61642A098F96001910C6 /* Messaging.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD6B61632A098F96001910C6 /* Messaging.swift */; };
-		DD9E906129FE109700D6DD11 /* SettingsScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD9E902529FE109700D6DD11 /* SettingsScreen.swift */; };
-		DD9E906329FE109700D6DD11 /* SettingsRoute.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD9E902729FE109700D6DD11 /* SettingsRoute.swift */; };
-		DD9E906429FE109700D6DD11 /* HomeRoute.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD9E902929FE109700D6DD11 /* HomeRoute.swift */; };
-		DD9E906529FE109700D6DD11 /* ListDetailsRoute.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD9E902B29FE109700D6DD11 /* ListDetailsRoute.swift */; };
-		DD9E906629FE109700D6DD11 /* ListDetailsScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD9E902C29FE109700D6DD11 /* ListDetailsScreen.swift */; };
-		DD9E906729FE109700D6DD11 /* TaskDetailsScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD9E902E29FE109700D6DD11 /* TaskDetailsScreen.swift */; };
-		DD9E906829FE109700D6DD11 /* TaskDetailsRoute.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD9E902F29FE109700D6DD11 /* TaskDetailsRoute.swift */; };
-		DD9E906929FE109700D6DD11 /* DetailNavTarget.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD9E903029FE109700D6DD11 /* DetailNavTarget.swift */; };
-		DD9E906A29FE109700D6DD11 /* HomeScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD9E903129FE109700D6DD11 /* HomeScreen.swift */; };
-		DD9E906B29FE109700D6DD11 /* SignUpScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD9E903429FE109700D6DD11 /* SignUpScreen.swift */; };
-		DD9E906C29FE109700D6DD11 /* SignUpRoute.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD9E903529FE109700D6DD11 /* SignUpRoute.swift */; };
-		DD9E906D29FE109700D6DD11 /* ForgotPasswordRoute.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD9E903729FE109700D6DD11 /* ForgotPasswordRoute.swift */; };
-		DD9E906E29FE109700D6DD11 /* ForgotPasswordScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD9E903829FE109700D6DD11 /* ForgotPasswordScreen.swift */; };
-		DD9E906F29FE109700D6DD11 /* SignInScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD9E903A29FE109700D6DD11 /* SignInScreen.swift */; };
-		DD9E907029FE109700D6DD11 /* SignInRoute.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD9E903B29FE109700D6DD11 /* SignInRoute.swift */; };
-		DD9E907129FE109700D6DD11 /* WelcomeScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD9E903C29FE109700D6DD11 /* WelcomeScreen.swift */; };
-		DD9E907229FE109700D6DD11 /* ProfileScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD9E903E29FE109700D6DD11 /* ProfileScreen.swift */; };
-		DD9E907329FE109700D6DD11 /* ProfileRoute.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD9E903F29FE109700D6DD11 /* ProfileRoute.swift */; };
-		DD9E907429FE109700D6DD11 /* ChangePasswordRoute.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD9E904129FE109700D6DD11 /* ChangePasswordRoute.swift */; };
-		DD9E907529FE109700D6DD11 /* ChangePasswordScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD9E904229FE109700D6DD11 /* ChangePasswordScreen.swift */; };
-		DD9E907629FE109700D6DD11 /* Board.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD9E904429FE109700D6DD11 /* Board.swift */; };
-		DD9E907729FE109700D6DD11 /* Profile.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD9E904529FE109700D6DD11 /* Profile.swift */; };
-		DD9E907829FE109700D6DD11 /* List.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD9E904629FE109700D6DD11 /* List.swift */; };
-		DD9E907929FE109700D6DD11 /* Task.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD9E904729FE109700D6DD11 /* Task.swift */; };
-		DD9E907A29FE109700D6DD11 /* ModifyList.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD9E904929FE109700D6DD11 /* ModifyList.swift */; };
-		DD9E907B29FE109700D6DD11 /* CreateTask.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD9E904A29FE109700D6DD11 /* CreateTask.swift */; };
-		DD9E907C29FE109700D6DD11 /* FormElements.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD9E904B29FE109700D6DD11 /* FormElements.swift */; };
-		DD9E907D29FE109700D6DD11 /* Chips.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD9E904C29FE109700D6DD11 /* Chips.swift */; };
-		DD9E907E29FE109700D6DD11 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD9E904D29FE109700D6DD11 /* ContentView.swift */; };
-		DD9E907F29FE109700D6DD11 /* BindingExt.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD9E904F29FE109700D6DD11 /* BindingExt.swift */; };
-		DD9E908029FE109700D6DD11 /* TypeExt.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD9E905029FE109700D6DD11 /* TypeExt.swift */; };
-		DD9E908129FE109700D6DD11 /* ViewModelBinding.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD9E905229FE109700D6DD11 /* ViewModelBinding.swift */; };
-		DD9E908229FE109700D6DD11 /* ViewModelStateNullable.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD9E905329FE109700D6DD11 /* ViewModelStateNullable.swift */; };
-		DD9E908329FE109700D6DD11 /* ViewModelState.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD9E905429FE109700D6DD11 /* ViewModelState.swift */; };
-		DD9E908429FE109700D6DD11 /* CFlowExt.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD9E905529FE109700D6DD11 /* CFlowExt.swift */; };
-		DD9E908529FE109700D6DD11 /* ViewModelObservable.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD9E905629FE109700D6DD11 /* ViewModelObservable.swift */; };
-		DD9E908629FE109700D6DD11 /* FriendlyDateFormat.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD9E905729FE109700D6DD11 /* FriendlyDateFormat.swift */; };
 		DD9E908729FE109700D6DD11 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DD9E905829FE109700D6DD11 /* Assets.xcassets */; };
 		DD9E908829FE109700D6DD11 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DD9E905A29FE109700D6DD11 /* Preview Assets.xcassets */; };
-		DD9E908929FE109700D6DD11 /* ModelExt.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD9E905C29FE109700D6DD11 /* ModelExt.swift */; };
 		DD9E908A29FE109700D6DD11 /* App.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD9E905D29FE109700D6DD11 /* App.swift */; };
 		DD9E908D29FE109700D6DD11 /* Configuration.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD9E906029FE109700D6DD11 /* Configuration.swift */; };
 		DDA8F1282A53595200FBC339 /* AppIcon.icns in Resources */ = {isa = PBXBuildFile; fileRef = DDA8F1272A53595200FBC339 /* AppIcon.icns */; };
@@ -57,62 +23,24 @@
 		DDBF7C182A69FA7400EC8475 /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = DDBF7C172A69FA7400EC8475 /* FirebaseAnalytics */; };
 		DDBF7C282A69FA7400EC8475 /* FirebaseCrashlytics in Frameworks */ = {isa = PBXBuildFile; productRef = DDBF7C272A69FA7400EC8475 /* FirebaseCrashlytics */; };
 		DDBF7C3E2A69FA7400EC8475 /* FirebaseMessaging in Frameworks */ = {isa = PBXBuildFile; productRef = DDBF7C3D2A69FA7400EC8475 /* FirebaseMessaging */; };
-		DDEBDB182A33ED9400FF9C20 /* ResetPasswordRoute.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDEBDB172A33ED9400FF9C20 /* ResetPasswordRoute.swift */; };
-		DDEBDB1A2A33ED9D00FF9C20 /* ResetPasswordScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDEBDB192A33ED9D00FF9C20 /* ResetPasswordScreen.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		DD5DF8CC2A762CF200E84B85 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		DD5E05742A7C47C2005A2B6A /* lato_medium.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = lato_medium.ttf; path = ../../../shared/ui/src/androidMain/res/font/lato_medium.ttf; sourceTree = "<group>"; };
+		DD5E05752A7C47C2005A2B6A /* lato_bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = lato_bold.ttf; path = ../../../shared/ui/src/androidMain/res/font/lato_bold.ttf; sourceTree = "<group>"; };
+		DD5E05762A7C47C2005A2B6A /* lato_regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = lato_regular.ttf; path = ../../../shared/ui/src/androidMain/res/font/lato_regular.ttf; sourceTree = "<group>"; };
 		DD6B61602A098CA4001910C6 /* Tasks.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Tasks.entitlements; sourceTree = "<group>"; };
 		DD6B61612A098DB1001910C6 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		DD6B61632A098F96001910C6 /* Messaging.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Messaging.swift; sourceTree = "<group>"; };
 		DD6DB40229F9FAD500EE8325 /* Tasks.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Tasks.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		DD9E902529FE109700D6DD11 /* SettingsScreen.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsScreen.swift; sourceTree = "<group>"; };
-		DD9E902729FE109700D6DD11 /* SettingsRoute.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsRoute.swift; sourceTree = "<group>"; };
-		DD9E902929FE109700D6DD11 /* HomeRoute.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HomeRoute.swift; sourceTree = "<group>"; };
-		DD9E902B29FE109700D6DD11 /* ListDetailsRoute.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ListDetailsRoute.swift; sourceTree = "<group>"; };
-		DD9E902C29FE109700D6DD11 /* ListDetailsScreen.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ListDetailsScreen.swift; sourceTree = "<group>"; };
-		DD9E902E29FE109700D6DD11 /* TaskDetailsScreen.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TaskDetailsScreen.swift; sourceTree = "<group>"; };
-		DD9E902F29FE109700D6DD11 /* TaskDetailsRoute.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TaskDetailsRoute.swift; sourceTree = "<group>"; };
-		DD9E903029FE109700D6DD11 /* DetailNavTarget.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DetailNavTarget.swift; sourceTree = "<group>"; };
-		DD9E903129FE109700D6DD11 /* HomeScreen.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HomeScreen.swift; sourceTree = "<group>"; };
-		DD9E903429FE109700D6DD11 /* SignUpScreen.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SignUpScreen.swift; sourceTree = "<group>"; };
-		DD9E903529FE109700D6DD11 /* SignUpRoute.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SignUpRoute.swift; sourceTree = "<group>"; };
-		DD9E903729FE109700D6DD11 /* ForgotPasswordRoute.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ForgotPasswordRoute.swift; sourceTree = "<group>"; };
-		DD9E903829FE109700D6DD11 /* ForgotPasswordScreen.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ForgotPasswordScreen.swift; sourceTree = "<group>"; };
-		DD9E903A29FE109700D6DD11 /* SignInScreen.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SignInScreen.swift; sourceTree = "<group>"; };
-		DD9E903B29FE109700D6DD11 /* SignInRoute.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SignInRoute.swift; sourceTree = "<group>"; };
-		DD9E903C29FE109700D6DD11 /* WelcomeScreen.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WelcomeScreen.swift; sourceTree = "<group>"; };
-		DD9E903E29FE109700D6DD11 /* ProfileScreen.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProfileScreen.swift; sourceTree = "<group>"; };
-		DD9E903F29FE109700D6DD11 /* ProfileRoute.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProfileRoute.swift; sourceTree = "<group>"; };
-		DD9E904129FE109700D6DD11 /* ChangePasswordRoute.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChangePasswordRoute.swift; sourceTree = "<group>"; };
-		DD9E904229FE109700D6DD11 /* ChangePasswordScreen.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChangePasswordScreen.swift; sourceTree = "<group>"; };
-		DD9E904429FE109700D6DD11 /* Board.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Board.swift; sourceTree = "<group>"; };
-		DD9E904529FE109700D6DD11 /* Profile.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Profile.swift; sourceTree = "<group>"; };
-		DD9E904629FE109700D6DD11 /* List.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = List.swift; sourceTree = "<group>"; };
-		DD9E904729FE109700D6DD11 /* Task.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Task.swift; sourceTree = "<group>"; };
-		DD9E904929FE109700D6DD11 /* ModifyList.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ModifyList.swift; sourceTree = "<group>"; };
-		DD9E904A29FE109700D6DD11 /* CreateTask.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CreateTask.swift; sourceTree = "<group>"; };
-		DD9E904B29FE109700D6DD11 /* FormElements.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FormElements.swift; sourceTree = "<group>"; };
-		DD9E904C29FE109700D6DD11 /* Chips.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Chips.swift; sourceTree = "<group>"; };
-		DD9E904D29FE109700D6DD11 /* ContentView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
-		DD9E904F29FE109700D6DD11 /* BindingExt.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BindingExt.swift; sourceTree = "<group>"; };
-		DD9E905029FE109700D6DD11 /* TypeExt.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TypeExt.swift; sourceTree = "<group>"; };
-		DD9E905229FE109700D6DD11 /* ViewModelBinding.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewModelBinding.swift; sourceTree = "<group>"; };
-		DD9E905329FE109700D6DD11 /* ViewModelStateNullable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewModelStateNullable.swift; sourceTree = "<group>"; };
-		DD9E905429FE109700D6DD11 /* ViewModelState.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewModelState.swift; sourceTree = "<group>"; };
-		DD9E905529FE109700D6DD11 /* CFlowExt.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CFlowExt.swift; sourceTree = "<group>"; };
-		DD9E905629FE109700D6DD11 /* ViewModelObservable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewModelObservable.swift; sourceTree = "<group>"; };
-		DD9E905729FE109700D6DD11 /* FriendlyDateFormat.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FriendlyDateFormat.swift; sourceTree = "<group>"; };
 		DD9E905829FE109700D6DD11 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		DD9E905A29FE109700D6DD11 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
-		DD9E905C29FE109700D6DD11 /* ModelExt.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ModelExt.swift; sourceTree = "<group>"; };
 		DD9E905D29FE109700D6DD11 /* App.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = App.swift; sourceTree = "<group>"; };
 		DD9E906029FE109700D6DD11 /* Configuration.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Configuration.swift; sourceTree = "<group>"; };
 		DD9E909029FE134100D6DD11 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		DDA8F1272A53595200FBC339 /* AppIcon.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = AppIcon.icns; sourceTree = "<group>"; };
 		DDBF7C132A69F06900EC8475 /* Firebase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Firebase.swift; sourceTree = "<group>"; };
-		DDEBDB172A33ED9400FF9C20 /* ResetPasswordRoute.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResetPasswordRoute.swift; sourceTree = "<group>"; };
-		DDEBDB192A33ED9D00FF9C20 /* ResetPasswordScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResetPasswordScreen.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -121,7 +49,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				DDBF7C182A69FA7400EC8475 /* FirebaseAnalytics in Frameworks */,
-				DD1BFC8A2A6A001700F93E6E /* TasksShared in Frameworks */,
 				DDBF7C3E2A69FA7400EC8475 /* FirebaseMessaging in Frameworks */,
 				DDBF7C282A69FA7400EC8475 /* FirebaseCrashlytics in Frameworks */,
 			);
@@ -146,187 +73,32 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		DD5E05552A7C421D005A2B6A /* Fonts */ = {
+			isa = PBXGroup;
+			children = (
+				DD5E05752A7C47C2005A2B6A /* lato_bold.ttf */,
+				DD5E05742A7C47C2005A2B6A /* lato_medium.ttf */,
+				DD5E05762A7C47C2005A2B6A /* lato_regular.ttf */,
+			);
+			path = Fonts;
+			sourceTree = "<group>";
+		};
 		DD9E902129FE109700D6DD11 /* Tasks */ = {
 			isa = PBXGroup;
 			children = (
+				DD5E05552A7C421D005A2B6A /* Fonts */,
 				DD9E905D29FE109700D6DD11 /* App.swift */,
 				DDA8F1272A53595200FBC339 /* AppIcon.icns */,
 				DD9E905829FE109700D6DD11 /* Assets.xcassets */,
 				DD9E906029FE109700D6DD11 /* Configuration.swift */,
 				DDBF7C152A69F06F00EC8475 /* Firebase */,
+				DD5DF8CC2A762CF200E84B85 /* ContentView.swift */,
 				DD6B61612A098DB1001910C6 /* GoogleService-Info.plist */,
 				DD9E909029FE134100D6DD11 /* Info.plist */,
-				DD9E905B29FE109700D6DD11 /* Model */,
 				DD9E905929FE109700D6DD11 /* Preview Content */,
 				DD6B61602A098CA4001910C6 /* Tasks.entitlements */,
-				DD9E902229FE109700D6DD11 /* UI */,
-				DD9E904E29FE109700D6DD11 /* Util */,
 			);
 			path = Tasks;
-			sourceTree = "<group>";
-		};
-		DD9E902229FE109700D6DD11 /* UI */ = {
-			isa = PBXGroup;
-			children = (
-				DD9E902329FE109700D6DD11 /* Route */,
-				DD9E904329FE109700D6DD11 /* Component */,
-				DD9E904D29FE109700D6DD11 /* ContentView.swift */,
-			);
-			path = UI;
-			sourceTree = "<group>";
-		};
-		DD9E902329FE109700D6DD11 /* Route */ = {
-			isa = PBXGroup;
-			children = (
-				DD9E902429FE109700D6DD11 /* Settings */,
-				DD9E902829FE109700D6DD11 /* Home */,
-				DD9E903229FE109700D6DD11 /* Auth */,
-				DD9E903C29FE109700D6DD11 /* WelcomeScreen.swift */,
-				DD9E903D29FE109700D6DD11 /* Profile */,
-			);
-			path = Route;
-			sourceTree = "<group>";
-		};
-		DD9E902429FE109700D6DD11 /* Settings */ = {
-			isa = PBXGroup;
-			children = (
-				DD9E902529FE109700D6DD11 /* SettingsScreen.swift */,
-				DD9E902729FE109700D6DD11 /* SettingsRoute.swift */,
-			);
-			path = Settings;
-			sourceTree = "<group>";
-		};
-		DD9E902829FE109700D6DD11 /* Home */ = {
-			isa = PBXGroup;
-			children = (
-				DD9E902929FE109700D6DD11 /* HomeRoute.swift */,
-				DD9E902A29FE109700D6DD11 /* List Details */,
-				DD9E902D29FE109700D6DD11 /* Task Details */,
-				DD9E903029FE109700D6DD11 /* DetailNavTarget.swift */,
-				DD9E903129FE109700D6DD11 /* HomeScreen.swift */,
-			);
-			path = Home;
-			sourceTree = "<group>";
-		};
-		DD9E902A29FE109700D6DD11 /* List Details */ = {
-			isa = PBXGroup;
-			children = (
-				DD9E902B29FE109700D6DD11 /* ListDetailsRoute.swift */,
-				DD9E902C29FE109700D6DD11 /* ListDetailsScreen.swift */,
-			);
-			path = "List Details";
-			sourceTree = "<group>";
-		};
-		DD9E902D29FE109700D6DD11 /* Task Details */ = {
-			isa = PBXGroup;
-			children = (
-				DD9E902E29FE109700D6DD11 /* TaskDetailsScreen.swift */,
-				DD9E902F29FE109700D6DD11 /* TaskDetailsRoute.swift */,
-			);
-			path = "Task Details";
-			sourceTree = "<group>";
-		};
-		DD9E903229FE109700D6DD11 /* Auth */ = {
-			isa = PBXGroup;
-			children = (
-				DDEBDB162A33ED8700FF9C20 /* Reset Password */,
-				DD9E903329FE109700D6DD11 /* Sign Up */,
-				DD9E903629FE109700D6DD11 /* Forgot Password */,
-				DD9E903929FE109700D6DD11 /* Sign In */,
-			);
-			path = Auth;
-			sourceTree = "<group>";
-		};
-		DD9E903329FE109700D6DD11 /* Sign Up */ = {
-			isa = PBXGroup;
-			children = (
-				DD9E903429FE109700D6DD11 /* SignUpScreen.swift */,
-				DD9E903529FE109700D6DD11 /* SignUpRoute.swift */,
-			);
-			path = "Sign Up";
-			sourceTree = "<group>";
-		};
-		DD9E903629FE109700D6DD11 /* Forgot Password */ = {
-			isa = PBXGroup;
-			children = (
-				DD9E903729FE109700D6DD11 /* ForgotPasswordRoute.swift */,
-				DD9E903829FE109700D6DD11 /* ForgotPasswordScreen.swift */,
-			);
-			path = "Forgot Password";
-			sourceTree = "<group>";
-		};
-		DD9E903929FE109700D6DD11 /* Sign In */ = {
-			isa = PBXGroup;
-			children = (
-				DD9E903A29FE109700D6DD11 /* SignInScreen.swift */,
-				DD9E903B29FE109700D6DD11 /* SignInRoute.swift */,
-			);
-			path = "Sign In";
-			sourceTree = "<group>";
-		};
-		DD9E903D29FE109700D6DD11 /* Profile */ = {
-			isa = PBXGroup;
-			children = (
-				DD9E903E29FE109700D6DD11 /* ProfileScreen.swift */,
-				DD9E903F29FE109700D6DD11 /* ProfileRoute.swift */,
-				DD9E904029FE109700D6DD11 /* Change Password */,
-			);
-			path = Profile;
-			sourceTree = "<group>";
-		};
-		DD9E904029FE109700D6DD11 /* Change Password */ = {
-			isa = PBXGroup;
-			children = (
-				DD9E904129FE109700D6DD11 /* ChangePasswordRoute.swift */,
-				DD9E904229FE109700D6DD11 /* ChangePasswordScreen.swift */,
-			);
-			path = "Change Password";
-			sourceTree = "<group>";
-		};
-		DD9E904329FE109700D6DD11 /* Component */ = {
-			isa = PBXGroup;
-			children = (
-				DD9E904829FE109700D6DD11 /* Sheet */,
-				DD9E904429FE109700D6DD11 /* Board.swift */,
-				DD9E904529FE109700D6DD11 /* Profile.swift */,
-				DD9E904629FE109700D6DD11 /* List.swift */,
-				DD9E904729FE109700D6DD11 /* Task.swift */,
-				DD9E904B29FE109700D6DD11 /* FormElements.swift */,
-				DD9E904C29FE109700D6DD11 /* Chips.swift */,
-			);
-			path = Component;
-			sourceTree = "<group>";
-		};
-		DD9E904829FE109700D6DD11 /* Sheet */ = {
-			isa = PBXGroup;
-			children = (
-				DD9E904929FE109700D6DD11 /* ModifyList.swift */,
-				DD9E904A29FE109700D6DD11 /* CreateTask.swift */,
-			);
-			path = Sheet;
-			sourceTree = "<group>";
-		};
-		DD9E904E29FE109700D6DD11 /* Util */ = {
-			isa = PBXGroup;
-			children = (
-				DD9E904F29FE109700D6DD11 /* BindingExt.swift */,
-				DD9E905029FE109700D6DD11 /* TypeExt.swift */,
-				DD9E905129FE109700D6DD11 /* MVVM */,
-				DD9E905729FE109700D6DD11 /* FriendlyDateFormat.swift */,
-			);
-			path = Util;
-			sourceTree = "<group>";
-		};
-		DD9E905129FE109700D6DD11 /* MVVM */ = {
-			isa = PBXGroup;
-			children = (
-				DD9E905229FE109700D6DD11 /* ViewModelBinding.swift */,
-				DD9E905329FE109700D6DD11 /* ViewModelStateNullable.swift */,
-				DD9E905429FE109700D6DD11 /* ViewModelState.swift */,
-				DD9E905529FE109700D6DD11 /* CFlowExt.swift */,
-				DD9E905629FE109700D6DD11 /* ViewModelObservable.swift */,
-			);
-			path = MVVM;
 			sourceTree = "<group>";
 		};
 		DD9E905929FE109700D6DD11 /* Preview Content */ = {
@@ -335,14 +107,6 @@
 				DD9E905A29FE109700D6DD11 /* Preview Assets.xcassets */,
 			);
 			path = "Preview Content";
-			sourceTree = "<group>";
-		};
-		DD9E905B29FE109700D6DD11 /* Model */ = {
-			isa = PBXGroup;
-			children = (
-				DD9E905C29FE109700D6DD11 /* ModelExt.swift */,
-			);
-			path = Model;
 			sourceTree = "<group>";
 		};
 		DDBF7C152A69F06F00EC8475 /* Firebase */ = {
@@ -354,15 +118,6 @@
 			path = Firebase;
 			sourceTree = "<group>";
 		};
-		DDEBDB162A33ED8700FF9C20 /* Reset Password */ = {
-			isa = PBXGroup;
-			children = (
-				DDEBDB172A33ED9400FF9C20 /* ResetPasswordRoute.swift */,
-				DDEBDB192A33ED9D00FF9C20 /* ResetPasswordScreen.swift */,
-			);
-			path = "Reset Password";
-			sourceTree = "<group>";
-		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -371,6 +126,7 @@
 			buildConfigurationList = DD6DB40D29F9FAD700EE8325 /* Build configuration list for PBXNativeTarget "Tasks" */;
 			buildPhases = (
 				DD62595D2A01B9F600BE63B1 /* Format Sources (SwiftFormat) */,
+				DD033BA72A76249D00C4D771 /* Embed and Sign (KMM) */,
 				DD6DB3FE29F9FAD500EE8325 /* Sources */,
 				DD6DB3FF29F9FAD500EE8325 /* Frameworks */,
 				DD6DB40029F9FAD500EE8325 /* Resources */,
@@ -385,7 +141,6 @@
 				DDBF7C172A69FA7400EC8475 /* FirebaseAnalytics */,
 				DDBF7C272A69FA7400EC8475 /* FirebaseCrashlytics */,
 				DDBF7C3D2A69FA7400EC8475 /* FirebaseMessaging */,
-				DD1BFC892A6A001700F93E6E /* TasksShared */,
 			);
 			productName = ios;
 			productReference = DD6DB40229F9FAD500EE8325 /* Tasks.app */;
@@ -399,7 +154,7 @@
 			attributes = {
 				LastSwiftUpdateCheck = 1430;
 				LastUpgradeCheck = 1130;
-				ORGANIZATIONNAME = orgName;
+				ORGANIZATIONNAME = chara.dev;
 				TargetAttributes = {
 					DD6DB40129F9FAD500EE8325 = {
 						CreatedOnToolsVersion = 14.3;
@@ -417,8 +172,6 @@
 			mainGroup = 7555FF72242A565900829871;
 			packageReferences = (
 				DDBF7C162A69FA7400EC8475 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
-				DDBF7C402A69FE3900EC8475 /* XCRemoteSwiftPackageReference "tasks-kmm" */,
-				DD1BFC882A6A001700F93E6E /* XCRemoteSwiftPackageReference "tasks-kmm" */,
 			);
 			productRefGroup = 7555FF7C242A565900829871 /* Products */;
 			projectDirPath = "";
@@ -434,9 +187,13 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DD11AAEF2A7CC12C00DE262A /* Info.plist in Resources */,
 				DD9E908729FE109700D6DD11 /* Assets.xcassets in Resources */,
+				DD5E05862A7C47C2005A2B6A /* lato_medium.ttf in Resources */,
 				DDA8F1282A53595200FBC339 /* AppIcon.icns in Resources */,
+				DD5E05872A7C47C2005A2B6A /* lato_bold.ttf in Resources */,
 				DD9E908829FE109700D6DD11 /* Preview Assets.xcassets in Resources */,
+				DD5E05882A7C47C2005A2B6A /* lato_regular.ttf in Resources */,
 				DD6B61622A098DB1001910C6 /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -444,6 +201,25 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		DD033BA72A76249D00C4D771 /* Embed and Sign (KMM) */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Embed and Sign (KMM)";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "cd \"$SRCROOT/..\" \n./gradlew :shared:framework:embedAndSignAppleFrameworkForXcode\n";
+		};
 		DD62595D2A01B9F600BE63B1 /* Format Sources (SwiftFormat) */ = {
 			isa = PBXShellScriptBuildPhase;
 			alwaysOutOfDate = 1;
@@ -466,7 +242,7 @@
 		DDBF7C3F2A69FAEB00EC8475 /* Upload Debug Symbols (Crashlytics) */ = {
 			isa = PBXShellScriptBuildPhase;
 			alwaysOutOfDate = 1;
-			buildActionMask = 2147483647;
+			buildActionMask = 8;
 			files = (
 			);
 			inputFileListPaths = (
@@ -478,9 +254,9 @@
 			);
 			outputPaths = (
 			);
-			runOnlyForDeploymentPostprocessing = 0;
+			runOnlyForDeploymentPostprocessing = 1;
 			shellPath = /bin/sh;
-			shellScript = "${BUILD_DIR%Build/*}/SourcePackages/checkouts/firebase-ios-sdk/Crashlytics/run\n\n";
+			shellScript = "${BUILD_DIR%Build/*}/SourcePackages/checkouts/firebase-ios-sdk/Crashlytics/run\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -489,50 +265,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				DD9E908129FE109700D6DD11 /* ViewModelBinding.swift in Sources */,
-				DD9E906629FE109700D6DD11 /* ListDetailsScreen.swift in Sources */,
-				DD9E906E29FE109700D6DD11 /* ForgotPasswordScreen.swift in Sources */,
-				DD9E906829FE109700D6DD11 /* TaskDetailsRoute.swift in Sources */,
-				DD9E907729FE109700D6DD11 /* Profile.swift in Sources */,
-				DD9E907029FE109700D6DD11 /* SignInRoute.swift in Sources */,
-				DD9E907629FE109700D6DD11 /* Board.swift in Sources */,
 				DD6B61642A098F96001910C6 /* Messaging.swift in Sources */,
-				DD9E907329FE109700D6DD11 /* ProfileRoute.swift in Sources */,
-				DD9E907529FE109700D6DD11 /* ChangePasswordScreen.swift in Sources */,
-				DDEBDB182A33ED9400FF9C20 /* ResetPasswordRoute.swift in Sources */,
-				DD9E906B29FE109700D6DD11 /* SignUpScreen.swift in Sources */,
-				DD9E907129FE109700D6DD11 /* WelcomeScreen.swift in Sources */,
-				DD9E906529FE109700D6DD11 /* ListDetailsRoute.swift in Sources */,
-				DD9E906929FE109700D6DD11 /* DetailNavTarget.swift in Sources */,
+				DD5DF8CD2A762CF200E84B85 /* ContentView.swift in Sources */,
 				DD9E908A29FE109700D6DD11 /* App.swift in Sources */,
-				DD9E907929FE109700D6DD11 /* Task.swift in Sources */,
-				DD9E906129FE109700D6DD11 /* SettingsScreen.swift in Sources */,
 				DDBF7C142A69F06900EC8475 /* Firebase.swift in Sources */,
-				DD9E907A29FE109700D6DD11 /* ModifyList.swift in Sources */,
-				DD9E908929FE109700D6DD11 /* ModelExt.swift in Sources */,
-				DD9E908629FE109700D6DD11 /* FriendlyDateFormat.swift in Sources */,
-				DD9E907B29FE109700D6DD11 /* CreateTask.swift in Sources */,
-				DD9E907F29FE109700D6DD11 /* BindingExt.swift in Sources */,
-				DD9E906A29FE109700D6DD11 /* HomeScreen.swift in Sources */,
-				DD9E907429FE109700D6DD11 /* ChangePasswordRoute.swift in Sources */,
-				DD9E906429FE109700D6DD11 /* HomeRoute.swift in Sources */,
-				DD9E908529FE109700D6DD11 /* ViewModelObservable.swift in Sources */,
-				DD9E907829FE109700D6DD11 /* List.swift in Sources */,
-				DD9E908229FE109700D6DD11 /* ViewModelStateNullable.swift in Sources */,
-				DD9E906C29FE109700D6DD11 /* SignUpRoute.swift in Sources */,
 				DD9E908D29FE109700D6DD11 /* Configuration.swift in Sources */,
-				DD9E908329FE109700D6DD11 /* ViewModelState.swift in Sources */,
-				DDEBDB1A2A33ED9D00FF9C20 /* ResetPasswordScreen.swift in Sources */,
-				DD9E907229FE109700D6DD11 /* ProfileScreen.swift in Sources */,
-				DD9E906F29FE109700D6DD11 /* SignInScreen.swift in Sources */,
-				DD9E906729FE109700D6DD11 /* TaskDetailsScreen.swift in Sources */,
-				DD9E908429FE109700D6DD11 /* CFlowExt.swift in Sources */,
-				DD9E906D29FE109700D6DD11 /* ForgotPasswordRoute.swift in Sources */,
-				DD9E908029FE109700D6DD11 /* TypeExt.swift in Sources */,
-				DD9E907E29FE109700D6DD11 /* ContentView.swift in Sources */,
-				DD9E907C29FE109700D6DD11 /* FormElements.swift in Sources */,
-				DD9E906329FE109700D6DD11 /* SettingsRoute.swift in Sources */,
-				DD9E907D29FE109700D6DD11 /* Chips.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -591,7 +328,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				MACOSX_DEPLOYMENT_TARGET = 13.3;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
@@ -649,7 +386,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				MACOSX_DEPLOYMENT_TARGET = 13.3;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
@@ -670,11 +407,12 @@
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
 				CODE_SIGN_ENTITLEMENTS = Tasks/Tasks.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 4;
+				CURRENT_PROJECT_VERSION = 5;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_ASSET_PATHS = "\"Tasks/Preview Content\"";
 				DEVELOPMENT_TEAM = N2WQ73MLWJ;
 				ENABLE_PREVIEWS = YES;
+				FRAMEWORK_SEARCH_PATHS = "$(SRCROOT)/../shared/framework/build/xcode-frameworks/$(CONFIGURATION)/$(SDK_NAME)";
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Tasks/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = Tasks;
@@ -685,9 +423,16 @@
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				LD_QUOTE_LINKER_ARGUMENTS_FOR_COMPILER_DRIVER = YES;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited)";
-				MARKETING_VERSION = 0.6.4;
+				MARKETING_VERSION = 0.8;
+				OTHER_LDFLAGS = (
+					"${inherited}",
+					"-framework",
+					TasksShared,
+					"-lsqlite3",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = dev.chara.tasks.ios;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
@@ -708,10 +453,11 @@
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
 				CODE_SIGN_ENTITLEMENTS = Tasks/Tasks.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 4;
+				CURRENT_PROJECT_VERSION = 5;
 				DEVELOPMENT_ASSET_PATHS = "\"Tasks/Preview Content\"";
 				DEVELOPMENT_TEAM = N2WQ73MLWJ;
 				ENABLE_PREVIEWS = YES;
+				FRAMEWORK_SEARCH_PATHS = "$(SRCROOT)/../shared/framework/build/xcode-frameworks/$(CONFIGURATION)/$(SDK_NAME)";
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Tasks/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = Tasks;
@@ -722,9 +468,16 @@
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				LD_QUOTE_LINKER_ARGUMENTS_FOR_COMPILER_DRIVER = YES;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited)";
-				MARKETING_VERSION = 0.6.4;
+				MARKETING_VERSION = 0.8;
+				OTHER_LDFLAGS = (
+					"${inherited}",
+					"-framework",
+					TasksShared,
+					"-lsqlite3",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = dev.chara.tasks.ios;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
@@ -746,7 +499,7 @@
 				7555FFA4242A565B00829871 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
+			defaultConfigurationName = Debug;
 		};
 		DD6DB40D29F9FAD700EE8325 /* Build configuration list for PBXNativeTarget "Tasks" */ = {
 			isa = XCConfigurationList;
@@ -755,19 +508,11 @@
 				DD6DB40F29F9FAD700EE8325 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
+			defaultConfigurationName = Debug;
 		};
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		DD1BFC882A6A001700F93E6E /* XCRemoteSwiftPackageReference "tasks-kmm" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/19lmyers/tasks-kmm/";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 0.8.1;
-			};
-		};
 		DDBF7C162A69FA7400EC8475 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/firebase/firebase-ios-sdk.git";
@@ -776,22 +521,9 @@
 				minimumVersion = 10.12.0;
 			};
 		};
-		DDBF7C402A69FE3900EC8475 /* XCRemoteSwiftPackageReference "tasks-kmm" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/19lmyers/tasks-kmm/";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 0.8.1;
-			};
-		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		DD1BFC892A6A001700F93E6E /* TasksShared */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = DDBF7C402A69FE3900EC8475 /* XCRemoteSwiftPackageReference "tasks-kmm" */;
-			productName = TasksShared;
-		};
 		DDBF7C172A69FA7400EC8475 /* FirebaseAnalytics */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = DDBF7C162A69FA7400EC8475 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;

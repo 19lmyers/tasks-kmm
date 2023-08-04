@@ -1,0 +1,25 @@
+get:
+SELECT *
+FROM TaskList
+ORDER BY title ASC;
+
+getById:
+SELECT *
+FROM TaskList
+WHERE id = ?
+LIMIT 1;
+
+insert:
+INSERT INTO TaskList VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+
+update:
+UPDATE TaskList
+SET title = ?, color = ?, icon = ?, description = ?, sort_type = ?, sort_direction = ?, show_index_numbers = ?, last_modified = ?
+WHERE id = ?;
+
+delete:
+DELETE FROM TaskList
+WHERE id = ?;
+
+deleteAll:
+DELETE FROM TaskList;

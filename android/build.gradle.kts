@@ -14,11 +14,13 @@ plugins {
     alias(libs.plugins.google.services)
     alias(libs.plugins.crashlytics)
 
+    alias(libs.plugins.jetbrains.compose)
+
     id("kotlin-parcelize")
 }
 
 kotlin {
-    jvmToolchain(8)
+    jvmToolchain(17)
 }
 
 android {
@@ -28,18 +30,14 @@ android {
         applicationId = "dev.chara.tasks.android"
         minSdk = 24
         targetSdk = 34
-        versionCode = 13
-        versionName = "0.7"
+        versionCode = 14
+        versionName = "0.8"
     }
     compileOptions {
         isCoreLibraryDesugaringEnabled = true
     }
     buildFeatures {
-        compose = true
         buildConfig = true
-    }
-    composeOptions {
-        kotlinCompilerExtensionVersion = libs.versions.compose.compiler.get()
     }
     packaging {
         resources {
@@ -62,6 +60,8 @@ android {
     flavorDimensions += "endpoint"
     productFlavors {
         create("prod") {
+            isDefault = true
+
             dimension = "endpoint"
 
             buildConfigField("String", "ENDPOINT_URL", "\"https://tasks-api.chara.dev\"")
@@ -85,39 +85,46 @@ android {
 dependencies {
     coreLibraryDesugaring(libs.desugar.jdk.libs)
 
-    implementation(project(":shared"))
+    implementation(project(":shared:model"))
+    implementation(project(":shared:database"))
+    implementation(project(":shared:data"))
+    implementation(project(":shared:domain"))
+    implementation(project(":shared:component"))
+    implementation(project(":shared:ui"))
+    implementation(project(":shared:ext"))
 
-    implementation(libs.napier)
+    implementation(libs.accompanist.systemuicontroller)
 
-    implementation(libs.kotlinx.coroutines.android)
-    implementation(libs.kotlinx.datetime)
-
-    implementation(libs.koin.android)
-    implementation(libs.koin.androidx.compose)
-
-    implementation(platform(libs.compose.bom))
-    implementation(libs.bundles.compose)
-    implementation(libs.bundles.compose.material3)
+    implementation(libs.androidx.activity)
 
     implementation(libs.androidx.glance)
     implementation(libs.androidx.glance.material3)
 
-    implementation(libs.androidx.activity)
-    implementation(libs.androidx.lifecycle.runtime)
     implementation(libs.androidx.lifecycle.service)
+
     implementation(libs.androidx.work)
 
-    implementation(libs.navigation.reimagined)
+    implementation(compose.foundation)
+    implementation(compose.material3)
 
-    implementation(libs.accompanist.systemuicontroller)
-
-    implementation(libs.compose.reorderable)
-
-    implementation(libs.coil.compose)
+    implementation(libs.decompose)
 
     implementation(platform(libs.firebase.bom))
     implementation(libs.bundles.firebase)
 
-    debugImplementation(libs.compose.ui.tooling)
-    debugImplementation(libs.compose.ui.test.manifest)
+    implementation(libs.kermit)
+    implementation(libs.kermit.crashlytics)
+
+    implementation(libs.koin.core)
+    implementation(libs.koin.android)
+
+    implementation(libs.kotlinx.datetime)
+
+    implementation(libs.materialkolor)
+
+    implementation(libs.result)
+}
+
+compose {
+    kotlinCompilerPlugin.set(dependencies.compiler.auto)
 }

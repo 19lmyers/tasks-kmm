@@ -2,6 +2,12 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>UIAppFonts</key>
+	<array>
+		<string>lato_regular.ttf</string>
+		<string>lato_medium.ttf</string>
+		<string>lato_bold.ttf</string>
+	</array>
 	<key>CFBundleIconFile</key>
 	<string>AppIcon.icns</string>
 	<key>FirebaseAppDelegateProxyEnabled</key>
@@ -11,11 +17,12 @@
 	<key>ITSAppUsesNonExemptEncryption</key>
 	<false/>
 	<key>UIApplicationSceneManifest</key>
-	<dict>
-		<key>UIApplicationSupportsMultipleScenes</key>
-		<false/>
-	</dict>
+	<array>
+		<string></string>
+	</array>
 	<key>UILaunchScreen</key>
-	<dict/>
+	<array>
+		<string></string>
+	</array>
 </dict>
 </plist>

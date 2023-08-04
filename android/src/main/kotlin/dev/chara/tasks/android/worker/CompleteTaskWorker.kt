@@ -9,8 +9,8 @@ import com.github.michaelbull.result.Err
 import com.github.michaelbull.result.mapBoth
 import com.github.michaelbull.result.mapError
 import dev.chara.tasks.android.notification.service.MessagingService
-import dev.chara.tasks.data.Repository
-import dev.chara.tasks.widget.WidgetManager
+import dev.chara.tasks.shared.data.Repository
+import dev.chara.tasks.shared.ext.WidgetManager
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.withContext

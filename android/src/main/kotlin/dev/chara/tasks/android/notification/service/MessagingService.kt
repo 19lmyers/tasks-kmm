@@ -22,9 +22,8 @@ import dev.chara.tasks.android.model.drawable
 import dev.chara.tasks.android.model.res
 import dev.chara.tasks.android.notification.receiver.NotificationActionReceiver
 import dev.chara.tasks.android.ui.MainActivity
-import dev.chara.tasks.data.Repository
-import dev.chara.tasks.model.TaskList
-import io.github.aakira.napier.Napier
+import dev.chara.tasks.shared.data.Repository
+import dev.chara.tasks.shared.model.TaskList
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
@@ -63,8 +62,6 @@ class MessagingService : FirebaseMessagingService(), LifecycleOwner {
 
     override fun onMessageReceived(message: RemoteMessage) {
         super.onMessageReceived(message)
-
-        Napier.w(message.toString(), tag = "MessagingService")
 
         val messageType = message.data[DATA_MESSAGE_TYPE]
 
