@@ -18,6 +18,8 @@ private var QUERY_LIST_ID = "id"
 private var PATH_VIEW_TASK = "/task"
 private var QUERY_TASK_ID = "id"
 
+var rootHolder: RootHolder = .init()
+
 @main
 struct TasksApp: App {
     @UIApplicationDelegateAdaptor private var appDelegate: AppDelegate
@@ -34,19 +36,19 @@ struct TasksApp: App {
 
     var body: some Scene {
         WindowGroup {
-            ContentView(rootHolder: appDelegate.rootHolder)
+            ContentView(rootHolder: rootHolder)
                 .ignoresSafeArea(.all)
                 .onReceive(NotificationCenter.default.publisher(for: UIApplication.didBecomeActiveNotification)) { _ in
-                    LifecycleRegistryExtKt.resume(appDelegate.rootHolder.lifecycle)
+                    LifecycleRegistryExtKt.resume(rootHolder.lifecycle)
                 }
                 .onReceive(NotificationCenter.default.publisher(for: UIApplication.willResignActiveNotification)) { _ in
-                    LifecycleRegistryExtKt.pause(appDelegate.rootHolder.lifecycle)
+                    LifecycleRegistryExtKt.pause(rootHolder.lifecycle)
                 }
                 .onReceive(NotificationCenter.default.publisher(for: UIApplication.didEnterBackgroundNotification)) { _ in
-                    LifecycleRegistryExtKt.stop(appDelegate.rootHolder.lifecycle)
+                    LifecycleRegistryExtKt.stop(rootHolder.lifecycle)
                 }
                 .onReceive(NotificationCenter.default.publisher(for: UIApplication.willTerminateNotification)) { _ in
-                    LifecycleRegistryExtKt.destroy(appDelegate.rootHolder.lifecycle)
+                    LifecycleRegistryExtKt.destroy(rootHolder.lifecycle)
                 }
                 .onOpenURL { url in
                     guard let components = NSURLComponents(url: url, resolvingAgainstBaseURL: true),
@@ -59,19 +61,19 @@ struct TasksApp: App {
                     switch path {
                     case PATH_VERIFY_EMAIL:
                         if let token = params.first(where: { $0.name == QUERY_VERIFY_EMAIL_TOKEN })?.value {
-                            appDelegate.rootHolder.root.onDeepLink(deepLink: DeepLinkVerifyEmail(token: token))
+                            rootHolder.root.onDeepLink(deepLink: DeepLinkVerifyEmail(token: token))
                         }
                     case PATH_RESET_PASSWORD:
                         if let token = params.first(where: { $0.name == QUERY_PASSWORD_RESET_TOKEN })?.value {
-                            appDelegate.rootHolder.root.onDeepLink(deepLink: DeepLinkResetPassword(token: token))
+                            rootHolder.root.onDeepLink(deepLink: DeepLinkResetPassword(token: token))
                         }
                     case PATH_VIEW_LIST:
                         if let id = params.first(where: { $0.name == QUERY_LIST_ID })?.value {
-                            appDelegate.rootHolder.root.onDeepLink(deepLink: DeepLinkViewList(id: id))
+                            rootHolder.root.onDeepLink(deepLink: DeepLinkViewList(id: id))
                         }
                     case PATH_VIEW_TASK:
                         if let id = params.first(where: { $0.name == QUERY_TASK_ID })?.value {
-                            appDelegate.rootHolder.root.onDeepLink(deepLink: DeepLinkViewTask(id: id))
+                            rootHolder.root.onDeepLink(deepLink: DeepLinkViewTask(id: id))
                         }
                     default:
                         break
@@ -82,8 +84,6 @@ struct TasksApp: App {
 }
 
 class AppDelegate: NSObject, UIApplicationDelegate {
-    var rootHolder: RootHolder = .init()
-
     func application(_ application: UIApplication, didFinishLaunchingWithOptions _: [UIApplication.LaunchOptionsKey: Any]?) -> Bool
     {
         Messaging.messaging().delegate = self
@@ -103,8 +103,35 @@ class AppDelegate: NSObject, UIApplicationDelegate {
         return true
     }
 
+    func application(
+        _: UIApplication, configurationForConnecting connectingSceneSession: UISceneSession, options: UIScene.ConnectionOptions
+    ) -> UISceneConfiguration {
+        if let shortcutItem = options.shortcutItem {
+            if shortcutItem.type == "CreateTaskAction" {
+                rootHolder.root.onDeepLink(deepLink: DeepLinkCreateTask.shared)
+            }
+        }
+
+        let configuration = UISceneConfiguration(
+            name: connectingSceneSession.configuration.name,
+            sessionRole: connectingSceneSession.role
+        )
+        configuration.delegateClass = SceneDelegate.self
+        return configuration
+    }
+
     func application(_: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
         Messaging.messaging().apnsToken = deviceToken
+    }
+}
+
+class SceneDelegate: NSObject, UIWindowSceneDelegate {
+    func windowScene(_: UIWindowScene, performActionFor shortcutItem: UIApplicationShortcutItem, completionHandler: @escaping (Bool) -> Void) {
+        if shortcutItem.type == "CreateTaskAction" {
+            rootHolder.root.onDeepLink(deepLink: DeepLinkCreateTask.shared)
+        }
+
+        completionHandler(true)
     }
 }
 

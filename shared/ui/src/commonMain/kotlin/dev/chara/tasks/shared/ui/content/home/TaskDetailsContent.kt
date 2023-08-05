@@ -77,6 +77,7 @@ import dev.chara.tasks.shared.ui.item.DueDateChip
 import dev.chara.tasks.shared.ui.item.ReminderChip
 import dev.chara.tasks.shared.ui.model.icon
 import dev.chara.tasks.shared.ui.theme.ColorTheme
+import dev.chara.tasks.shared.ui.util.BackHandler
 import kotlinx.datetime.Clock
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toInstant
@@ -112,14 +113,22 @@ fun TaskDetailsContent(component: TaskDetailsComponent) {
             )
         }
 
-        if (state.value.showConfirmExit) {
+        var showConfirmExitDialog by remember { mutableStateOf(false) }
+
+        if (showConfirmExitDialog) {
             ConfirmExitDialog(
-                onDismiss = { component.setShowConfirmExit(false) },
+                onDismiss = { showConfirmExitDialog = false },
                 onConfirm = {
-                    component.setShowConfirmExit(false)
+                    showConfirmExitDialog = false
                     component.onUp()
                 }
             )
+        }
+
+        if (modified) {
+            BackHandler(backHandler = component.backHandler) {
+                showConfirmExitDialog = !showConfirmExitDialog
+            }
         }
 
         Scaffold(
@@ -130,7 +139,13 @@ fun TaskDetailsContent(component: TaskDetailsComponent) {
                     selectedListId = task!!.listId,
                     scrollBehavior = scrollBehavior,
                     upAsCloseButton = true,
-                    onUpClicked = { component.setShowConfirmExit(true) },
+                    onUpClicked = {
+                        if (modified) {
+                            showConfirmExitDialog = true
+                        } else {
+                            component.onUp()
+                        }
+                    },
                     onDeleteClicked = { showDeleteDialog = true },
                     onListSelected = {
                         component.updateTask(task!!)

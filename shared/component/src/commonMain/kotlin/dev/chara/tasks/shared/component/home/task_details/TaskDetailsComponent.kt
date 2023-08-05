@@ -1,7 +1,7 @@
 package dev.chara.tasks.shared.component.home.task_details
 
 import com.arkivanov.decompose.ComponentContext
-import com.arkivanov.essenty.backhandler.BackCallback
+import com.arkivanov.essenty.backhandler.BackHandlerOwner
 import com.github.michaelbull.result.Ok
 import dev.chara.tasks.shared.component.util.coroutineScope
 import dev.chara.tasks.shared.data.Repository
@@ -18,12 +18,10 @@ import kotlinx.datetime.Clock
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
-interface TaskDetailsComponent {
+interface TaskDetailsComponent : BackHandlerOwner {
     val state: StateFlow<TaskDetailsUiState>
 
     fun onUp()
-
-    fun setShowConfirmExit(showConfirmExit: Boolean)
 
     fun updateTask(task: Task)
 
@@ -67,17 +65,6 @@ class DefaultTaskDetailsComponent(
     }
 
     override fun onUp() = navigateUp()
-
-    private val callback =
-        BackCallback(priority = 1) { setShowConfirmExit(!state.value.showConfirmExit) }
-
-    init {
-        backHandler.register(callback)
-    }
-
-    override fun setShowConfirmExit(showConfirmExit: Boolean) {
-        _state.value = state.value.copy(showConfirmExit = showConfirmExit)
-    }
 
     override fun updateTask(task: Task) {
         coroutineScope.launch {

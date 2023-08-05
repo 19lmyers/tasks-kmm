@@ -62,6 +62,7 @@ import dev.chara.tasks.shared.ui.item.ProfileImage
 import dev.chara.tasks.shared.ui.picker.photoPicker
 import dev.chara.tasks.shared.ui.theme.extend.surfaceContainerHigh
 import dev.chara.tasks.shared.ui.theme.extend.surfaceContainerHighest
+import dev.chara.tasks.shared.ui.util.BackHandler
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
 @Composable
@@ -100,6 +101,10 @@ fun ProfileContent(component: ProfileComponent) {
 
     var modified by rememberSaveable { mutableStateOf(false) }
 
+    if (modified) {
+        BackHandler(backHandler = component.backHandler) { showExitDialog = !showExitDialog }
+    }
+
     Scaffold(
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         snackbarHost = { SnackbarHost(snackbarHostState) },
@@ -107,7 +112,15 @@ fun ProfileContent(component: ProfileComponent) {
             TopAppBar(
                 title = { Text(text = "Edit profile") },
                 navigationIcon = {
-                    IconButton(onClick = { component.onUp() }) {
+                    IconButton(
+                        onClick = {
+                            if (modified) {
+                                showExitDialog = true
+                            } else {
+                                component.onUp()
+                            }
+                        }
+                    ) {
                         Icon(
                             Icons.Filled.Close,
                             contentDescription = "Cancel",

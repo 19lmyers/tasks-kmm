@@ -2,13 +2,11 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>CreateTaskActionIconType</key>
-	<string>plus</string>
 	<key>UIApplicationShortcutItems</key>
 	<array>
 		<dict>
-			<key>UIApplicationShortcutItemIconType</key>
-			<string>CreateTaskActionIconType</string>
+			<key>UIApplicationShortcutItemIconSymbolName</key>
+			<string>plus</string>
 			<key>UIApplicationShortcutItemType</key>
 			<string>CreateTaskAction</string>
 			<key>UIApplicationShortcutItemTitle</key>

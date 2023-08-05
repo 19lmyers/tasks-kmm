@@ -1,6 +1,7 @@
 package dev.chara.tasks.shared.component.profile
 
 import com.arkivanov.decompose.ComponentContext
+import com.arkivanov.essenty.backhandler.BackHandlerOwner
 import dev.chara.tasks.shared.component.util.SnackbarMessage
 import dev.chara.tasks.shared.component.util.coroutineScope
 import dev.chara.tasks.shared.component.util.emitAsMessage
@@ -19,7 +20,7 @@ import kotlinx.coroutines.launch
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
-interface ProfileComponent {
+interface ProfileComponent : BackHandlerOwner {
     val state: StateFlow<ProfileUiState>
 
     val messages: SharedFlow<SnackbarMessage>
