@@ -1,29 +1,27 @@
 [versions]
-android = "8.1.0-rc01"
+android = "8.2.0-alpha15"
 kotlin = "1.9.0"
 
-coroutines = "1.7.2"
-glance = "1.0.0-beta01"
-koin = "3.4.2"
-kswift = "0.6.1"
-ktor = "2.3.2"
-mvvm = "0.16.1"
+coroutines = "1.7.3"
+glance = "1.0.0-rc01"
+koin = "3.4.3"
+ktor = "2.3.3"
 result = "1.1.18"
-sqldelight = "2.0.0-rc02"
 
-compose-compiler = "1.5.0"
-material3 = "1.2.0-alpha03"
+kermit = "2.0.0-RC5"
+decompose = "2.1.0-compose-experimental-alpha-06"
+sqldelight = "2.0.0"
 
 [plugins]
 
 android-application = { id = "com.android.application", version.ref = "android" }
 android-library = { id = "com.android.library", version.ref = "android" }
 
-crashlytics = { id = "com.google.firebase.crashlytics", version = "2.9.7" }
+crashlytics = { id = "com.google.firebase.crashlytics", version = "2.9.8" }
 
 google-services = { id = "com.google.gms.google-services", version = "4.3.15" }
 
-kmmbridge = { id = "co.touchlab.faktory.kmmbridge", version = "0.3.7" }
+jetbrains-compose = { id = "org.jetbrains.compose", version = "1.5.0-beta01" }
 
 kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
@@ -32,65 +30,62 @@ kotlin-plugin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization"
 
 kotlin-atomicfu = { id = "org.jetbrains.kotlin.plugin.atomicfu", version.ref = "kotlin" }
 
-moko-kswift = { id = "dev.icerock.moko.kswift", version.ref = "kswift" }
+ktfmt = { id = "com.ncorti.ktfmt.gradle", version = "0.13.0" }
 
 sqldelight = { id = "app.cash.sqldelight", version.ref = "sqldelight" }
 
 versions = { id = "com.github.ben-manes.versions", version = "0.47.0" }
 
 [libraries]
-accompanist-systemuicontroller = { module = "com.google.accompanist:accompanist-systemuicontroller", version = "0.30.1" }
+accompanist-systemuicontroller = { module = "com.google.accompanist:accompanist-systemuicontroller", version = "0.31.6-rc" }
+
+androidx-core = { module = "androidx.core:core-ktx", version = "1.10.1" }
 
 androidx-activity = { module = "androidx.activity:activity-compose", version = "1.7.2" }
 
 androidx-glance = { module = "androidx.glance:glance-appwidget", version.ref = "glance" }
 androidx-glance-material3 = { module = "androidx.glance:glance-material3", version.ref = "glance" }
 
-androidx-lifecycle-viewmodel = { module = "androidx.lifecycle:lifecycle-viewmodel-ktx", version = "2.6.1" }
-androidx-lifecycle-runtime = { module = "androidx.lifecycle:lifecycle-runtime-compose", version = "2.6.1" }
 androidx-lifecycle-service = { module = "androidx.lifecycle:lifecycle-service", version = "2.6.1" }
 
 androidx-work = { module = "androidx.work:work-runtime-ktx", version = "2.8.1" }
 
-coil-compose = { module = "io.coil-kt:coil-compose-base", version = "2.4.0" }
-
-compose-bom = { module = "androidx.compose:compose-bom", version = "2023.06.01" }
-
-compose-ui = { module = "androidx.compose.ui:ui" }
-compose-ui-tooling-preview = { module = "androidx.compose.ui:ui-tooling-preview" }
-compose-foundation = { module = "androidx.compose.foundation:foundation" }
-
-compose-ui-tooling = { module = "androidx.compose.ui:ui-tooling" }
-compose-ui-test-manifest = { module = "androidx.compose.ui:ui-test-manifest" }
-
-compose-material = { module = "androidx.compose.material:material" }
-compose-material-icons-extended = { module = "androidx.compose.material:material-icons-extended" }
-
-compose-material3 = { module = "androidx.compose.material3:material3", version.ref = "material3" }
-compose-material3-window-size = { module = "androidx.compose.material3:material3-window-size-class", version.ref = "material3" }
+atomicfu = { module = "org.jetbrains.kotlinx:atomicfu", version = "0.21.0" }
 
 compose-reorderable = { module = "org.burnoutcrew.composereorderable:reorderable", version = "0.9.6" }
+
+crashkios = { module = "co.touchlab.crashkios:crashlytics", version = "0.8.2" }
+
+decompose = { module = "com.arkivanov.decompose:decompose", version.ref = "decompose" }
+decompose-extensions = { module = "com.arkivanov.decompose:extensions-compose-jetbrains", version.ref = "decompose" }
 
 datastore = { module = "androidx.datastore:datastore-preferences-core", version = "1.1.0-alpha04" }
 
 desugar_jdk_libs = { module = "com.android.tools:desugar_jdk_libs", version = "2.0.3" }
 
-firebase-bom = { module = "com.google.firebase:firebase-bom", version = "32.2.0" }
+essenty = { module = "com.arkivanov.essenty:lifecycle", version = "1.2.0-alpha-03" }
+
+firebase-bom = { module = "com.google.firebase:firebase-bom", version = "32.2.2" }
 
 firebase-analytics = { module = "com.google.firebase:firebase-analytics-ktx" }
 firebase-messaging = { module = "com.google.firebase:firebase-messaging-ktx" }
 firebase-crashlytics = { module = "com.google.firebase:firebase-crashlytics-ktx" }
 
+kamel = { module = "media.kamel:kamel-image", version = "0.7.1" }
+
+kermit = { module = "co.touchlab:kermit", version.ref = "kermit" }
+kermit-crashlytics = { module = "co.touchlab:kermit-crashlytics", version.ref = "kermit" }
+
 koin-core = { module = "io.insert-koin:koin-core", version.ref = "koin" }
 
 koin-android = { module = "io.insert-koin:koin-android", version.ref = "koin" }
-koin-androidx-compose = { module = "io.insert-koin:koin-androidx-compose", version = "3.4.5" }
+koin-compose = { module = "io.insert-koin:koin-compose", version = "1.0.4" }
 
 kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "coroutines" }
 
-kotlinx-coroutines-android = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version.ref = "coroutines" }
-
 kotlinx-datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version = "0.4.0" }
+
+kotlinx-serialization-core = { module = "org.jetbrains.kotlinx:kotlinx-serialization-core", version = "1.5.1" }
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version = "1.5.1" }
 
 ktor-client-core = { module = "io.ktor:ktor-client-core", version.ref = "ktor" }
@@ -103,21 +98,14 @@ ktor-client-okhttp = { module = "io.ktor:ktor-client-okhttp", version.ref = "kto
 
 ktor-serialization-kotlinx-json = { module = "io.ktor:ktor-serialization-kotlinx-json", version.ref = "ktor" }
 
-moko-kswift-runtime = { module = "dev.icerock.moko:kswift-runtime", version.ref = "kswift" }
-
-moko-mvvm-core = { module = "dev.icerock.moko:mvvm-core", version.ref = "mvvm" }
-moko-mvvm-flow = { module = "dev.icerock.moko:mvvm-flow", version.ref = "mvvm" }
-
-napier = { module = "io.github.aakira:napier", version = "2.6.1" }
-
-navigation-reimagined = { module = "dev.olshevski.navigation:reimagined", version = "1.5.0-beta01" }
+materialkolor = { module = "com.materialkolor:material-kolor", version = "1.2.2" }
 
 nserrorkt = { module = "com.rickclephas.kmp:nserror-kt", version = "0.1.0" }
 
 result = { module = "com.michael-bull.kotlin-result:kotlin-result", version.ref = "result" }
 result-coroutines = { module = "com.michael-bull.kotlin-result:kotlin-result-coroutines", version.ref = "result" }
 
-okio = { module = "com.squareup.okio:okio", version = "3.4.0" }
+okio = { module = "com.squareup.okio:okio", version = "3.5.0" }
 
 sqldelight-dialect = { module = "app.cash.sqldelight:sqlite-3-38-dialect", version.ref = "sqldelight" }
 sqldelight-coroutines-extensions = { module = "app.cash.sqldelight:coroutines-extensions", version.ref = "sqldelight" }
@@ -127,11 +115,9 @@ sqldelight-native-driver = { module = "app.cash.sqldelight:native-driver", versi
 
 sqlite-android = { module = "com.github.requery:sqlite-android", version = "3.42.0" }
 
-uuid = { module = "com.benasher44:uuid", version = "0.7.1" }
+uuid = { module = "com.benasher44:uuid", version = "0.8.0" }
+
+window-size = { module = "dev.chrisbanes.material3:material3-window-size-class-multiplatform", version = "0.2.0" }
 
 [bundles]
 firebase = ["firebase-analytics", "firebase-messaging", "firebase-crashlytics"]
-
-compose = ["compose-ui", "compose-ui-tooling-preview", "compose-foundation", "compose-material", "compose-material-icons-extended"]
-
-compose-material3 = ["compose-material3", "compose-material3-window-size"]

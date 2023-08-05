@@ -65,7 +65,7 @@
             </intent-filter>
         </receiver>
         <receiver
-            android:name=".widget.TaskListWidgetReceiver"
+            android:name=".ui.widget.TaskListWidgetReceiver"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
@@ -76,7 +76,8 @@
                 android:resource="@xml/tasks_widget_info" />
         </receiver>
 
-        <service android:name="com.google.android.gms.metadata.ModuleDependencies" android:enabled="false" android:exported="false">
+        <!--suppress AndroidDomInspection -->
+        <service tools:ignore="MissingClass" android:name="com.google.android.gms.metadata.ModuleDependencies" android:enabled="false" android:exported="false">
             <intent-filter>
                 <action android:name="com.google.android.gms.metadata.MODULE_DEPENDENCIES" />
             </intent-filter>

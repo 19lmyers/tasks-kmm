@@ -39,7 +39,11 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
 
         if userInfo[DATA_MESSAGE_TYPE] as? String == MESSAGE_TYPE_REMINDER {
             guard let taskId = userInfo[DATA_TASK_ID] as? String else { return }
-            AppState.shared.launchAction = .task(taskId, response.actionIdentifier == COMPLETE_ACTION_IDENTIFIER)
+            if response.actionIdentifier == COMPLETE_ACTION_IDENTIFIER {
+                rootHolder.root.markTaskAsCompleted(id: taskId)
+            } else {
+                rootHolder.root.onDeepLink(deepLink: DeepLinkViewTask(id: taskId))
+            }
         }
     }
 }
@@ -47,8 +51,7 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
 extension AppDelegate: MessagingDelegate {
     func messaging(_: Messaging, didReceiveRegistrationToken fcmToken: String?) {
         if fcmToken != nil {
-            let helper = MessagingHelper()
-            helper.onNewToken(token: fcmToken!)
+            rootHolder.root.linkFCMToken(token: fcmToken!)
         }
     }
 }

@@ -98,15 +98,6 @@
         "revision" : "f25867a208f459d3c5a06935dceb9083b11cd539",
         "version" : "1.22.0"
       }
-    },
-    {
-      "identity" : "tasks-kmm",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/19lmyers/tasks-kmm/",
-      "state" : {
-        "revision" : "215160f4fc7f70f048c2176380050cdcd6ef0cc6",
-        "version" : "0.8.3"
-      }
     }
   ],
   "version" : 2

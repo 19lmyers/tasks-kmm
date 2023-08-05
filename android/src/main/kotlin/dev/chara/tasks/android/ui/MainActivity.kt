@@ -5,94 +5,89 @@ import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
-import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
-import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.ui.graphics.Color
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.view.WindowCompat
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
+import com.arkivanov.decompose.defaultComponentContext
+import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import dev.chara.tasks.android.notification.service.MessagingService
-import dev.chara.tasks.android.ui.theme.AppTheme
-import dev.chara.tasks.model.preference.Theme
-import dev.chara.tasks.viewmodel.BaseViewModel
-import dev.olshevski.navigation.reimagined.NavController
-import dev.olshevski.navigation.reimagined.navController
+import dev.chara.tasks.shared.component.DeepLink
+import dev.chara.tasks.shared.component.DefaultRootComponent
+import dev.chara.tasks.shared.model.preference.Theme
+import dev.chara.tasks.shared.ui.content.RootContent
 
 class MainActivity : ComponentActivity() {
 
-    @OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         WindowCompat.setDecorFitsSystemWindows(window, false)
 
-        val initialBackstack: List<NavTarget> = parseIntent()
+        val root =
+            DefaultRootComponent(
+                componentContext = defaultComponentContext(),
+                deepLink = parseIntent()
+            )
 
         setContent {
-            val viewModel: BaseViewModel = viewModel()
+            RootContent(component = root)
 
-            val state = viewModel.uiState.collectAsStateWithLifecycle()
+            val state = root.state.collectAsState()
 
-            val isDarkTheme = when (state.value.appTheme) {
-                Theme.SYSTEM_DEFAULT -> isSystemInDarkTheme()
-                Theme.LIGHT -> false
-                Theme.DARK -> true
-            }
+            val darkTheme =
+                when (state.value.appTheme) {
+                    Theme.SYSTEM_DEFAULT -> isSystemInDarkTheme()
+                    Theme.LIGHT -> false
+                    Theme.DARK -> true
+                }
 
-            val navController: NavController<NavTarget> = rememberSaveable(initialBackstack) {
-                navController(initialBackstack = initialBackstack)
-            }
-
-            val windowSizeClass = calculateWindowSizeClass(this)
-
-            AppTheme(darkTheme = isDarkTheme, variant = state.value.appThemeVariant) {
-                RootNavHost(
-                    navController,
-                    windowSizeClass = windowSizeClass,
-                    showCreateTaskSheet = intent.action == ACTION_NEW_TASK
+            val systemUiController = rememberSystemUiController()
+            DisposableEffect(systemUiController, darkTheme) {
+                systemUiController.setSystemBarsColor(
+                    color = Color.Transparent,
+                    darkIcons = !darkTheme
                 )
+
+                onDispose {}
             }
         }
     }
 
-    private fun parseIntent(): List<NavTarget> =
+    private fun parseIntent(): DeepLink =
         if (intent.data != null && intent.data!!.host == DEEP_LINK_HOST) {
-
             when (intent.data!!.path) {
                 PATH_VERIFY_EMAIL -> {
                     val token = intent.data!!.getQueryParameter(QUERY_EMAIL_VERIFY_TOKEN)
 
                     if (token != null) {
-                        listOf(NavTarget.VerifyEmail(token))
+                        DeepLink.VerifyEmail(token)
                     } else {
                         Toast.makeText(this, "Missing token parameter", Toast.LENGTH_LONG).show()
-                        listOf(NavTarget.Home.Default)
+                        DeepLink.None
                     }
                 }
-
                 PATH_RESET_PASSWORD -> {
                     val token = intent.data!!.getQueryParameter(QUERY_PASSWORD_RESET_TOKEN)
 
                     if (token != null) {
-                        listOf(NavTarget.ResetPassword(token))
+                        DeepLink.ResetPassword(token)
                     } else {
                         Toast.makeText(this, "Missing token parameter", Toast.LENGTH_LONG).show()
-                        listOf(NavTarget.Home.Default)
+                        DeepLink.None
                     }
                 }
-
                 PATH_VIEW_LIST -> {
                     val listId = intent.data!!.getQueryParameter(QUERY_LIST_ID)
 
                     if (listId != null) {
-                        listOf(NavTarget.Home.WithList(listId))
+                        DeepLink.ViewList(listId)
                     } else {
                         Toast.makeText(this, "Missing id parameter", Toast.LENGTH_LONG).show()
-                        listOf(NavTarget.Home.Default)
+                        DeepLink.None
                     }
                 }
-
                 PATH_VIEW_TASK -> {
                     val taskId = intent.data!!.getQueryParameter(QUERY_TASK_ID)
 
@@ -100,19 +95,20 @@ class MainActivity : ComponentActivity() {
                         NotificationManagerCompat.from(this)
                             .cancel(taskId, MessagingService.NOTIFICATION_TYPE_REMINDER)
 
-                        listOf(NavTarget.Home.WithTask(taskId))
+                        DeepLink.ViewTask(taskId)
                     } else {
                         Toast.makeText(this, "Missing id parameter", Toast.LENGTH_LONG).show()
-                        listOf(NavTarget.Home.Default)
+                        DeepLink.None
                     }
                 }
-
                 else -> {
-                    listOf(NavTarget.Home.Default)
+                    DeepLink.None
                 }
             }
+        } else if (intent.action == ACTION_NEW_TASK) {
+            DeepLink.CreateTask
         } else {
-            listOf(NavTarget.Home.Default)
+            DeepLink.None
         }
 
     companion object {

@@ -22,9 +22,8 @@ import dev.chara.tasks.android.model.drawable
 import dev.chara.tasks.android.model.res
 import dev.chara.tasks.android.notification.receiver.NotificationActionReceiver
 import dev.chara.tasks.android.ui.MainActivity
-import dev.chara.tasks.data.Repository
-import dev.chara.tasks.model.TaskList
-import io.github.aakira.napier.Napier
+import dev.chara.tasks.shared.data.Repository
+import dev.chara.tasks.shared.model.TaskList
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
@@ -64,8 +63,6 @@ class MessagingService : FirebaseMessagingService(), LifecycleOwner {
     override fun onMessageReceived(message: RemoteMessage) {
         super.onMessageReceived(message)
 
-        Napier.w(message.toString(), tag = "MessagingService")
-
         val messageType = message.data[DATA_MESSAGE_TYPE]
 
         if (messageType == MESSAGE_TYPE_REMINDER) {
@@ -73,71 +70,83 @@ class MessagingService : FirebaseMessagingService(), LifecycleOwner {
             val taskLabel = message.data[DATA_TASK_LABEL] ?: return
             val listTitle = message.data[DATA_LIST_TITLE] ?: return
 
-            val listColor = try {
-                TaskList.Color.valueOf(message.data[DATA_LIST_COLOR] ?: "")
-            } catch (ex: IllegalArgumentException) {
-                null
-            }
-            val listIcon = try {
-                TaskList.Icon.valueOf(message.data[DATA_LIST_ICON] ?: "")
-            } catch (ex: IllegalArgumentException) {
-                null
-            }
+            val listColor =
+                try {
+                    TaskList.Color.valueOf(message.data[DATA_LIST_COLOR] ?: "")
+                } catch (ex: IllegalArgumentException) {
+                    null
+                }
+            val listIcon =
+                try {
+                    TaskList.Icon.valueOf(message.data[DATA_LIST_ICON] ?: "")
+                } catch (ex: IllegalArgumentException) {
+                    null
+                }
 
             val channelId = getString(R.string.notification_channel_reminders)
 
-            val editTaskIntent = Intent(
-                Intent.ACTION_VIEW,
-                Uri.Builder()
-                    .scheme("https")
-                    .authority(MainActivity.DEEP_LINK_HOST)
-                    .path(MainActivity.PATH_VIEW_TASK)
-                    .appendQueryParameter(MainActivity.QUERY_TASK_ID, taskId)
-                    .build()
-            )
+            val editTaskIntent =
+                Intent(
+                    Intent.ACTION_VIEW,
+                    Uri.Builder()
+                        .scheme("https")
+                        .authority(MainActivity.DEEP_LINK_HOST)
+                        .path(MainActivity.PATH_VIEW_TASK)
+                        .appendQueryParameter(MainActivity.QUERY_TASK_ID, taskId)
+                        .build()
+                )
 
-            val editTaskPendingIntent = PendingIntent.getActivity(
-                this,
-                0,
-                editTaskIntent,
-                PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_CANCEL_CURRENT
-            )
+            val editTaskPendingIntent =
+                PendingIntent.getActivity(
+                    this,
+                    0,
+                    editTaskIntent,
+                    PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_CANCEL_CURRENT
+                )
 
-            val completeTaskIntent = Intent(this, NotificationActionReceiver::class.java)
-                .setAction(NotificationActionReceiver.ACTION_COMPLETE_TASK)
-                .putExtra(NotificationActionReceiver.EXTRA_TASK_ID, taskId)
+            val completeTaskIntent =
+                Intent(this, NotificationActionReceiver::class.java)
+                    .setAction(NotificationActionReceiver.ACTION_COMPLETE_TASK)
+                    .putExtra(NotificationActionReceiver.EXTRA_TASK_ID, taskId)
 
-            val completeTaskPendingIntent = PendingIntent.getBroadcast(
-                this,
-                0,
-                completeTaskIntent,
-                PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_CANCEL_CURRENT
-            )
+            val completeTaskPendingIntent =
+                PendingIntent.getBroadcast(
+                    this,
+                    0,
+                    completeTaskIntent,
+                    PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_CANCEL_CURRENT
+                )
 
-            var builder = NotificationCompat.Builder(this, channelId)
-                .setSmallIcon(listIcon.drawable)
-                .setContentTitle(taskLabel)
-                .setSubText(listTitle)
-                .setShowWhen(true)
-                .setWhen(message.sentTime)
-                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-                .setCategory(NotificationCompat.CATEGORY_REMINDER)
-                .setContentIntent(editTaskPendingIntent)
-                .setAutoCancel(true)
-                .addAction(R.drawable.done_48px, "Mark as complete", completeTaskPendingIntent)
+            var builder =
+                NotificationCompat.Builder(this, channelId)
+                    .setSmallIcon(listIcon.drawable)
+                    .setContentTitle(taskLabel)
+                    .setSubText(listTitle)
+                    .setShowWhen(true)
+                    .setWhen(message.sentTime)
+                    .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                    .setCategory(NotificationCompat.CATEGORY_REMINDER)
+                    .setContentIntent(editTaskPendingIntent)
+                    .setAutoCancel(true)
+                    .addAction(R.drawable.done_48px, "Mark as complete", completeTaskPendingIntent)
 
             if (listColor != null) {
                 builder = builder.setColor(resources.getColor(listColor.res, theme))
             }
 
-            if (ActivityCompat.checkSelfPermission(
+            if (
+                ActivityCompat.checkSelfPermission(
                     applicationContext,
                     Manifest.permission.POST_NOTIFICATIONS
                 ) == PackageManager.PERMISSION_GRANTED
             ) {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                     val mChannel =
-                        NotificationChannel(channelId, "Reminders", NotificationManager.IMPORTANCE_DEFAULT)
+                        NotificationChannel(
+                            channelId,
+                            "Reminders",
+                            NotificationManager.IMPORTANCE_DEFAULT
+                        )
 
                     val notificationManager =
                         getSystemService(NOTIFICATION_SERVICE) as NotificationManager

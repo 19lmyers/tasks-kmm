@@ -49,3 +49,5 @@
   native <methods>;
   public <init>(...);
 }
+
+-keep class io.kamel.** { *; }

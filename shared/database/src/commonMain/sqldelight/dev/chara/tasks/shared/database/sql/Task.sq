@@ -1,0 +1,128 @@
+get:
+SELECT *
+FROM Task
+ORDER BY list_id, is_starred DESC, label ASC;
+
+getStarred:
+SELECT *
+FROM Task
+WHERE is_starred = 1
+AND is_completed = 0
+ORDER BY last_modified ASC;
+
+getUpcoming:
+SELECT DISTINCT *
+FROM Task
+WHERE is_completed = 0
+AND ((
+    DATETIME(reminder_date) >= DATETIME('now')
+    AND DATETIME(reminder_date) < DATETIME('now', '+7 days')
+) OR (
+    DATETIME(due_date) >= DATETIME('now')
+    AND DATETIME(due_date) < DATETIME('now', '+7 days')
+))
+ORDER BY COALESCE(reminder_date, due_date, '9999-12-31 23:59:59') ASC;
+
+getOverdue:
+SELECT *
+FROM Task
+WHERE is_completed = 0
+AND (
+    DATETIME(reminder_date) < DATETIME('now')
+    OR DATETIME(due_date) < DATETIME('now')
+)
+ORDER BY COALESCE(reminder_date, due_date, '9999-12-31 23:59:59') ASC;
+
+getById:
+SELECT *
+FROM Task
+WHERE id = ?
+LIMIT 1;
+
+getByList_Ordinal:
+SELECT *
+FROM Task
+WHERE list_id = ?
+AND is_completed = ?
+ORDER BY ordinal ASC;
+
+getByList_Label:
+SELECT *
+FROM Task
+WHERE list_id = ?
+AND is_completed = ?
+ORDER BY label ASC;
+
+getByList_DateCreated:
+SELECT *
+FROM Task
+WHERE list_id = ?
+AND is_completed = ?
+ORDER BY date_created ASC;
+
+getByList_Upcoming:
+SELECT *
+FROM Task
+WHERE list_id = ?
+AND is_completed = ?
+ORDER BY COALESCE(reminder_date, due_date, '9999-12-31 23:59:59') ASC, last_modified ASC;
+
+getByList_Starred:
+SELECT *
+FROM Task
+WHERE list_id = ?
+AND is_completed = ?
+ORDER BY is_starred DESC, last_modified ASC;
+
+getCountForList:
+SELECT COUNT(*)
+FROM Task
+WHERE list_id = ?
+AND is_completed = ?;
+
+getListSize:
+SELECT COUNT(*)
+FROM Task
+WHERE list_id = ?;
+
+getMaxOrdinal:
+SELECT MAX(t.ordinal)
+FROM Task t
+WHERE list_id = ?;
+
+insert:
+INSERT INTO Task VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+
+update:
+UPDATE Task
+SET label = ?, is_completed = ?, is_starred = ?, details = ?, reminder_date = ?, due_date = ?, last_modified = ?, ordinal = ?
+WHERE id = ?;
+
+move:
+UPDATE Task
+
+SET list_id = ?, last_modified = ?
+WHERE id = ?;
+
+reorder {
+    UPDATE Task
+    SET ordinal = ordinal + :difference_sign, last_modified = :last_modified
+    WHERE list_id = :list_id
+    AND ordinal BETWEEN :lower_bound AND :upper_bound;
+
+    UPDATE Task
+    SET ordinal = :ordinal + 0, last_modified = :last_modified
+    WHERE list_id = :list_id
+    AND id = :task_id;
+}
+
+delete:
+DELETE FROM Task
+WHERE id = ?;
+
+deleteByList:
+DELETE FROM Task
+WHERE list_id = ?;
+
+deleteAll:
+DELETE FROM Task;

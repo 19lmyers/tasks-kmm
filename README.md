@@ -85,3 +85,13 @@ If I were to start this project over, there are two major things I'd do differen
 
 1. I'd use Source Control (Git) from the beginning and practice a more Agile development cycle.
 2. I'd add unit and integration testing to the list of concepts to teach myself during the project.
+
+## For developers
+
+For code linting before each commit, change the project's git hooks directory with this command:
+
+```shell
+git config core.hooksPath hooks/
+```
+
+You can also copy the contents of /hooks to your project's git hooks folder.
