@@ -53,7 +53,8 @@ import com.github.michaelbull.result.Result
 import dev.chara.tasks.shared.component.welcome.forgot_password.ForgotPasswordComponent
 
 @OptIn(
-    ExperimentalComposeUiApi::class, ExperimentalLayoutApi::class,
+    ExperimentalComposeUiApi::class,
+    ExperimentalLayoutApi::class,
     ExperimentalMaterial3Api::class
 )
 @Composable
@@ -72,12 +73,10 @@ fun ForgotPasswordContent(component: ForgotPasswordComponent) {
         AlertDialog(
             onDismissRequest = {},
             title = { Text(text = "Password reset link sent") },
-            text = { Text(text = "An email with a password reset link should be arriving shortly.") },
-            confirmButton = {
-                TextButton(onClick = { component.onUp() }) {
-                    Text("OK")
-                }
-            }
+            text = {
+                Text(text = "An email with a password reset link should be arriving shortly.")
+            },
+            confirmButton = { TextButton(onClick = { component.onUp() }) { Text("OK") } }
         )
     }
 
@@ -98,9 +97,7 @@ fun ForgotPasswordContent(component: ForgotPasswordComponent) {
             )
         },
         bottomBar = {
-            BottomAppBar(
-                modifier = Modifier.padding(WindowInsets.ime.asPaddingValues())
-            ) {
+            BottomAppBar(modifier = Modifier.padding(WindowInsets.ime.asPaddingValues())) {
                 Spacer(Modifier.weight(1f, true))
 
                 FilledTonalButton(
@@ -110,7 +107,6 @@ fun ForgotPasswordContent(component: ForgotPasswordComponent) {
                         component.sendResetEmail(email)
                     },
                     enabled = emailResult is Ok && !state.value.isLoading
-
                 ) {
                     Text(text = "Confirm")
                 }
@@ -118,9 +114,7 @@ fun ForgotPasswordContent(component: ForgotPasswordComponent) {
         },
         content = { innerPadding ->
             Column(
-                modifier = Modifier
-                    .padding(innerPadding)
-                    .consumeWindowInsets(innerPadding),
+                modifier = Modifier.padding(innerPadding).consumeWindowInsets(innerPadding),
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
@@ -162,26 +156,23 @@ private fun ForgotPasswordForm(
     val focusRequester = remember { FocusRequester() }
 
     OutlinedTextField(
-        modifier = Modifier
-            .padding(16.dp, 8.dp)
-            .fillMaxWidth()
-            .focusRequester(focusRequester),
+        modifier = Modifier.padding(16.dp, 8.dp).fillMaxWidth().focusRequester(focusRequester),
         value = email,
         singleLine = true,
         onValueChange = onEmailChanged,
         readOnly = resetPending,
         label = { Text(text = "Email") },
-        keyboardOptions = KeyboardOptions(
-            keyboardType = KeyboardType.Email, imeAction = ImeAction.Next
-        ),
-        keyboardActions = KeyboardActions(
-            onDone = {
-                if (emailResult is Ok && !resetPending) {
-                    keyboardController?.hide()
-                    onResetClicked()
+        keyboardOptions =
+            KeyboardOptions(keyboardType = KeyboardType.Email, imeAction = ImeAction.Next),
+        keyboardActions =
+            KeyboardActions(
+                onDone = {
+                    if (emailResult is Ok && !resetPending) {
+                        keyboardController?.hide()
+                        onResetClicked()
+                    }
                 }
-            }
-        ),
+            ),
         isError = email.isNotEmpty() && emailResult is Err,
         supportingText = {
             if (email.isNotEmpty() && emailResult is Err) {

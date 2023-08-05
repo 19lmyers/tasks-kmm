@@ -61,9 +61,7 @@ class DefaultCreateTaskComponent(
             val result = repository.createTask(task.listId, task)
 
             if (result is Ok) {
-                withContext(Dispatchers.Main) {
-                    dismiss()
-                }
+                withContext(Dispatchers.Main) { dismiss() }
             }
 
             _state.value = state.value.copy(isLoading = false)

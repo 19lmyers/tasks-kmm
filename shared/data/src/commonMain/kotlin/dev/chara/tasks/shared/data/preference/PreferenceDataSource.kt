@@ -22,25 +22,25 @@ expect class DataStorePath {
 
 class PreferenceDataSource(private val dataStorePath: DataStorePath) {
 
-    private val dataStore = PreferenceDataStoreFactory.createWithPath(
-        corruptionHandler = null,
-        scope = CoroutineScope(Dispatchers.Default + SupervisorJob()),
-        produceFile = {
-            dataStorePath.get("tasks.preferences_pb").toPath()
-        }
-    )
-
-    fun getUserProfile() = dataStore.data.map {
-        val email = it[KEY_AUTH_USER_EMAIL] ?: return@map null
-
-        Profile(
-            id = it[KEY_AUTH_USER_ID] ?: "",
-            email = email,
-            emailVerified = it[KEY_AUTH_USER_EMAIL_VERIFIED] ?: false,
-            displayName = it[KEY_AUTH_USER_DISPLAY_NAME] ?: "",
-            profilePhotoUri = it[KEY_AUTH_USER_PROFILE_PHOTO_URI],
+    private val dataStore =
+        PreferenceDataStoreFactory.createWithPath(
+            corruptionHandler = null,
+            scope = CoroutineScope(Dispatchers.Default + SupervisorJob()),
+            produceFile = { dataStorePath.get("tasks.preferences_pb").toPath() }
         )
-    }
+
+    fun getUserProfile() =
+        dataStore.data.map {
+            val email = it[KEY_AUTH_USER_EMAIL] ?: return@map null
+
+            Profile(
+                id = it[KEY_AUTH_USER_ID] ?: "",
+                email = email,
+                emailVerified = it[KEY_AUTH_USER_EMAIL_VERIFIED] ?: false,
+                displayName = it[KEY_AUTH_USER_DISPLAY_NAME] ?: "",
+                profilePhotoUri = it[KEY_AUTH_USER_PROFILE_PHOTO_URI],
+            )
+        }
 
     suspend fun setUserProfile(profile: Profile) {
         dataStore.edit {
@@ -57,15 +57,16 @@ class PreferenceDataSource(private val dataStorePath: DataStorePath) {
         }
     }
 
-    fun getApiTokens() = dataStore.data.map {
-        if (it[KEY_API_ACCESS_TOKEN].isNullOrBlank()) return@map null
-        if (it[KEY_API_REFRESH_TOKEN].isNullOrBlank()) return@map null
+    fun getApiTokens() =
+        dataStore.data.map {
+            if (it[KEY_API_ACCESS_TOKEN].isNullOrBlank()) return@map null
+            if (it[KEY_API_REFRESH_TOKEN].isNullOrBlank()) return@map null
 
-        TokenPair(
-            it[KEY_API_ACCESS_TOKEN] ?: return@map null,
-            it[KEY_API_REFRESH_TOKEN] ?: return@map null
-        )
-    }
+            TokenPair(
+                it[KEY_API_ACCESS_TOKEN] ?: return@map null,
+                it[KEY_API_REFRESH_TOKEN] ?: return@map null
+            )
+        }
 
     suspend fun setApiTokens(tokens: TokenPair) {
         dataStore.edit {
@@ -74,42 +75,37 @@ class PreferenceDataSource(private val dataStorePath: DataStorePath) {
         }
     }
 
-    suspend fun clearAuthFields() = dataStore.edit {
-        it.remove(KEY_AUTH_USER_EMAIL)
-        it.remove(KEY_AUTH_USER_DISPLAY_NAME)
-        it.remove(KEY_AUTH_USER_PROFILE_PHOTO_URI)
+    suspend fun clearAuthFields() =
+        dataStore.edit {
+            it.remove(KEY_AUTH_USER_EMAIL)
+            it.remove(KEY_AUTH_USER_DISPLAY_NAME)
+            it.remove(KEY_AUTH_USER_PROFILE_PHOTO_URI)
 
-        it.remove(KEY_API_ACCESS_TOKEN)
-        it.remove(KEY_API_REFRESH_TOKEN)
-    }
+            it.remove(KEY_API_ACCESS_TOKEN)
+            it.remove(KEY_API_REFRESH_TOKEN)
+        }
 
-    fun getAppTheme() = dataStore.data.map {
-        Theme.valueOf(it[KEY_APP_THEME] ?: Theme.SYSTEM_DEFAULT.name)
-    }
+    fun getAppTheme() =
+        dataStore.data.map { Theme.valueOf(it[KEY_APP_THEME] ?: Theme.SYSTEM_DEFAULT.name) }
 
     suspend fun setAppTheme(theme: Theme) {
-        dataStore.edit {
-            it[KEY_APP_THEME] = theme.name
-        }
+        dataStore.edit { it[KEY_APP_THEME] = theme.name }
     }
 
-    fun getAppThemeVariant() = dataStore.data.map {
-        ThemeVariant.valueOf(it[KEY_APP_THEME_VARIANT] ?: ThemeVariant.TONAL_SPOT.name)
-    }
+    fun getAppThemeVariant() =
+        dataStore.data.map {
+            ThemeVariant.valueOf(it[KEY_APP_THEME_VARIANT] ?: ThemeVariant.TONAL_SPOT.name)
+        }
 
     suspend fun setAppThemeVariant(variant: ThemeVariant) {
-        dataStore.edit {
-            it[KEY_APP_THEME_VARIANT] = variant.name
-        }
+        dataStore.edit { it[KEY_APP_THEME_VARIANT] = variant.name }
     }
 
     /**
-     * This is the reverse of the Repository.
-     * Why? So newly added sections are enabled by default!
+     * This is the reverse of the Repository. Why? So newly added sections are enabled by default!
      */
-    fun getDisabledBoardSections() = dataStore.data.map {
-        it[KEY_BOARD_DISABLED_SECTIONS] ?: emptySet()
-    }
+    fun getDisabledBoardSections() =
+        dataStore.data.map { it[KEY_BOARD_DISABLED_SECTIONS] ?: emptySet() }
 
     suspend fun setDisabledForBoardSection(boardSection: BoardSection.Type, disabled: Boolean) {
         dataStore.edit {

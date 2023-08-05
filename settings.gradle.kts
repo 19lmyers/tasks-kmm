@@ -21,18 +21,12 @@ dependencyResolutionManagement {
 rootProject.name = "Tasks"
 
 include(":shared:model")
-
 include(":shared:database")
 include(":shared:data")
-
 include(":shared:domain")
-
 include(":shared:component")
-
 include(":shared:ui")
-
 include(":shared:ext")
-
 include(":shared:framework")
 
 include(":android")

@@ -51,9 +51,10 @@ fun AlertDialog(
         properties = properties,
     ) {
         Box(
-            modifier = modifier
-                .sizeIn(minWidth = DialogMinWidth, maxWidth = DialogMaxWidth)
-                .then(Modifier.semantics { paneTitle = "Dialog" }),
+            modifier =
+                modifier
+                    .sizeIn(minWidth = DialogMinWidth, maxWidth = DialogMaxWidth)
+                    .then(Modifier.semantics { paneTitle = "Dialog" }),
             propagateMinConstraints = true
         ) {
             content()
@@ -78,27 +79,28 @@ fun AlertDialog(
     border: BorderStroke = BorderStroke(1.dp, MaterialTheme.colorScheme.surfaceContainerHighest),
     tonalElevation: Dp = 6.0.dp,
     properties: DialogProperties = DialogProperties()
-) = AlertDialog(onDismissRequest = onDismissRequest, modifier = modifier, properties = properties) {
-    AlertDialogContent(
-        buttons = {
-            AlertDialogFlowRow(
-                mainAxisSpacing = ButtonsMainAxisSpacing,
-                crossAxisSpacing = ButtonsCrossAxisSpacing
-            ) {
-                dismissButton?.invoke()
-                confirmButton()
-            }
-        },
-        icon = icon,
-        title = title,
-        text = text,
-        shape = shape,
-        containerColor = containerColor,
-        tonalElevation = tonalElevation,
-        buttonContentColor = MaterialTheme.colorScheme.primary,
-        iconContentColor = iconContentColor,
-        titleContentColor = titleContentColor,
-        textContentColor = textContentColor,
-        border = border
-    )
-}
+) =
+    AlertDialog(onDismissRequest = onDismissRequest, modifier = modifier, properties = properties) {
+        AlertDialogContent(
+            buttons = {
+                AlertDialogFlowRow(
+                    mainAxisSpacing = ButtonsMainAxisSpacing,
+                    crossAxisSpacing = ButtonsCrossAxisSpacing
+                ) {
+                    dismissButton?.invoke()
+                    confirmButton()
+                }
+            },
+            icon = icon,
+            title = title,
+            text = text,
+            shape = shape,
+            containerColor = containerColor,
+            tonalElevation = tonalElevation,
+            buttonContentColor = MaterialTheme.colorScheme.primary,
+            iconContentColor = iconContentColor,
+            titleContentColor = titleContentColor,
+            textContentColor = textContentColor,
+            border = border
+        )
+    }

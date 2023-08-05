@@ -8,7 +8,10 @@ import kotlinx.coroutines.tasks.await
 
 class AndroidFirebaseWrapper : FirebaseWrapper {
     override suspend fun getMessagingToken(): String? = Firebase.messaging.token.await()
+
     override fun setUserId(userId: String) = Firebase.crashlytics.setUserId(userId)
+
     override fun log(msg: String) = Firebase.crashlytics.log(msg)
+
     override fun recordException(t: Throwable) = Firebase.crashlytics.recordException(t)
 }

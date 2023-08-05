@@ -17,14 +17,10 @@ class NotificationActionReceiver : BroadcastReceiver() {
 
                 val completeTaskRequest: WorkRequest =
                     OneTimeWorkRequestBuilder<CompleteTaskWorker>()
-                        .setInputData(
-                            workDataOf(
-                                CompleteTaskWorker.TASK_ID to taskId
-                            )
-                        ).build()
+                        .setInputData(workDataOf(CompleteTaskWorker.TASK_ID to taskId))
+                        .build()
 
-                WorkManager.getInstance(context)
-                    .enqueue(completeTaskRequest)
+                WorkManager.getInstance(context).enqueue(completeTaskRequest)
             }
         }
     }

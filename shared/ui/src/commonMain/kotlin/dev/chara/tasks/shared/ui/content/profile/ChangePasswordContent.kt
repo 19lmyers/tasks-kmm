@@ -54,7 +54,8 @@ import com.androidx.material3.polyfill.AlertDialog
 import dev.chara.tasks.shared.component.profile.change_password.ChangePasswordComponent
 
 @OptIn(
-    ExperimentalLayoutApi::class, ExperimentalComposeUiApi::class,
+    ExperimentalLayoutApi::class,
+    ExperimentalComposeUiApi::class,
     ExperimentalMaterial3Api::class
 )
 @Composable
@@ -67,11 +68,7 @@ fun ChangePasswordContent(component: ChangePasswordComponent) {
         AlertDialog(
             onDismissRequest = {},
             title = { Text(text = "Password changed") },
-            confirmButton = {
-                TextButton(onClick = { component.onConfirmUp() }) {
-                    Text("OK")
-                }
-            },
+            confirmButton = { TextButton(onClick = { component.onConfirmUp() }) { Text("OK") } },
         )
     }
 
@@ -106,7 +103,11 @@ fun ChangePasswordContent(component: ChangePasswordComponent) {
                         keyboardController?.hide()
                         component.changePassword(currentPassword, newPassword)
                     },
-                    enabled = currentPassword.isNotBlank() && newPassword.isNotBlank() && newPassword != currentPassword && !state.value.isLoading
+                    enabled =
+                        currentPassword.isNotBlank() &&
+                            newPassword.isNotBlank() &&
+                            newPassword != currentPassword &&
+                            !state.value.isLoading
                 ) {
                     Text(text = "Change")
                 }
@@ -114,9 +115,7 @@ fun ChangePasswordContent(component: ChangePasswordComponent) {
         },
         content = { innerPadding ->
             Column(
-                modifier = Modifier
-                    .padding(innerPadding)
-                    .consumeWindowInsets(innerPadding),
+                modifier = Modifier.padding(innerPadding).consumeWindowInsets(innerPadding),
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
@@ -130,10 +129,7 @@ fun ChangePasswordContent(component: ChangePasswordComponent) {
                     onNewPasswordChanged = { newPassword = it },
                     changePasswordPending = state.value.isLoading,
                     onChangePasswordClicked = {
-                        component.changePassword(
-                            currentPassword,
-                            newPassword
-                        )
+                        component.changePassword(currentPassword, newPassword)
                     }
                 )
             }
@@ -151,7 +147,6 @@ fun ChangePasswordContent(component: ChangePasswordComponent) {
     }
 }
 
-
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
 private fun ChangePasswordForm(
@@ -168,22 +163,23 @@ private fun ChangePasswordForm(
     var currentPasswordVisible by rememberSaveable { mutableStateOf(false) }
 
     OutlinedTextField(
-        modifier = Modifier
-            .padding(16.dp, 8.dp)
-            .fillMaxWidth()
-            .focusRequester(focusRequester),
+        modifier = Modifier.padding(16.dp, 8.dp).fillMaxWidth().focusRequester(focusRequester),
         value = currentPassword,
         singleLine = true,
         onValueChange = onCurrentPasswordChanged,
         label = { Text(text = "Current Password") },
         readOnly = changePasswordPending,
-        visualTransformation = if (currentPasswordVisible) VisualTransformation.None else PasswordVisualTransformation(),
-        keyboardOptions = KeyboardOptions(
-            keyboardType = KeyboardType.Password, imeAction = ImeAction.Next,
-        ),
+        visualTransformation =
+            if (currentPasswordVisible) VisualTransformation.None
+            else PasswordVisualTransformation(),
+        keyboardOptions =
+            KeyboardOptions(
+                keyboardType = KeyboardType.Password,
+                imeAction = ImeAction.Next,
+            ),
         trailingIcon = {
-            val image = if (currentPasswordVisible) Icons.Filled.VisibilityOff
-            else Icons.Filled.Visibility
+            val image =
+                if (currentPasswordVisible) Icons.Filled.VisibilityOff else Icons.Filled.Visibility
 
             val description = if (currentPasswordVisible) "Hide password" else "Show password"
 
@@ -196,29 +192,31 @@ private fun ChangePasswordForm(
     var newPasswordVisible by rememberSaveable { mutableStateOf(false) }
 
     OutlinedTextField(
-        modifier = Modifier
-            .padding(16.dp, 8.dp)
-            .fillMaxWidth(),
+        modifier = Modifier.padding(16.dp, 8.dp).fillMaxWidth(),
         value = newPassword,
         singleLine = true,
         onValueChange = onNewPasswordChanged,
         readOnly = changePasswordPending,
         label = { Text(text = "New Password") },
-        visualTransformation = if (newPasswordVisible) VisualTransformation.None else PasswordVisualTransformation(),
-        keyboardOptions = KeyboardOptions(
-            keyboardType = KeyboardType.Password, imeAction = ImeAction.Done,
-        ),
-        keyboardActions = KeyboardActions(
-            onDone = {
-                if (currentPassword.isNotBlank() && !changePasswordPending) {
-                    keyboardController?.hide()
-                    onChangePasswordClicked()
+        visualTransformation =
+            if (newPasswordVisible) VisualTransformation.None else PasswordVisualTransformation(),
+        keyboardOptions =
+            KeyboardOptions(
+                keyboardType = KeyboardType.Password,
+                imeAction = ImeAction.Done,
+            ),
+        keyboardActions =
+            KeyboardActions(
+                onDone = {
+                    if (currentPassword.isNotBlank() && !changePasswordPending) {
+                        keyboardController?.hide()
+                        onChangePasswordClicked()
+                    }
                 }
-            }
-        ),
+            ),
         trailingIcon = {
-            val image = if (newPasswordVisible) Icons.Filled.VisibilityOff
-            else Icons.Filled.Visibility
+            val image =
+                if (newPasswordVisible) Icons.Filled.VisibilityOff else Icons.Filled.Visibility
 
             val description = if (newPasswordVisible) "Hide password" else "Show password"
 

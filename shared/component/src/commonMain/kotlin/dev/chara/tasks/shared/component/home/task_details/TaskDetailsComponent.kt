@@ -47,31 +47,29 @@ class DefaultTaskDetailsComponent(
     init {
         coroutineScope.launch {
             combine(
-                repository.getTaskById(taskId),
-                repository.getLists(),
-            ) { task, taskLists ->
-                TaskDetailsUiState(
-                    isLoading = false,
-                    selectedTask = task,
-                    allLists = taskLists,
-                )
-            }.collect {
-                if (it.selectedTask == null) {
-                    withContext(Dispatchers.Main) {
-                        navigateUp()
-                    }
-                } else {
-                    _state.value = it
+                    repository.getTaskById(taskId),
+                    repository.getLists(),
+                ) { task, taskLists ->
+                    TaskDetailsUiState(
+                        isLoading = false,
+                        selectedTask = task,
+                        allLists = taskLists,
+                    )
                 }
-            }
+                .collect {
+                    if (it.selectedTask == null) {
+                        withContext(Dispatchers.Main) { navigateUp() }
+                    } else {
+                        _state.value = it
+                    }
+                }
         }
     }
 
     override fun onUp() = navigateUp()
 
-    private val callback = BackCallback(priority = 1) {
-        setShowConfirmExit(!state.value.showConfirmExit)
-    }
+    private val callback =
+        BackCallback(priority = 1) { setShowConfirmExit(!state.value.showConfirmExit) }
 
     init {
         backHandler.register(callback)
@@ -84,25 +82,24 @@ class DefaultTaskDetailsComponent(
     override fun updateTask(task: Task) {
         coroutineScope.launch {
             val result = repository.updateTask(task.listId, task.id, task)
-            //_messages.emitAsMessage(result)
+            // _messages.emitAsMessage(result)
         }
     }
 
     override fun moveTask(oldListId: String, newListId: String, taskId: String) {
         coroutineScope.launch {
-            val result = repository.moveTask(oldListId, newListId, taskId, lastModified = Clock.System.now())
-           //_messages.emitAsMessage(result)
+            val result =
+                repository.moveTask(oldListId, newListId, taskId, lastModified = Clock.System.now())
+            // _messages.emitAsMessage(result)
         }
     }
 
     override fun deleteTask(task: Task) {
         coroutineScope.launch {
             val result = repository.deleteTask(task.listId, task.id)
-            //_messages.emitAsMessage(result, successMessage = "List deleted")
+            // _messages.emitAsMessage(result, successMessage = "List deleted")
             if (result is Ok) {
-                withContext(Dispatchers.Main) {
-                    navigateUp()
-                }
+                withContext(Dispatchers.Main) { navigateUp() }
             }
         }
     }

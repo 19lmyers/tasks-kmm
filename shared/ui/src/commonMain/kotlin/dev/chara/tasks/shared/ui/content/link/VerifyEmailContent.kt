@@ -47,7 +47,9 @@ import com.github.michaelbull.result.Ok
 import com.github.michaelbull.result.Result
 import dev.chara.tasks.shared.component.link.verify_email.VerifyEmailComponent
 
-@OptIn(ExperimentalComposeUiApi::class, ExperimentalLayoutApi::class,
+@OptIn(
+    ExperimentalComposeUiApi::class,
+    ExperimentalLayoutApi::class,
     ExperimentalMaterial3Api::class
 )
 @Composable
@@ -58,13 +60,9 @@ fun VerifyEmailContent(component: VerifyEmailComponent) {
 
     if (state.value.emailVerified) {
         AlertDialog(
-            onDismissRequest = { },
+            onDismissRequest = {},
             title = { Text(text = "Email verified") },
-            confirmButton = {
-                TextButton(onClick = { component.onHome() }) {
-                    Text("OK")
-                }
-            },
+            confirmButton = { TextButton(onClick = { component.onHome() }) { Text("OK") } },
         )
     }
 
@@ -92,7 +90,6 @@ fun VerifyEmailContent(component: VerifyEmailComponent) {
                         component.verifyEmail(email)
                     },
                     enabled = emailResult is Ok && !state.value.isLoading
-
                 ) {
                     Text(text = "Verify")
                 }
@@ -100,9 +97,7 @@ fun VerifyEmailContent(component: VerifyEmailComponent) {
         },
         content = { innerPadding ->
             Column(
-                modifier = Modifier
-                    .padding(innerPadding)
-                    .consumeWindowInsets(innerPadding),
+                modifier = Modifier.padding(innerPadding).consumeWindowInsets(innerPadding),
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
@@ -144,26 +139,23 @@ private fun VerifyEmailForm(
     val focusRequester = remember { FocusRequester() }
 
     OutlinedTextField(
-        modifier = Modifier
-            .padding(16.dp, 8.dp)
-            .fillMaxWidth()
-            .focusRequester(focusRequester),
+        modifier = Modifier.padding(16.dp, 8.dp).fillMaxWidth().focusRequester(focusRequester),
         value = email,
         singleLine = true,
         onValueChange = onEmailChanged,
         readOnly = verifyPending,
         label = { Text(text = "Email") },
-        keyboardOptions = KeyboardOptions(
-            keyboardType = KeyboardType.Email, imeAction = ImeAction.Next
-        ),
-        keyboardActions = KeyboardActions(
-            onDone = {
-                if (emailResult is Ok && !verifyPending) {
-                    keyboardController?.hide()
-                    onVerifyClicked()
+        keyboardOptions =
+            KeyboardOptions(keyboardType = KeyboardType.Email, imeAction = ImeAction.Next),
+        keyboardActions =
+            KeyboardActions(
+                onDone = {
+                    if (emailResult is Ok && !verifyPending) {
+                        keyboardController?.hide()
+                        onVerifyClicked()
+                    }
                 }
-            }
-        ),
+            ),
         isError = email.isNotEmpty() && emailResult is Err,
         supportingText = {
             if (email.isNotEmpty() && emailResult is Err) {

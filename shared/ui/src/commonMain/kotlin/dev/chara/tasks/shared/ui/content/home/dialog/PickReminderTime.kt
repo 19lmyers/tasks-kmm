@@ -45,10 +45,8 @@ fun PickReminderTimeDialog(
     initialHour: Int,
     initialMinute: Int
 ) {
-    val timePickerState = rememberTimePickerState(
-        initialHour = initialHour,
-        initialMinute = initialMinute
-    )
+    val timePickerState =
+        rememberTimePickerState(initialHour = initialHour, initialMinute = initialMinute)
 
     var showAsTextEntry by remember { mutableStateOf(timePickerState.is24hour) }
 
@@ -56,58 +54,35 @@ fun PickReminderTimeDialog(
         TimePickerDialog(
             onDismiss = onDismiss,
             confirmButton = {
-                TextButton(
-                    onClick = { onConfirm(timePickerState.hour, timePickerState.minute) }
-                ) {
+                TextButton(onClick = { onConfirm(timePickerState.hour, timePickerState.minute) }) {
                     Text("Confirm")
                 }
             },
-            dismissButton = {
-                TextButton(
-                    onClick = onDismiss
-                ) {
-                    Text("Cancel")
-                }
-            },
+            dismissButton = { TextButton(onClick = onDismiss) { Text("Cancel") } },
             switchLayoutButton = {
                 IconButton(onClick = { showAsTextEntry = !showAsTextEntry }) {
                     Icon(Icons.Filled.Schedule, contentDescription = "Switch to picker")
                 }
             }
         ) {
-            TimeInput(
-                modifier = Modifier.padding(24.dp),
-                state = timePickerState
-            )
+            TimeInput(modifier = Modifier.padding(24.dp), state = timePickerState)
         }
     } else {
         TimePickerDialog(
             onDismiss = onDismiss,
             confirmButton = {
-                TextButton(
-                    onClick = { onConfirm(timePickerState.hour, timePickerState.minute) }
-                ) {
+                TextButton(onClick = { onConfirm(timePickerState.hour, timePickerState.minute) }) {
                     Text("Confirm")
                 }
             },
-            dismissButton = {
-                TextButton(
-                    onClick = onDismiss
-                ) {
-                    Text("Cancel")
-                }
-            },
+            dismissButton = { TextButton(onClick = onDismiss) { Text("Cancel") } },
             switchLayoutButton = {
                 IconButton(onClick = { showAsTextEntry = !showAsTextEntry }) {
-
                     Icon(Icons.Filled.Keyboard, contentDescription = "Switch to text entry")
                 }
             }
         ) {
-            TimePicker(
-                modifier = Modifier.padding(24.dp),
-                state = timePickerState
-            )
+            TimePicker(modifier = Modifier.padding(24.dp), state = timePickerState)
         }
     }
 }
@@ -135,24 +110,21 @@ private fun TimePickerDialog(
 
                 Box(modifier = Modifier.fillMaxWidth()) {
                     Box(
-                        modifier = Modifier
-                            .align(Alignment.CenterStart)
-                            .padding(bottom = 8.dp, start = 6.dp)
+                        modifier =
+                            Modifier.align(Alignment.CenterStart)
+                                .padding(bottom = 8.dp, start = 6.dp)
                     ) {
                         CompositionLocalProvider(
                             LocalContentColor provides MaterialTheme.colorScheme.primary
                         ) {
                             val textStyle = MaterialTheme.typography.labelLarge
-                            ProvideTextStyle(value = textStyle) {
-                                switchLayoutButton?.invoke()
-                            }
+                            ProvideTextStyle(value = textStyle) { switchLayoutButton?.invoke() }
                         }
                     }
 
                     Box(
-                        modifier = Modifier
-                            .align(Alignment.CenterEnd)
-                            .padding(bottom = 8.dp, end = 6.dp),
+                        modifier =
+                            Modifier.align(Alignment.CenterEnd).padding(bottom = 8.dp, end = 6.dp),
                     ) {
                         CompositionLocalProvider(
                             LocalContentColor provides MaterialTheme.colorScheme.primary

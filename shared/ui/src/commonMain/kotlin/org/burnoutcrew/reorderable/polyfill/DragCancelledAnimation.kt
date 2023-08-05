@@ -27,12 +27,14 @@ import androidx.compose.ui.geometry.Offset
 
 interface DragCancelledAnimation {
     suspend fun dragCancelled(position: ItemPosition, offset: Offset)
+
     val position: ItemPosition?
     val offset: Offset
 }
 
 class NoDragCancelledAnimation : DragCancelledAnimation {
     override suspend fun dragCancelled(position: ItemPosition, offset: Offset) {}
+
     override val position: ItemPosition? = null
     override val offset: Offset = Offset.Zero
 }

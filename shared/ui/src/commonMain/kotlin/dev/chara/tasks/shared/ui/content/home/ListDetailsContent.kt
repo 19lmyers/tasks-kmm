@@ -68,7 +68,8 @@ import dev.chara.tasks.shared.ui.theme.extend.surfaceContainerHighest
 import kotlinx.datetime.Clock
 
 @OptIn(
-    ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class,
+    ExperimentalMaterial3Api::class,
+    ExperimentalLayoutApi::class,
     ExperimentalMaterialApi::class
 )
 @Composable
@@ -87,9 +88,7 @@ fun ListDetailsContent(component: ListDetailsComponent, upAsCloseButton: Boolean
 
         if (showDeleteListDialog) {
             DeleteListDialog(
-                onDismiss = {
-                    showDeleteListDialog = false
-                },
+                onDismiss = { showDeleteListDialog = false },
                 onConfirm = {
                     showDeleteListDialog = false
                     component.deleteList(state.value.selectedList!!.id)
@@ -101,9 +100,7 @@ fun ListDetailsContent(component: ListDetailsComponent, upAsCloseButton: Boolean
 
         if (showDeleteCompletedTasksDialog) {
             DeleteCompletedTasksDialog(
-                onDismiss = {
-                    showDeleteCompletedTasksDialog = false
-                },
+                onDismiss = { showDeleteCompletedTasksDialog = false },
                 onConfirm = {
                     component.clearCompletedTasks(state.value.selectedList!!.id)
                     showDeleteCompletedTasksDialog = false
@@ -116,9 +113,7 @@ fun ListDetailsContent(component: ListDetailsComponent, upAsCloseButton: Boolean
         if (showSortDialog) {
             SortListDialog(
                 sortType = state.value.selectedList!!.sortType,
-                onDismiss = {
-                    showSortDialog = false
-                },
+                onDismiss = { showSortDialog = false },
                 onSelect = { sortType ->
                     component.updateList(
                         state.value.selectedList!!.copy(
@@ -139,9 +134,7 @@ fun ListDetailsContent(component: ListDetailsComponent, upAsCloseButton: Boolean
                     upAsCloseButton = upAsCloseButton,
                     onUpClicked = { component.onUp() },
                     enableActions = !state.value.isLoading,
-                    onEditClicked = {
-                        component.onEditClicked(state.value.selectedList!!.id)
-                    },
+                    onEditClicked = { component.onEditClicked(state.value.selectedList!!.id) },
                     showOverflowMenu = showOverflowMenu,
                     setOverflowShown = { showOverflowMenu = it },
                     onDeleteTasksClicked = { showDeleteCompletedTasksDialog = true },
@@ -156,11 +149,15 @@ fun ListDetailsContent(component: ListDetailsComponent, upAsCloseButton: Boolean
                     onSortDirectionClicked = {
                         component.updateList(
                             state.value.selectedList!!.copy(
-                                sortDirection = if (state.value.selectedList!!.sortDirection == TaskList.SortDirection.ASCENDING) {
-                                    TaskList.SortDirection.DESCENDING
-                                } else {
-                                    TaskList.SortDirection.ASCENDING
-                                },
+                                sortDirection =
+                                    if (
+                                        state.value.selectedList!!.sortDirection ==
+                                            TaskList.SortDirection.ASCENDING
+                                    ) {
+                                        TaskList.SortDirection.DESCENDING
+                                    } else {
+                                        TaskList.SortDirection.ASCENDING
+                                    },
                                 lastModified = Clock.System.now()
                             )
                         )
@@ -171,11 +168,11 @@ fun ListDetailsContent(component: ListDetailsComponent, upAsCloseButton: Boolean
             },
             content = { innerPadding ->
                 Box(
-                    modifier = Modifier
-                        .padding(innerPadding)
-                        .consumeWindowInsets(innerPadding)
-                        .pullRefresh(pullRefreshState)
-                        .nestedScroll(scrollBehavior.nestedScrollConnection)
+                    modifier =
+                        Modifier.padding(innerPadding)
+                            .consumeWindowInsets(innerPadding)
+                            .pullRefresh(pullRefreshState)
+                            .nestedScroll(scrollBehavior.nestedScrollConnection)
                 ) {
                     Column(
                         verticalArrangement = Arrangement.Center,
@@ -183,21 +180,23 @@ fun ListDetailsContent(component: ListDetailsComponent, upAsCloseButton: Boolean
                     ) {
                         if (state.value.isLoading) {
                             Box(modifier = Modifier.fillMaxSize()) {
-                                CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
+                                CircularProgressIndicator(
+                                    modifier = Modifier.align(Alignment.Center)
+                                )
                             }
-                        } else if (state.value.currentTasks.isEmpty() && state.value.completedTasks.isEmpty()) {
+                        } else if (
+                            state.value.currentTasks.isEmpty() &&
+                                state.value.completedTasks.isEmpty()
+                        ) {
                             TaskPlaceholder()
                         } else {
                             Tasks(
                                 currentTasks = state.value.currentTasks,
                                 completedTasks = state.value.completedTasks,
-                                onClick = { task ->
-                                    component.onTaskClicked(task.id)
-                                },
-                                onUpdate = { task ->
-                                    component.updateTask(task)
-                                },
-                                allowReorder = state.value.selectedList?.sortType == TaskList.SortType.ORDINAL,
+                                onClick = { task -> component.onTaskClicked(task.id) },
+                                onUpdate = { task -> component.updateTask(task) },
+                                allowReorder =
+                                    state.value.selectedList?.sortType == TaskList.SortType.ORDINAL,
                                 onReorder = { taskId, fromIndex, toIndex ->
                                     component.reorderTask(
                                         state.value.selectedList!!.id,
@@ -206,7 +205,8 @@ fun ListDetailsContent(component: ListDetailsComponent, upAsCloseButton: Boolean
                                         toIndex
                                     )
                                 },
-                                showIndexNumbers = state.value.selectedList?.showIndexNumbers == true,
+                                showIndexNumbers =
+                                    state.value.selectedList?.showIndexNumbers == true,
                             )
                         }
                     }
@@ -265,11 +265,19 @@ private fun TopBar(
         },
         actions = {
             IconButton(onClick = { onEditClicked() }, enabled = enableActions) {
-                Icon(Icons.Filled.Edit, contentDescription = "Edit", tint = MaterialTheme.colorScheme.primary)
+                Icon(
+                    Icons.Filled.Edit,
+                    contentDescription = "Edit",
+                    tint = MaterialTheme.colorScheme.primary
+                )
             }
 
             IconButton(onClick = { setOverflowShown(true) }) {
-                Icon(Icons.Filled.MoreVert, contentDescription = "More actions", tint = MaterialTheme.colorScheme.primary)
+                Icon(
+                    Icons.Filled.MoreVert,
+                    contentDescription = "More actions",
+                    tint = MaterialTheme.colorScheme.primary
+                )
             }
             DropdownMenu(
                 expanded = showOverflowMenu,
@@ -288,9 +296,7 @@ private fun TopBar(
                 )
                 DropdownMenuItem(
                     text = { Text(text = "Delete list") },
-                    leadingIcon = {
-                        Icon(Icons.Filled.Delete, contentDescription = "Delete")
-                    },
+                    leadingIcon = { Icon(Icons.Filled.Delete, contentDescription = "Delete") },
                     onClick = {
                         onDeleteListClicked()
                         setOverflowShown(false)
@@ -305,14 +311,9 @@ private fun TopBar(
 
 @Composable
 private fun TaskPlaceholder() {
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .verticalScroll(rememberScrollState())
-    ) {
+    Box(modifier = Modifier.fillMaxSize().verticalScroll(rememberScrollState())) {
         Text(
-            modifier = Modifier
-                .align(Alignment.Center),
+            modifier = Modifier.align(Alignment.Center),
             text = "No tasks found",
             textAlign = TextAlign.Center,
         )
@@ -332,20 +333,14 @@ private fun BottomBar(
         actions = {
             if (sortType != null) {
                 TextButton(onClick = onSortTypeClicked) {
-                    Icon(
-                        sortType.icon,
-                        contentDescription = "Sort by"
-                    )
+                    Icon(sortType.icon, contentDescription = "Sort by")
                     Spacer(modifier = Modifier.size(ButtonDefaults.IconSpacing))
                     Text(text = sortType.toString())
                 }
             }
             if (sortDirection != null && sortType != TaskList.SortType.ORDINAL) {
                 TextButton(onClick = onSortDirectionClicked) {
-                    Icon(
-                        sortDirection.icon,
-                        contentDescription = "Sort order"
-                    )
+                    Icon(sortDirection.icon, contentDescription = "Sort order")
                     Spacer(modifier = Modifier.size(ButtonDefaults.IconSpacing))
                     Text(text = sortDirection.toString())
                 }
@@ -372,22 +367,11 @@ private fun DeleteCompletedTasksDialog(
     AlertDialog(
         onDismissRequest = onDismiss,
         title = { Text(text = "Delete all completed tasks?") },
-        text = {
-            Text(text = "Completed tasks will be permanently deleted from this list")
-        },
-        dismissButton = {
-            TextButton(onClick = onDismiss) {
-                Text("Cancel")
-            }
-        },
-        confirmButton = {
-            TextButton(onClick = onConfirm) {
-                Text("Delete")
-            }
-        }
+        text = { Text(text = "Completed tasks will be permanently deleted from this list") },
+        dismissButton = { TextButton(onClick = onDismiss) { Text("Cancel") } },
+        confirmButton = { TextButton(onClick = onConfirm) { Text("Delete") } }
     )
 }
-
 
 @Composable
 private fun DeleteListDialog(
@@ -397,19 +381,9 @@ private fun DeleteListDialog(
     AlertDialog(
         onDismissRequest = onDismiss,
         title = { Text(text = "Delete list?") },
-        text = {
-            Text(text = "All tasks in this list will be permanently deleted")
-        },
-        dismissButton = {
-            TextButton(onClick = onDismiss) {
-                Text("Cancel")
-            }
-        },
-        confirmButton = {
-            TextButton(onClick = onConfirm) {
-                Text("Delete")
-            }
-        }
+        text = { Text(text = "All tasks in this list will be permanently deleted") },
+        dismissButton = { TextButton(onClick = onDismiss) { Text("Cancel") } },
+        confirmButton = { TextButton(onClick = onConfirm) { Text("Delete") } }
     )
 }
 
@@ -427,33 +401,21 @@ private fun SortListDialog(
             contentColor = MaterialTheme.colorScheme.onSurface,
             tonalElevation = 6.0.dp,
         ) {
-            Column(
-                modifier = Modifier
-                    .padding(24.dp)
-                    .selectableGroup()
-            ) {
-                Box(
-                    modifier = Modifier.padding(bottom = 16.dp)
-                ) {
+            Column(modifier = Modifier.padding(24.dp).selectableGroup()) {
+                Box(modifier = Modifier.padding(bottom = 16.dp)) {
                     Text(text = "Sort by", style = MaterialTheme.typography.headlineSmall)
                 }
                 for (type in TaskList.SortType.values()) {
                     ListItem(
-                        modifier = Modifier.selectable(
-                            selected = sortType == type,
-                            onClick = {
-                                onSelect(type)
-                            },
-                            role = Role.RadioButton
-                        ),
-                        headlineContent = {
-                            Text(type.toString())
-                        },
-                        leadingContent = {
-                            RadioButton(
+                        modifier =
+                            Modifier.selectable(
                                 selected = sortType == type,
-                                onClick = null
-                            )
+                                onClick = { onSelect(type) },
+                                role = Role.RadioButton
+                            ),
+                        headlineContent = { Text(type.toString()) },
+                        leadingContent = {
+                            RadioButton(selected = sortType == type, onClick = null)
                         }
                     )
                 }

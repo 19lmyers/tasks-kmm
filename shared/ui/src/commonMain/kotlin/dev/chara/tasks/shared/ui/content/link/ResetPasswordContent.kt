@@ -52,7 +52,8 @@ import com.androidx.material3.polyfill.AlertDialog
 import dev.chara.tasks.shared.component.link.reset_password.ResetPasswordComponent
 
 @OptIn(
-    ExperimentalComposeUiApi::class, ExperimentalLayoutApi::class,
+    ExperimentalComposeUiApi::class,
+    ExperimentalLayoutApi::class,
     ExperimentalMaterial3Api::class
 )
 @Composable
@@ -66,11 +67,7 @@ fun ResetPasswordContent(component: ResetPasswordComponent) {
             onDismissRequest = {},
             title = { Text(text = "Password reset") },
             text = { Text(text = "You may now sign in.") },
-            confirmButton = {
-                TextButton(onClick = { component.onSignIn() }) {
-                    Text("OK")
-                }
-            }
+            confirmButton = { TextButton(onClick = { component.onSignIn() }) { Text("OK") } }
         )
     }
 
@@ -80,11 +77,7 @@ fun ResetPasswordContent(component: ResetPasswordComponent) {
 
     Scaffold(
         snackbarHost = { SnackbarHost(snackbarHostState) },
-        topBar = {
-            TopAppBar(
-                title = { Text("Reset password") }
-            )
-        },
+        topBar = { TopAppBar(title = { Text("Reset password") }) },
         bottomBar = {
             BottomAppBar(modifier = Modifier.padding(WindowInsets.ime.asPaddingValues())) {
                 Spacer(Modifier.weight(1f, true))
@@ -96,7 +89,6 @@ fun ResetPasswordContent(component: ResetPasswordComponent) {
                         component.resetPassword(password)
                     },
                     enabled = password.isNotBlank() && !state.value.isLoading
-
                 ) {
                     Text(text = "Reset")
                 }
@@ -104,9 +96,7 @@ fun ResetPasswordContent(component: ResetPasswordComponent) {
         },
         content = { innerPadding ->
             Column(
-                modifier = Modifier
-                    .padding(innerPadding)
-                    .consumeWindowInsets(innerPadding),
+                modifier = Modifier.padding(innerPadding).consumeWindowInsets(innerPadding),
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
@@ -117,9 +107,7 @@ fun ResetPasswordContent(component: ResetPasswordComponent) {
                     password = password,
                     onPasswordChanged = { password = it },
                     resetPending = state.value.isLoading,
-                    onResetClicked = {
-                        component.resetPassword(password)
-                    },
+                    onResetClicked = { component.resetPassword(password) },
                 )
             }
         }
@@ -136,7 +124,6 @@ fun ResetPasswordContent(component: ResetPasswordComponent) {
     }
 }
 
-
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
 private fun ResetPasswordForm(
@@ -151,30 +138,30 @@ private fun ResetPasswordForm(
     var passwordVisible by rememberSaveable { mutableStateOf(false) }
 
     OutlinedTextField(
-        modifier = Modifier
-            .padding(16.dp, 8.dp)
-            .fillMaxWidth()
-            .focusRequester(focusRequester),
+        modifier = Modifier.padding(16.dp, 8.dp).fillMaxWidth().focusRequester(focusRequester),
         value = password,
         singleLine = true,
         onValueChange = onPasswordChanged,
         label = { Text(text = "Password") },
         readOnly = resetPending,
-        visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
-        keyboardOptions = KeyboardOptions(
-            keyboardType = KeyboardType.Password, imeAction = ImeAction.Done,
-        ),
-        keyboardActions = KeyboardActions(
-            onDone = {
-                if (!resetPending) {
-                    keyboardController?.hide()
-                    onResetClicked()
+        visualTransformation =
+            if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
+        keyboardOptions =
+            KeyboardOptions(
+                keyboardType = KeyboardType.Password,
+                imeAction = ImeAction.Done,
+            ),
+        keyboardActions =
+            KeyboardActions(
+                onDone = {
+                    if (!resetPending) {
+                        keyboardController?.hide()
+                        onResetClicked()
+                    }
                 }
-            }
-        ),
+            ),
         trailingIcon = {
-            val image = if (passwordVisible) Icons.Filled.VisibilityOff
-            else Icons.Filled.Visibility
+            val image = if (passwordVisible) Icons.Filled.VisibilityOff else Icons.Filled.Visibility
 
             val description = if (passwordVisible) "Hide password" else "Show password"
 

@@ -72,12 +72,8 @@ fun ProfileContent(component: ProfileComponent) {
 
     val selectPhotoAction = photoPicker { result ->
         result.mapBoth(
-            success = {
-                component.uploadProfilePhoto(it)
-            },
-            failure = {
-                Logger.d("Error occurred while uploading photo: ", it)
-            },
+            success = { component.uploadProfilePhoto(it) },
+            failure = { Logger.d("Error occurred while uploading photo: ", it) },
         )
     }
 
@@ -97,9 +93,10 @@ fun ProfileContent(component: ProfileComponent) {
 
     val scrollState = rememberScrollState()
 
-    var displayName by rememberSaveable(state.value.profile!!.displayName) {
-        mutableStateOf(state.value.profile!!.displayName)
-    }
+    var displayName by
+        rememberSaveable(state.value.profile!!.displayName) {
+            mutableStateOf(state.value.profile!!.displayName)
+        }
 
     var modified by rememberSaveable { mutableStateOf(false) }
 
@@ -108,9 +105,7 @@ fun ProfileContent(component: ProfileComponent) {
         snackbarHost = { SnackbarHost(snackbarHostState) },
         topBar = {
             TopAppBar(
-                title = {
-                    Text(text = "Edit profile")
-                },
+                title = { Text(text = "Edit profile") },
                 navigationIcon = {
                     IconButton(onClick = { component.onUp() }) {
                         Icon(
@@ -149,12 +144,12 @@ fun ProfileContent(component: ProfileComponent) {
             val paddingBottom = PaddingValues(bottom = innerPadding.calculateBottomPadding())
 
             Column(
-                modifier = Modifier
-                    .padding(paddingTop)
-                    .consumeWindowInsets(paddingTop)
-                    .fillMaxSize()
-                    .verticalScroll(scrollState)
-                    .padding(paddingBottom)
+                modifier =
+                    Modifier.padding(paddingTop)
+                        .consumeWindowInsets(paddingTop)
+                        .fillMaxSize()
+                        .verticalScroll(scrollState)
+                        .padding(paddingBottom)
             ) {
                 Surface(
                     modifier = Modifier.padding(16.dp),
@@ -162,13 +157,12 @@ fun ProfileContent(component: ProfileComponent) {
                     border = BorderStroke(1.dp, MaterialTheme.colorScheme.surfaceContainerHighest)
                 ) {
                     ListItem(
-                        colors = ListItemDefaults.colors(containerColor = MaterialTheme.colorScheme.surfaceContainerHigh),
-                        headlineContent = {
-                            Text(displayName)
-                        },
-                        supportingContent = {
-                            Text(state.value.profile!!.email)
-                        },
+                        colors =
+                            ListItemDefaults.colors(
+                                containerColor = MaterialTheme.colorScheme.surfaceContainerHigh
+                            ),
+                        headlineContent = { Text(displayName) },
+                        supportingContent = { Text(state.value.profile!!.email) },
                         leadingContent = {
                             ProfileImage(
                                 email = state.value.profile!!.email,
@@ -181,9 +175,7 @@ fun ProfileContent(component: ProfileComponent) {
                 }
 
                 OutlinedTextField(
-                    modifier = Modifier
-                        .padding(16.dp, 8.dp)
-                        .fillMaxWidth(),
+                    modifier = Modifier.padding(16.dp, 8.dp).fillMaxWidth(),
                     value = displayName,
                     singleLine = true,
                     onValueChange = {
@@ -199,10 +191,12 @@ fun ProfileContent(component: ProfileComponent) {
                     },
                     trailingIcon = {
                         if (displayName != state.value.profile!!.displayName) {
-                            IconButton(onClick = {
-                                displayName = state.value.profile!!.displayName
-                                modified = false
-                            }) {
+                            IconButton(
+                                onClick = {
+                                    displayName = state.value.profile!!.displayName
+                                    modified = false
+                                }
+                            ) {
                                 Icon(Icons.Filled.Refresh, contentDescription = "Reset")
                             }
                         }
@@ -217,42 +211,32 @@ fun ProfileContent(component: ProfileComponent) {
                             Text("Add profile picture")
                         }
                     },
-                    leadingContent = {
-                        Icon(Icons.Filled.AddCircle, contentDescription = "Add")
-                    },
-                    modifier = Modifier
-                        .padding(horizontal = 16.dp)
-                        .clip(MaterialTheme.shapes.extraLarge)
-                        .clickable {
-                            selectPhotoAction()
-                        }
+                    leadingContent = { Icon(Icons.Filled.AddCircle, contentDescription = "Add") },
+                    modifier =
+                        Modifier.padding(horizontal = 16.dp)
+                            .clip(MaterialTheme.shapes.extraLarge)
+                            .clickable { selectPhotoAction() }
                 )
 
                 if (state.value.profile!!.profilePhotoUri != null) {
                     ListItem(
-                        headlineContent = {
-                            Text("Remove profile picture")
-                        },
+                        headlineContent = { Text("Remove profile picture") },
                         leadingContent = {
                             Icon(Icons.Filled.RemoveCircle, contentDescription = "Remove")
                         },
-                        modifier = Modifier
-                            .padding(horizontal = 16.dp)
-                            .clip(MaterialTheme.shapes.extraLarge)
-                            .clickable {
-                                component.updateUserProfile(
-                                    state.value.profile!!.copy(
-                                        profilePhotoUri = null
+                        modifier =
+                            Modifier.padding(horizontal = 16.dp)
+                                .clip(MaterialTheme.shapes.extraLarge)
+                                .clickable {
+                                    component.updateUserProfile(
+                                        state.value.profile!!.copy(profilePhotoUri = null)
                                     )
-                                )
-                            }
+                                }
                     )
                 }
 
                 ListItem(
-                    headlineContent = {
-                        Text(state.value.profile!!.email)
-                    },
+                    headlineContent = { Text(state.value.profile!!.email) },
                     supportingContent = {
                         if (state.value.profile!!.emailVerified) {
                             Text("Tap to change")
@@ -263,34 +247,31 @@ fun ProfileContent(component: ProfileComponent) {
                     leadingContent = {
                         Icon(Icons.Filled.AlternateEmail, contentDescription = "Email")
                     },
-                    modifier = Modifier
-                        .padding(horizontal = 16.dp)
-                        .clip(MaterialTheme.shapes.extraLarge)
-                        .clickable(enabled = state.value.profile?.emailVerified == true) {
-                            component.onChangeEmail()
-                        }
+                    modifier =
+                        Modifier.padding(horizontal = 16.dp)
+                            .clip(MaterialTheme.shapes.extraLarge)
+                            .clickable(enabled = state.value.profile?.emailVerified == true) {
+                                component.onChangeEmail()
+                            }
                 )
 
                 if (state.value.profile!!.emailVerified) {
                     ListItem(
-                        headlineContent = {
-                            Text("Change password")
-                        },
+                        headlineContent = { Text("Change password") },
                         leadingContent = {
                             Icon(Icons.Filled.Password, contentDescription = "Email")
                         },
-                        modifier = Modifier
-                            .padding(horizontal = 16.dp)
-                            .clip(MaterialTheme.shapes.extraLarge)
-                            .clickable(enabled = state.value.profile?.emailVerified == true) {
-                                component.onChangePassword()
-                            }
+                        modifier =
+                            Modifier.padding(horizontal = 16.dp)
+                                .clip(MaterialTheme.shapes.extraLarge)
+                                .clickable(enabled = state.value.profile?.emailVerified == true) {
+                                    component.onChangePassword()
+                                }
                     )
                 }
             }
         }
     )
-
 
     LaunchedEffect(component.messages) {
         component.messages.collect { message ->
@@ -311,18 +292,8 @@ private fun ConfirmExitDialog(
     AlertDialog(
         onDismissRequest = onDismiss,
         title = { Text(text = "Close without saving?") },
-        text = {
-            Text(text = "Your changes to your profile will not be saved")
-        },
-        dismissButton = {
-            TextButton(onClick = onDismiss) {
-                Text("Cancel")
-            }
-        },
-        confirmButton = {
-            TextButton(onClick = onConfirm) {
-                Text("Close")
-            }
-        }
+        text = { Text(text = "Your changes to your profile will not be saved") },
+        dismissButton = { TextButton(onClick = onDismiss) { Text("Cancel") } },
+        confirmButton = { TextButton(onClick = onConfirm) { Text("Close") } }
     )
 }

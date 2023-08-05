@@ -28,12 +28,9 @@ fun WelcomeContent(component: WelcomeComponent) {
     Scaffold(
         topBar = { LargeTopAppBar(title = { Text("Welcome to Tasks") }) },
         bottomBar = {
-            BottomAppBar(
-                modifier = Modifier.padding(WindowInsets.ime.asPaddingValues())
-            ) {
+            BottomAppBar(modifier = Modifier.padding(WindowInsets.ime.asPaddingValues())) {
                 TextButton(
-                    modifier = Modifier
-                        .padding(16.dp, 8.dp),
+                    modifier = Modifier.padding(16.dp, 8.dp),
                     onClick = { component.onSignIn() }
                 ) {
                     Text(text = "Sign in")
@@ -42,8 +39,7 @@ fun WelcomeContent(component: WelcomeComponent) {
                 Spacer(Modifier.weight(1f, true))
 
                 FilledTonalButton(
-                    modifier = Modifier
-                        .padding(16.dp, 8.dp),
+                    modifier = Modifier.padding(16.dp, 8.dp),
                     onClick = { component.onSignUp() }
                 ) {
                     Text(text = "Sign up")
@@ -52,10 +48,8 @@ fun WelcomeContent(component: WelcomeComponent) {
         },
         content = { innerPadding ->
             Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(innerPadding)
-                    .consumeWindowInsets(innerPadding),
+                modifier =
+                    Modifier.fillMaxSize().padding(innerPadding).consumeWindowInsets(innerPadding),
             ) {
                 Text("TODO put onboarding here", modifier = Modifier.align(Alignment.Center))
             }

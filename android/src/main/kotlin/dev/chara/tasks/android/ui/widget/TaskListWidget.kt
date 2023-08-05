@@ -42,8 +42,8 @@ import dev.chara.tasks.android.worker.CompleteTaskWorker
 import dev.chara.tasks.shared.data.Repository
 import dev.chara.tasks.shared.model.Task
 import dev.chara.tasks.shared.model.TaskList
-import dev.chara.tasks.shared.model.board.BoardSection
 import dev.chara.tasks.shared.model.board.BoardList
+import dev.chara.tasks.shared.model.board.BoardSection
 import dev.chara.tasks.shared.model.preference.ThemeVariant
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
@@ -57,8 +57,10 @@ class TaskListWidget : GlanceAppWidget(), KoinComponent {
     override suspend fun provideGlance(context: Context, id: GlanceId) {
         provideContent {
             GlanceTheme {
-                val themeVariant = repository.getAppThemeVariant()
-                    .collectAsState(initial = ThemeVariant.TONAL_SPOT)
+                val themeVariant =
+                    repository
+                        .getAppThemeVariant()
+                        .collectAsState(initial = ThemeVariant.TONAL_SPOT)
 
                 val allLists = repository.getLists().collectAsState(listOf())
 
@@ -76,12 +78,13 @@ class TaskListWidget : GlanceAppWidget(), KoinComponent {
                         themeVariant.value
                     )
                 } else {
-                    val list = repository.getListById(selectedListId)
-                        .collectAsState(null)
+                    val list = repository.getListById(selectedListId).collectAsState(null)
 
                     if (list.value != null) {
-                        val tasks = repository.getTasksByList(selectedListId, false)
-                            .collectAsState(listOf())
+                        val tasks =
+                            repository
+                                .getTasksByList(selectedListId, false)
+                                .collectAsState(listOf())
 
                         TaskList(list.value!!, tasks.value)
                     }
@@ -103,41 +106,31 @@ fun Dashboard(
     themeVariant: ThemeVariant = ThemeVariant.TONAL_SPOT,
 ) {
     LazyColumn(
-        modifier = GlanceModifier
-            .fillMaxSize()
-            .appWidgetBackground()
-            .cornerRadius(12.dp)
-            .background(GlanceTheme.colors.background)
-            .padding(8.dp)
-            //.clickable(onClick = actionStartActivity<MainActivity>())
+        modifier =
+            GlanceModifier.fillMaxSize()
+                .appWidgetBackground()
+                .cornerRadius(12.dp)
+                .background(GlanceTheme.colors.background)
+                .padding(8.dp)
+        // .clickable(onClick = actionStartActivity<MainActivity>())
     ) {
-        item {
-            Header(title = "Dashboard")
-        }
+        item { Header(title = "Dashboard") }
 
         for (boardSection in boardSections) {
-            item {
-                Subhead(title = boardSection.type.title)
-            }
+            item { Subhead(title = boardSection.type.title) }
 
             items(boardSection.tasks) { task ->
                 val list = allLists.find { list -> list.id == task.listId }
 
-                GlanceColorTheme(list?.color, themeVariant) {
-                    Task(task)
-                }
+                GlanceColorTheme(list?.color, themeVariant) { Task(task) }
             }
         }
 
         for (pinnedList in boardLists) {
-            item {
-                Subhead(title = pinnedList.taskList.title)
-            }
+            item { Subhead(title = pinnedList.taskList.title) }
 
             items(pinnedList.topTasks) { task ->
-                GlanceColorTheme(pinnedList.taskList.color, themeVariant) {
-                    Task(task)
-                }
+                GlanceColorTheme(pinnedList.taskList.color, themeVariant) { Task(task) }
             }
         }
     }
@@ -146,13 +139,13 @@ fun Dashboard(
 @Composable
 fun TaskList(list: TaskList, tasks: List<Task>) {
     Column(
-        modifier = GlanceModifier
-            .fillMaxSize()
-            .appWidgetBackground()
-            .cornerRadius(12.dp)
-            .background(GlanceTheme.colors.background)
-            .padding(8.dp)
-            //.clickable(onClick = actionStartActivity<MainActivity>())
+        modifier =
+            GlanceModifier.fillMaxSize()
+                .appWidgetBackground()
+                .cornerRadius(12.dp)
+                .background(GlanceTheme.colors.background)
+                .padding(8.dp)
+        // .clickable(onClick = actionStartActivity<MainActivity>())
     ) {
         Header(title = list.title)
 
@@ -175,24 +168,23 @@ fun Subhead(title: String) {
 @Composable
 fun Task(task: Task) {
     Box(
-        modifier = GlanceModifier
-            .fillMaxWidth()
-            .background(GlanceTheme.colors.surfaceVariant)
-            .cornerRadius(24.dp)
-            .padding(12.dp)
-            //.clickable(onClick = actionStartActivity<MainActivity>())
+        modifier =
+            GlanceModifier.fillMaxWidth()
+                .background(GlanceTheme.colors.surfaceVariant)
+                .cornerRadius(24.dp)
+                .padding(12.dp)
+        // .clickable(onClick = actionStartActivity<MainActivity>())
     ) {
         Column {
             Row {
                 CheckBox(
                     checked = task.isCompleted,
-                    onCheckedChange = actionRunCallback<TaskCompleteAction>(
-                        actionParametersOf(taskIdKey to task.id)
-                    )
+                    onCheckedChange =
+                        actionRunCallback<TaskCompleteAction>(
+                            actionParametersOf(taskIdKey to task.id)
+                        )
                 )
-                Column(
-                    modifier = GlanceModifier.fillMaxWidth()
-                ) {
+                Column(modifier = GlanceModifier.fillMaxWidth()) {
                     Text(
                         text = task.label,
                         maxLines = 5,
@@ -229,10 +221,10 @@ class TaskCompleteAction : ActionCallback {
                         CompleteTaskWorker.TASK_ID to taskId,
                         CompleteTaskWorker.IS_COMPLETED to checked
                     )
-                ).build()
+                )
+                .build()
 
-        WorkManager.getInstance(context)
-            .enqueue(completeTaskRequest)
+        WorkManager.getInstance(context).enqueue(completeTaskRequest)
     }
 }
 

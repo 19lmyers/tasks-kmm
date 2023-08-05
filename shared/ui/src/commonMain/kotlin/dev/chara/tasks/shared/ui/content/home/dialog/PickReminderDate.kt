@@ -39,6 +39,8 @@ import com.androidx.material3.polyfill.AlertDialog
 import dev.chara.tasks.shared.domain.FriendlyDateFormatter
 import dev.chara.tasks.shared.ui.theme.extend.surfaceContainerHigh
 import dev.chara.tasks.shared.ui.theme.extend.surfaceContainerHighest
+import kotlin.time.Duration.Companion.hours
+import kotlin.time.Duration.Companion.minutes
 import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDateTime
@@ -50,8 +52,6 @@ import kotlinx.datetime.toInstant
 import kotlinx.datetime.toLocalDateTime
 import kotlinx.datetime.todayIn
 import org.koin.compose.koinInject
-import kotlin.time.Duration.Companion.hours
-import kotlin.time.Duration.Companion.minutes
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -60,11 +60,11 @@ fun PickReminderDateDialog(onDismiss: () -> Unit, onConfirm: (LocalDateTime) -> 
 
     val dateFormatter: FriendlyDateFormatter = koinInject()
 
-    val datePickerState = rememberDatePickerState(
-        initialSelectedDateMillis = localDateTime.date
-            .atStartOfDayIn(TimeZone.UTC)
-            .toEpochMilliseconds()
-    )
+    val datePickerState =
+        rememberDatePickerState(
+            initialSelectedDateMillis =
+                localDateTime.date.atStartOfDayIn(TimeZone.UTC).toEpochMilliseconds()
+        )
 
     var selectedTime by remember { mutableStateOf<Pair<Int, Int>?>(null) }
 
@@ -99,30 +99,27 @@ fun PickReminderDateDialog(onDismiss: () -> Unit, onConfirm: (LocalDateTime) -> 
                 Text("OK")
             }
         },
-        dismissButton = {
-            TextButton(
-                onClick = onDismiss
-            ) {
-                Text("Cancel")
-            }
-        }
+        dismissButton = { TextButton(onClick = onDismiss) { Text("Cancel") } }
     ) {
         CompositionLocalProvider(LocalContentColor provides MaterialTheme.colorScheme.onSurface) {
             DatePicker(
                 state = datePickerState,
-                colors = DatePickerDefaults.colors(containerColor = MaterialTheme.colorScheme.surfaceContainerHigh)
+                colors =
+                    DatePickerDefaults.colors(
+                        containerColor = MaterialTheme.colorScheme.surfaceContainerHigh
+                    )
             )
         }
 
         Divider()
 
         ListItem(
-            colors = ListItemDefaults.colors(containerColor = MaterialTheme.colorScheme.surfaceContainerHigh),
-            modifier = Modifier
-                .clickable {
-                    showTimePickerDialog = true
-                }
-                .padding(horizontal = 8.dp),
+            colors =
+                ListItemDefaults.colors(
+                    containerColor = MaterialTheme.colorScheme.surfaceContainerHigh
+                ),
+            modifier =
+                Modifier.clickable { showTimePickerDialog = true }.padding(horizontal = 8.dp),
             headlineContent = {
                 if (selectedTime != null) {
                     Text(
@@ -136,9 +133,7 @@ fun PickReminderDateDialog(onDismiss: () -> Unit, onConfirm: (LocalDateTime) -> 
                     Text("Set time")
                 }
             },
-            leadingContent = {
-                Icon(Icons.Filled.Schedule, contentDescription = "Clock")
-            }
+            leadingContent = { Icon(Icons.Filled.Schedule, contentDescription = "Clock") }
         )
 
         Divider()
@@ -158,8 +153,7 @@ private fun DatePickerDialog(
         modifier = Modifier.wrapContentHeight(),
     ) {
         Surface(
-            modifier = Modifier
-                .requiredWidth(360.dp),
+            modifier = Modifier.requiredWidth(360.dp),
             shape = DatePickerDefaults.shape,
             color = MaterialTheme.colorScheme.surfaceContainerHigh,
             border = BorderStroke(1.dp, MaterialTheme.colorScheme.surfaceContainerHighest),
@@ -169,9 +163,7 @@ private fun DatePickerDialog(
                 content()
 
                 Box(
-                    modifier = Modifier
-                        .align(Alignment.End)
-                        .padding(bottom = 8.dp, end = 6.dp),
+                    modifier = Modifier.align(Alignment.End).padding(bottom = 8.dp, end = 6.dp),
                 ) {
                     CompositionLocalProvider(
                         LocalContentColor provides MaterialTheme.colorScheme.primary

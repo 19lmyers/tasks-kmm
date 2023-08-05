@@ -29,20 +29,20 @@ class CompleteTaskWorker(context: Context, workerParams: WorkerParameters) :
 
         val isCompleted = inputData.getBoolean(IS_COMPLETED, true)
 
-        val result = withContext(Dispatchers.IO) {
-            val task =
-                repository.getTaskById(taskId).first()
-                    ?: return@withContext Err("No task found for id")
+        val result =
+            withContext(Dispatchers.IO) {
+                val task =
+                    repository.getTaskById(taskId).first()
+                        ?: return@withContext Err("No task found for id")
 
-            repository.updateTask(
-                task.listId, task.id, task.copy(
-                    isCompleted = isCompleted,
-                    lastModified = Clock.System.now()
-                )
-            ).mapError {
-                "TODO map this"
+                repository
+                    .updateTask(
+                        task.listId,
+                        task.id,
+                        task.copy(isCompleted = isCompleted, lastModified = Clock.System.now())
+                    )
+                    .mapError { "TODO map this" }
             }
-        }
 
         return withContext(Dispatchers.Main) {
             NotificationManagerCompat.from(applicationContext)
@@ -53,18 +53,15 @@ class CompleteTaskWorker(context: Context, workerParams: WorkerParameters) :
             result.mapBoth(
                 success = {
                     Toast.makeText(
-                        applicationContext,
-                        "Task marked as complete",
-                        Toast.LENGTH_SHORT
-                    ).show()
+                            applicationContext,
+                            "Task marked as complete",
+                            Toast.LENGTH_SHORT
+                        )
+                        .show()
                     Result.success()
                 },
                 failure = {
-                    Toast.makeText(
-                        applicationContext,
-                        it,
-                        Toast.LENGTH_SHORT
-                    ).show()
+                    Toast.makeText(applicationContext, it, Toast.LENGTH_SHORT).show()
                     Result.failure()
                 }
             )

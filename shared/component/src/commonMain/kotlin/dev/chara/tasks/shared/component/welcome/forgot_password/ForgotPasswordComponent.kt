@@ -53,9 +53,7 @@ class DefaultForgotPasswordComponent(
         }
     }
 
-    private val callback = BackCallback {
-        onUp()
-    }
+    private val callback = BackCallback { onUp() }
 
     init {
         backHandler.register(callback)

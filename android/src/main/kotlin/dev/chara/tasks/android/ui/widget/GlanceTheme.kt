@@ -19,11 +19,7 @@ fun GlanceColorTheme(
         val lightColors = dynamicColorScheme(color.seed, false, variant.style)
         val darkColors = dynamicColorScheme(color.seed, false, variant.style)
 
-        GlanceTheme(
-            colors = ColorProviders(lightColors, darkColors)
-        ) {
-            content()
-        }
+        GlanceTheme(colors = ColorProviders(lightColors, darkColors)) { content() }
     } else {
         content()
     }

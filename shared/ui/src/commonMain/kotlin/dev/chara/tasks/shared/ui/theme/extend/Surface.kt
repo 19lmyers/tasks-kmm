@@ -26,37 +26,28 @@ import com.materialkolor.scheme.SchemeRainbow
 import com.materialkolor.scheme.SchemeTonalSpot
 import com.materialkolor.scheme.SchemeVibrant
 
-val LocalSurfaceColors = staticCompositionLocalOf {
-    dynamicSurfaceColors(Color(0xFF6750A4), false)
-}
+val LocalSurfaceColors = staticCompositionLocalOf { dynamicSurfaceColors(Color(0xFF6750A4), false) }
 
 val ColorScheme.surfaceBright
-    @Composable
-    get() = LocalSurfaceColors.current.surfaceBright
+    @Composable get() = LocalSurfaceColors.current.surfaceBright
 
 val ColorScheme.surfaceContainer
-    @Composable
-    get() = LocalSurfaceColors.current.surfaceContainer
+    @Composable get() = LocalSurfaceColors.current.surfaceContainer
 
 val ColorScheme.surfaceContainerHigh
-    @Composable
-    get() = LocalSurfaceColors.current.surfaceContainerHigh
+    @Composable get() = LocalSurfaceColors.current.surfaceContainerHigh
 
 val ColorScheme.surfaceContainerHighest
-    @Composable
-    get() = LocalSurfaceColors.current.surfaceContainerHighest
+    @Composable get() = LocalSurfaceColors.current.surfaceContainerHighest
 
 val ColorScheme.surfaceContainerLow
-    @Composable
-    get() = LocalSurfaceColors.current.surfaceContainerLow
+    @Composable get() = LocalSurfaceColors.current.surfaceContainerLow
 
 val ColorScheme.surfaceContainerLowest
-    @Composable
-    get() = LocalSurfaceColors.current.surfaceContainerLowest
+    @Composable get() = LocalSurfaceColors.current.surfaceContainerLowest
 
 val ColorScheme.surfaceDim
-    @Composable
-    get() = LocalSurfaceColors.current.surfaceDim
+    @Composable get() = LocalSurfaceColors.current.surfaceDim
 
 @Composable
 fun ExtendSurfaceColors(
@@ -66,20 +57,19 @@ fun ExtendSurfaceColors(
     contrastLevel: Double = 0.0,
     content: @Composable () -> Unit
 ) {
-    val surfaceColors: SurfaceColors by remember(seedColor, useDarkTheme, style, contrastLevel) {
-        derivedStateOf {
-            dynamicSurfaceColors(
-                seedColor = seedColor,
-                isDark = useDarkTheme,
-                style = style,
-                contrastLevel = contrastLevel,
-            )
+    val surfaceColors: SurfaceColors by
+        remember(seedColor, useDarkTheme, style, contrastLevel) {
+            derivedStateOf {
+                dynamicSurfaceColors(
+                    seedColor = seedColor,
+                    isDark = useDarkTheme,
+                    style = style,
+                    contrastLevel = contrastLevel,
+                )
+            }
         }
-    }
 
-    CompositionLocalProvider(LocalSurfaceColors provides surfaceColors) {
-        content()
-    }
+    CompositionLocalProvider(LocalSurfaceColors provides surfaceColors) { content() }
 }
 
 class SurfaceColors(
@@ -93,28 +83,23 @@ class SurfaceColors(
 ) {
     var surfaceBright by mutableStateOf(surfaceBright, structuralEqualityPolicy())
         internal set
+
     var surfaceContainer by mutableStateOf(surfaceContainer, structuralEqualityPolicy())
         internal set
-    var surfaceContainerHigh by mutableStateOf(
-        surfaceContainerHigh,
-        structuralEqualityPolicy()
-    )
+
+    var surfaceContainerHigh by mutableStateOf(surfaceContainerHigh, structuralEqualityPolicy())
         internal set
-    var surfaceContainerHighest by mutableStateOf(
-        surfaceContainerHighest,
-        structuralEqualityPolicy()
-    )
+
+    var surfaceContainerHighest by
+        mutableStateOf(surfaceContainerHighest, structuralEqualityPolicy())
         internal set
-    var surfaceContainerLow by mutableStateOf(
-        surfaceContainerLow,
-        structuralEqualityPolicy()
-    )
+
+    var surfaceContainerLow by mutableStateOf(surfaceContainerLow, structuralEqualityPolicy())
         internal set
-    var surfaceContainerLowest by mutableStateOf(
-        surfaceContainerLowest,
-        structuralEqualityPolicy()
-    )
+
+    var surfaceContainerLowest by mutableStateOf(surfaceContainerLowest, structuralEqualityPolicy())
         internal set
+
     var surfaceDim by mutableStateOf(surfaceDim, structuralEqualityPolicy())
         internal set
 
@@ -139,14 +124,14 @@ class SurfaceColors(
 
     override fun toString(): String {
         return "SurfaceColors(" +
-                "surfaceBright=$surfaceBright" +
-                "surfaceContainer=$surfaceContainer" +
-                "surfaceContainerHigh=$surfaceContainerHigh" +
-                "surfaceContainerHighest=$surfaceContainerHighest" +
-                "surfaceContainerLow=$surfaceContainerLow" +
-                "surfaceContainerLowest=$surfaceContainerLowest" +
-                "surfaceDim=$surfaceDim" +
-                ")"
+            "surfaceBright=$surfaceBright" +
+            "surfaceContainer=$surfaceContainer" +
+            "surfaceContainerHigh=$surfaceContainerHigh" +
+            "surfaceContainerHighest=$surfaceContainerHighest" +
+            "surfaceContainerLow=$surfaceContainerLow" +
+            "surfaceContainerLowest=$surfaceContainerLowest" +
+            "surfaceDim=$surfaceDim" +
+            ")"
     }
 }
 
@@ -158,17 +143,18 @@ fun dynamicSurfaceColors(
 ): SurfaceColors {
     val hct = Hct.fromInt(seedColor.toArgb())
     val colors = MaterialDynamicColors()
-    val scheme = when (style) {
-        PaletteStyle.TonalSpot -> SchemeTonalSpot(hct, isDark, contrastLevel)
-        PaletteStyle.Neutral -> SchemeNeutral(hct, isDark, contrastLevel)
-        PaletteStyle.Vibrant -> SchemeVibrant(hct, isDark, contrastLevel)
-        PaletteStyle.Expressive -> SchemeExpressive(hct, isDark, contrastLevel)
-        PaletteStyle.Rainbow -> SchemeRainbow(hct, isDark, contrastLevel)
-        PaletteStyle.FruitSalad -> SchemeFruitSalad(hct, isDark, contrastLevel)
-        PaletteStyle.Monochrome -> SchemeMonochrome(hct, isDark, contrastLevel)
-        PaletteStyle.Fidelity -> SchemeFidelity(hct, isDark, contrastLevel)
-        PaletteStyle.Content -> SchemeContent(hct, isDark, contrastLevel)
-    }
+    val scheme =
+        when (style) {
+            PaletteStyle.TonalSpot -> SchemeTonalSpot(hct, isDark, contrastLevel)
+            PaletteStyle.Neutral -> SchemeNeutral(hct, isDark, contrastLevel)
+            PaletteStyle.Vibrant -> SchemeVibrant(hct, isDark, contrastLevel)
+            PaletteStyle.Expressive -> SchemeExpressive(hct, isDark, contrastLevel)
+            PaletteStyle.Rainbow -> SchemeRainbow(hct, isDark, contrastLevel)
+            PaletteStyle.FruitSalad -> SchemeFruitSalad(hct, isDark, contrastLevel)
+            PaletteStyle.Monochrome -> SchemeMonochrome(hct, isDark, contrastLevel)
+            PaletteStyle.Fidelity -> SchemeFidelity(hct, isDark, contrastLevel)
+            PaletteStyle.Content -> SchemeContent(hct, isDark, contrastLevel)
+        }
 
     return SurfaceColors(
         surfaceBright = Color(colors.surfaceBright().getArgb(scheme)),

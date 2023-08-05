@@ -10,7 +10,9 @@ internal sealed class DiffAction {
 
     sealed class Task : DiffAction() {
         class Create(val task: ModelTask) : Task()
+
         class Update(val task: ModelTask) : Task()
+
         class Move(val oldListID: String, val task: ModelTask) : Task()
     }
 }

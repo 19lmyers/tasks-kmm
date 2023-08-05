@@ -59,13 +59,12 @@ import com.github.michaelbull.result.unwrapError
 import dev.chara.tasks.shared.component.welcome.sign_in.SignInComponent
 
 @OptIn(
-    ExperimentalComposeUiApi::class, ExperimentalMaterial3Api::class,
+    ExperimentalComposeUiApi::class,
+    ExperimentalMaterial3Api::class,
     ExperimentalLayoutApi::class
 )
 @Composable
-fun SignInContent(
-    component: SignInComponent
-) {
+fun SignInContent(component: SignInComponent) {
     val state = component.state.collectAsState()
 
     val keyboardController = LocalSoftwareKeyboardController.current
@@ -97,9 +96,7 @@ fun SignInContent(
             )
         },
         bottomBar = {
-            BottomAppBar(
-                modifier = Modifier.padding(WindowInsets.ime.asPaddingValues())
-            ) {
+            BottomAppBar(modifier = Modifier.padding(WindowInsets.ime.asPaddingValues())) {
                 TextButton(
                     modifier = Modifier.padding(16.dp, 0.dp),
                     onClick = { component.onForgotPassword() },
@@ -124,10 +121,10 @@ fun SignInContent(
         },
         content = { innerPadding ->
             Column(
-                modifier = Modifier
-                    .nestedScroll(scrollBehavior.nestedScrollConnection)
-                    .padding(innerPadding)
-                    .consumeWindowInsets(innerPadding),
+                modifier =
+                    Modifier.nestedScroll(scrollBehavior.nestedScrollConnection)
+                        .padding(innerPadding)
+                        .consumeWindowInsets(innerPadding),
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
@@ -140,9 +137,7 @@ fun SignInContent(
                     onEmailChanged = { email = it },
                     onPasswordChanged = { password = it },
                     signInPending = state.value.isLoading,
-                    onSignInPressed = {
-                        component.signIn(email, password)
-                    },
+                    onSignInPressed = { component.signIn(email, password) },
                     emailResult = emailResult
                 )
             }
@@ -175,18 +170,14 @@ private fun SignInForm(
     val focusRequester = remember { FocusRequester() }
 
     OutlinedTextField(
-        modifier = Modifier
-            .padding(16.dp, 8.dp)
-            .fillMaxWidth()
-            .focusRequester(focusRequester),
+        modifier = Modifier.padding(16.dp, 8.dp).fillMaxWidth().focusRequester(focusRequester),
         value = email,
         singleLine = true,
         onValueChange = onEmailChanged,
         readOnly = signInPending,
         label = { Text(text = "Email") },
-        keyboardOptions = KeyboardOptions(
-            keyboardType = KeyboardType.Email, imeAction = ImeAction.Next
-        ),
+        keyboardOptions =
+            KeyboardOptions(keyboardType = KeyboardType.Email, imeAction = ImeAction.Next),
         isError = email.isNotEmpty() && emailResult is Err,
         supportingText = {
             if (email.isNotEmpty() && emailResult is Err) {
@@ -198,29 +189,30 @@ private fun SignInForm(
     var passwordVisible by rememberSaveable { mutableStateOf(false) }
 
     OutlinedTextField(
-        modifier = Modifier
-            .padding(16.dp, 8.dp)
-            .fillMaxWidth(),
+        modifier = Modifier.padding(16.dp, 8.dp).fillMaxWidth(),
         value = password,
         singleLine = true,
         onValueChange = onPasswordChanged,
         label = { Text(text = "Password") },
         readOnly = signInPending,
-        visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
-        keyboardOptions = KeyboardOptions(
-            keyboardType = KeyboardType.Password, imeAction = ImeAction.Done,
-        ),
-        keyboardActions = KeyboardActions(
-            onDone = {
-                if (emailResult is Ok && password.isNotBlank() && !signInPending) {
-                    keyboardController?.hide()
-                    onSignInPressed()
+        visualTransformation =
+            if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
+        keyboardOptions =
+            KeyboardOptions(
+                keyboardType = KeyboardType.Password,
+                imeAction = ImeAction.Done,
+            ),
+        keyboardActions =
+            KeyboardActions(
+                onDone = {
+                    if (emailResult is Ok && password.isNotBlank() && !signInPending) {
+                        keyboardController?.hide()
+                        onSignInPressed()
+                    }
                 }
-            }
-        ),
+            ),
         trailingIcon = {
-            val image = if (passwordVisible) Icons.Filled.VisibilityOff
-            else Icons.Filled.Visibility
+            val image = if (passwordVisible) Icons.Filled.VisibilityOff else Icons.Filled.Visibility
 
             val description = if (passwordVisible) "Hide password" else "Show password"
 

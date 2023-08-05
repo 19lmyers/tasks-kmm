@@ -18,27 +18,19 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import dev.chara.tasks.shared.model.TaskList
 import dev.chara.tasks.shared.ui.model.icon
+import kotlin.jvm.JvmName
 import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
-import kotlin.jvm.JvmName
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ListChip(modifier: Modifier = Modifier, list: TaskList, onClick: (TaskList) -> Unit) {
     InputChip(
-        modifier = Modifier
-            .padding(horizontal = 4.dp)
-            .then(modifier),
-        label = {
-            Text(text = list.title)
-        },
-        leadingIcon = {
-            Icon(list.icon.icon, contentDescription = "List")
-        },
+        modifier = Modifier.padding(horizontal = 4.dp).then(modifier),
+        label = { Text(text = list.title) },
+        leadingIcon = { Icon(list.icon.icon, contentDescription = "List") },
         selected = false,
-        onClick = {
-            onClick(list)
-        }
+        onClick = { onClick(list) }
     )
 }
 
@@ -47,12 +39,8 @@ fun ListChip(modifier: Modifier = Modifier, list: TaskList, onClick: (TaskList) 
 @Composable
 fun ListChip(modifier: Modifier = Modifier, list: TaskList?, onClick: (TaskList?) -> Unit) {
     InputChip(
-        modifier = Modifier
-            .padding(horizontal = 4.dp)
-            .then(modifier),
-        label = {
-            Text(text = list?.title ?: "No list selected")
-        },
+        modifier = Modifier.padding(horizontal = 4.dp).then(modifier),
+        label = { Text(text = list?.title ?: "No list selected") },
         leadingIcon = {
             if (list == null) {
                 Icon(Icons.Filled.QuestionMark, contentDescription = "List")
@@ -61,9 +49,7 @@ fun ListChip(modifier: Modifier = Modifier, list: TaskList?, onClick: (TaskList?
             }
         },
         selected = false,
-        onClick = {
-            onClick(list)
-        }
+        onClick = { onClick(list) }
     )
 }
 
@@ -78,14 +64,15 @@ fun ReminderChip(
 ) {
     val currentTime = Clock.System.now()
 
-    val chipColors = if (reminderDate != null && reminderDate < currentTime) {
-        InputChipDefaults.inputChipColors(
-            labelColor = MaterialTheme.colorScheme.error,
-            leadingIconColor = MaterialTheme.colorScheme.error
-        )
-    } else {
-        InputChipDefaults.inputChipColors()
-    }
+    val chipColors =
+        if (reminderDate != null && reminderDate < currentTime) {
+            InputChipDefaults.inputChipColors(
+                labelColor = MaterialTheme.colorScheme.error,
+                leadingIconColor = MaterialTheme.colorScheme.error
+            )
+        } else {
+            InputChipDefaults.inputChipColors()
+        }
 
     InputChip(
         modifier = Modifier.padding(horizontal = 4.dp),
@@ -127,14 +114,15 @@ fun DueDateChip(
 ) {
     val currentTime = Clock.System.now()
 
-    val chipColors = if (dueDate != null && dueDate < currentTime) {
-        InputChipDefaults.inputChipColors(
-            labelColor = MaterialTheme.colorScheme.error,
-            leadingIconColor = MaterialTheme.colorScheme.error
-        )
-    } else {
-        InputChipDefaults.inputChipColors()
-    }
+    val chipColors =
+        if (dueDate != null && dueDate < currentTime) {
+            InputChipDefaults.inputChipColors(
+                labelColor = MaterialTheme.colorScheme.error,
+                leadingIconColor = MaterialTheme.colorScheme.error
+            )
+        } else {
+            InputChipDefaults.inputChipColors()
+        }
 
     InputChip(
         modifier = Modifier.padding(horizontal = 4.dp),

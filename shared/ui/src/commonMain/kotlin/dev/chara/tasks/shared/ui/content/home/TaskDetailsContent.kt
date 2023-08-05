@@ -92,10 +92,10 @@ fun TaskDetailsContent(component: TaskDetailsComponent) {
     var task by remember(state.value.selectedTask) { mutableStateOf(state.value.selectedTask) }
     var modified by remember { mutableStateOf(false) }
 
-    val parentList by remember(
-        state.value.allLists,
-        task?.listId
-    ) { derivedStateOf { state.value.allLists.firstOrNull { it.id == task?.listId } } }
+    val parentList by
+        remember(state.value.allLists, task?.listId) {
+            derivedStateOf { state.value.allLists.firstOrNull { it.id == task?.listId } }
+        }
 
     val scrollState = rememberScrollState()
 
@@ -104,9 +104,7 @@ fun TaskDetailsContent(component: TaskDetailsComponent) {
 
         if (showDeleteDialog) {
             DeleteTaskDialog(
-                onDismiss = {
-                    showDeleteDialog = false
-                },
+                onDismiss = { showDeleteDialog = false },
                 onConfirm = {
                     showDeleteDialog = false
                     component.deleteTask(task!!)
@@ -132,9 +130,7 @@ fun TaskDetailsContent(component: TaskDetailsComponent) {
                     selectedListId = task!!.listId,
                     scrollBehavior = scrollBehavior,
                     upAsCloseButton = true,
-                    onUpClicked = {
-                        component.setShowConfirmExit(true)
-                    },
+                    onUpClicked = { component.setShowConfirmExit(true) },
                     onDeleteClicked = { showDeleteDialog = true },
                     onListSelected = {
                         component.updateTask(task!!)
@@ -158,7 +154,8 @@ fun TaskDetailsContent(component: TaskDetailsComponent) {
                             modified = false
                             component.onUp()
                         },
-                        enabled = !state.value.isLoading && task?.label?.isNotBlank() == true && modified
+                        enabled =
+                            !state.value.isLoading && task?.label?.isNotBlank() == true && modified
                     ) {
                         Text(text = "Save")
                     }
@@ -166,10 +163,10 @@ fun TaskDetailsContent(component: TaskDetailsComponent) {
             }
         ) { innerPadding ->
             Box(
-                modifier = Modifier
-                    .padding(innerPadding)
-                    .consumeWindowInsets(innerPadding)
-                    .nestedScroll(scrollBehavior.nestedScrollConnection)
+                modifier =
+                    Modifier.padding(innerPadding)
+                        .consumeWindowInsets(innerPadding)
+                        .nestedScroll(scrollBehavior.nestedScrollConnection)
             ) {
                 Column(
                     verticalArrangement = Arrangement.Center,
@@ -229,21 +226,30 @@ private fun TopBarWithListSelector(
                 checked = task.isStarred,
                 onCheckedChange = { isStarred ->
                     onUpdateTask(
-                        task.copy(
-                            isStarred = isStarred,
-                            lastModified = Clock.System.now()
-                        )
+                        task.copy(isStarred = isStarred, lastModified = Clock.System.now())
                     )
                 }
             ) {
                 if (task.isStarred) {
-                    Icon(Icons.Filled.Star, contentDescription = "Unstar task", tint = MaterialTheme.colorScheme.primary)
+                    Icon(
+                        Icons.Filled.Star,
+                        contentDescription = "Unstar task",
+                        tint = MaterialTheme.colorScheme.primary
+                    )
                 } else {
-                    Icon(Icons.Filled.StarOutline, contentDescription = "Star task", tint = MaterialTheme.colorScheme.primary)
+                    Icon(
+                        Icons.Filled.StarOutline,
+                        contentDescription = "Star task",
+                        tint = MaterialTheme.colorScheme.primary
+                    )
                 }
             }
             IconButton(onClick = { onDeleteClicked() }) {
-                Icon(Icons.Filled.Delete, contentDescription = "Delete", tint = MaterialTheme.colorScheme.primary)
+                Icon(
+                    Icons.Filled.Delete,
+                    contentDescription = "Delete",
+                    tint = MaterialTheme.colorScheme.primary
+                )
             }
         },
         scrollBehavior = scrollBehavior
@@ -315,9 +321,7 @@ private fun TaskDetailsForm(
 
     if (showReminderDateDialog) {
         PickReminderDateDialog(
-            onDismiss = {
-                showReminderDateDialog = false
-            },
+            onDismiss = { showReminderDateDialog = false },
             onConfirm = { selectedDate ->
                 onUpdateTask(
                     task.copy(
@@ -333,9 +337,7 @@ private fun TaskDetailsForm(
 
     if (showDueDatePickerDialog) {
         PickDueDateDialog(
-            onDismiss = {
-                showDueDatePickerDialog = false
-            },
+            onDismiss = { showDueDatePickerDialog = false },
             onConfirm = { selectedDate ->
                 onUpdateTask(
                     task.copy(
@@ -353,27 +355,20 @@ private fun TaskDetailsForm(
         Checkbox(
             modifier = Modifier.align(Alignment.CenterVertically),
             checked = task.isCompleted,
-            onCheckedChange = { isChecked ->
-                onUpdateTask(task.copy(isCompleted = isChecked))
-            }
+            onCheckedChange = { isChecked -> onUpdateTask(task.copy(isCompleted = isChecked)) }
         )
 
         BasicTextField(
-            modifier = Modifier
-                .padding(vertical = 16.dp, horizontal = 2.dp)
-                .fillMaxWidth(),
+            modifier = Modifier.padding(vertical = 16.dp, horizontal = 2.dp).fillMaxWidth(),
             value = task.label,
             onValueChange = {
-                onUpdateTask(
-                    task.copy(
-                        label = it,
-                        lastModified = Clock.System.now()
-                    )
-                )
+                onUpdateTask(task.copy(label = it, lastModified = Clock.System.now()))
             },
             singleLine = false,
-            textStyle = MaterialTheme.typography.bodyLarge
-                .copy(color = MaterialTheme.colorScheme.onBackground),
+            textStyle =
+                MaterialTheme.typography.bodyLarge.copy(
+                    color = MaterialTheme.colorScheme.onBackground
+                ),
             cursorBrush = SolidColor(MaterialTheme.colorScheme.primary),
             decorationBox = { innerTextField ->
                 if (task.label.isEmpty()) {
@@ -385,14 +380,12 @@ private fun TaskDetailsForm(
                 }
                 innerTextField()
             },
-            keyboardOptions = KeyboardOptions(
-                capitalization = KeyboardCapitalization.Sentences, imeAction = ImeAction.Done,
-            ),
-            keyboardActions = KeyboardActions(
-                onDone = {
-                    keyboardController?.hide()
-                }
-            )
+            keyboardOptions =
+                KeyboardOptions(
+                    capitalization = KeyboardCapitalization.Sentences,
+                    imeAction = ImeAction.Done,
+                ),
+            keyboardActions = KeyboardActions(onDone = { keyboardController?.hide() })
         )
     }
 
@@ -403,16 +396,13 @@ private fun TaskDetailsForm(
                 value = task.details ?: "",
                 onValueChange = {
                     if (it.isEmpty()) return@BasicTextField
-                    onUpdateTask(
-                        task.copy(
-                            details = it,
-                            lastModified = Clock.System.now()
-                        )
-                    )
+                    onUpdateTask(task.copy(details = it, lastModified = Clock.System.now()))
                 },
                 singleLine = false,
-                textStyle = MaterialTheme.typography.bodyLarge
-                    .copy(color = MaterialTheme.colorScheme.onBackground),
+                textStyle =
+                    MaterialTheme.typography.bodyLarge.copy(
+                        color = MaterialTheme.colorScheme.onBackground
+                    ),
                 cursorBrush = SolidColor(MaterialTheme.colorScheme.primary),
                 decorationBox = { innerTextField ->
                     if (task.details.isNullOrEmpty()) {
@@ -424,29 +414,20 @@ private fun TaskDetailsForm(
                     }
                     innerTextField()
                 },
-                keyboardOptions = KeyboardOptions(
-                    capitalization = KeyboardCapitalization.Sentences, imeAction = ImeAction.Done,
-                ),
-                keyboardActions = KeyboardActions(
-                    onDone = {
-                        keyboardController?.hide()
-                    }
-                )
+                keyboardOptions =
+                    KeyboardOptions(
+                        capitalization = KeyboardCapitalization.Sentences,
+                        imeAction = ImeAction.Done,
+                    ),
+                keyboardActions = KeyboardActions(onDone = { keyboardController?.hide() })
             )
         },
-        leadingContent = {
-            Icon(Icons.Filled.Notes, contentDescription = "Details")
-        },
+        leadingContent = { Icon(Icons.Filled.Notes, contentDescription = "Details") },
         trailingContent = {
             if (task.details != null) {
                 IconButton(
                     onClick = {
-                        onUpdateTask(
-                            task.copy(
-                                details = null,
-                                lastModified = Clock.System.now()
-                            )
-                        )
+                        onUpdateTask(task.copy(details = null, lastModified = Clock.System.now()))
                     }
                 ) {
                     Icon(Icons.Filled.Clear, contentDescription = "Clear")
@@ -457,23 +438,22 @@ private fun TaskDetailsForm(
 
     val currentTime = Clock.System.now()
 
-    val reminderColors = if (task.reminderDate == null) {
-        ListItemDefaults.colors(
-            headlineColor = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.8f),
-        )
-    } else if (task.reminderDate!! < currentTime) {
-        ListItemDefaults.colors(
-            headlineColor = MaterialTheme.colorScheme.error,
-            leadingIconColor = MaterialTheme.colorScheme.error
-        )
-    } else {
-        ListItemDefaults.colors()
-    }
+    val reminderColors =
+        if (task.reminderDate == null) {
+            ListItemDefaults.colors(
+                headlineColor = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.8f),
+            )
+        } else if (task.reminderDate!! < currentTime) {
+            ListItemDefaults.colors(
+                headlineColor = MaterialTheme.colorScheme.error,
+                leadingIconColor = MaterialTheme.colorScheme.error
+            )
+        } else {
+            ListItemDefaults.colors()
+        }
 
     ListItem(
-        headlineContent = {
-            Text("Remind me")
-        },
+        headlineContent = { Text("Remind me") },
         leadingContent = {
             if (task.reminderDate != null) {
                 Icon(Icons.Filled.Notifications, contentDescription = "Reminder")
@@ -489,43 +469,31 @@ private fun TaskDetailsForm(
                     selectable = true,
                     withIcon = false
                 ) {
-                    onUpdateTask(
-                        task.copy(
-                            reminderDate = null,
-                            lastModified = Clock.System.now()
-                        )
-                    )
+                    onUpdateTask(task.copy(reminderDate = null, lastModified = Clock.System.now()))
                 }
             }
         },
         colors = reminderColors,
-        modifier = Modifier
-            .fillMaxWidth()
-            .clickable {
-                showReminderDateDialog = true
-            }
+        modifier = Modifier.fillMaxWidth().clickable { showReminderDateDialog = true }
     )
 
-    val dueDateColors = if (task.dueDate == null) {
-        ListItemDefaults.colors(
-            headlineColor = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.8f),
-        )
-    } else if (task.dueDate!! < currentTime) {
-        ListItemDefaults.colors(
-            headlineColor = MaterialTheme.colorScheme.error,
-            leadingIconColor = MaterialTheme.colorScheme.error
-        )
-    } else {
-        ListItemDefaults.colors()
-    }
+    val dueDateColors =
+        if (task.dueDate == null) {
+            ListItemDefaults.colors(
+                headlineColor = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.8f),
+            )
+        } else if (task.dueDate!! < currentTime) {
+            ListItemDefaults.colors(
+                headlineColor = MaterialTheme.colorScheme.error,
+                leadingIconColor = MaterialTheme.colorScheme.error
+            )
+        } else {
+            ListItemDefaults.colors()
+        }
 
     ListItem(
-        headlineContent = {
-            Text("Set due date")
-        },
-        leadingContent = {
-            Icon(Icons.Filled.Event, contentDescription = "Due date")
-        },
+        headlineContent = { Text("Set due date") },
+        leadingContent = { Icon(Icons.Filled.Event, contentDescription = "Due date") },
         trailingContent = {
             if (task.dueDate != null) {
                 DueDateChip(
@@ -534,21 +502,12 @@ private fun TaskDetailsForm(
                     selectable = true,
                     withIcon = false
                 ) {
-                    onUpdateTask(
-                        task.copy(
-                            dueDate = null,
-                            lastModified = Clock.System.now()
-                        )
-                    )
+                    onUpdateTask(task.copy(dueDate = null, lastModified = Clock.System.now()))
                 }
             }
         },
         colors = dueDateColors,
-        modifier = Modifier
-            .fillMaxWidth()
-            .clickable {
-                showDueDatePickerDialog = true
-            }
+        modifier = Modifier.fillMaxWidth().clickable { showDueDatePickerDialog = true }
     )
 }
 
@@ -560,19 +519,9 @@ private fun ConfirmExitDialog(
     AlertDialog(
         onDismissRequest = onDismiss,
         title = { Text(text = "Close without saving?") },
-        text = {
-            Text(text = "Your changes to this task will not be saved")
-        },
-        dismissButton = {
-            TextButton(onClick = onDismiss) {
-                Text("Cancel")
-            }
-        },
-        confirmButton = {
-            TextButton(onClick = onConfirm) {
-                Text("Close")
-            }
-        }
+        text = { Text(text = "Your changes to this task will not be saved") },
+        dismissButton = { TextButton(onClick = onDismiss) { Text("Cancel") } },
+        confirmButton = { TextButton(onClick = onConfirm) { Text("Close") } }
     )
 }
 
@@ -584,18 +533,8 @@ private fun DeleteTaskDialog(
     AlertDialog(
         onDismissRequest = onDismiss,
         title = { Text(text = "Delete task?") },
-        text = {
-            Text(text = "This task will be permanently deleted")
-        },
-        dismissButton = {
-            TextButton(onClick = onDismiss) {
-                Text("Cancel")
-            }
-        },
-        confirmButton = {
-            TextButton(onClick = onConfirm) {
-                Text("Delete")
-            }
-        }
+        text = { Text(text = "This task will be permanently deleted") },
+        dismissButton = { TextButton(onClick = onDismiss) { Text("Cancel") } },
+        confirmButton = { TextButton(onClick = onConfirm) { Text("Delete") } }
     )
 }

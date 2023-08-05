@@ -12,10 +12,12 @@ expect class DriverFactory {
     operator fun invoke(): SqlDriver
 }
 
-private val instantAdapter = object : ColumnAdapter<Instant, String> {
-    override fun decode(databaseValue: String): Instant = Instant.parse(databaseValue)
-    override fun encode(value: Instant): String = value.toString()
-}
+private val instantAdapter =
+    object : ColumnAdapter<Instant, String> {
+        override fun decode(databaseValue: String): Instant = Instant.parse(databaseValue)
+
+        override fun encode(value: Instant): String = value.toString()
+    }
 
 object Database {
     operator fun invoke(driverFactory: DriverFactory): SQLDatabase {

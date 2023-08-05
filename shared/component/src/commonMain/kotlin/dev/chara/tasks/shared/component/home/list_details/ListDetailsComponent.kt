@@ -63,26 +63,25 @@ class DefaultListDetailsComponent(
     init {
         coroutineScope.launch {
             combine(
-                repository.getListById(listId),
-                repository.getTasksByList(listId, false),
-                repository.getTasksByList(listId, true)
-            ) { list, currentTasks, completedTasks ->
-                ListDetailsUiState(
-                    isLoading = false,
-                    isRefreshing = false,
-                    selectedList = list,
-                    currentTasks = currentTasks,
-                    completedTasks = completedTasks
-                )
-            }.collect {
-                if (it.selectedList == null) {
-                    withContext(Dispatchers.Main) {
-                        navigateUp()
-                    }
-                } else {
-                    _state.value = it
+                    repository.getListById(listId),
+                    repository.getTasksByList(listId, false),
+                    repository.getTasksByList(listId, true)
+                ) { list, currentTasks, completedTasks ->
+                    ListDetailsUiState(
+                        isLoading = false,
+                        isRefreshing = false,
+                        selectedList = list,
+                        currentTasks = currentTasks,
+                        completedTasks = completedTasks
+                    )
                 }
-            }
+                .collect {
+                    if (it.selectedList == null) {
+                        withContext(Dispatchers.Main) { navigateUp() }
+                    } else {
+                        _state.value = it
+                    }
+                }
         }
     }
 
@@ -93,7 +92,7 @@ class DefaultListDetailsComponent(
             _state.value = state.value.copy(isRefreshing = true)
 
             val result = repository.refresh()
-            //_messages.emitAsMessage(result)
+            // _messages.emitAsMessage(result)
         }
     }
 
@@ -106,18 +105,16 @@ class DefaultListDetailsComponent(
     override fun updateList(taskList: TaskList) {
         coroutineScope.launch {
             val result = repository.updateList(taskList.id, taskList)
-            //_messages.emitAsMessage(result)
+            // _messages.emitAsMessage(result)
         }
     }
 
     override fun deleteList(listId: String) {
         coroutineScope.launch {
             val result = repository.deleteList(listId)
-            //_messages.emitAsMessage(result, successMessage = "List deleted")
+            // _messages.emitAsMessage(result, successMessage = "List deleted")
             if (result is Ok) {
-                withContext(Dispatchers.Main) {
-                    navigateUp()
-                }
+                withContext(Dispatchers.Main) { navigateUp() }
             }
         }
     }
@@ -125,28 +122,35 @@ class DefaultListDetailsComponent(
     override fun createTask(task: Task) {
         coroutineScope.launch {
             val result = repository.createTask(task.listId, task)
-            //_messages.emitAsMessage(result, successMessage = "Task created")
+            // _messages.emitAsMessage(result, successMessage = "Task created")
         }
     }
 
     override fun updateTask(task: Task) {
         coroutineScope.launch {
             val result = repository.updateTask(task.listId, task.id, task)
-            //_messages.emitAsMessage(result, successMessage = "Task updated")
+            // _messages.emitAsMessage(result, successMessage = "Task updated")
         }
     }
 
     override fun reorderTask(listId: String, taskId: String, fromIndex: Int, toIndex: Int) {
         coroutineScope.launch {
-            val result = repository.reorderTask(listId, taskId, fromIndex, toIndex, lastModified = Clock.System.now())
-            //_messages.emitAsMessage(result, successMessage = "Task updated")
+            val result =
+                repository.reorderTask(
+                    listId,
+                    taskId,
+                    fromIndex,
+                    toIndex,
+                    lastModified = Clock.System.now()
+                )
+            // _messages.emitAsMessage(result, successMessage = "Task updated")
         }
     }
 
     override fun clearCompletedTasks(listId: String) {
         coroutineScope.launch {
             val result = repository.clearCompletedTasks(listId)
-            //_messages.emitAsMessage(result)
+            // _messages.emitAsMessage(result)
         }
     }
 }

@@ -8,7 +8,6 @@ import co.touchlab.kermit.ExperimentalKermitApi
 import co.touchlab.kermit.Logger
 import co.touchlab.kermit.Severity
 import co.touchlab.kermit.crashlytics.CrashlyticsLogWriter
-import co.touchlab.kermit.crashlytics.setupCrashlyticsExceptionHook
 import dev.chara.tasks.shared.component.RootComponent
 import dev.chara.tasks.shared.data.inject.sharedDataLayer
 import dev.chara.tasks.shared.data.preference.DataStorePath
@@ -39,13 +38,9 @@ fun setupKoin(firebaseWrapper: FirebaseWrapper, endpointUrl: String) {
         factory { Endpoint(endpointUrl) }
     }
 
-    val appleUi = module {
-        single { FriendlyDateFormatter() }
-    }
+    val appleUi = module { single { FriendlyDateFormatter() } }
 
-    startKoin {
-        modules(appleExt, sharedDataLayer(), appleShared, appleUi)
-    }
+    startKoin { modules(appleExt, sharedDataLayer(), appleShared, appleUi) }
 }
 
 @OptIn(ExperimentalKermitApi::class)
@@ -54,14 +49,11 @@ fun setupLogger() {
         CrashlyticsLogWriter(
             minSeverity = Severity.Info,
             minCrashSeverity = Severity.Warn,
-            printTag = true
         )
     )
-    setupCrashlyticsExceptionHook(Logger)
     setCrashlyticsUnhandledExceptionHook()
 }
 
-fun mainViewController(rootComponent: RootComponent) =
-    ComposeUIViewController {
-        RootContent(component = rootComponent)
-    }
+fun mainViewController(rootComponent: RootComponent) = ComposeUIViewController {
+    RootContent(component = rootComponent)
+}

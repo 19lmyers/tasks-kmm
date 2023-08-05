@@ -53,18 +53,15 @@ fun PickDueDateDialog(onDismiss: () -> Unit, onConfirm: (LocalDateTime) -> Unit)
                 Text("OK")
             }
         },
-        dismissButton = {
-            TextButton(
-                onClick = onDismiss
-            ) {
-                Text("Cancel")
-            }
-        }
+        dismissButton = { TextButton(onClick = onDismiss) { Text("Cancel") } }
     ) {
         CompositionLocalProvider(LocalContentColor provides MaterialTheme.colorScheme.onSurface) {
             DatePicker(
                 state = datePickerState,
-                colors = DatePickerDefaults.colors(containerColor = MaterialTheme.colorScheme.surfaceContainerHigh)
+                colors =
+                    DatePickerDefaults.colors(
+                        containerColor = MaterialTheme.colorScheme.surfaceContainerHigh
+                    )
             )
         }
     }
@@ -79,13 +76,9 @@ private fun DatePickerDialog(
     confirmButton: @Composable () -> Unit,
     content: @Composable ColumnScope.() -> Unit
 ) {
-    AlertDialog(
-        onDismissRequest = onDismissRequest,
-        modifier = Modifier.wrapContentHeight()
-    ) {
+    AlertDialog(onDismissRequest = onDismissRequest, modifier = Modifier.wrapContentHeight()) {
         Surface(
-            modifier = Modifier
-                .requiredWidth(360.dp),
+            modifier = Modifier.requiredWidth(360.dp),
             shape = DatePickerDefaults.shape,
             color = MaterialTheme.colorScheme.surfaceContainerHigh,
             border = BorderStroke(1.dp, MaterialTheme.colorScheme.surfaceContainerHighest),
@@ -94,11 +87,7 @@ private fun DatePickerDialog(
             Column(verticalArrangement = Arrangement.SpaceBetween) {
                 content()
 
-                Box(
-                    modifier = Modifier
-                        .align(Alignment.End)
-                        .padding(bottom = 8.dp, end = 6.dp)
-                ) {
+                Box(modifier = Modifier.align(Alignment.End).padding(bottom = 8.dp, end = 6.dp)) {
                     CompositionLocalProvider(
                         LocalContentColor provides MaterialTheme.colorScheme.primary
                     ) {

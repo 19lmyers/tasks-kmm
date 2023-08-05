@@ -7,6 +7,5 @@ import org.jetbrains.skia.Typeface as SkTypeface
 
 private fun getTypeface(name: String, style: SkFontStyle) = SkTypeface.makeFromName(name, style)
 
-actual val latoFontFamily: FontFamily = FontFamily(
-    Typeface(getTypeface("Lato", SkFontStyle.NORMAL))
-)
+actual val latoFontFamily: FontFamily =
+    FontFamily(Typeface(getTypeface("Lato", SkFontStyle.NORMAL)))

@@ -7,18 +7,13 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class TaskList(
     val id: String,
-
     val title: String,
-
     val color: Color? = null,
     val icon: Icon? = null,
     val description: String? = null,
-
     val showIndexNumbers: Boolean = false,
-
     val sortType: SortType = SortType.ORDINAL,
     val sortDirection: SortDirection = SortDirection.ASCENDING,
-
     val dateCreated: Instant = Clock.System.now(),
     val lastModified: Instant = Clock.System.now()
 ) {

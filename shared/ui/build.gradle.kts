@@ -7,12 +7,14 @@ plugins {
     alias(libs.plugins.android.library)
 
     alias(libs.plugins.jetbrains.compose)
+
+    alias(libs.plugins.ktfmt)
 }
 
 kotlin {
     jvmToolchain(17)
 
-    android()
+    androidTarget()
 
     iosX64()
     iosArm64()
@@ -111,4 +113,8 @@ android {
         minSdk = 24
     }
     sourceSets["main"].res.srcDirs("src/androidMain/res")
+}
+
+ktfmt {
+    kotlinLangStyle()
 }

@@ -53,7 +53,8 @@ import com.github.michaelbull.result.Result
 import dev.chara.tasks.shared.component.profile.change_email.ChangeEmailComponent
 
 @OptIn(
-    ExperimentalComposeUiApi::class, ExperimentalMaterial3Api::class,
+    ExperimentalComposeUiApi::class,
+    ExperimentalMaterial3Api::class,
     ExperimentalLayoutApi::class
 )
 @Composable
@@ -67,11 +68,7 @@ fun ChangeEmailContent(component: ChangeEmailComponent) {
             onDismissRequest = {},
             title = { Text(text = "Verification email sent") },
             text = { Text("Follow the link provided to verify your email address.") },
-            confirmButton = {
-                TextButton(onClick = { component.onConfirmUp() }) {
-                    Text("OK")
-                }
-            },
+            confirmButton = { TextButton(onClick = { component.onConfirmUp() }) { Text("OK") } },
         )
     }
 
@@ -115,9 +112,7 @@ fun ChangeEmailContent(component: ChangeEmailComponent) {
         },
         content = { innerPadding ->
             Column(
-                modifier = Modifier
-                    .padding(innerPadding)
-                    .consumeWindowInsets(innerPadding),
+                modifier = Modifier.padding(innerPadding).consumeWindowInsets(innerPadding),
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
@@ -128,9 +123,7 @@ fun ChangeEmailContent(component: ChangeEmailComponent) {
                     email = newEmail,
                     onEmailChanged = { newEmail = it },
                     changeEmailPending = state.value.isLoading,
-                    onChangeEmailClicked = {
-                        component.changeEmail(newEmail)
-                    },
+                    onChangeEmailClicked = { component.changeEmail(newEmail) },
                     emailResult = emailResult
                 )
             }
@@ -161,26 +154,23 @@ private fun ChangeEmailForm(
     val focusRequester = remember { FocusRequester() }
 
     OutlinedTextField(
-        modifier = Modifier
-            .padding(16.dp, 8.dp)
-            .fillMaxWidth()
-            .focusRequester(focusRequester),
+        modifier = Modifier.padding(16.dp, 8.dp).fillMaxWidth().focusRequester(focusRequester),
         value = email,
         singleLine = true,
         onValueChange = onEmailChanged,
         label = { Text(text = "Email") },
         readOnly = changeEmailPending,
-        keyboardOptions = KeyboardOptions(
-            keyboardType = KeyboardType.Email, imeAction = ImeAction.Next
-        ),
-        keyboardActions = KeyboardActions(
-            onDone = {
-                if (emailResult is Ok && !changeEmailPending) {
-                    keyboardController?.hide()
-                    onChangeEmailClicked()
+        keyboardOptions =
+            KeyboardOptions(keyboardType = KeyboardType.Email, imeAction = ImeAction.Next),
+        keyboardActions =
+            KeyboardActions(
+                onDone = {
+                    if (emailResult is Ok && !changeEmailPending) {
+                        keyboardController?.hide()
+                        onChangeEmailClicked()
+                    }
                 }
-            }
-        ),
+            ),
         isError = email.isNotEmpty() && emailResult is Err,
         supportingText = {
             if (email.isNotEmpty() && emailResult is Err) {

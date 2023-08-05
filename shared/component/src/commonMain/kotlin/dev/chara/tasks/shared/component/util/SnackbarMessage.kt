@@ -15,12 +15,7 @@ suspend fun <V> MutableSharedFlow<SnackbarMessage>.emitAsMessage(
     result: Result<V, DataError>,
     defaultErrorMessage: String = "An unknown error occurred"
 ) {
-    emit(
-        result,
-        defaultErrorMessage = defaultErrorMessage,
-        successMessage = null,
-        action = null
-    )
+    emit(result, defaultErrorMessage = defaultErrorMessage, successMessage = null, action = null)
 }
 
 suspend fun <V> MutableSharedFlow<SnackbarMessage>.emitAsMessage(
@@ -56,32 +51,27 @@ private suspend fun <V> MutableSharedFlow<SnackbarMessage>.emit(
     successMessage: String? = null,
     action: SnackbarMessage.Action? = null,
 ) {
-    result.mapBoth(
-        success = {
-            successMessage?.let {
-                SnackbarMessage(successMessage, action)
+    result
+        .mapBoth(
+            success = { successMessage?.let { SnackbarMessage(successMessage, action) } },
+            failure = { error ->
+                val message =
+                    when (error) {
+                        is ApiError -> {
+                            error.message
+                        }
+                        is ClientError -> {
+                            error.exception.message
+                        }
+                        else -> {
+                            null
+                        }
+                    }
+
+                SnackbarMessage(message ?: defaultErrorMessage, action = null)
             }
-        },
-        failure = { error ->
-            val message = when (error) {
-                is ApiError -> {
-                    error.message
-                }
-
-                is ClientError -> {
-                    error.exception.message
-                }
-
-                else -> {
-                    null
-                }
-            }
-
-            SnackbarMessage(message ?: defaultErrorMessage, action = null)
-        }
-    )?.let { message ->
-        emit(message)
-    }
+        )
+        ?.let { message -> emit(message) }
 }
 
 suspend fun MutableSharedFlow<SnackbarMessage>.emitAsMessage(

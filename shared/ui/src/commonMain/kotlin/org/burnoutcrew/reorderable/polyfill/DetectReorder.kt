@@ -31,10 +31,11 @@ fun Modifier.detectReorder(state: ReorderableState<*>) =
                     var drag: PointerInputChange?
                     var overSlop = Offset.Zero
                     do {
-                        drag = awaitPointerSlopOrCancellation(down.id, down.type) { change, over ->
-                            change.consume()
-                            overSlop = over
-                        }
+                        drag =
+                            awaitPointerSlopOrCancellation(down.id, down.type) { change, over ->
+                                change.consume()
+                                overSlop = over
+                            }
                     } while (drag != null && !drag.isConsumed)
                     if (drag != null) {
                         state.interactions.trySend(StartDrag(down.id, overSlop))
@@ -44,14 +45,11 @@ fun Modifier.detectReorder(state: ReorderableState<*>) =
         }
     )
 
-
 fun Modifier.detectReorderAfterLongPress(state: ReorderableState<*>) =
     this.then(
         Modifier.pointerInput(Unit) {
             forEachGesture {
-                val down = awaitPointerEventScope {
-                    awaitFirstDown(requireUnconsumed = false)
-                }
+                val down = awaitPointerEventScope { awaitFirstDown(requireUnconsumed = false) }
                 awaitLongPressOrCancellation(down)?.also {
                     state.interactions.trySend(StartDrag(down.id))
                 }

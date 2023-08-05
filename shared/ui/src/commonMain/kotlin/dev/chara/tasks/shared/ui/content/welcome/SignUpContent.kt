@@ -58,13 +58,12 @@ import com.github.michaelbull.result.Result
 import dev.chara.tasks.shared.component.welcome.sign_up.SignUpComponent
 
 @OptIn(
-    ExperimentalComposeUiApi::class, ExperimentalMaterial3Api::class,
+    ExperimentalComposeUiApi::class,
+    ExperimentalMaterial3Api::class,
     ExperimentalLayoutApi::class
 )
 @Composable
-fun SignUpContent(
-    component: SignUpComponent
-) {
+fun SignUpContent(component: SignUpComponent) {
     val state = component.state.collectAsState()
 
     val keyboardController = LocalSoftwareKeyboardController.current
@@ -97,9 +96,7 @@ fun SignUpContent(
             )
         },
         bottomBar = {
-            BottomAppBar(
-                modifier = Modifier.padding(WindowInsets.ime.asPaddingValues())
-            ) {
+            BottomAppBar(modifier = Modifier.padding(WindowInsets.ime.asPaddingValues())) {
                 Spacer(Modifier.weight(1f, true))
 
                 FilledTonalButton(
@@ -108,7 +105,11 @@ fun SignUpContent(
                         keyboardController?.hide()
                         component.signUp(email, displayName, password)
                     },
-                    enabled = emailResult is Ok && displayName.isNotBlank() && password.isNotBlank() && !state.value.isLoading
+                    enabled =
+                        emailResult is Ok &&
+                            displayName.isNotBlank() &&
+                            password.isNotBlank() &&
+                            !state.value.isLoading
                 ) {
                     Text(text = "Sign up")
                 }
@@ -116,10 +117,10 @@ fun SignUpContent(
         },
         content = { innerPadding ->
             Column(
-                modifier = Modifier
-                    .nestedScroll(scrollBehavior.nestedScrollConnection)
-                    .padding(innerPadding)
-                    .consumeWindowInsets(innerPadding),
+                modifier =
+                    Modifier.nestedScroll(scrollBehavior.nestedScrollConnection)
+                        .padding(innerPadding)
+                        .consumeWindowInsets(innerPadding),
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
@@ -169,18 +170,14 @@ private fun SignUpForm(
     val focusRequester = remember { FocusRequester() }
 
     OutlinedTextField(
-        modifier = Modifier
-            .padding(16.dp, 8.dp)
-            .fillMaxWidth()
-            .focusRequester(focusRequester),
+        modifier = Modifier.padding(16.dp, 8.dp).fillMaxWidth().focusRequester(focusRequester),
         value = email,
         singleLine = true,
         onValueChange = onEmailChanged,
         readOnly = signUpPending,
         label = { Text(text = "Email") },
-        keyboardOptions = KeyboardOptions(
-            keyboardType = KeyboardType.Email, imeAction = ImeAction.Next
-        ),
+        keyboardOptions =
+            KeyboardOptions(keyboardType = KeyboardType.Email, imeAction = ImeAction.Next),
         isError = email.isNotEmpty() && emailResult is Err,
         supportingText = {
             if (email.isNotEmpty() && emailResult is Err) {
@@ -190,46 +187,51 @@ private fun SignUpForm(
     )
 
     OutlinedTextField(
-        modifier = Modifier
-            .padding(16.dp, 8.dp)
-            .fillMaxWidth(),
+        modifier = Modifier.padding(16.dp, 8.dp).fillMaxWidth(),
         value = displayName,
         singleLine = true,
         onValueChange = onDisplayNameChanged,
         readOnly = signUpPending,
         label = { Text(text = "Display Name") },
-        keyboardOptions = KeyboardOptions(
-            capitalization = KeyboardCapitalization.Words,
-            imeAction = ImeAction.Next
-        )
+        keyboardOptions =
+            KeyboardOptions(
+                capitalization = KeyboardCapitalization.Words,
+                imeAction = ImeAction.Next
+            )
     )
 
     var passwordVisible by rememberSaveable { mutableStateOf(false) }
 
     OutlinedTextField(
-        modifier = Modifier
-            .padding(16.dp, 8.dp)
-            .fillMaxWidth(),
+        modifier = Modifier.padding(16.dp, 8.dp).fillMaxWidth(),
         value = password,
         singleLine = true,
         onValueChange = onPasswordChanged,
         label = { Text(text = "Password") },
         readOnly = signUpPending,
-        visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
-        keyboardOptions = KeyboardOptions(
-            keyboardType = KeyboardType.Password, imeAction = ImeAction.Done,
-        ),
-        keyboardActions = KeyboardActions(
-            onDone = {
-                if (emailResult is Ok && displayName.isNotBlank() && password.isNotBlank() && !signUpPending) {
-                    keyboardController?.hide()
-                    onSignUpClicked()
+        visualTransformation =
+            if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
+        keyboardOptions =
+            KeyboardOptions(
+                keyboardType = KeyboardType.Password,
+                imeAction = ImeAction.Done,
+            ),
+        keyboardActions =
+            KeyboardActions(
+                onDone = {
+                    if (
+                        emailResult is Ok &&
+                            displayName.isNotBlank() &&
+                            password.isNotBlank() &&
+                            !signUpPending
+                    ) {
+                        keyboardController?.hide()
+                        onSignUpClicked()
+                    }
                 }
-            }
-        ),
+            ),
         trailingIcon = {
-            val image = if (passwordVisible) Icons.Filled.VisibilityOff
-            else Icons.Filled.Visibility
+            val image = if (passwordVisible) Icons.Filled.VisibilityOff else Icons.Filled.Visibility
 
             val description = if (passwordVisible) "Hide password" else "Show password"
 

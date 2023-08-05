@@ -16,7 +16,6 @@ import kotlinx.coroutines.withContext
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
-
 interface ModifyListComponent {
     val state: StateFlow<ModifyListUiState>
 
@@ -59,16 +58,15 @@ class DefaultModifyListComponent(
 
     override fun onSave(taskList: TaskList) {
         coroutineScope.launch {
-            val result = if (taskList.id.isEmpty()) {
-                repository.createList(taskList)
-            } else {
-                repository.updateList(taskList.id, taskList)
-            }
+            val result =
+                if (taskList.id.isEmpty()) {
+                    repository.createList(taskList)
+                } else {
+                    repository.updateList(taskList.id, taskList)
+                }
 
             if (result is Ok) {
-                withContext(Dispatchers.Main) {
-                    dismiss()
-                }
+                withContext(Dispatchers.Main) { dismiss() }
             }
         }
     }

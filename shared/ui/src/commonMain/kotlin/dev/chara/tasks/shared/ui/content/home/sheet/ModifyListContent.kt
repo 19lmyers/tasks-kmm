@@ -57,7 +57,6 @@ import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.unit.dp
 import com.androidx.material3.polyfill.AlertDialog
 import com.androidx.material3.polyfill.ModalBottomSheet
-import com.materialkolor.dynamicColorScheme
 import dev.chara.tasks.shared.component.home.modify_list.ModifyListComponent
 import dev.chara.tasks.shared.model.TaskList
 import dev.chara.tasks.shared.ui.model.icon
@@ -66,6 +65,7 @@ import dev.chara.tasks.shared.ui.theme.ColorTheme
 import dev.chara.tasks.shared.ui.theme.LocalDarkTheme
 import dev.chara.tasks.shared.ui.theme.LocalThemeVariant
 import dev.chara.tasks.shared.ui.theme.color.style
+import dev.chara.tasks.shared.ui.theme.extend.dynamicSurfaceColors
 import dev.chara.tasks.shared.ui.theme.extend.surfaceContainerHigh
 import dev.chara.tasks.shared.ui.theme.extend.surfaceContainerHighest
 import kotlinx.datetime.Clock
@@ -84,9 +84,7 @@ fun ModifyListContent(component: ModifyListComponent) {
     var description by remember { mutableStateOf(state.value.selectedList?.description) }
 
     var showIndexNumbers by remember {
-        mutableStateOf(
-            state.value.selectedList?.showIndexNumbers ?: false
-        )
+        mutableStateOf(state.value.selectedList?.showIndexNumbers ?: false)
     }
 
     ColorTheme(color = listColor) {
@@ -103,18 +101,14 @@ fun ModifyListContent(component: ModifyListComponent) {
                     tonalElevation = 6.0.dp,
                 ) {
                     Column(modifier = Modifier.padding(24.dp)) {
-                        Box(
-                            modifier = Modifier.padding(bottom = 16.dp)
-                        ) {
+                        Box(modifier = Modifier.padding(bottom = 16.dp)) {
                             Text(
                                 text = "Select icon",
                                 style = MaterialTheme.typography.headlineSmall
                             )
                         }
                         LazyVerticalGrid(
-                            modifier = Modifier
-                                .padding(8.dp)
-                                .fillMaxWidth(),
+                            modifier = Modifier.padding(8.dp).fillMaxWidth(),
                             columns = GridCells.Adaptive(56.dp)
                         ) {
                             item {
@@ -155,7 +149,8 @@ fun ModifyListContent(component: ModifyListComponent) {
 
             Column(modifier = Modifier.verticalScroll(scrollState)) {
                 Text(
-                    if (state.value.selectedList?.id.isNullOrBlank()) "Create list" else "Edit list",
+                    if (state.value.selectedList?.id.isNullOrBlank()) "Create list"
+                    else "Edit list",
                     modifier = Modifier.padding(16.dp, 0.dp),
                     style = MaterialTheme.typography.titleLarge
                 )
@@ -165,32 +160,35 @@ fun ModifyListContent(component: ModifyListComponent) {
                 }
 
                 OutlinedTextField(
-                    modifier = Modifier
-                        .padding(horizontal = 16.dp, vertical = 8.dp)
-                        .fillMaxWidth()
-                        .focusRequester(focusRequester),
+                    modifier =
+                        Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
+                            .fillMaxWidth()
+                            .focusRequester(focusRequester),
                     label = { Text(text = "Title") },
                     value = listTitle,
                     onValueChange = { listTitle = it },
                     singleLine = true,
-                    keyboardOptions = KeyboardOptions(
-                        capitalization = KeyboardCapitalization.Words,
-                        imeAction = ImeAction.Done,
-                    ),
-                    keyboardActions = KeyboardActions(
-                        onDone = {
-                            if (listTitle.isNotBlank()) {
-                                keyboardController?.hide()
+                    keyboardOptions =
+                        KeyboardOptions(
+                            capitalization = KeyboardCapitalization.Words,
+                            imeAction = ImeAction.Done,
+                        ),
+                    keyboardActions =
+                        KeyboardActions(
+                            onDone = {
+                                if (listTitle.isNotBlank()) {
+                                    keyboardController?.hide()
+                                }
                             }
-                        }
-                    )
+                        )
                 )
 
                 ListItem(
-                    colors = ListItemDefaults.colors(containerColor = MaterialTheme.colorScheme.surfaceContainerHigh),
-                    modifier = Modifier.clickable {
-                        showIconDialog = true
-                    },
+                    colors =
+                        ListItemDefaults.colors(
+                            containerColor = MaterialTheme.colorScheme.surfaceContainerHigh
+                        ),
+                    modifier = Modifier.clickable { showIconDialog = true },
                     headlineContent = { Text(text = "Icon") },
                     trailingContent = {
                         Icon(imageVector = listIcon.icon, contentDescription = "List")
@@ -201,9 +199,7 @@ fun ModifyListContent(component: ModifyListComponent) {
                 val selectionColor = MaterialTheme.colorScheme.primary
 
                 LazyRow(
-                    modifier = Modifier
-                        .padding(horizontal = 16.dp, vertical = 8.dp)
-                        .fillMaxWidth()
+                    modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp).fillMaxWidth()
                 ) {
                     item {
                         ColorSwatch(
@@ -216,13 +212,10 @@ fun ModifyListContent(component: ModifyListComponent) {
                         }
                     }
 
-                    items(
-                        items = TaskList.Color.values(),
-                        key = { it.name }
-                    ) { color ->
+                    items(items = TaskList.Color.values(), key = { it.name }) { color ->
                         ColorTheme(color = color) {
                             ColorSwatch(
-                                color = MaterialTheme.colorScheme.primaryContainer,
+                                color = MaterialTheme.colorScheme.surfaceContainerHigh,
                                 outline = outlineColor,
                                 selection = selectionColor,
                                 selected = listColor == color
@@ -234,17 +227,14 @@ fun ModifyListContent(component: ModifyListComponent) {
                 }
 
                 OutlinedTextField(
-                    modifier = Modifier
-                        .padding(horizontal = 16.dp, vertical = 8.dp)
-                        .fillMaxWidth(),
+                    modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp).fillMaxWidth(),
                     label = { Text(text = "Description") },
                     value = description ?: "",
-                    onValueChange = {
-                        description = it.ifBlank { null }
-                    },
-                    keyboardOptions = KeyboardOptions(
-                        capitalization = KeyboardCapitalization.Sentences,
-                    ),
+                    onValueChange = { description = it.ifBlank { null } },
+                    keyboardOptions =
+                        KeyboardOptions(
+                            capitalization = KeyboardCapitalization.Sentences,
+                        ),
                     trailingIcon = {
                         IconButton(onClick = { description = null }) {
                             Icon(imageVector = Icons.Filled.Clear, "Clear")
@@ -253,7 +243,10 @@ fun ModifyListContent(component: ModifyListComponent) {
                 )
 
                 ListItem(
-                    colors = ListItemDefaults.colors(containerColor = MaterialTheme.colorScheme.surfaceContainerHigh),
+                    colors =
+                        ListItemDefaults.colors(
+                            containerColor = MaterialTheme.colorScheme.surfaceContainerHigh
+                        ),
                     headlineContent = { Text(text = "Show list numbers") },
                     leadingContent = {
                         Icon(imageVector = Icons.Filled.FormatListNumbered, "List numbers")
@@ -261,18 +254,16 @@ fun ModifyListContent(component: ModifyListComponent) {
                     trailingContent = {
                         Switch(
                             checked = showIndexNumbers,
-                            onCheckedChange = {
-                                showIndexNumbers = it
-                            }
+                            onCheckedChange = { showIndexNumbers = it }
                         )
                     }
                 )
 
                 FilledTonalButton(
-                    modifier = Modifier
-                        .padding(horizontal = 16.dp)
-                        .padding(bottom = 16.dp)
-                        .align(Alignment.End),
+                    modifier =
+                        Modifier.padding(horizontal = 16.dp)
+                            .padding(bottom = 16.dp)
+                            .align(Alignment.End),
                     onClick = {
                         keyboardController?.hide()
 
@@ -323,37 +314,38 @@ fun ColorSwatch(
     selected: Boolean,
     onSelected: () -> Unit,
 ) {
-    val modifier = if (color != null) {
-        Modifier.background(color, MaterialTheme.shapes.medium)
-    } else {
-        val darkTheme = LocalDarkTheme.current
-        val variant = LocalThemeVariant.current
+    val modifier =
+        if (color != null) {
+            Modifier.background(color, MaterialTheme.shapes.medium)
+        } else {
+            val darkTheme = LocalDarkTheme.current
+            val variant = LocalThemeVariant.current
 
-        Modifier.background(
-            Brush.sweepGradient(
-                TaskList.Color.values().map { listColor ->
-                    val dynamicColors = dynamicColorScheme(listColor.seed, darkTheme, variant.style)
-                    dynamicColors.primaryContainer
-                }
-            ),
-            MaterialTheme.shapes.medium
-        )
-    }
+            Modifier.background(
+                Brush.sweepGradient(
+                    TaskList.Color.values().map { listColor ->
+                        val surfaceColors =
+                            dynamicSurfaceColors(listColor.seed, darkTheme, variant.style)
+                        surfaceColors.surfaceContainerHigh
+                    }
+                ),
+                MaterialTheme.shapes.medium
+            )
+        }
 
     Surface(
-        modifier = Modifier
-            .requiredSize(72.dp)
-            .padding(8.dp)
-            .then(modifier),
+        modifier = Modifier.requiredSize(72.dp).padding(8.dp).then(modifier),
         shape = MaterialTheme.shapes.medium,
         color = Color.Transparent,
-        border = BorderStroke(
-            2.dp, if (selected) {
-                selection
-            } else {
-                outline
-            }
-        )
+        border =
+            BorderStroke(
+                2.dp,
+                if (selected) {
+                    selection
+                } else {
+                    outline
+                }
+            )
     ) {
         Box(modifier = Modifier.clickable { onSelected() }) {
             if (selected) {
@@ -376,28 +368,30 @@ fun IconSwatch(
     onSelected: () -> Unit,
 ) {
     Surface(
-        modifier = Modifier
-            .requiredSize(72.dp)
-            .padding(8.dp),
+        modifier = Modifier.requiredSize(72.dp).padding(8.dp),
         shape = MaterialTheme.shapes.medium,
-        border = BorderStroke(
-            2.dp, if (selected) {
-                MaterialTheme.colorScheme.primary
-            } else {
-                MaterialTheme.colorScheme.outline
-            }
-        )
+        color = MaterialTheme.colorScheme.surfaceContainerHigh,
+        border =
+            BorderStroke(
+                2.dp,
+                if (selected) {
+                    MaterialTheme.colorScheme.primary
+                } else {
+                    MaterialTheme.colorScheme.outline
+                }
+            )
     ) {
         Box(modifier = Modifier.clickable { onSelected() }) {
             Icon(
                 imageVector = icon,
                 contentDescription = contentDescription,
                 modifier = Modifier.align(Alignment.Center),
-                tint = if (selected) {
-                    MaterialTheme.colorScheme.primary
-                } else {
-                    MaterialTheme.colorScheme.outline
-                }
+                tint =
+                    if (selected) {
+                        MaterialTheme.colorScheme.primary
+                    } else {
+                        MaterialTheme.colorScheme.outline
+                    }
             )
         }
     }

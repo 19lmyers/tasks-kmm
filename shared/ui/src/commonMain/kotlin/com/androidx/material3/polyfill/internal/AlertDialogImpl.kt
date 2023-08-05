@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-
 package com.androidx.material3.polyfill.internal
 
 import androidx.compose.foundation.BorderStroke
@@ -39,7 +38,6 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import kotlin.math.max
 
-
 @Composable
 internal fun AlertDialogContent(
     buttons: @Composable () -> Unit,
@@ -63,16 +61,10 @@ internal fun AlertDialogContent(
         tonalElevation = tonalElevation,
         border = border
     ) {
-        Column(
-            modifier = Modifier.padding(DialogPadding)
-        ) {
+        Column(modifier = Modifier.padding(DialogPadding)) {
             icon?.let {
                 CompositionLocalProvider(LocalContentColor provides iconContentColor) {
-                    Box(
-                        Modifier
-                            .padding(IconPadding)
-                            .align(Alignment.CenterHorizontally)
-                    ) {
+                    Box(Modifier.padding(IconPadding).align(Alignment.CenterHorizontally)) {
                         icon()
                     }
                 }
@@ -82,8 +74,7 @@ internal fun AlertDialogContent(
                     val textStyle = MaterialTheme.typography.headlineSmall
                     ProvideTextStyle(textStyle) {
                         Box(
-                            Modifier
-                                .padding(TitlePadding)
+                            Modifier.padding(TitlePadding)
                                 .align(
                                     if (icon == null) {
                                         Alignment.Start
@@ -99,12 +90,10 @@ internal fun AlertDialogContent(
             }
             text?.let {
                 CompositionLocalProvider(LocalContentColor provides textContentColor) {
-                    val textStyle =
-                        MaterialTheme.typography.bodyMedium
+                    val textStyle = MaterialTheme.typography.bodyMedium
                     ProvideTextStyle(textStyle) {
                         Box(
-                            Modifier
-                                .weight(weight = 1f, fill = false)
+                            Modifier.weight(weight = 1f, fill = false)
                                 .padding(TextPadding)
                                 .align(Alignment.Start)
                         ) {
@@ -115,8 +104,7 @@ internal fun AlertDialogContent(
             }
             Box(modifier = Modifier.align(Alignment.End)) {
                 CompositionLocalProvider(LocalContentColor provides buttonContentColor) {
-                    val textStyle =
-                        MaterialTheme.typography.labelLarge
+                    val textStyle = MaterialTheme.typography.labelLarge
                     ProvideTextStyle(value = textStyle, content = buttons)
                 }
             }
@@ -144,8 +132,9 @@ internal fun AlertDialogFlowRow(
 
         // Return whether the placeable can be added to the current sequence.
         fun canAddToCurrentSequence(placeable: Placeable) =
-            currentSequence.isEmpty() || currentMainAxisSize + mainAxisSpacing.roundToPx() +
-                    placeable.width <= constraints.maxWidth
+            currentSequence.isEmpty() ||
+                currentMainAxisSize + mainAxisSpacing.roundToPx() + placeable.width <=
+                    constraints.maxWidth
 
         // Store current sequence information and start a new sequence.
         fun startNewSequence() {
@@ -193,21 +182,23 @@ internal fun AlertDialogFlowRow(
 
         layout(layoutWidth, layoutHeight) {
             sequences.forEachIndexed { i, placeables ->
-                val childrenMainAxisSizes = IntArray(placeables.size) { j ->
-                    placeables[j].width +
+                val childrenMainAxisSizes =
+                    IntArray(placeables.size) { j ->
+                        placeables[j].width +
                             if (j < placeables.lastIndex) mainAxisSpacing.roundToPx() else 0
-                }
+                    }
                 val arrangement = Arrangement.End
                 val mainAxisPositions = IntArray(childrenMainAxisSizes.size) { 0 }
                 with(arrangement) {
-                    arrange(mainAxisLayoutSize, childrenMainAxisSizes,
-                        layoutDirection, mainAxisPositions)
+                    arrange(
+                        mainAxisLayoutSize,
+                        childrenMainAxisSizes,
+                        layoutDirection,
+                        mainAxisPositions
+                    )
                 }
                 placeables.forEachIndexed { j, placeable ->
-                    placeable.place(
-                        x = mainAxisPositions[j],
-                        y = crossAxisPositions[i]
-                    )
+                    placeable.place(x = mainAxisPositions[j], y = crossAxisPositions[i])
                 }
             }
         }

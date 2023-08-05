@@ -7,12 +7,14 @@ plugins {
     alias(libs.plugins.android.library)
 
     id("kotlin-parcelize")
+
+    alias(libs.plugins.ktfmt)
 }
 
 kotlin {
     jvmToolchain(17)
 
-    android()
+    androidTarget()
 
     iosX64()
     iosArm64()
@@ -52,4 +54,8 @@ android {
     defaultConfig {
         minSdk = 24
     }
+}
+
+ktfmt {
+    kotlinLangStyle()
 }

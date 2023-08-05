@@ -8,8 +8,6 @@ import kotlinx.coroutines.withContext
 
 class AndroidWidgetManager(private val applicationContext: Context) : WidgetManager {
     override suspend fun update() {
-        withContext(Dispatchers.Main) {
-            TaskListWidget().updateAll(applicationContext)
-        }
+        withContext(Dispatchers.Main) { TaskListWidget().updateAll(applicationContext) }
     }
 }

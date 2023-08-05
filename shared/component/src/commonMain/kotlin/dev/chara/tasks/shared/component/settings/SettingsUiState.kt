@@ -7,10 +7,8 @@ import dev.chara.tasks.shared.model.preference.ThemeVariant
 
 data class SettingsUiState(
     val isLoading: Boolean = true,
-
     val appTheme: Theme = Theme.SYSTEM_DEFAULT,
     val appThemeVariant: ThemeVariant = ThemeVariant.TONAL_SPOT,
     val taskLists: List<TaskList> = listOf(),
     val enabledBoardSections: List<BoardSection.Type> = listOf()
 )
-

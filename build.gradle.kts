@@ -14,5 +14,7 @@ plugins {
     alias(libs.plugins.google.services) apply false
     alias(libs.plugins.crashlytics) apply false
 
+    alias(libs.plugins.ktfmt) apply false
+
     alias(libs.plugins.versions)
 }

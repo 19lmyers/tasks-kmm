@@ -6,6 +6,8 @@ plugins {
     alias(libs.plugins.kotlin.multiplatform)
 
     alias(libs.plugins.jetbrains.compose)
+
+    alias(libs.plugins.ktfmt)
 }
 
 kotlin {
@@ -95,4 +97,8 @@ kotlin {
 
 compose {
     kotlinCompilerPlugin.set(dependencies.compiler.auto)
+}
+
+ktfmt {
+    kotlinLangStyle()
 }

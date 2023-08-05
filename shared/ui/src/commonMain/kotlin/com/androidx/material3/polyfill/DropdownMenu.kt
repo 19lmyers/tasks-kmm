@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-
 package com.androidx.material3.polyfill
 
 import androidx.compose.animation.core.MutableTransitionState
@@ -56,12 +55,10 @@ fun DropdownMenu(
     if (expandedStates.currentState || expandedStates.targetState) {
         val transformOriginState = remember { mutableStateOf(TransformOrigin.Center) }
         val density = LocalDensity.current
-        val popupPositionProvider = DropdownMenuPositionProvider(
-            offset,
-            density
-        ) { parentBounds, menuBounds ->
-            transformOriginState.value = calculateTransformOrigin(parentBounds, menuBounds)
-        }
+        val popupPositionProvider =
+            DropdownMenuPositionProvider(offset, density) { parentBounds, menuBounds ->
+                transformOriginState.value = calculateTransformOrigin(parentBounds, menuBounds)
+            }
 
         Popup(
             onDismissRequest = onDismissRequest,

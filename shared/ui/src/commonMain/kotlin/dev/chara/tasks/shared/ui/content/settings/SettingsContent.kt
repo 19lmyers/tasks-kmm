@@ -63,9 +63,7 @@ fun SettingsContent(component: SettingsComponent) {
         snackbarHost = { SnackbarHost(snackbarHostState) },
         topBar = {
             TopAppBar(
-                title = {
-                    Text(text = "Settings")
-                },
+                title = { Text(text = "Settings") },
                 navigationIcon = {
                     IconButton(onClick = { component.onUp() }) {
                         Icon(
@@ -82,14 +80,13 @@ fun SettingsContent(component: SettingsComponent) {
             val paddingTop = PaddingValues(top = innerPadding.calculateTopPadding())
             val paddingBottom = PaddingValues(bottom = innerPadding.calculateBottomPadding())
 
-
             BoardSettings(
-                modifier = Modifier
-                    .padding(paddingTop)
-                    .consumeWindowInsets(paddingTop)
-                    .fillMaxSize()
-                    .verticalScroll(scrollState)
-                    .padding(paddingBottom),
+                modifier =
+                    Modifier.padding(paddingTop)
+                        .consumeWindowInsets(paddingTop)
+                        .fillMaxSize()
+                        .verticalScroll(scrollState)
+                        .padding(paddingBottom),
                 appTheme = state.value.appTheme,
                 appThemeVariant = state.value.appThemeVariant,
                 enabledBoardSections = state.value.enabledBoardSections,
@@ -131,10 +128,7 @@ private fun BoardSettings(
     Column(modifier = modifier) {
         ListItem(
             headlineContent = {
-                Text(
-                    text = "Appearance",
-                    style = MaterialTheme.typography.titleMedium
-                )
+                Text(text = "Appearance", style = MaterialTheme.typography.titleMedium)
             }
         )
 
@@ -150,15 +144,16 @@ private fun BoardSettings(
             trailingContent = {
                 ExposedDropdownMenuBox(
                     expanded = showThemeDropdown,
-                    onExpandedChange = { showThemeDropdown = it }) {
+                    onExpandedChange = { showThemeDropdown = it }
+                ) {
                     OutlinedTextField(
-                        modifier = Modifier
-                            .menuAnchor()
-                            .width(200.dp),
+                        modifier = Modifier.menuAnchor().width(200.dp),
                         readOnly = true,
                         value = appTheme.toString(),
                         onValueChange = {},
-                        trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = showThemeDropdown) },
+                        trailingIcon = {
+                            ExposedDropdownMenuDefaults.TrailingIcon(expanded = showThemeDropdown)
+                        },
                         colors = ExposedDropdownMenuDefaults.outlinedTextFieldColors(),
                         textStyle = MaterialTheme.typography.bodyLarge
                     )
@@ -184,7 +179,6 @@ private fun BoardSettings(
 
         var showThemeVariantDropdown by remember { mutableStateOf(false) }
 
-
         ListItem(
             modifier = Modifier.clickable { showThemeVariantDropdown = true },
             headlineContent = {
@@ -195,15 +189,18 @@ private fun BoardSettings(
             trailingContent = {
                 ExposedDropdownMenuBox(
                     expanded = showThemeVariantDropdown,
-                    onExpandedChange = { showThemeVariantDropdown = it }) {
+                    onExpandedChange = { showThemeVariantDropdown = it }
+                ) {
                     OutlinedTextField(
-                        modifier = Modifier
-                            .menuAnchor()
-                            .width(200.dp),
+                        modifier = Modifier.menuAnchor().width(200.dp),
                         readOnly = true,
                         value = appThemeVariant.toString(),
                         onValueChange = {},
-                        trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = showThemeVariantDropdown) },
+                        trailingIcon = {
+                            ExposedDropdownMenuDefaults.TrailingIcon(
+                                expanded = showThemeVariantDropdown
+                            )
+                        },
                         colors = ExposedDropdownMenuDefaults.outlinedTextFieldColors(),
                         textStyle = MaterialTheme.typography.bodyLarge
                     )
@@ -229,25 +226,21 @@ private fun BoardSettings(
 
         ListItem(
             headlineContent = {
-                Text(
-                    text = "Dashboard sections",
-                    style = MaterialTheme.typography.titleMedium
-                )
+                Text(text = "Dashboard sections", style = MaterialTheme.typography.titleMedium)
             }
         )
 
         for (boardSection in BoardSection.Type.values()) {
             ListItem(
-                modifier = Modifier.clickable {
-                    onUpdateBoardSection(
-                        boardSection,
-                        !enabledBoardSections.contains(boardSection)
-                    )
-                },
+                modifier =
+                    Modifier.clickable {
+                        onUpdateBoardSection(
+                            boardSection,
+                            !enabledBoardSections.contains(boardSection)
+                        )
+                    },
                 headlineContent = { Text(boardSection.title) },
-                leadingContent = {
-                    Icon(boardSection.icon, contentDescription = "List")
-                },
+                leadingContent = { Icon(boardSection.icon, contentDescription = "List") },
                 trailingContent = {
                     Switch(
                         checked = enabledBoardSections.contains(boardSection),
@@ -259,10 +252,7 @@ private fun BoardSettings(
 
         ListItem(
             headlineContent = {
-                Text(
-                    text = "Task lists",
-                    style = MaterialTheme.typography.titleMedium
-                )
+                Text(text = "Task lists", style = MaterialTheme.typography.titleMedium)
             },
             supportingContent = {
                 Text(
@@ -276,11 +266,9 @@ private fun BoardSettings(
         for (taskList in taskLists) {
             ListItem(
                 headlineContent = { Text(taskList.title) },
-                leadingContent = {
-                    Icon(taskList.icon.icon, contentDescription = "List")
-                },
+                leadingContent = { Icon(taskList.icon.icon, contentDescription = "List") },
                 trailingContent = {
-                    //Icon(Icons.Filled.DragHandle, contentDescription = "Drag to reorder")
+                    // Icon(Icons.Filled.DragHandle, contentDescription = "Drag to reorder")
                 }
             )
         }

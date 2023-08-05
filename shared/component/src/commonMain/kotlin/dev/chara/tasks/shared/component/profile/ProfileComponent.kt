@@ -56,9 +56,7 @@ class DefaultProfileComponent(
     init {
         coroutineScope.launch {
             repository.getUserProfile().collect { profile ->
-                _state.value = ProfileUiState(
-                    profile = profile
-                )
+                _state.value = ProfileUiState(profile = profile)
             }
         }
     }
@@ -79,10 +77,7 @@ class DefaultProfileComponent(
 
             _state.value = state.value.copy(isUploading = false)
 
-            _messages.emitAsMessage(
-                result = result,
-                successMessage = "Profile updated"
-            )
+            _messages.emitAsMessage(result = result, successMessage = "Profile updated")
         }
     }
 
@@ -94,10 +89,7 @@ class DefaultProfileComponent(
 
             _state.value = state.value.copy(isUploading = false)
 
-            _messages.emitAsMessage(
-                result = result,
-                successMessage = "Photo updated"
-            )
+            _messages.emitAsMessage(result = result, successMessage = "Photo updated")
         }
     }
 }

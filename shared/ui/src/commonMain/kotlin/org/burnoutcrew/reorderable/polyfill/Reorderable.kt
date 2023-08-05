@@ -26,39 +26,37 @@ import androidx.compose.ui.input.pointer.changedToUp
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.input.pointer.positionChange
 
-fun Modifier.reorderable(
-    state: ReorderableState<*>
-) = then(
-    Modifier.pointerInput(Unit) {
-        forEachGesture {
-            val dragStart = state.interactions.receive()
-            val down = awaitPointerEventScope {
-                currentEvent.changes.firstOrNull { it.id == dragStart.id }
-            }
-            if (down != null && state.onDragStart(down.position.x.toInt(), down.position.y.toInt())) {
-                dragStart.offset?.apply {
-                    state.onDrag(x.toInt(), y.toInt())
+fun Modifier.reorderable(state: ReorderableState<*>) =
+    then(
+        Modifier.pointerInput(Unit) {
+            forEachGesture {
+                val dragStart = state.interactions.receive()
+                val down = awaitPointerEventScope {
+                    currentEvent.changes.firstOrNull { it.id == dragStart.id }
                 }
-                detectDrag(
-                    down.id,
-                    onDragEnd = {
-                        state.onDragCanceled()
-                    },
-                    onDragCancel = {
-                        state.onDragCanceled()
-                    },
-                    onDrag = { change, dragAmount ->
-                        change.consume()
-                        state.onDrag(dragAmount.x.toInt(), dragAmount.y.toInt())
-                    })
+                if (
+                    down != null &&
+                        state.onDragStart(down.position.x.toInt(), down.position.y.toInt())
+                ) {
+                    dragStart.offset?.apply { state.onDrag(x.toInt(), y.toInt()) }
+                    detectDrag(
+                        down.id,
+                        onDragEnd = { state.onDragCanceled() },
+                        onDragCancel = { state.onDragCanceled() },
+                        onDrag = { change, dragAmount ->
+                            change.consume()
+                            state.onDrag(dragAmount.x.toInt(), dragAmount.y.toInt())
+                        }
+                    )
+                }
             }
         }
-    })
+    )
 
 internal suspend fun PointerInputScope.detectDrag(
     down: PointerId,
-    onDragEnd: () -> Unit = { },
-    onDragCancel: () -> Unit = { },
+    onDragEnd: () -> Unit = {},
+    onDragCancel: () -> Unit = {},
     onDrag: (change: PointerInputChange, dragAmount: Offset) -> Unit,
 ) {
     awaitPointerEventScope {
@@ -69,9 +67,7 @@ internal suspend fun PointerInputScope.detectDrag(
             }
         ) {
             // consume up if we quit drag gracefully with the up
-            currentEvent.changes.forEach {
-                if (it.changedToUp()) it.consume()
-            }
+            currentEvent.changes.forEach { if (it.changedToUp()) it.consume() }
             onDragEnd()
         } else {
             onDragCancel()

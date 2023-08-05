@@ -7,6 +7,7 @@ import com.github.michaelbull.result.Err
 import com.github.michaelbull.result.Ok
 import com.github.michaelbull.result.Result
 import com.rickclephas.kmp.nserrorkt.asThrowable
+import kotlinx.cinterop.ExperimentalForeignApi
 import kotlinx.cinterop.addressOf
 import kotlinx.cinterop.usePinned
 import platform.Foundation.NSData
@@ -33,7 +34,9 @@ actual fun photoPicker(onResult: (Result<ByteArray, Throwable>) -> Unit): () -> 
                 val result = didFinishPicking.firstOrNull() as? PHPickerResult
 
                 if (result != null) {
-                    result.itemProvider().loadDataRepresentationForContentType(UTTypeJPEG) { data, error ->
+                    result.itemProvider().loadDataRepresentationForContentType(UTTypeJPEG) {
+                        data,
+                        error ->
                         if (data != null) {
                             val bytes = data.toByteArray()
 
@@ -66,13 +69,15 @@ actual fun photoPicker(onResult: (Result<ByteArray, Throwable>) -> Unit): () -> 
         {
             val pickerController = PHPickerViewController(configuration)
             pickerController.setDelegate(pickerDelegate)
-            uiViewController.presentViewController(pickerController, animated = true, completion = null)
+            uiViewController.presentViewController(
+                pickerController,
+                animated = true,
+                completion = null
+            )
         }
     }
 }
 
-private fun NSData.toByteArray(): ByteArray = ByteArray(length.toInt()).apply {
-    usePinned {
-        memcpy(it.addressOf(0), bytes, length)
-    }
-}
+@OptIn(ExperimentalForeignApi::class)
+private fun NSData.toByteArray(): ByteArray =
+    ByteArray(length.toInt()).apply { usePinned { memcpy(it.addressOf(0), bytes, length) } }

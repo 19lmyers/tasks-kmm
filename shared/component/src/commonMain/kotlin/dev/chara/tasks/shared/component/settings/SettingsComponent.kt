@@ -55,42 +55,35 @@ class DefaultSettingsComponent(
     init {
         coroutineScope.launch {
             combine(
-                repository.getAppTheme(),
-                repository.getAppThemeVariant(),
-                repository.getEnabledBoardSections(),
-                repository.getLists()
-            ) { theme, themeVariant, enabledSections, taskLists ->
-                SettingsUiState(
-                    isLoading = false,
-                    appTheme = theme,
-                    appThemeVariant = themeVariant,
-                    enabledBoardSections = enabledSections,
-                    taskLists = taskLists
-                )
-            }.collect {
-                _state.value = it
-            }
+                    repository.getAppTheme(),
+                    repository.getAppThemeVariant(),
+                    repository.getEnabledBoardSections(),
+                    repository.getLists()
+                ) { theme, themeVariant, enabledSections, taskLists ->
+                    SettingsUiState(
+                        isLoading = false,
+                        appTheme = theme,
+                        appThemeVariant = themeVariant,
+                        enabledBoardSections = enabledSections,
+                        taskLists = taskLists
+                    )
+                }
+                .collect { _state.value = it }
         }
     }
 
     override fun onUp() = navigateUp()
 
     override fun setAppTheme(theme: Theme) {
-        coroutineScope.launch {
-            repository.setAppTheme(theme)
-        }
+        coroutineScope.launch { repository.setAppTheme(theme) }
     }
 
     override fun setAppThemeVariant(themeVariant: ThemeVariant) {
-        coroutineScope.launch {
-            repository.setAppThemeVariant(themeVariant)
-        }
+        coroutineScope.launch { repository.setAppThemeVariant(themeVariant) }
     }
 
     override fun setEnabledForBoardSection(section: BoardSection.Type, enabled: Boolean) {
-        coroutineScope.launch {
-            repository.setEnabledForBoardSection(section, enabled)
-        }
+        coroutineScope.launch { repository.setEnabledForBoardSection(section, enabled) }
     }
 
     override fun updateList(taskList: TaskList) {

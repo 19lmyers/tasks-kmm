@@ -76,10 +76,13 @@ fun ExposedDropdownMenuBox(
         object : ExposedDropdownMenuBoxScope {
             override fun Modifier.menuAnchor(): Modifier {
                 return composed {
-                    onGloballyPositioned {
-                        width = it.size.width
-                    }.expandable(expanded, onExpandedChange = { onExpandedChange(!expanded) })
-                }.focusRequester(focusRequester)
+                        onGloballyPositioned { width = it.size.width }
+                            .expandable(
+                                expanded,
+                                onExpandedChange = { onExpandedChange(!expanded) }
+                            )
+                    }
+                    .focusRequester(focusRequester)
             }
 
             override fun Modifier.exposedDropdownSize(matchTextFieldWidth: Boolean): Modifier {
@@ -94,18 +97,12 @@ fun ExposedDropdownMenuBox(
         }
     }
 
-    Box(modifier) {
-        scope.content()
-    }
+    Box(modifier) { scope.content() }
 
-    SideEffect {
-        if (expanded) focusRequester.requestFocus()
-    }
+    SideEffect { if (expanded) focusRequester.requestFocus() }
 }
 
-/**
- * Scope for [ExposedDropdownMenuBox].
- */
+/** Scope for [ExposedDropdownMenuBox]. */
 @ExperimentalMaterial3Api
 interface ExposedDropdownMenuBoxScope {
     /**
@@ -123,19 +120,17 @@ interface ExposedDropdownMenuBoxScope {
      * [TextField] and the software keyboard.
      *
      * @param matchTextFieldWidth whether the menu should match the width of the text field to which
-     * it's attached. If set to `true`, the width will match the width of the text field.
+     *   it's attached. If set to `true`, the width will match the width of the text field.
      */
-    fun Modifier.exposedDropdownSize(
-        matchTextFieldWidth: Boolean = true
-    ): Modifier
+    fun Modifier.exposedDropdownSize(matchTextFieldWidth: Boolean = true): Modifier
 
     /**
      * Popup which contains content for Exposed Dropdown Menu. Should be used inside the content of
      * [ExposedDropdownMenuBox].
      *
      * @param expanded whether the menu is expanded
-     * @param onDismissRequest called when the user requests to dismiss the menu, such as by
-     * tapping outside the menu's bounds
+     * @param onDismissRequest called when the user requests to dismiss the menu, such as by tapping
+     *   outside the menu's bounds
      * @param modifier the [Modifier] to be applied to this menu
      * @param content the content of the menu
      */
@@ -161,14 +156,12 @@ object ExposedDropdownMenuDefaults {
      * Default trailing icon for Exposed Dropdown Menu.
      *
      * @param expanded whether [ExposedDropdownMenuBoxScope.ExposedDropdownMenu] is expanded or not.
-     * Affects the appearance of the icon.
+     *   Affects the appearance of the icon.
      */
     @ExperimentalMaterial3Api
     @Composable
     fun TrailingIcon(expanded: Boolean) {
-        Icon(
-            Icons.Filled.ArrowDropDown, null, Modifier.rotate(if (expanded) 180f else 0f)
-        )
+        Icon(Icons.Filled.ArrowDropDown, null, Modifier.rotate(if (expanded) 180f else 0f))
     }
 
     /**
@@ -178,10 +171,10 @@ object ExposedDropdownMenuDefaults {
      *
      * @param focusedTextColor the color used for the input text of this text field when focused
      * @param unfocusedTextColor the color used for the input text of this text field when not
-     * focused
+     *   focused
      * @param disabledTextColor the color used for the input text of this text field when disabled
      * @param errorTextColor the color used for the input text of this text field when in error
-     * state
+     *   state
      * @param focusedContainerColor the container color for this text field when focused
      * @param unfocusedContainerColor the container color for this text field when not focused
      * @param disabledContainerColor the container color for this text field when disabled
@@ -199,7 +192,7 @@ object ExposedDropdownMenuDefaults {
      * @param errorLeadingIconColor the leading icon color for this text field when in error state
      * @param focusedTrailingIconColor the trailing icon color for this text field when focused
      * @param unfocusedTrailingIconColor the trailing icon color for this text field when not
-     * focused
+     *   focused
      * @param disabledTrailingIconColor the trailing icon color for this text field when disabled
      * @param errorTrailingIconColor the trailing icon color for this text field when in error state
      * @param focusedLabelColor the label color for this text field when focused
@@ -260,47 +253,48 @@ object ExposedDropdownMenuDefaults {
         unfocusedSuffixColor: Color = MaterialTheme.colorScheme.onSurfaceVariant,
         disabledSuffixColor: Color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f),
         errorSuffixColor: Color = MaterialTheme.colorScheme.onSurfaceVariant,
-    ): TextFieldColors = TextFieldDefaults.colors(
-        focusedTextColor = focusedTextColor,
-        unfocusedTextColor = unfocusedTextColor,
-        disabledTextColor = disabledTextColor,
-        errorTextColor = errorTextColor,
-        focusedContainerColor = focusedContainerColor,
-        unfocusedContainerColor = unfocusedContainerColor,
-        disabledContainerColor = disabledContainerColor,
-        errorContainerColor = errorContainerColor,
-        cursorColor = cursorColor,
-        errorCursorColor = errorCursorColor,
-        selectionColors = selectionColors,
-        focusedIndicatorColor = focusedIndicatorColor,
-        unfocusedIndicatorColor = unfocusedIndicatorColor,
-        disabledIndicatorColor = disabledIndicatorColor,
-        errorIndicatorColor = errorIndicatorColor,
-        focusedLeadingIconColor = focusedLeadingIconColor,
-        unfocusedLeadingIconColor = unfocusedLeadingIconColor,
-        disabledLeadingIconColor = disabledLeadingIconColor,
-        errorLeadingIconColor = errorLeadingIconColor,
-        focusedTrailingIconColor = focusedTrailingIconColor,
-        unfocusedTrailingIconColor = unfocusedTrailingIconColor,
-        disabledTrailingIconColor = disabledTrailingIconColor,
-        errorTrailingIconColor = errorTrailingIconColor,
-        focusedLabelColor = focusedLabelColor,
-        unfocusedLabelColor = unfocusedLabelColor,
-        disabledLabelColor = disabledLabelColor,
-        errorLabelColor = errorLabelColor,
-        focusedPlaceholderColor = focusedPlaceholderColor,
-        unfocusedPlaceholderColor = unfocusedPlaceholderColor,
-        disabledPlaceholderColor = disabledPlaceholderColor,
-        errorPlaceholderColor = errorPlaceholderColor,
-        focusedPrefixColor = focusedPrefixColor,
-        unfocusedPrefixColor = unfocusedPrefixColor,
-        disabledPrefixColor = disabledPrefixColor,
-        errorPrefixColor = errorPrefixColor,
-        focusedSuffixColor = focusedSuffixColor,
-        unfocusedSuffixColor = unfocusedSuffixColor,
-        disabledSuffixColor = disabledSuffixColor,
-        errorSuffixColor = errorSuffixColor,
-    )
+    ): TextFieldColors =
+        TextFieldDefaults.colors(
+            focusedTextColor = focusedTextColor,
+            unfocusedTextColor = unfocusedTextColor,
+            disabledTextColor = disabledTextColor,
+            errorTextColor = errorTextColor,
+            focusedContainerColor = focusedContainerColor,
+            unfocusedContainerColor = unfocusedContainerColor,
+            disabledContainerColor = disabledContainerColor,
+            errorContainerColor = errorContainerColor,
+            cursorColor = cursorColor,
+            errorCursorColor = errorCursorColor,
+            selectionColors = selectionColors,
+            focusedIndicatorColor = focusedIndicatorColor,
+            unfocusedIndicatorColor = unfocusedIndicatorColor,
+            disabledIndicatorColor = disabledIndicatorColor,
+            errorIndicatorColor = errorIndicatorColor,
+            focusedLeadingIconColor = focusedLeadingIconColor,
+            unfocusedLeadingIconColor = unfocusedLeadingIconColor,
+            disabledLeadingIconColor = disabledLeadingIconColor,
+            errorLeadingIconColor = errorLeadingIconColor,
+            focusedTrailingIconColor = focusedTrailingIconColor,
+            unfocusedTrailingIconColor = unfocusedTrailingIconColor,
+            disabledTrailingIconColor = disabledTrailingIconColor,
+            errorTrailingIconColor = errorTrailingIconColor,
+            focusedLabelColor = focusedLabelColor,
+            unfocusedLabelColor = unfocusedLabelColor,
+            disabledLabelColor = disabledLabelColor,
+            errorLabelColor = errorLabelColor,
+            focusedPlaceholderColor = focusedPlaceholderColor,
+            unfocusedPlaceholderColor = unfocusedPlaceholderColor,
+            disabledPlaceholderColor = disabledPlaceholderColor,
+            errorPlaceholderColor = errorPlaceholderColor,
+            focusedPrefixColor = focusedPrefixColor,
+            unfocusedPrefixColor = unfocusedPrefixColor,
+            disabledPrefixColor = disabledPrefixColor,
+            errorPrefixColor = errorPrefixColor,
+            focusedSuffixColor = focusedSuffixColor,
+            unfocusedSuffixColor = unfocusedSuffixColor,
+            disabledSuffixColor = disabledSuffixColor,
+            errorSuffixColor = errorSuffixColor,
+        )
 
     /**
      * Creates a [TextFieldColors] that represents the default input text, container, and content
@@ -309,10 +303,10 @@ object ExposedDropdownMenuDefaults {
      *
      * @param focusedTextColor the color used for the input text of this text field when focused
      * @param unfocusedTextColor the color used for the input text of this text field when not
-     * focused
+     *   focused
      * @param disabledTextColor the color used for the input text of this text field when disabled
      * @param errorTextColor the color used for the input text of this text field when in error
-     * state
+     *   state
      * @param focusedContainerColor the container color for this text field when focused
      * @param unfocusedContainerColor the container color for this text field when not focused
      * @param disabledContainerColor the container color for this text field when disabled
@@ -329,7 +323,8 @@ object ExposedDropdownMenuDefaults {
      * @param disabledLeadingIconColor the leading icon color for this text field when disabled
      * @param errorLeadingIconColor the leading icon color for this text field when in error state
      * @param focusedTrailingIconColor the trailing icon color for this text field when focused
-     * @param unfocusedTrailingIconColor the trailing icon color for this text field when not focused
+     * @param unfocusedTrailingIconColor the trailing icon color for this text field when not
+     *   focused
      * @param disabledTrailingIconColor the trailing icon color for this text field when disabled
      * @param errorTrailingIconColor the trailing icon color for this text field when in error state
      * @param focusedLabelColor the label color for this text field when focused
@@ -390,79 +385,80 @@ object ExposedDropdownMenuDefaults {
         unfocusedSuffixColor: Color = MaterialTheme.colorScheme.onSurfaceVariant,
         disabledSuffixColor: Color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f),
         errorSuffixColor: Color = MaterialTheme.colorScheme.onSurfaceVariant,
-    ): TextFieldColors = OutlinedTextFieldDefaults.colors(
-        focusedTextColor = focusedTextColor,
-        unfocusedTextColor = unfocusedTextColor,
-        disabledTextColor = disabledTextColor,
-        errorTextColor = errorTextColor,
-        focusedContainerColor = focusedContainerColor,
-        unfocusedContainerColor = unfocusedContainerColor,
-        disabledContainerColor = disabledContainerColor,
-        errorContainerColor = errorContainerColor,
-        cursorColor = cursorColor,
-        errorCursorColor = errorCursorColor,
-        selectionColors = selectionColors,
-        focusedBorderColor = focusedBorderColor,
-        unfocusedBorderColor = unfocusedBorderColor,
-        disabledBorderColor = disabledBorderColor,
-        errorBorderColor = errorBorderColor,
-        focusedLeadingIconColor = focusedLeadingIconColor,
-        unfocusedLeadingIconColor = unfocusedLeadingIconColor,
-        disabledLeadingIconColor = disabledLeadingIconColor,
-        errorLeadingIconColor = errorLeadingIconColor,
-        focusedTrailingIconColor = focusedTrailingIconColor,
-        unfocusedTrailingIconColor = unfocusedTrailingIconColor,
-        disabledTrailingIconColor = disabledTrailingIconColor,
-        errorTrailingIconColor = errorTrailingIconColor,
-        focusedLabelColor = focusedLabelColor,
-        unfocusedLabelColor = unfocusedLabelColor,
-        disabledLabelColor = disabledLabelColor,
-        errorLabelColor = errorLabelColor,
-        focusedPlaceholderColor = focusedPlaceholderColor,
-        unfocusedPlaceholderColor = unfocusedPlaceholderColor,
-        disabledPlaceholderColor = disabledPlaceholderColor,
-        errorPlaceholderColor = errorPlaceholderColor,
-        focusedPrefixColor = focusedPrefixColor,
-        unfocusedPrefixColor = unfocusedPrefixColor,
-        disabledPrefixColor = disabledPrefixColor,
-        errorPrefixColor = errorPrefixColor,
-        focusedSuffixColor = focusedSuffixColor,
-        unfocusedSuffixColor = unfocusedSuffixColor,
-        disabledSuffixColor = disabledSuffixColor,
-        errorSuffixColor = errorSuffixColor,
-    )
+    ): TextFieldColors =
+        OutlinedTextFieldDefaults.colors(
+            focusedTextColor = focusedTextColor,
+            unfocusedTextColor = unfocusedTextColor,
+            disabledTextColor = disabledTextColor,
+            errorTextColor = errorTextColor,
+            focusedContainerColor = focusedContainerColor,
+            unfocusedContainerColor = unfocusedContainerColor,
+            disabledContainerColor = disabledContainerColor,
+            errorContainerColor = errorContainerColor,
+            cursorColor = cursorColor,
+            errorCursorColor = errorCursorColor,
+            selectionColors = selectionColors,
+            focusedBorderColor = focusedBorderColor,
+            unfocusedBorderColor = unfocusedBorderColor,
+            disabledBorderColor = disabledBorderColor,
+            errorBorderColor = errorBorderColor,
+            focusedLeadingIconColor = focusedLeadingIconColor,
+            unfocusedLeadingIconColor = unfocusedLeadingIconColor,
+            disabledLeadingIconColor = disabledLeadingIconColor,
+            errorLeadingIconColor = errorLeadingIconColor,
+            focusedTrailingIconColor = focusedTrailingIconColor,
+            unfocusedTrailingIconColor = unfocusedTrailingIconColor,
+            disabledTrailingIconColor = disabledTrailingIconColor,
+            errorTrailingIconColor = errorTrailingIconColor,
+            focusedLabelColor = focusedLabelColor,
+            unfocusedLabelColor = unfocusedLabelColor,
+            disabledLabelColor = disabledLabelColor,
+            errorLabelColor = errorLabelColor,
+            focusedPlaceholderColor = focusedPlaceholderColor,
+            unfocusedPlaceholderColor = unfocusedPlaceholderColor,
+            disabledPlaceholderColor = disabledPlaceholderColor,
+            errorPlaceholderColor = errorPlaceholderColor,
+            focusedPrefixColor = focusedPrefixColor,
+            unfocusedPrefixColor = unfocusedPrefixColor,
+            disabledPrefixColor = disabledPrefixColor,
+            errorPrefixColor = errorPrefixColor,
+            focusedSuffixColor = focusedSuffixColor,
+            unfocusedSuffixColor = unfocusedSuffixColor,
+            disabledSuffixColor = disabledSuffixColor,
+            errorSuffixColor = errorSuffixColor,
+        )
 
     /**
      * Padding for [DropdownMenuItem]s within [ExposedDropdownMenuBoxScope.ExposedDropdownMenu] to
      * align them properly with [TextField] components.
      */
-    val ItemContentPadding: PaddingValues = PaddingValues(
-        horizontal = ExposedDropdownMenuItemHorizontalPadding, vertical = 0.dp
-    )
+    val ItemContentPadding: PaddingValues =
+        PaddingValues(horizontal = ExposedDropdownMenuItemHorizontalPadding, vertical = 0.dp)
 }
 
 @Suppress("ComposableModifierFactory")
 @Composable
-private fun Modifier.expandable(
-    expanded: Boolean, onExpandedChange: () -> Unit
-) = pointerInput(Unit) {
-    awaitEachGesture {
-        // Must be PointerEventPass.Initial to observe events before the text field consumes them
-        // in the Main pass
-        awaitFirstDown(pass = PointerEventPass.Initial)
-        val upEvent = waitForUpOrCancellation(pass = PointerEventPass.Initial)
-        if (upEvent != null) {
-            onExpandedChange()
+private fun Modifier.expandable(expanded: Boolean, onExpandedChange: () -> Unit) =
+    pointerInput(Unit) {
+            awaitEachGesture {
+                // Must be PointerEventPass.Initial to observe events before the text field consumes
+                // them
+                // in the Main pass
+                awaitFirstDown(pass = PointerEventPass.Initial)
+                val upEvent = waitForUpOrCancellation(pass = PointerEventPass.Initial)
+                if (upEvent != null) {
+                    onExpandedChange()
+                }
+            }
         }
-    }
-}.semantics {
-    stateDescription = if (expanded) "Expanded" else "Collapsed"
-    contentDescription = "Dropdown menu"
-    onClick {
-        onExpandedChange()
-        true
-    }
-}
+        .semantics {
+            stateDescription = if (expanded) "Expanded" else "Collapsed"
+            contentDescription = "Dropdown menu"
+            onClick {
+                onExpandedChange()
+                true
+            }
+        }
 
 private val ExposedDropdownMenuItemHorizontalPadding = 16.dp
 

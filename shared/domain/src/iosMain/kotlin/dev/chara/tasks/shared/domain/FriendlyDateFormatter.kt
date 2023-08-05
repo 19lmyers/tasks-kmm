@@ -26,11 +26,12 @@ actual class FriendlyDateFormatter {
 
         val formatter = NSDateFormatter()
 
-        formatter.dateStyle = if (NSCalendar.currentCalendar.isDateInToday(date)) {
-            NSDateFormatterNoStyle
-        } else {
-            NSDateFormatterMediumStyle
-        }
+        formatter.dateStyle =
+            if (NSCalendar.currentCalendar.isDateInToday(date)) {
+                NSDateFormatterNoStyle
+            } else {
+                NSDateFormatterMediumStyle
+            }
         formatter.timeStyle = NSDateFormatterShortStyle
         formatter.locale = NSLocale.currentLocale
 

@@ -31,11 +31,12 @@ fun RootContent(component: RootComponent) {
     val state = component.state.collectAsState()
 
     AppTheme(
-        darkTheme = when (state.value.appTheme) {
-            Theme.SYSTEM_DEFAULT -> isSystemInDarkTheme()
-            Theme.LIGHT -> false
-            Theme.DARK -> true
-        },
+        darkTheme =
+            when (state.value.appTheme) {
+                Theme.SYSTEM_DEFAULT -> isSystemInDarkTheme()
+                Theme.LIGHT -> false
+                Theme.DARK -> true
+            },
         variant = state.value.appThemeVariant
     ) {
         Children(
@@ -44,25 +45,15 @@ fun RootContent(component: RootComponent) {
         ) {
             when (val child = it.instance) {
                 is RootComponent.Child.Welcome -> WelcomeContent(child.component)
-
                 is RootComponent.Child.SignUp -> SignUpContent(child.component)
-
                 is RootComponent.Child.SignIn -> SignInContent(child.component)
-
                 is RootComponent.Child.ForgotPassword -> ForgotPasswordContent(child.component)
-
                 is RootComponent.Child.Home -> HomeContent(child.component, windowSizeClass)
-
                 is RootComponent.Child.Profile -> ProfileContent(child.component)
-
                 is RootComponent.Child.Settings -> SettingsContent(child.component)
-
                 is RootComponent.Child.ChangeEmail -> ChangeEmailContent(child.component)
-
                 is RootComponent.Child.ChangePassword -> ChangePasswordContent(child.component)
-
                 is RootComponent.Child.VerifyEmail -> VerifyEmailContent(child.component)
-
                 is RootComponent.Child.ResetPassword -> ResetPasswordContent(child.component)
             }
         }

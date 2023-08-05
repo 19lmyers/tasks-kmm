@@ -40,13 +40,19 @@ fun rememberReorderableLazyGridState(
 ): ReorderableLazyGridState {
     val maxScroll = with(LocalDensity.current) { maxScrollPerFrame.toPx() }
     val scope = rememberCoroutineScope()
-    val state = remember(gridState) {
-        ReorderableLazyGridState(gridState, scope, maxScroll, onMove, canDragOver, onDragEnd, dragCancelledAnimation)
-    }
-    LaunchedEffect(state) {
-        state.visibleItemsChanged()
-            .collect { state.onDrag(0, 0) }
-    }
+    val state =
+        remember(gridState) {
+            ReorderableLazyGridState(
+                gridState,
+                scope,
+                maxScroll,
+                onMove,
+                canDragOver,
+                onDragEnd,
+                dragCancelledAnimation
+            )
+        }
+    LaunchedEffect(state) { state.visibleItemsChanged().collect { state.onDrag(0, 0) } }
 
     LaunchedEffect(state) {
         while (true) {
@@ -65,33 +71,54 @@ class ReorderableLazyGridState(
     canDragOver: ((draggedOver: ItemPosition, dragging: ItemPosition) -> Boolean)? = null,
     onDragEnd: ((startIndex: Int, endIndex: Int) -> (Unit))? = null,
     dragCancelledAnimation: DragCancelledAnimation = SpringDragCancelledAnimation()
-) : ReorderableState<LazyGridItemInfo>(scope, maxScrollPerFrame, onMove, canDragOver, onDragEnd, dragCancelledAnimation) {
+) :
+    ReorderableState<LazyGridItemInfo>(
+        scope,
+        maxScrollPerFrame,
+        onMove,
+        canDragOver,
+        onDragEnd,
+        dragCancelledAnimation
+    ) {
     override val isVerticalScroll: Boolean
         get() = gridState.layoutInfo.orientation == Orientation.Vertical
+
     override val LazyGridItemInfo.left: Int
         get() = offset.x
+
     override val LazyGridItemInfo.right: Int
         get() = offset.x + size.width
+
     override val LazyGridItemInfo.top: Int
         get() = offset.y
+
     override val LazyGridItemInfo.bottom: Int
         get() = offset.y + size.height
+
     override val LazyGridItemInfo.width: Int
         get() = size.width
+
     override val LazyGridItemInfo.height: Int
         get() = size.height
+
     override val LazyGridItemInfo.itemIndex: Int
         get() = index
+
     override val LazyGridItemInfo.itemKey: Any
         get() = key
+
     override val visibleItemsInfo: List<LazyGridItemInfo>
         get() = gridState.layoutInfo.visibleItemsInfo
+
     override val viewportStartOffset: Int
         get() = gridState.layoutInfo.viewportStartOffset
+
     override val viewportEndOffset: Int
         get() = gridState.layoutInfo.viewportEndOffset
+
     override val firstVisibleItemIndex: Int
         get() = gridState.firstVisibleItemIndex
+
     override val firstVisibleItemScrollOffset: Int
         get() = gridState.firstVisibleItemScrollOffset
 

@@ -4,6 +4,7 @@ import com.arkivanov.decompose.ComponentContext
 
 interface WelcomeComponent {
     fun onSignUp()
+
     fun onSignIn()
 }
 
@@ -13,5 +14,6 @@ class DefaultWelcomeComponent(
     private val navigateToSignIn: () -> Unit
 ) : WelcomeComponent, ComponentContext by componentContext {
     override fun onSignUp() = navigateToSignUp()
+
     override fun onSignIn() = navigateToSignIn()
 }

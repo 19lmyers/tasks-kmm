@@ -34,7 +34,16 @@ fun LazyItemScope.ReorderableItem(
     index: Int? = null,
     orientationLocked: Boolean = true,
     content: @Composable BoxScope.(isDragging: Boolean) -> Unit
-) = ReorderableItem(reorderableState, key, modifier, Modifier.animateItemPlacement(), orientationLocked, index, content)
+) =
+    ReorderableItem(
+        reorderableState,
+        key,
+        modifier,
+        Modifier.animateItemPlacement(),
+        orientationLocked,
+        index,
+        content
+    )
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -44,7 +53,16 @@ fun LazyGridItemScope.ReorderableItem(
     modifier: Modifier = Modifier,
     index: Int? = null,
     content: @Composable BoxScope.(isDragging: Boolean) -> Unit
-) = ReorderableItem(reorderableState, key, modifier, Modifier.animateItemPlacement(), false, index, content)
+) =
+    ReorderableItem(
+        reorderableState,
+        key,
+        modifier,
+        Modifier.animateItemPlacement(),
+        false,
+        index,
+        content
+    )
 
 @Composable
 fun ReorderableItem(
@@ -56,36 +74,42 @@ fun ReorderableItem(
     index: Int? = null,
     content: @Composable BoxScope.(isDragging: Boolean) -> Unit
 ) {
-    val isDragging = if (index != null) {
-        index == state.draggingItemIndex
-    } else {
-        key == state.draggingItemKey
-    }
+    val isDragging =
+        if (index != null) {
+            index == state.draggingItemIndex
+        } else {
+            key == state.draggingItemKey
+        }
     val draggingModifier =
         if (isDragging) {
-            Modifier
-                .zIndex(1f)
-                .graphicsLayer {
-                    translationX = if (!orientationLocked || !state.isVerticalScroll) state.draggingItemLeft else 0f
-                    translationY = if (!orientationLocked || state.isVerticalScroll) state.draggingItemTop else 0f
-                }
-        } else {
-            val cancel = if (index != null) {
-                index == state.dragCancelledAnimation.position?.index
-            } else {
-                key == state.dragCancelledAnimation.position?.key
+            Modifier.zIndex(1f).graphicsLayer {
+                translationX =
+                    if (!orientationLocked || !state.isVerticalScroll) state.draggingItemLeft
+                    else 0f
+                translationY =
+                    if (!orientationLocked || state.isVerticalScroll) state.draggingItemTop else 0f
             }
+        } else {
+            val cancel =
+                if (index != null) {
+                    index == state.dragCancelledAnimation.position?.index
+                } else {
+                    key == state.dragCancelledAnimation.position?.key
+                }
             if (cancel) {
-                Modifier.zIndex(1f)
-                    .graphicsLayer {
-                        translationX = if (!orientationLocked || !state.isVerticalScroll) state.dragCancelledAnimation.offset.x else 0f
-                        translationY = if (!orientationLocked || state.isVerticalScroll) state.dragCancelledAnimation.offset.y else 0f
-                    }
+                Modifier.zIndex(1f).graphicsLayer {
+                    translationX =
+                        if (!orientationLocked || !state.isVerticalScroll)
+                            state.dragCancelledAnimation.offset.x
+                        else 0f
+                    translationY =
+                        if (!orientationLocked || state.isVerticalScroll)
+                            state.dragCancelledAnimation.offset.y
+                        else 0f
+                }
             } else {
                 defaultDraggingModifier
             }
         }
-    Box(modifier = modifier.then(draggingModifier)) {
-        content(isDragging)
-    }
+    Box(modifier = modifier.then(draggingModifier)) { content(isDragging) }
 }

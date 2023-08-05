@@ -56,9 +56,7 @@ class DefaultSignUpComponent(
         }
     }
 
-    private val callback = BackCallback {
-        onUp()
-    }
+    private val callback = BackCallback { onUp() }
 
     init {
         backHandler.register(callback)
@@ -76,9 +74,7 @@ class DefaultSignUpComponent(
             _state.value = _state.value.copy(isLoading = false)
 
             if (result is Ok) {
-                withContext(Dispatchers.Main) {
-                    navigateToHome()
-                }
+                withContext(Dispatchers.Main) { navigateToHome() }
             }
         }
     }

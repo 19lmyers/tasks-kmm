@@ -51,9 +51,7 @@ class DefaultChangePasswordComponent(
         }
     }
 
-    private val callback = BackCallback {
-        onUp()
-    }
+    private val callback = BackCallback { onUp() }
 
     init {
         backHandler.register(callback)
@@ -69,7 +67,6 @@ class DefaultChangePasswordComponent(
             _messages.emitAsMessage(result)
 
             _state.value = state.value.copy(isLoading = false, passwordChanged = result is Ok)
-
         }
     }
 }

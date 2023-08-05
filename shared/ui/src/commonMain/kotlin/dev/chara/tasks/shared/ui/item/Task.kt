@@ -61,19 +61,20 @@ private const val KEY_DIVIDER = "KEY_DIVIDER"
 private const val CONTENT_TYPE_TASK = "CONTENT_TYPE_TASK"
 private const val CONTENT_TYPE_DIVIDER = "CONTENT_TYPE_DIVIDER"
 
-fun Modifier.reorderable(
-    state: ReorderableLazyListState,
-    enabled: Boolean
-) = composed(inspectorInfo = debugInspectorInfo {
-    name = "reorderable"
-    value = enabled
-}) {
-    if (enabled) {
-        reorderable(state)
-    } else {
-        this
+fun Modifier.reorderable(state: ReorderableLazyListState, enabled: Boolean) =
+    composed(
+        inspectorInfo =
+            debugInspectorInfo {
+                name = "reorderable"
+                value = enabled
+            }
+    ) {
+        if (enabled) {
+            reorderable(state)
+        } else {
+            this
+        }
     }
-}
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -100,23 +101,18 @@ fun Tasks(
     // TODO store in DB?
     var showCompletedTasks by rememberSaveable { mutableStateOf(false) }
 
-    val reorderableState = rememberReorderableLazyListState(
-        onMove = { from, to ->
-            reorderableTasks = reorderableTasks.apply {
-                add(to.index, removeAt(from.index))
-            }
-            onReorder(from.key as String, from.index, to.index)
-        },
-        canDragOver = { from, _ ->
-            from.index < reorderableTasks.size
-        }
-    )
+    val reorderableState =
+        rememberReorderableLazyListState(
+            onMove = { from, to ->
+                reorderableTasks = reorderableTasks.apply { add(to.index, removeAt(from.index)) }
+                onReorder(from.key as String, from.index, to.index)
+            },
+            canDragOver = { from, _ -> from.index < reorderableTasks.size }
+        )
 
     LazyColumn(
         state = reorderableState.listState,
-        modifier = Modifier
-            .fillMaxSize()
-            .reorderable(reorderableState, allowReorder),
+        modifier = Modifier.fillMaxSize().reorderable(reorderableState, allowReorder),
         contentPadding = PaddingValues(start = 16.dp, end = 16.dp, bottom = 32.dp),
     ) {
         itemsIndexed(
@@ -124,16 +120,13 @@ fun Tasks(
             key = { _, task -> task.id },
             contentType = { _, _ -> CONTENT_TYPE_TASK }
         ) { index, task ->
-            ReorderableItem(
-                reorderableState = reorderableState,
-                key = task.id,
-                index = index
-            ) { isDragging ->
+            ReorderableItem(reorderableState = reorderableState, key = task.id, index = index) {
+                isDragging ->
                 TaskItem(
-                    modifier = Modifier
-                        .animateItemPlacement()
-                        .detectReorderAfterLongPress(reorderableState)
-                        .zIndex(zIndex = if (isDragging) 1f else 0f),
+                    modifier =
+                        Modifier.animateItemPlacement()
+                            .detectReorderAfterLongPress(reorderableState)
+                            .zIndex(zIndex = if (isDragging) 1f else 0f),
                     task = task,
                     onClick = { onClick(it) },
                     onUpdate = { onUpdate(it) },
@@ -155,11 +148,8 @@ fun Tasks(
             }
 
             if (showCompletedTasks) {
-                items(
-                    completedTasks,
-                    key = { it.id },
-                    contentType = { CONTENT_TYPE_TASK }
-                ) { task ->
+                items(completedTasks, key = { it.id }, contentType = { CONTENT_TYPE_TASK }) { task
+                    ->
                     TaskItem(
                         modifier = Modifier.animateItemPlacement(),
                         task = task,
@@ -193,24 +183,20 @@ fun TaskItem(
             Text(
                 text = indexNumber.toString(),
                 style = MaterialTheme.typography.titleLarge,
-                modifier = Modifier
-                    .align(Alignment.CenterVertically)
-                    .padding(horizontal = 8.dp)
+                modifier = Modifier.align(Alignment.CenterVertically).padding(horizontal = 8.dp)
             )
         }
         Surface(
             color = MaterialTheme.colorScheme.surfaceContainerHigh,
-            modifier = Modifier
-                .padding(4.dp)
-                .fillMaxWidth(),
+            modifier = Modifier.padding(4.dp).fillMaxWidth(),
             onClick = { onClick(task) },
             shadowElevation = shadowElevation.value,
             shape = MaterialTheme.shapes.extraLarge,
-            border = BorderStroke(
-                width = 1.dp,
-                color = MaterialTheme.colorScheme.surfaceContainerHighest
-            )
-
+            border =
+                BorderStroke(
+                    width = 1.dp,
+                    color = MaterialTheme.colorScheme.surfaceContainerHighest
+                )
         ) {
             Task(
                 modifier = Modifier.padding(4.dp),
@@ -241,18 +227,11 @@ private fun Task(
                     checked = task.isCompleted,
                     onCheckedChange = { isCompleted ->
                         onUpdate(
-                            task.copy(
-                                isCompleted = isCompleted,
-                                lastModified = Clock.System.now()
-                            )
+                            task.copy(isCompleted = isCompleted, lastModified = Clock.System.now())
                         )
                     }
                 )
-                Column(
-                    modifier = Modifier
-                        .align(Alignment.CenterVertically)
-                        .fillMaxWidth(0.85f)
-                ) {
+                Column(modifier = Modifier.align(Alignment.CenterVertically).fillMaxWidth(0.85f)) {
                     Text(
                         text = task.label,
                         maxLines = 5,
@@ -278,8 +257,7 @@ private fun Task(
             )
         }
         IconToggleButton(
-            modifier = Modifier
-                .align(Alignment.TopEnd),
+            modifier = Modifier.align(Alignment.TopEnd),
             checked = task.isStarred,
             onCheckedChange = { isStarred ->
                 onUpdate(task.copy(isStarred = isStarred, lastModified = Clock.System.now()))
@@ -302,11 +280,7 @@ private fun TaskChips(
     onTaskClicked: (Task) -> Unit,
     formatter: FriendlyDateFormatter = koinInject()
 ) {
-    Row(
-        modifier = Modifier
-            .padding(horizontal = 8.dp)
-            .horizontalScroll(rememberScrollState())
-    ) {
+    Row(modifier = Modifier.padding(horizontal = 8.dp).horizontalScroll(rememberScrollState())) {
         if (parentList != null) {
             ListChip(list = parentList, onClick = onListClicked)
         }
@@ -315,7 +289,8 @@ private fun TaskChips(
                 task.reminderDate,
                 formatDateTime = { formatter.formatDateTime(it) },
                 selectable = false,
-                onClick = { onTaskClicked(task) })
+                onClick = { onTaskClicked(task) }
+            )
         }
         if (task.dueDate != null) {
             DueDateChip(
@@ -335,17 +310,18 @@ private fun CompletedTasksDivider(
     setExpanded: (Boolean) -> Unit,
     count: Int
 ) {
-    Box(modifier = modifier
-        .fillMaxWidth()
-        .clip(MaterialTheme.shapes.extraLarge)
-        .clickable { setExpanded(!expanded) }
-        .padding(16.dp)
+    Box(
+        modifier =
+            modifier
+                .fillMaxWidth()
+                .clip(MaterialTheme.shapes.extraLarge)
+                .clickable { setExpanded(!expanded) }
+                .padding(16.dp)
     ) {
         Text(
             text = "Completed ($count)",
             style = MaterialTheme.typography.bodyLarge,
-            modifier = Modifier
-                .align(Alignment.CenterStart)
+            modifier = Modifier.align(Alignment.CenterStart)
         )
         if (expanded) {
             Icon(

@@ -57,15 +57,14 @@ class DefaultVerifyEmailComponent(
         }
     }
 
-    private val callback = BackCallback {
-        onUp()
-    }
+    private val callback = BackCallback { onUp() }
 
     init {
         backHandler.register(callback)
     }
 
     override fun onHome() = navigateToHome()
+
     override fun validateEmail(email: String) = EmailValidator(email)
 
     override fun verifyEmail(email: String) {

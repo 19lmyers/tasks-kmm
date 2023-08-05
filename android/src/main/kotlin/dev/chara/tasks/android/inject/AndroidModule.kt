@@ -23,6 +23,4 @@ fun androidDataLayer() = module {
     factory { Endpoint(BuildConfig.ENDPOINT_URL) }
 }
 
-fun androidUiLayer() = module {
-    single { FriendlyDateFormatter(androidContext()) }
-}
+fun androidUiLayer() = module { single { FriendlyDateFormatter(androidContext()) } }

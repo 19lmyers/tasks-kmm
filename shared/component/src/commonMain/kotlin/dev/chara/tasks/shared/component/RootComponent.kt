@@ -62,17 +62,25 @@ interface RootComponent {
 
     sealed class Child {
         class Welcome(val component: WelcomeComponent) : Child()
+
         class SignUp(val component: SignUpComponent) : Child()
+
         class SignIn(val component: SignInComponent) : Child()
+
         class ForgotPassword(val component: ForgotPasswordComponent) : Child()
 
         class Home(val component: HomeComponent) : Child()
+
         class Profile(val component: ProfileComponent) : Child()
+
         class Settings(val component: SettingsComponent) : Child()
+
         class ChangeEmail(val component: ChangeEmailComponent) : Child()
+
         class ChangePassword(val component: ChangePasswordComponent) : Child()
 
         class VerifyEmail(val component: VerifyEmailComponent) : Child()
+
         class ResetPassword(val component: ResetPasswordComponent) : Child()
     }
 }
@@ -91,166 +99,118 @@ class DefaultRootComponent(
 
     init {
         coroutineScope.launch {
-            combine(
-                repository.getAppTheme(),
-                repository.getAppThemeVariant()
-            ) { theme, variant ->
-                RootUiState(
-                    appTheme = theme,
-                    appThemeVariant = variant
-                )
-            }.collect {
-                _state.value = it
-            }
+            combine(repository.getAppTheme(), repository.getAppThemeVariant()) { theme, variant ->
+                    RootUiState(appTheme = theme, appThemeVariant = variant)
+                }
+                .collect { _state.value = it }
         }
     }
 
     private val navigation = StackNavigation<Config>()
 
-    private val stack = childStack(
-        source = navigation,
-        initialStack = { listOf(getStackFor(deepLink)) },
-        childFactory = ::child,
-        handleBackButton = true
-    )
+    private val stack =
+        childStack(
+            source = navigation,
+            initialStack = { listOf(getStackFor(deepLink)) },
+            childFactory = ::child,
+            handleBackButton = true
+        )
 
     override val childStack: Value<ChildStack<*, Child>> = stack
 
     private fun child(config: Config, componentContext: ComponentContext): Child =
         when (config) {
-            Config.Welcome -> Child.Welcome(
-                DefaultWelcomeComponent(
-                    componentContext,
-                    navigateToSignUp = {
-                        navigation.push(Config.SignUp)
-                    },
-                    navigateToSignIn = {
-                        navigation.push(Config.SignIn)
-                    }
+            Config.Welcome ->
+                Child.Welcome(
+                    DefaultWelcomeComponent(
+                        componentContext,
+                        navigateToSignUp = { navigation.push(Config.SignUp) },
+                        navigateToSignIn = { navigation.push(Config.SignIn) }
+                    )
                 )
-            )
-
-            Config.SignUp -> Child.SignUp(
-                DefaultSignUpComponent(
-                    componentContext,
-                    navigateUp = {
-                        navigation.pop()
-                    },
-                    navigateToHome = {
-                        navigation.replaceAll(Config.Home.Default)
-                    }
+            Config.SignUp ->
+                Child.SignUp(
+                    DefaultSignUpComponent(
+                        componentContext,
+                        navigateUp = { navigation.pop() },
+                        navigateToHome = { navigation.replaceAll(Config.Home.Default) }
+                    )
                 )
-            )
-
-            Config.SignIn -> Child.SignIn(
-                DefaultSignInComponent(
-                    componentContext,
-                    navigateUp = {
-                        navigation.pop()
-                    },
-                    navigateToForgotPassword = {
-                        navigation.push(Config.ForgotPassword)
-                    },
-                    navigateToHome = {
-                        navigation.replaceAll(Config.Home.Default)
-                    }
+            Config.SignIn ->
+                Child.SignIn(
+                    DefaultSignInComponent(
+                        componentContext,
+                        navigateUp = { navigation.pop() },
+                        navigateToForgotPassword = { navigation.push(Config.ForgotPassword) },
+                        navigateToHome = { navigation.replaceAll(Config.Home.Default) }
+                    )
                 )
-            )
-
-            Config.ForgotPassword -> Child.ForgotPassword(
-                DefaultForgotPasswordComponent(
-                    componentContext,
-                    navigateUp = {
-                        navigation.pop()
-                    }
+            Config.ForgotPassword ->
+                Child.ForgotPassword(
+                    DefaultForgotPasswordComponent(
+                        componentContext,
+                        navigateUp = { navigation.pop() }
+                    )
                 )
-            )
-
-            is Config.Home -> Child.Home(
-                DefaultHomeComponent(
-                    componentContext,
-                    defaultListId = if (config is Config.Home.WithListDetails) config.id else null,
-                    defaultTaskId = if (config is Config.Home.WithTaskDetails) config.id else null,
-                    showCreateTaskSheet = config is Config.Home.WithCreateTask,
-                    navigateToWelcome = {
-                        navigation.replaceAll(Config.Welcome)
-                    },
-                    navigateToProfile = {
-                        navigation.push(Config.Profile)
-                    },
-                    navigateToSettings = {
-                        navigation.push(Config.Settings)
-                    }
+            is Config.Home ->
+                Child.Home(
+                    DefaultHomeComponent(
+                        componentContext,
+                        defaultListId =
+                            if (config is Config.Home.WithListDetails) config.id else null,
+                        defaultTaskId =
+                            if (config is Config.Home.WithTaskDetails) config.id else null,
+                        showCreateTaskSheet = config is Config.Home.WithCreateTask,
+                        navigateToWelcome = { navigation.replaceAll(Config.Welcome) },
+                        navigateToProfile = { navigation.push(Config.Profile) },
+                        navigateToSettings = { navigation.push(Config.Settings) }
+                    )
                 )
-            )
-
-            Config.Profile -> Child.Profile(
-                DefaultProfileComponent(
-                    componentContext,
-                    navigateUp = {
-                        navigation.pop()
-                    },
-                    navigateToChangeEmail = {
-                        navigation.push(Config.ChangeEmail)
-                    },
-                    navigateToChangePassword = {
-                        navigation.push(Config.ChangePassword)
-                    }
+            Config.Profile ->
+                Child.Profile(
+                    DefaultProfileComponent(
+                        componentContext,
+                        navigateUp = { navigation.pop() },
+                        navigateToChangeEmail = { navigation.push(Config.ChangeEmail) },
+                        navigateToChangePassword = { navigation.push(Config.ChangePassword) }
+                    )
                 )
-            )
-
-            Config.Settings -> Child.Settings(
-                DefaultSettingsComponent(
-                    componentContext,
-                    navigateUp = {
-                        navigation.pop()
-                    }
+            Config.Settings ->
+                Child.Settings(
+                    DefaultSettingsComponent(componentContext, navigateUp = { navigation.pop() })
                 )
-            )
-
-            Config.ChangeEmail -> Child.ChangeEmail(
-                DefaultChangeEmailComponent(
-                    componentContext,
-                    navigateUp = {
-                        navigation.pop()
-                    },
+            Config.ChangeEmail ->
+                Child.ChangeEmail(
+                    DefaultChangeEmailComponent(
+                        componentContext,
+                        navigateUp = { navigation.pop() },
+                    )
                 )
-            )
-
-            Config.ChangePassword -> Child.ChangePassword(
-                DefaultChangePasswordComponent(
-                    componentContext,
-                    navigateUp = {
-                        navigation.pop()
-                    },
+            Config.ChangePassword ->
+                Child.ChangePassword(
+                    DefaultChangePasswordComponent(
+                        componentContext,
+                        navigateUp = { navigation.pop() },
+                    )
                 )
-            )
-
-            is Config.VerifyEmail -> Child.VerifyEmail(
-                DefaultVerifyEmailComponent(
-                    componentContext,
-                    verifyToken = config.verifyToken,
-                    navigateUp = {
-                        navigation.pop()
-                    },
-                    navigateToHome = {
-                        navigation.replaceAll(Config.Home.Default)
-                    }
+            is Config.VerifyEmail ->
+                Child.VerifyEmail(
+                    DefaultVerifyEmailComponent(
+                        componentContext,
+                        verifyToken = config.verifyToken,
+                        navigateUp = { navigation.pop() },
+                        navigateToHome = { navigation.replaceAll(Config.Home.Default) }
+                    )
                 )
-            )
-
-            is Config.ResetPassword -> Child.ResetPassword(
-                DefaultResetPasswordComponent(
-                    componentContext,
-                    resetToken = config.resetToken,
-                    navigateUp = {
-                        navigation.pop()
-                    },
-                    navigateToSignIn = {
-                        navigation.replaceAll(Config.Welcome, Config.SignIn)
-                    }
+            is Config.ResetPassword ->
+                Child.ResetPassword(
+                    DefaultResetPasswordComponent(
+                        componentContext,
+                        resetToken = config.resetToken,
+                        navigateUp = { navigation.pop() },
+                        navigateToSignIn = { navigation.replaceAll(Config.Welcome, Config.SignIn) }
+                    )
                 )
-            )
         }
 
     override fun onDeepLink(deepLink: DeepLink) {
@@ -262,12 +222,12 @@ class DefaultRootComponent(
             withContext(Dispatchers.IO) {
                 val task = repository.getTaskById(id).first() ?: return@withContext
 
-                val result = repository.updateTask(
-                    task.listId, task.id, task.copy(
-                        isCompleted = true,
-                        lastModified = Clock.System.now()
+                val result =
+                    repository.updateTask(
+                        task.listId,
+                        task.id,
+                        task.copy(isCompleted = true, lastModified = Clock.System.now())
                     )
-                )
                 // TODO show snackbar
             }
         }
@@ -285,62 +245,44 @@ class DefaultRootComponent(
         private fun getStackFor(deepLink: DeepLink): Config =
             when (deepLink) {
                 DeepLink.None -> Config.Home.Default
-
                 is DeepLink.ViewList -> Config.Home.WithListDetails(deepLink.id)
                 is DeepLink.ViewTask -> Config.Home.WithTaskDetails(deepLink.id)
-
                 DeepLink.CreateTask -> Config.Home.WithCreateTask
-
                 is DeepLink.VerifyEmail -> Config.VerifyEmail(deepLink.token)
                 is DeepLink.ResetPassword -> Config.ResetPassword(deepLink.token)
             }
     }
 
     private sealed interface Config : Parcelable {
-        @Parcelize
-        object Welcome : Config
+        @Parcelize object Welcome : Config
 
-        @Parcelize
-        object SignUp : Config
+        @Parcelize object SignUp : Config
 
-        @Parcelize
-        object SignIn : Config
+        @Parcelize object SignIn : Config
 
-        @Parcelize
-        object ForgotPassword : Config
+        @Parcelize object ForgotPassword : Config
 
         sealed interface Home : Config {
 
-            @Parcelize
-            object Default : Home
+            @Parcelize object Default : Home
 
-            @Parcelize
-            data class WithListDetails(val id: String) : Home
+            @Parcelize data class WithListDetails(val id: String) : Home
 
-            @Parcelize
-            data class WithTaskDetails(val id: String) : Home
+            @Parcelize data class WithTaskDetails(val id: String) : Home
 
-            @Parcelize
-            object WithCreateTask : Home
+            @Parcelize object WithCreateTask : Home
         }
 
-        @Parcelize
-        object Profile : Config
+        @Parcelize object Profile : Config
 
-        @Parcelize
-        object Settings : Config
+        @Parcelize object Settings : Config
 
-        @Parcelize
-        object ChangeEmail : Config
+        @Parcelize object ChangeEmail : Config
 
-        @Parcelize
-        object ChangePassword : Config
+        @Parcelize object ChangePassword : Config
 
-        @Parcelize
-        class VerifyEmail(val verifyToken: String) : Config
+        @Parcelize class VerifyEmail(val verifyToken: String) : Config
 
-        @Parcelize
-        class ResetPassword(val resetToken: String) : Config
+        @Parcelize class ResetPassword(val resetToken: String) : Config
     }
-
 }

@@ -8,12 +8,14 @@ plugins {
     alias(libs.plugins.android.library)
 
     alias(libs.plugins.sqldelight)
+
+    alias(libs.plugins.ktfmt)
 }
 
 kotlin {
     jvmToolchain(17)
 
-    android()
+    androidTarget()
 
     iosX64()
     iosArm64()
@@ -90,4 +92,8 @@ sqldelight {
             verifyMigrations.set(true)
         }
     }
+}
+
+ktfmt {
+    kotlinLangStyle()
 }

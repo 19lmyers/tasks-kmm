@@ -1,14 +1,14 @@
 [versions]
 android = "8.2.0-alpha15"
-kotlin = "1.8.22"
+kotlin = "1.9.0"
 
 coroutines = "1.7.3"
 glance = "1.0.0-rc01"
 koin = "3.4.3"
-ktor = "2.3.2"
+ktor = "2.3.3"
 result = "1.1.18"
 
-kermit = "1.0.3"
+kermit = "2.0.0-RC5"
 decompose = "2.1.0-compose-experimental-alpha-06"
 sqldelight = "2.0.0"
 
@@ -17,7 +17,7 @@ sqldelight = "2.0.0"
 android-application = { id = "com.android.application", version.ref = "android" }
 android-library = { id = "com.android.library", version.ref = "android" }
 
-crashlytics = { id = "com.google.firebase.crashlytics", version = "2.9.7" }
+crashlytics = { id = "com.google.firebase.crashlytics", version = "2.9.8" }
 
 google-services = { id = "com.google.gms.google-services", version = "4.3.15" }
 
@@ -29,6 +29,8 @@ kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-plugin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 
 kotlin-atomicfu = { id = "org.jetbrains.kotlin.plugin.atomicfu", version.ref = "kotlin" }
+
+ktfmt = { id = "com.ncorti.ktfmt.gradle", version = "0.13.0" }
 
 sqldelight = { id = "app.cash.sqldelight", version.ref = "sqldelight" }
 
@@ -63,13 +65,13 @@ desugar_jdk_libs = { module = "com.android.tools:desugar_jdk_libs", version = "2
 
 essenty = { module = "com.arkivanov.essenty:lifecycle", version = "1.2.0-alpha-03" }
 
-firebase-bom = { module = "com.google.firebase:firebase-bom", version = "32.2.0" }
+firebase-bom = { module = "com.google.firebase:firebase-bom", version = "32.2.2" }
 
 firebase-analytics = { module = "com.google.firebase:firebase-analytics-ktx" }
 firebase-messaging = { module = "com.google.firebase:firebase-messaging-ktx" }
 firebase-crashlytics = { module = "com.google.firebase:firebase-crashlytics-ktx" }
 
-kamel = { module = "media.kamel:kamel-image", version = "0.7.0" }
+kamel = { module = "media.kamel:kamel-image", version = "0.7.1" }
 
 kermit = { module = "co.touchlab:kermit", version.ref = "kermit" }
 kermit-crashlytics = { module = "co.touchlab:kermit-crashlytics", version.ref = "kermit" }
@@ -103,7 +105,7 @@ nserrorkt = { module = "com.rickclephas.kmp:nserror-kt", version = "0.1.0" }
 result = { module = "com.michael-bull.kotlin-result:kotlin-result", version.ref = "result" }
 result-coroutines = { module = "com.michael-bull.kotlin-result:kotlin-result-coroutines", version.ref = "result" }
 
-okio = { module = "com.squareup.okio:okio", version = "3.4.0" }
+okio = { module = "com.squareup.okio:okio", version = "3.5.0" }
 
 sqldelight-dialect = { module = "app.cash.sqldelight:sqlite-3-38-dialect", version.ref = "sqldelight" }
 sqldelight-coroutines-extensions = { module = "app.cash.sqldelight:coroutines-extensions", version.ref = "sqldelight" }
@@ -113,7 +115,7 @@ sqldelight-native-driver = { module = "app.cash.sqldelight:native-driver", versi
 
 sqlite-android = { module = "com.github.requery:sqlite-android", version = "3.42.0" }
 
-uuid = { module = "com.benasher44:uuid", version = "0.7.0" }
+uuid = { module = "com.benasher44:uuid", version = "0.8.0" }
 
 window-size = { module = "dev.chrisbanes.material3:material3-window-size-class-multiplatform", version = "0.2.0" }
 

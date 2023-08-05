@@ -15,16 +15,12 @@ import dev.chara.tasks.shared.ui.theme.color.style
 import dev.chara.tasks.shared.ui.theme.extend.ExtendSurfaceColors
 
 val LocalDarkTheme = staticCompositionLocalOf {
-    false //default to light theme
+    false // default to light theme
 }
 
-val LocalThemeVariant = staticCompositionLocalOf {
-    ThemeVariant.TONAL_SPOT
-}
+val LocalThemeVariant = staticCompositionLocalOf { ThemeVariant.TONAL_SPOT }
 
-val LocalSeedColor = staticCompositionLocalOf {
-    Color(0xFF6750A4)
-}
+val LocalSeedColor = staticCompositionLocalOf { Color(0xFF6750A4) }
 
 @Composable
 fun AppTheme(
@@ -35,11 +31,12 @@ fun AppTheme(
 ) {
     val default = LocalSeedColor.current
 
-    val seed = if (dynamicColor) {
-        getPlatformColor(default)
-    } else {
-        default
-    }
+    val seed =
+        if (dynamicColor) {
+            getPlatformColor(default)
+        } else {
+            default
+        }
 
     CompositionLocalProvider(
         LocalDarkTheme provides darkTheme,
@@ -51,14 +48,8 @@ fun AppTheme(
             useDarkTheme = darkTheme,
             style = variant.style,
         ) {
-            ExtendSurfaceColors(
-                seedColor = seed,
-                useDarkTheme = darkTheme,
-                style = variant.style
-            ) {
-                MaterialTheme(typography = typography) {
-                    content()
-                }
+            ExtendSurfaceColors(seedColor = seed, useDarkTheme = darkTheme, style = variant.style) {
+                MaterialTheme(typography = typography) { content() }
             }
         }
     }
@@ -78,14 +69,8 @@ fun ColorTheme(
         useDarkTheme = darkTheme,
         style = variant.style,
     ) {
-        ExtendSurfaceColors(
-            seedColor = seed,
-            useDarkTheme = darkTheme,
-            style = variant.style
-        ) {
-            MaterialTheme(typography = typography) {
-                content()
-            }
+        ExtendSurfaceColors(seedColor = seed, useDarkTheme = darkTheme, style = variant.style) {
+            MaterialTheme(typography = typography) { content() }
         }
     }
 }
@@ -102,14 +87,8 @@ fun DynamicTheme(
         useDarkTheme = darkTheme,
         style = variant.style,
     ) {
-        ExtendSurfaceColors(
-            seedColor = seed,
-            useDarkTheme = darkTheme,
-            style = variant.style
-        ) {
-            MaterialTheme(typography = typography) {
-                content()
-            }
+        ExtendSurfaceColors(seedColor = seed, useDarkTheme = darkTheme, style = variant.style) {
+            MaterialTheme(typography = typography) { content() }
         }
     }
 }

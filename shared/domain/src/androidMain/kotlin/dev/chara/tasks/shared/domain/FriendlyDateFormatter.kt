@@ -8,9 +8,10 @@ actual class FriendlyDateFormatter(private val context: Context) {
     actual fun formatDate(value: Instant): String {
         val millis = value.toEpochMilliseconds()
 
-        val flags = (DateUtils.FORMAT_SHOW_DATE
-                or DateUtils.FORMAT_SHOW_WEEKDAY
-                or DateUtils.FORMAT_ABBREV_ALL)
+        val flags =
+            (DateUtils.FORMAT_SHOW_DATE or
+                DateUtils.FORMAT_SHOW_WEEKDAY or
+                DateUtils.FORMAT_ABBREV_ALL)
 
         return DateUtils.formatDateTime(context, millis, flags)
     }
@@ -22,7 +23,10 @@ actual class FriendlyDateFormatter(private val context: Context) {
 
         if (!DateUtils.isToday(millis)) {
             flags =
-                flags or DateUtils.FORMAT_SHOW_DATE or DateUtils.FORMAT_SHOW_WEEKDAY or DateUtils.FORMAT_ABBREV_ALL
+                flags or
+                    DateUtils.FORMAT_SHOW_DATE or
+                    DateUtils.FORMAT_SHOW_WEEKDAY or
+                    DateUtils.FORMAT_ABBREV_ALL
         }
 
         return DateUtils.formatDateTime(context, millis, flags)

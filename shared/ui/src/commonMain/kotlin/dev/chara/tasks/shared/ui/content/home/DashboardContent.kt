@@ -75,7 +75,8 @@ private const val CONTENT_TYPE_LIST = "CONTENT_TYPE_LIST"
 private const val CONTENT_TYPE_CREATE = "CONTENT_TYPE_CREATE"
 
 @OptIn(
-    ExperimentalFoundationApi::class, ExperimentalMaterialApi::class,
+    ExperimentalFoundationApi::class,
+    ExperimentalMaterialApi::class,
     ExperimentalLayoutApi::class
 )
 @Composable
@@ -95,34 +96,26 @@ fun DashboardContent(
     val coroutineScope = rememberCoroutineScope()
 
     Box(
-        modifier = Modifier
-            .padding(paddingTop)
-            .consumeWindowInsets(paddingTop)
-            .pullRefresh(pullRefreshState)
+        modifier =
+            Modifier.padding(paddingTop)
+                .consumeWindowInsets(paddingTop)
+                .pullRefresh(pullRefreshState)
     ) {
         LazyColumn(
-            modifier = Modifier.fillMaxSize()
-                .nestedScroll(nestedScrollConnection),
+            modifier = Modifier.fillMaxSize().nestedScroll(nestedScrollConnection),
             state = listState,
             contentPadding = paddingBottom
         ) {
             if (state.value.boardSections.isNotEmpty()) {
-                stickyHeader(
-                    key = "board",
-                    contentType = CONTENT_TYPE_HEADER
-                ) {
-                    val elevation: Dp by animateDpAsState(
-                        targetValue = if (listState.firstVisibleItemIndex > 0) 3.dp else 0.dp,
-                        animationSpec = spring(stiffness = Spring.StiffnessMediumLow)
-                    )
+                stickyHeader(key = "board", contentType = CONTENT_TYPE_HEADER) {
+                    val elevation: Dp by
+                        animateDpAsState(
+                            targetValue = if (listState.firstVisibleItemIndex > 0) 3.dp else 0.dp,
+                            animationSpec = spring(stiffness = Spring.StiffnessMediumLow)
+                        )
 
-                    SectionHeader(
-                        title = "Dashboard",
-                        elevation = elevation
-                    ) {
-                        coroutineScope.launch {
-                            listState.animateScrollToItem(0)
-                        }
+                    SectionHeader(title = "Dashboard", elevation = elevation) {
+                        coroutineScope.launch { listState.animateScrollToItem(0) }
                     }
                 }
             }
@@ -145,12 +138,8 @@ fun DashboardContent(
                                 modifier = Modifier.padding(horizontal = 4.dp),
                                 task = task,
                                 parentList = parentList,
-                                onListClicked = {
-                                    component.onListClicked(it)
-                                },
-                                onClick = {
-                                    component.onTaskClicked(it)
-                                },
+                                onListClicked = { component.onListClicked(it) },
+                                onClick = { component.onTaskClicked(it) },
                                 onUpdate = { component.updateTask(it) }
                             )
                         }
@@ -159,19 +148,21 @@ fun DashboardContent(
             }
 
             if (state.value.boardSections.isNotEmpty()) {
-                stickyHeader(
-                    key = "list",
-                    contentType = CONTENT_TYPE_HEADER
-                ) {
-                    val elevation: Dp by animateDpAsState(
-                        targetValue = if (listState.firstVisibleItemIndex > state.value.boardSections.size) 3.dp else 0.dp,
-                        animationSpec = spring(stiffness = Spring.StiffnessMediumLow)
-                    )
+                stickyHeader(key = "list", contentType = CONTENT_TYPE_HEADER) {
+                    val elevation: Dp by
+                        animateDpAsState(
+                            targetValue =
+                                if (
+                                    listState.firstVisibleItemIndex > state.value.boardSections.size
+                                ) {
+                                    3.dp
+                                } else {
+                                    0.dp
+                                },
+                            animationSpec = spring(stiffness = Spring.StiffnessMediumLow)
+                        )
 
-                    SectionHeader(
-                        title = "Lists",
-                        elevation = elevation
-                    ) {
+                    SectionHeader(title = "Lists", elevation = elevation) {
                         coroutineScope.launch {
                             listState.animateScrollToItem(state.value.boardSections.size + 1)
                         }
@@ -195,9 +186,7 @@ fun DashboardContent(
                         TaskItem(
                             modifier = Modifier.padding(horizontal = 4.dp),
                             task = task,
-                            onClick = {
-                                component.onTaskClicked(it)
-                            },
+                            onClick = { component.onTaskClicked(it) },
                             onUpdate = { component.updateTask(it) },
                             showIndexNumbers = boardList.taskList.showIndexNumbers,
                             indexNumber = index + 1
@@ -224,13 +213,9 @@ fun DashboardContent(
                 }
             }
 
-            item(
-                key = "create",
-                contentType = CONTENT_TYPE_CREATE
-            ) {
+            item(key = "create", contentType = CONTENT_TYPE_CREATE) {
                 CreateListItem(
-                    Modifier
-                        .animateItemPlacement()
+                    Modifier.animateItemPlacement()
                         .padding(horizontal = 16.dp, vertical = 8.dp)
                         .fillMaxWidth(),
                     onClick = { component.onCreateList() }
@@ -253,9 +238,10 @@ fun DashboardContent(
             icon = { Icon(Icons.Filled.Add, contentDescription = "New task") },
             onClick = { component.onCreateTask() },
             expanded = !listState.canScrollBackward,
-            modifier = Modifier.align(Alignment.BottomEnd)
-                .padding(horizontal = 24.dp, vertical = 16.dp)
-                .padding(paddingBottom)
+            modifier =
+                Modifier.align(Alignment.BottomEnd)
+                    .padding(horizontal = 24.dp, vertical = 16.dp)
+                    .padding(paddingBottom)
         )
     }
 }
@@ -287,17 +273,13 @@ private fun LazyItemScope.BoardSectionCard(
 ) {
     DynamicTheme(seed = tintColor) {
         BoardSectionCardSurface(
-            modifier = Modifier
-                .animateItemPlacement()
-                .padding(horizontal = 16.dp, vertical = 8.dp)
-                .fillMaxWidth(),
+            modifier =
+                Modifier.animateItemPlacement()
+                    .padding(horizontal = 16.dp, vertical = 8.dp)
+                    .fillMaxWidth(),
             shape = MaterialTheme.shapes.extraLarge,
         ) {
-            CardContent(
-                title = title,
-                icon = icon,
-                content = content
-            )
+            CardContent(title = title, icon = icon, content = content)
         }
     }
 }
@@ -309,21 +291,24 @@ private fun BoardSectionCardSurface(
     content: @Composable () -> Unit
 ) {
     Box(
-        modifier = modifier.clip(shape)
-            .background(
-                Brush.linearGradient(
-                    listOf(
-                        MaterialTheme.colorScheme.surfaceContainerLow,
-                        MaterialTheme.colorScheme.surfaceContainerHigh
-                    ),
-                    start = Offset.Zero,
-                    end = Offset.Infinite
+        modifier =
+            modifier
+                .clip(shape)
+                .background(
+                    Brush.linearGradient(
+                        listOf(
+                            MaterialTheme.colorScheme.surfaceContainerLow,
+                            MaterialTheme.colorScheme.surfaceContainerHigh
+                        ),
+                        start = Offset.Zero,
+                        end = Offset.Infinite
+                    )
                 )
-            ).border(
-                width = 1.dp,
-                color = MaterialTheme.colorScheme.surfaceContainerHighest,
-                shape = shape
-            )
+                .border(
+                    width = 1.dp,
+                    color = MaterialTheme.colorScheme.surfaceContainerHighest,
+                    shape = shape
+                )
     ) {
         content()
     }
@@ -341,10 +326,10 @@ private fun LazyItemScope.ListCard(
 ) {
     ColorTheme(color = tintColor) {
         ListCardSurface(
-            modifier = Modifier
-                .animateItemPlacement()
-                .padding(horizontal = 16.dp, vertical = 8.dp)
-                .fillMaxWidth(),
+            modifier =
+                Modifier.animateItemPlacement()
+                    .padding(horizontal = 16.dp, vertical = 8.dp)
+                    .fillMaxWidth(),
             shape = MaterialTheme.shapes.extraLarge,
             onClick = onClick
         ) {
@@ -372,10 +357,11 @@ private fun ListCardSurface(
             modifier = modifier,
             shape = shape,
             onClick = onClick,
-            border = BorderStroke(
-                width = 1.dp,
-                color = MaterialTheme.colorScheme.surfaceContainerHighest
-            )
+            border =
+                BorderStroke(
+                    width = 1.dp,
+                    color = MaterialTheme.colorScheme.surfaceContainerHighest
+                )
         ) {
             content()
         }
@@ -384,10 +370,11 @@ private fun ListCardSurface(
             color = MaterialTheme.colorScheme.surfaceContainer,
             modifier = modifier,
             shape = shape,
-            border = BorderStroke(
-                width = 1.dp,
-                color = MaterialTheme.colorScheme.surfaceContainerHighest
-            )
+            border =
+                BorderStroke(
+                    width = 1.dp,
+                    color = MaterialTheme.colorScheme.surfaceContainerHighest
+                )
         ) {
             content()
         }
@@ -406,9 +393,7 @@ private fun CardContent(
         Box(modifier = Modifier.padding(horizontal = 16.dp).fillMaxWidth()) {
             Row {
                 Icon(
-                    modifier = Modifier
-                        .padding(8.dp)
-                        .align(Alignment.CenterVertically),
+                    modifier = Modifier.padding(8.dp).align(Alignment.CenterVertically),
                     imageVector = icon,
                     tint = MaterialTheme.colorScheme.primary,
                     contentDescription = null
@@ -434,9 +419,8 @@ private fun CardContent(
         }
         if (description != null) {
             Text(
-                modifier = Modifier
-                    .padding(horizontal = 8.dp)
-                    .padding(start = 16.dp, bottom = 8.dp),
+                modifier =
+                    Modifier.padding(horizontal = 8.dp).padding(start = 16.dp, bottom = 8.dp),
                 text = description,
                 style = MaterialTheme.typography.bodyLarge,
             )
@@ -446,15 +430,13 @@ private fun CardContent(
 }
 
 @Composable
-private fun ViewMore(
-    text: String,
-    onClick: () -> Unit
-) {
-    Box(modifier = Modifier
-        .fillMaxWidth()
-        .clip(MaterialTheme.shapes.extraLarge)
-        .clickable { onClick() }
-        .padding(horizontal = 24.dp, vertical = 12.dp)
+private fun ViewMore(text: String, onClick: () -> Unit) {
+    Box(
+        modifier =
+            Modifier.fillMaxWidth()
+                .clip(MaterialTheme.shapes.extraLarge)
+                .clickable { onClick() }
+                .padding(horizontal = 24.dp, vertical = 12.dp)
     ) {
         Text(
             text = text,
@@ -471,10 +453,7 @@ private fun ViewMore(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CreateListItem(
-    modifier: Modifier = Modifier,
-    onClick: () -> Unit
-) {
+fun CreateListItem(modifier: Modifier = Modifier, onClick: () -> Unit) {
     OutlinedCard(
         modifier = modifier,
         onClick = { onClick() },
@@ -483,18 +462,12 @@ fun CreateListItem(
     ) {
         Row(modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)) {
             Icon(
-                modifier = Modifier
-                    .padding(8.dp)
-                    .align(Alignment.CenterVertically),
+                modifier = Modifier.padding(8.dp).align(Alignment.CenterVertically),
                 imageVector = Icons.Filled.Add,
                 contentDescription = "Add",
                 tint = MaterialTheme.colorScheme.primary
             )
-            Column(
-                modifier = Modifier
-                    .padding(16.dp)
-                    .align(Alignment.CenterVertically)
-            ) {
+            Column(modifier = Modifier.padding(16.dp).align(Alignment.CenterVertically)) {
                 Text(
                     style = MaterialTheme.typography.headlineSmall,
                     text = "New list",

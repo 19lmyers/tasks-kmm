@@ -49,20 +49,19 @@ class DefaultDashboardComponent(
     init {
         coroutineScope.launch {
             combine(
-                repository.getBoardSections(),
-                repository.getBoardLists(),
-                repository.getLists(),
-            ) { boardSections, pinnedLists, allLists ->
-                DashboardUiState(
-                    isLoading = false,
-                    isRefreshing = false,
-                    boardSections = boardSections,
-                    boardLists = pinnedLists,
-                    allLists = allLists
-                )
-            }.collect {
-                _state.value = it
-            }
+                    repository.getBoardSections(),
+                    repository.getBoardLists(),
+                    repository.getLists(),
+                ) { boardSections, pinnedLists, allLists ->
+                    DashboardUiState(
+                        isLoading = false,
+                        isRefreshing = false,
+                        boardSections = boardSections,
+                        boardLists = pinnedLists,
+                        allLists = allLists
+                    )
+                }
+                .collect { _state.value = it }
         }
     }
 
@@ -71,13 +70,14 @@ class DefaultDashboardComponent(
             _state.value = state.value.copy(isRefreshing = true)
 
             val result = repository.refresh()
-            //_messages.emitAsMessage(result) TODO fix snackbar
+            // _messages.emitAsMessage(result) TODO fix snackbar
         }
     }
 
     override fun onCreateList() = navigateToCreateList()
 
     override fun onCreateTask() = navigateToCreateTask()
+
     override fun onListClicked(taskList: TaskList) = navigateToListDetails(taskList)
 
     override fun onTaskClicked(task: Task) = navigateToTaskDetails(task)
@@ -85,7 +85,7 @@ class DefaultDashboardComponent(
     override fun updateTask(task: Task) {
         coroutineScope.launch {
             repository.updateTask(task.listId, task.id, task)
-            //_messages.emitAsMessage(result, successMessage = "Task updated") TODO fix snackbar
+            // _messages.emitAsMessage(result, successMessage = "Task updated") TODO fix snackbar
         }
     }
 }

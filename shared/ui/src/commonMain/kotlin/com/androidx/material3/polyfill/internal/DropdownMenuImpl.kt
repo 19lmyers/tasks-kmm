@@ -75,68 +75,66 @@ internal fun DropdownMenuContent(
     // Menu open/close animation.
     val transition = updateTransition(expandedStates, "DropDownMenu")
 
-    val scale by transition.animateFloat(
-        transitionSpec = {
-            if (false isTransitioningTo true) {
-                // Dismissed to expanded
-                tween(
-                    durationMillis = InTransitionDuration,
-                    easing = LinearOutSlowInEasing
-                )
+    val scale by
+        transition.animateFloat(
+            transitionSpec = {
+                if (false isTransitioningTo true) {
+                    // Dismissed to expanded
+                    tween(durationMillis = InTransitionDuration, easing = LinearOutSlowInEasing)
+                } else {
+                    // Expanded to dismissed.
+                    tween(durationMillis = 1, delayMillis = OutTransitionDuration - 1)
+                }
+            }
+        ) {
+            if (it) {
+                // Menu is expanded.
+                1f
             } else {
-                // Expanded to dismissed.
-                tween(
-                    durationMillis = 1,
-                    delayMillis = OutTransitionDuration - 1
-                )
+                // Menu is dismissed.
+                0.8f
             }
         }
-    ) {
-        if (it) {
-            // Menu is expanded.
-            1f
-        } else {
-            // Menu is dismissed.
-            0.8f
-        }
-    }
 
-    val alpha by transition.animateFloat(
-        transitionSpec = {
-            if (false isTransitioningTo true) {
-                // Dismissed to expanded
-                tween(durationMillis = 30)
+    val alpha by
+        transition.animateFloat(
+            transitionSpec = {
+                if (false isTransitioningTo true) {
+                    // Dismissed to expanded
+                    tween(durationMillis = 30)
+                } else {
+                    // Expanded to dismissed.
+                    tween(durationMillis = OutTransitionDuration)
+                }
+            }
+        ) {
+            if (it) {
+                // Menu is expanded.
+                1f
             } else {
-                // Expanded to dismissed.
-                tween(durationMillis = OutTransitionDuration)
+                // Menu is dismissed.
+                0f
             }
         }
-    ) {
-        if (it) {
-            // Menu is expanded.
-            1f
-        } else {
-            // Menu is dismissed.
-            0f
-        }
-    }
     Surface(
-        modifier = Modifier.graphicsLayer {
-            scaleX = scale
-            scaleY = scale
-            this.alpha = alpha
-            transformOrigin = transformOriginState.value
-        },
+        modifier =
+            Modifier.graphicsLayer {
+                scaleX = scale
+                scaleY = scale
+                this.alpha = alpha
+                transformOrigin = transformOriginState.value
+            },
         shape = MaterialTheme.shapes.extraSmall,
         color = MaterialTheme.colorScheme.surface,
         tonalElevation = 3.dp,
         shadowElevation = 3.dp
     ) {
         Column(
-            modifier = modifier
-                .padding(vertical = DropdownMenuVerticalPadding)
-                .width(IntrinsicSize.Max)
-                .verticalScroll(scrollState),
+            modifier =
+                modifier
+                    .padding(vertical = DropdownMenuVerticalPadding)
+                    .width(IntrinsicSize.Max)
+                    .verticalScroll(scrollState),
             content = content
         )
     }
@@ -155,21 +153,22 @@ internal fun DropdownMenuItemContent(
     interactionSource: MutableInteractionSource
 ) {
     Row(
-        modifier = modifier
-            .clickable(
-                enabled = enabled,
-                onClick = onClick,
-                interactionSource = interactionSource,
-                indication = rememberRipple(true)
-            )
-            .fillMaxWidth()
-            // Preferred min and max width used during the intrinsic measurement.
-            .sizeIn(
-                minWidth = DropdownMenuItemDefaultMinWidth,
-                maxWidth = DropdownMenuItemDefaultMaxWidth,
-                minHeight = 48.dp
-            )
-            .padding(contentPadding),
+        modifier =
+            modifier
+                .clickable(
+                    enabled = enabled,
+                    onClick = onClick,
+                    interactionSource = interactionSource,
+                    indication = rememberRipple(true)
+                )
+                .fillMaxWidth()
+                // Preferred min and max width used during the intrinsic measurement.
+                .sizeIn(
+                    minWidth = DropdownMenuItemDefaultMinWidth,
+                    maxWidth = DropdownMenuItemDefaultMaxWidth,
+                    minHeight = 48.dp
+                )
+                .padding(contentPadding),
         verticalAlignment = Alignment.CenterVertically
     ) {
         ProvideTextStyle(MaterialTheme.typography.labelLarge) {
@@ -177,26 +176,25 @@ internal fun DropdownMenuItemContent(
                 CompositionLocalProvider(
                     LocalContentColor provides colors.leadingIconColor(enabled).value,
                 ) {
-                    Box(Modifier.defaultMinSize(minWidth = 24.dp)) {
-                        leadingIcon()
-                    }
+                    Box(Modifier.defaultMinSize(minWidth = 24.dp)) { leadingIcon() }
                 }
             }
             CompositionLocalProvider(LocalContentColor provides colors.textColor(enabled).value) {
                 Box(
-                    Modifier
-                        .weight(1f)
+                    Modifier.weight(1f)
                         .padding(
-                            start = if (leadingIcon != null) {
-                                DropdownMenuItemHorizontalPadding
-                            } else {
-                                0.dp
-                            },
-                            end = if (trailingIcon != null) {
-                                DropdownMenuItemHorizontalPadding
-                            } else {
-                                0.dp
-                            }
+                            start =
+                                if (leadingIcon != null) {
+                                    DropdownMenuItemHorizontalPadding
+                                } else {
+                                    0.dp
+                                },
+                            end =
+                                if (trailingIcon != null) {
+                                    DropdownMenuItemHorizontalPadding
+                                } else {
+                                    0.dp
+                                }
                         )
                 ) {
                     text()
@@ -206,18 +204,14 @@ internal fun DropdownMenuItemContent(
                 CompositionLocalProvider(
                     LocalContentColor provides colors.trailingIconColor(enabled).value
                 ) {
-                    Box(Modifier.defaultMinSize(minWidth = 24.dp)) {
-                        trailingIcon()
-                    }
+                    Box(Modifier.defaultMinSize(minWidth = 24.dp)) { trailingIcon() }
                 }
             }
         }
     }
 }
 
-/**
- * Contains default values used for [DropdownMenuItem].
- */
+/** Contains default values used for [DropdownMenuItem]. */
 object MenuDefaults {
 
     /**
@@ -227,81 +221,67 @@ object MenuDefaults {
      * @param textColor the text color of this [DropdownMenuItemContent] when enabled
      * @param leadingIconColor the leading icon color of this [DropdownMenuItemContent] when enabled
      * @param trailingIconColor the trailing icon color of this [DropdownMenuItemContent] when
-     * enabled
+     *   enabled
      * @param disabledTextColor the text color of this [DropdownMenuItemContent] when not enabled
      * @param disabledLeadingIconColor the leading icon color of this [DropdownMenuItemContent] when
-     * not enabled
+     *   not enabled
      * @param disabledTrailingIconColor the trailing icon color of this [DropdownMenuItemContent]
-     * when not enabled
+     *   when not enabled
      */
     @Composable
     fun itemColors(
         textColor: Color = MaterialTheme.colorScheme.onSurface,
         leadingIconColor: Color = MaterialTheme.colorScheme.onSurfaceVariant,
         trailingIconColor: Color = MaterialTheme.colorScheme.onSurface,
-        disabledTextColor: Color =
-            MaterialTheme.colorScheme.onSurface
-                .copy(alpha = 0.38f),
-        disabledLeadingIconColor: Color = MaterialTheme.colorScheme.onSurface
-            .copy(alpha = 0.38f),
-        disabledTrailingIconColor: Color = MaterialTheme.colorScheme.onSurface
-            .copy(alpha = 0.38f),
-    ): MenuItemColors = MenuItemColors(
-        textColor = textColor,
-        leadingIconColor = leadingIconColor,
-        trailingIconColor = trailingIconColor,
-        disabledTextColor = disabledTextColor,
-        disabledLeadingIconColor = disabledLeadingIconColor,
-        disabledTrailingIconColor = disabledTrailingIconColor,
-    )
+        disabledTextColor: Color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f),
+        disabledLeadingIconColor: Color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f),
+        disabledTrailingIconColor: Color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f),
+    ): MenuItemColors =
+        MenuItemColors(
+            textColor = textColor,
+            leadingIconColor = leadingIconColor,
+            trailingIconColor = trailingIconColor,
+            disabledTextColor = disabledTextColor,
+            disabledLeadingIconColor = disabledLeadingIconColor,
+            disabledTrailingIconColor = disabledTrailingIconColor,
+        )
 
-    /**
-     * Default padding used for [DropdownMenuItem].
-     */
-    val DropdownMenuItemContentPadding = PaddingValues(
-        horizontal = DropdownMenuItemHorizontalPadding,
-        vertical = 0.dp
-    )
+    /** Default padding used for [DropdownMenuItem]. */
+    val DropdownMenuItemContentPadding =
+        PaddingValues(horizontal = DropdownMenuItemHorizontalPadding, vertical = 0.dp)
 }
 
-internal fun calculateTransformOrigin(
-    parentBounds: IntRect,
-    menuBounds: IntRect
-): TransformOrigin {
-    val pivotX = when {
-        menuBounds.left >= parentBounds.right -> 0f
-        menuBounds.right <= parentBounds.left -> 1f
-        menuBounds.width == 0 -> 0f
-        else -> {
-            val intersectionCenter =
-                (
-                        max(parentBounds.left, menuBounds.left) +
-                                min(parentBounds.right, menuBounds.right)
-                        ) / 2
-            (intersectionCenter - menuBounds.left).toFloat() / menuBounds.width
+internal fun calculateTransformOrigin(parentBounds: IntRect, menuBounds: IntRect): TransformOrigin {
+    val pivotX =
+        when {
+            menuBounds.left >= parentBounds.right -> 0f
+            menuBounds.right <= parentBounds.left -> 1f
+            menuBounds.width == 0 -> 0f
+            else -> {
+                val intersectionCenter =
+                    (max(parentBounds.left, menuBounds.left) +
+                        min(parentBounds.right, menuBounds.right)) / 2
+                (intersectionCenter - menuBounds.left).toFloat() / menuBounds.width
+            }
         }
-    }
-    val pivotY = when {
-        menuBounds.top >= parentBounds.bottom -> 0f
-        menuBounds.bottom <= parentBounds.top -> 1f
-        menuBounds.height == 0 -> 0f
-        else -> {
-            val intersectionCenter =
-                (
-                        max(parentBounds.top, menuBounds.top) +
-                                min(parentBounds.bottom, menuBounds.bottom)
-                        ) / 2
-            (intersectionCenter - menuBounds.top).toFloat() / menuBounds.height
+    val pivotY =
+        when {
+            menuBounds.top >= parentBounds.bottom -> 0f
+            menuBounds.bottom <= parentBounds.top -> 1f
+            menuBounds.height == 0 -> 0f
+            else -> {
+                val intersectionCenter =
+                    (max(parentBounds.top, menuBounds.top) +
+                        min(parentBounds.bottom, menuBounds.bottom)) / 2
+                (intersectionCenter - menuBounds.top).toFloat() / menuBounds.height
+            }
         }
-    }
     return TransformOrigin(pivotX, pivotY)
 }
 
 // Menu positioning.
 
-/**
- * Calculates the position of a Material [DropdownMenu].
- */
+/** Calculates the position of a Material [DropdownMenu]. */
 @Immutable
 internal data class DropdownMenuPositionProvider(
     val contentOffset: DpOffset,
@@ -325,40 +305,48 @@ internal data class DropdownMenuPositionProvider(
         val rightToAnchorRight = anchorBounds.right - contentOffsetX - popupContentSize.width
         val leftToWindowLeft = 0
         val rightToWindowRight = windowSize.width - popupContentSize.width
-        val x = if (layoutDirection == LayoutDirection.Ltr) {
-            sequenceOf(
-                leftToAnchorLeft,
-                rightToAnchorRight,
-                // If the anchor gets outside of the window on the left, we want to position
-                // `leftToWindowLeft` for proximity to the anchor. Otherwise, `rightToWindowRight`.
-                if (anchorBounds.left < 0) leftToWindowLeft else rightToWindowRight
-            )
-        } else {
-            sequenceOf(
-                rightToAnchorRight,
-                leftToAnchorLeft,
-                // If the anchor gets outside of the window on the right, we want to position
-                // `rightToWindowRight` for proximity to the anchor. Otherwise, `leftToWindowLeft`.
-                if (anchorBounds.right > windowSize.width) rightToWindowRight else leftToWindowLeft
-            )
-        }.firstOrNull {
-            it >= 0 && it + popupContentSize.width <= windowSize.width
-        } ?: rightToAnchorRight
+        val x =
+            if (layoutDirection == LayoutDirection.Ltr) {
+                    sequenceOf(
+                        leftToAnchorLeft,
+                        rightToAnchorRight,
+                        // If the anchor gets outside of the window on the left, we want to position
+                        // `leftToWindowLeft` for proximity to the anchor. Otherwise,
+                        // `rightToWindowRight`.
+                        if (anchorBounds.left < 0) leftToWindowLeft else rightToWindowRight
+                    )
+                } else {
+                    sequenceOf(
+                        rightToAnchorRight,
+                        leftToAnchorLeft,
+                        // If the anchor gets outside of the window on the right, we want to
+                        // position
+                        // `rightToWindowRight` for proximity to the anchor. Otherwise,
+                        // `leftToWindowLeft`.
+                        if (anchorBounds.right > windowSize.width) rightToWindowRight
+                        else leftToWindowLeft
+                    )
+                }
+                .firstOrNull { it >= 0 && it + popupContentSize.width <= windowSize.width }
+                ?: rightToAnchorRight
 
         // Compute menu vertical position.
         val topToAnchorBottom = maxOf(anchorBounds.bottom + contentOffsetY, verticalMargin)
         val bottomToAnchorTop = anchorBounds.top - contentOffsetY - popupContentSize.height
         val centerToAnchorTop = anchorBounds.top - popupContentSize.height / 2
         val bottomToWindowBottom = windowSize.height - popupContentSize.height - verticalMargin
-        val y = sequenceOf(
-            topToAnchorBottom,
-            bottomToAnchorTop,
-            centerToAnchorTop,
-            bottomToWindowBottom
-        ).firstOrNull {
-            it >= verticalMargin &&
-                    it + popupContentSize.height <= windowSize.height - verticalMargin
-        } ?: bottomToAnchorTop
+        val y =
+            sequenceOf(
+                    topToAnchorBottom,
+                    bottomToAnchorTop,
+                    centerToAnchorTop,
+                    bottomToWindowBottom
+                )
+                .firstOrNull {
+                    it >= verticalMargin &&
+                        it + popupContentSize.height <= windowSize.height - verticalMargin
+                }
+                ?: bottomToAnchorTop
 
         onPositionCalculated(
             anchorBounds,
@@ -371,21 +359,20 @@ internal data class DropdownMenuPositionProvider(
 /**
  * Represents the text and icon colors used in a menu item at different states.
  *
- * @constructor create an instance with arbitrary colors.
- * See [MenuDefaults.itemColors] for the default colors used in a [DropdownMenuItemContent].
- *
  * @param textColor the text color of this [DropdownMenuItemContent] when enabled
  * @param leadingIconColor the leading icon color of this [DropdownMenuItemContent] when enabled
- * @param trailingIconColor the trailing icon color of this [DropdownMenuItemContent] when
- * enabled
+ * @param trailingIconColor the trailing icon color of this [DropdownMenuItemContent] when enabled
  * @param disabledTextColor the text color of this [DropdownMenuItemContent] when not enabled
- * @param disabledLeadingIconColor the leading icon color of this [DropdownMenuItemContent] when
- * not enabled
- * @param disabledTrailingIconColor the trailing icon color of this [DropdownMenuItemContent]
- * when not enabled
+ * @param disabledLeadingIconColor the leading icon color of this [DropdownMenuItemContent] when not
+ *   enabled
+ * @param disabledTrailingIconColor the trailing icon color of this [DropdownMenuItemContent] when
+ *   not enabled
+ * @constructor create an instance with arbitrary colors. See [MenuDefaults.itemColors] for the
+ *   default colors used in a [DropdownMenuItemContent].
  */
 @Immutable
-class MenuItemColors constructor(
+class MenuItemColors
+constructor(
     val textColor: Color,
     val leadingIconColor: Color,
     val trailingIconColor: Color,

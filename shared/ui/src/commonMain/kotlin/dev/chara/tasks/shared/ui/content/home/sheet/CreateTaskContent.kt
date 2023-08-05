@@ -72,12 +72,13 @@ fun CreateTaskContent(component: CreateTaskComponent) {
     var showReminderDatePickerDialog by remember { mutableStateOf(false) }
     var showDueDatePickerDialog by remember { mutableStateOf(false) }
 
-    val parentList by remember(state.value.allLists, listId) {
-        derivedStateOf {
-            state.value.allLists.firstOrNull { it.id == listId }
-                ?: state.value.allLists.firstOrNull()
+    val parentList by
+        remember(state.value.allLists, listId) {
+            derivedStateOf {
+                state.value.allLists.firstOrNull { it.id == listId }
+                    ?: state.value.allLists.firstOrNull()
+            }
         }
-    }
     var listsExpanded by remember { mutableStateOf(false) }
 
     val sheetState = rememberModalBottomSheetState()
@@ -87,9 +88,7 @@ fun CreateTaskContent(component: CreateTaskComponent) {
     ColorTheme(color = parentList?.color) {
         if (showReminderDatePickerDialog) {
             PickReminderDateDialog(
-                onDismiss = {
-                    showReminderDatePickerDialog = false
-                },
+                onDismiss = { showReminderDatePickerDialog = false },
                 onConfirm = { selectedDate ->
                     reminderDate = selectedDate.toInstant(TimeZone.currentSystemDefault())
 
@@ -100,9 +99,7 @@ fun CreateTaskContent(component: CreateTaskComponent) {
 
         if (showDueDatePickerDialog) {
             PickDueDateDialog(
-                onDismiss = {
-                    showDueDatePickerDialog = false
-                },
+                onDismiss = { showDueDatePickerDialog = false },
                 onConfirm = { selectedDate ->
                     dueDate = selectedDate.toInstant(TimeZone.currentSystemDefault())
 
@@ -127,41 +124,41 @@ fun CreateTaskContent(component: CreateTaskComponent) {
             }
 
             OutlinedTextField(
-                modifier = Modifier
-                    .padding(horizontal = 12.dp, vertical = 8.dp)
-                    .fillMaxWidth(),
+                modifier = Modifier.padding(horizontal = 12.dp, vertical = 8.dp).fillMaxWidth(),
                 label = { Text(text = "Label") },
                 value = label,
                 onValueChange = { label = it },
                 readOnly = state.value.isLoading,
                 singleLine = true,
-                keyboardOptions = KeyboardOptions(
-                    capitalization = KeyboardCapitalization.Sentences,
-                    imeAction = ImeAction.Done,
-                ),
-                keyboardActions = KeyboardActions(
-                    onDone = {
-                        if (!state.value.isLoading && parentList != null && label.isNotBlank()) {
-                            keyboardController?.hide()
-                            component.onSave(
-                                Task(
-                                    id = "",
-                                    listId = parentList!!.id,
-                                    label = label,
-                                    reminderDate = reminderDate,
-                                    dueDate = dueDate,
-                                    lastModified = Clock.System.now()
+                keyboardOptions =
+                    KeyboardOptions(
+                        capitalization = KeyboardCapitalization.Sentences,
+                        imeAction = ImeAction.Done,
+                    ),
+                keyboardActions =
+                    KeyboardActions(
+                        onDone = {
+                            if (
+                                !state.value.isLoading && parentList != null && label.isNotBlank()
+                            ) {
+                                keyboardController?.hide()
+                                component.onSave(
+                                    Task(
+                                        id = "",
+                                        listId = parentList!!.id,
+                                        label = label,
+                                        reminderDate = reminderDate,
+                                        dueDate = dueDate,
+                                        lastModified = Clock.System.now()
+                                    )
                                 )
-                            )
+                            }
                         }
-                    }
-                )
+                    )
             )
 
             ExposedDropdownMenuBox(
-                modifier = Modifier
-                    .padding(horizontal = 12.dp, vertical = 8.dp)
-                    .fillMaxWidth(),
+                modifier = Modifier.padding(horizontal = 12.dp, vertical = 8.dp).fillMaxWidth(),
                 expanded = !state.value.isLoading && listsExpanded,
                 onExpandedChange = { listsExpanded = it },
             ) {
@@ -170,33 +167,19 @@ fun CreateTaskContent(component: CreateTaskComponent) {
                     onValueChange = {},
                     readOnly = true,
                     modifier = Modifier.fillMaxWidth().menuAnchor(),
-                    leadingIcon = {
-                        Icon(
-                            parentList?.icon.icon,
-                            contentDescription = "List"
-                        )
-                    },
+                    leadingIcon = { Icon(parentList?.icon.icon, contentDescription = "List") },
                     trailingIcon = {
-                        ExposedDropdownMenuDefaults.TrailingIcon(
-                            expanded = listsExpanded
-                        )
+                        ExposedDropdownMenuDefaults.TrailingIcon(expanded = listsExpanded)
                     },
                     colors = ExposedDropdownMenuDefaults.outlinedTextFieldColors(),
                 )
                 ExposedDropdownMenu(
                     expanded = !state.value.isLoading && listsExpanded,
-                    onDismissRequest = {
-                        listsExpanded = false
-                    },
+                    onDismissRequest = { listsExpanded = false },
                 ) {
                     for (list in state.value.allLists) {
                         DropdownMenuItem(
-                            leadingIcon = {
-                                Icon(
-                                    list.icon.icon,
-                                    contentDescription = "List"
-                                )
-                            },
+                            leadingIcon = { Icon(list.icon.icon, contentDescription = "List") },
                             text = { Text(list.title) },
                             onClick = {
                                 listId = list.id
@@ -208,13 +191,15 @@ fun CreateTaskContent(component: CreateTaskComponent) {
             }
 
             ListItem(
-                colors = ListItemDefaults.colors(containerColor = MaterialTheme.colorScheme.surfaceContainerHigh),
-                modifier = Modifier.clickable(enabled = !state.value.isLoading) {
-                    showReminderDatePickerDialog = true
-                },
-                headlineContent = {
-                    Text("Remind me")
-                },
+                colors =
+                    ListItemDefaults.colors(
+                        containerColor = MaterialTheme.colorScheme.surfaceContainerHigh
+                    ),
+                modifier =
+                    Modifier.clickable(enabled = !state.value.isLoading) {
+                        showReminderDatePickerDialog = true
+                    },
+                headlineContent = { Text("Remind me") },
                 leadingContent = {
                     if (reminderDate != null) {
                         Icon(Icons.Filled.Notifications, contentDescription = "Reminder")
@@ -237,16 +222,16 @@ fun CreateTaskContent(component: CreateTaskComponent) {
             )
 
             ListItem(
-                colors = ListItemDefaults.colors(containerColor = MaterialTheme.colorScheme.surfaceContainerHigh),
-                modifier = Modifier.clickable(enabled = !state.value.isLoading) {
-                    showDueDatePickerDialog = true
-                },
-                headlineContent = {
-                    Text("Set due date")
-                },
-                leadingContent = {
-                    Icon(Icons.Filled.Event, contentDescription = "Remind me")
-                },
+                colors =
+                    ListItemDefaults.colors(
+                        containerColor = MaterialTheme.colorScheme.surfaceContainerHigh
+                    ),
+                modifier =
+                    Modifier.clickable(enabled = !state.value.isLoading) {
+                        showDueDatePickerDialog = true
+                    },
+                headlineContent = { Text("Set due date") },
+                leadingContent = { Icon(Icons.Filled.Event, contentDescription = "Remind me") },
                 trailingContent = {
                     if (dueDate != null) {
                         DueDateChip(
@@ -262,10 +247,10 @@ fun CreateTaskContent(component: CreateTaskComponent) {
             )
 
             FilledTonalButton(
-                modifier = Modifier
-                    .padding(horizontal = 16.dp)
-                    .padding(bottom = 16.dp)
-                    .align(Alignment.End),
+                modifier =
+                    Modifier.padding(horizontal = 16.dp)
+                        .padding(bottom = 16.dp)
+                        .align(Alignment.End),
                 onClick = {
                     keyboardController?.hide()
                     component.onSave(

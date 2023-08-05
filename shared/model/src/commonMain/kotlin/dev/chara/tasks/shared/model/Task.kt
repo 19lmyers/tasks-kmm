@@ -8,17 +8,13 @@ import kotlinx.serialization.Serializable
 data class Task(
     val id: String,
     val listId: String,
-
     val label: String,
     val isCompleted: Boolean = false,
     val isStarred: Boolean = false,
-
     val details: String? = null,
     val reminderDate: Instant? = null,
     val dueDate: Instant? = null,
-
     val dateCreated: Instant = Clock.System.now(),
     val lastModified: Instant = Clock.System.now(),
-
     val ordinal: Int = -1
 )

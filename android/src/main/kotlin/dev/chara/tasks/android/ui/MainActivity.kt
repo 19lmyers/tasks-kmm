@@ -25,21 +25,23 @@ class MainActivity : ComponentActivity() {
 
         WindowCompat.setDecorFitsSystemWindows(window, false)
 
-        val root = DefaultRootComponent(
-            componentContext = defaultComponentContext(),
-            deepLink = parseIntent()
-        )
+        val root =
+            DefaultRootComponent(
+                componentContext = defaultComponentContext(),
+                deepLink = parseIntent()
+            )
 
         setContent {
             RootContent(component = root)
 
             val state = root.state.collectAsState()
 
-            val darkTheme = when (state.value.appTheme) {
-                Theme.SYSTEM_DEFAULT -> isSystemInDarkTheme()
-                Theme.LIGHT -> false
-                Theme.DARK -> true
-            }
+            val darkTheme =
+                when (state.value.appTheme) {
+                    Theme.SYSTEM_DEFAULT -> isSystemInDarkTheme()
+                    Theme.LIGHT -> false
+                    Theme.DARK -> true
+                }
 
             val systemUiController = rememberSystemUiController()
             DisposableEffect(systemUiController, darkTheme) {
@@ -66,7 +68,6 @@ class MainActivity : ComponentActivity() {
                         DeepLink.None
                     }
                 }
-
                 PATH_RESET_PASSWORD -> {
                     val token = intent.data!!.getQueryParameter(QUERY_PASSWORD_RESET_TOKEN)
 
@@ -77,7 +78,6 @@ class MainActivity : ComponentActivity() {
                         DeepLink.None
                     }
                 }
-
                 PATH_VIEW_LIST -> {
                     val listId = intent.data!!.getQueryParameter(QUERY_LIST_ID)
 
@@ -88,7 +88,6 @@ class MainActivity : ComponentActivity() {
                         DeepLink.None
                     }
                 }
-
                 PATH_VIEW_TASK -> {
                     val taskId = intent.data!!.getQueryParameter(QUERY_TASK_ID)
 
@@ -102,7 +101,6 @@ class MainActivity : ComponentActivity() {
                         DeepLink.None
                     }
                 }
-
                 else -> {
                     DeepLink.None
                 }

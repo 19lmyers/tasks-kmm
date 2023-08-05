@@ -11,7 +11,9 @@ import io.requery.android.database.sqlite.RequerySQLiteOpenHelperFactory
 actual class DriverFactory(private val context: Context) {
     actual operator fun invoke(): SqlDriver =
         AndroidSqliteDriver(
-            SQLDatabase.Schema, context, "cache_v1.db",
+            SQLDatabase.Schema,
+            context,
+            "cache_v1.db",
             factory = RequerySQLiteOpenHelperFactory(),
             callback = CallbackDelegate(AndroidSqliteDriver.Callback(SQLDatabase.Schema))
         )

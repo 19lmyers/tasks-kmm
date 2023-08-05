@@ -17,6 +17,8 @@ plugins {
     alias(libs.plugins.jetbrains.compose)
 
     id("kotlin-parcelize")
+
+    alias(libs.plugins.ktfmt)
 }
 
 kotlin {
@@ -127,4 +129,8 @@ dependencies {
 
 compose {
     kotlinCompilerPlugin.set(dependencies.compiler.auto)
+}
+
+ktfmt {
+    kotlinLangStyle()
 }
