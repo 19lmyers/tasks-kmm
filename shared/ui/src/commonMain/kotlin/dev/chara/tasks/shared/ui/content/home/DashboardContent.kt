@@ -37,9 +37,13 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedCard
+import androidx.compose.material3.SnackbarDuration
+import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.SnackbarResult
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
@@ -84,7 +88,8 @@ fun DashboardContent(
     component: DashboardComponent,
     paddingTop: PaddingValues,
     paddingBottom: PaddingValues,
-    nestedScrollConnection: NestedScrollConnection
+    nestedScrollConnection: NestedScrollConnection,
+    snackbarHostState: SnackbarHostState
 ) {
     val state = component.state.collectAsState()
 
@@ -243,6 +248,23 @@ fun DashboardContent(
                     .padding(horizontal = 24.dp, vertical = 16.dp)
                     .padding(paddingBottom)
         )
+    }
+
+    LaunchedEffect(component.messages) {
+        component.messages.collect { message ->
+            snackbarHostState
+                .showSnackbar(
+                    message = message.text,
+                    duration = SnackbarDuration.Short,
+                    withDismissAction = message.action == null,
+                    actionLabel = message.action?.text
+                )
+                .let {
+                    if (it == SnackbarResult.ActionPerformed) {
+                        message.action?.function?.invoke()
+                    }
+                }
+        }
     }
 }
 

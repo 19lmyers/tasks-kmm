@@ -156,16 +156,19 @@ fun HomeContent(component: HomeComponent, windowSizeClass: WindowSizeClass) {
                             child.component,
                             paddingTop,
                             paddingBottom,
-                            scrollBehavior.nestedScrollConnection
+                            scrollBehavior.nestedScrollConnection,
+                            snackbarHostState
                         )
                 }
             }
         }
     }
 
-    val stackContent: @Composable (List<Child.Created<*, HomeComponent.Child.Stack>>) -> Unit =
+    val stackContent:
+        @Composable
+        (List<Child.Created<*, HomeComponent.Child.Stack>>, SnackbarHostState) -> Unit =
         remember {
-            movableContentOf { stack ->
+            movableContentOf { stack, snackbarHostState ->
                 AnimatedContent(
                     targetState = stack,
                     transitionSpec = { fadeIn() togetherWith fadeOut() }
@@ -175,10 +178,14 @@ fun HomeContent(component: HomeComponent, windowSizeClass: WindowSizeClass) {
                             is HomeComponent.Child.Stack.ListDetails ->
                                 ListDetailsContent(
                                     component = child.component,
-                                    upAsCloseButton = children.isDualPane
+                                    upAsCloseButton = children.isDualPane,
+                                    snackbarHostState = snackbarHostState
                                 )
                             is HomeComponent.Child.Stack.TaskDetails ->
-                                TaskDetailsContent(component = child.component)
+                                TaskDetailsContent(
+                                    component = child.component,
+                                    snackbarHostState = snackbarHostState
+                                )
                         }
                     } else {
                         Box(modifier = Modifier.fillMaxSize()) {
@@ -210,7 +217,7 @@ fun HomeContent(component: HomeComponent, windowSizeClass: WindowSizeClass) {
                 transitionSpec = { fadeIn() togetherWith fadeOut() }
             ) { showStack ->
                 if (showStack) {
-                    stackContent(children.stack)
+                    stackContent(children.stack, snackbarHostState)
                 } else {
                     mainContent(children.main)
                 }
@@ -226,7 +233,7 @@ fun HomeContent(component: HomeComponent, windowSizeClass: WindowSizeClass) {
                     border = BorderStroke(1.dp, MaterialTheme.colorScheme.surfaceContainerHighest),
                     tonalElevation = 1.dp
                 ) {
-                    stackContent(children.stack)
+                    stackContent(children.stack, remember { SnackbarHostState() })
                 }
             }
         }

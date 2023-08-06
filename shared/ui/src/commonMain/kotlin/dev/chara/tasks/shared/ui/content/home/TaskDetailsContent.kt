@@ -42,12 +42,17 @@ import androidx.compose.material3.ListItem
 import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarDuration
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.SnackbarResult
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
@@ -60,6 +65,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.style.TextOverflow
@@ -85,7 +91,7 @@ import org.koin.compose.koinInject
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
 @Composable
-fun TaskDetailsContent(component: TaskDetailsComponent) {
+fun TaskDetailsContent(component: TaskDetailsComponent, snackbarHostState: SnackbarHostState) {
     val state = component.state.collectAsState()
 
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
@@ -132,6 +138,7 @@ fun TaskDetailsContent(component: TaskDetailsComponent) {
         }
 
         Scaffold(
+            snackbarHost = { SnackbarHost(snackbarHostState) },
             topBar = {
                 TopBarWithListSelector(
                     task = task!!,
@@ -194,6 +201,23 @@ fun TaskDetailsContent(component: TaskDetailsComponent) {
                     }
                 }
             }
+        }
+    }
+
+    LaunchedEffect(component.messages) {
+        component.messages.collect { message ->
+            snackbarHostState
+                .showSnackbar(
+                    message = message.text,
+                    duration = SnackbarDuration.Short,
+                    withDismissAction = message.action == null,
+                    actionLabel = message.action?.text
+                )
+                .let {
+                    if (it == SnackbarResult.ActionPerformed) {
+                        message.action?.function?.invoke()
+                    }
+                }
         }
     }
 }
@@ -381,15 +405,17 @@ private fun TaskDetailsForm(
             },
             singleLine = false,
             textStyle =
-                MaterialTheme.typography.bodyLarge.copy(
-                    color = MaterialTheme.colorScheme.onBackground
+                MaterialTheme.typography.titleLarge.copy(
+                    color = MaterialTheme.colorScheme.onBackground,
+                    fontWeight = FontWeight.Normal
                 ),
             cursorBrush = SolidColor(MaterialTheme.colorScheme.primary),
             decorationBox = { innerTextField ->
                 if (task.label.isEmpty()) {
                     Text(
                         text = "Enter label",
-                        style = MaterialTheme.typography.bodyLarge,
+                        style = MaterialTheme.typography.titleLarge,
+                        fontWeight = FontWeight.Normal,
                         color = MaterialTheme.colorScheme.error
                     )
                 }

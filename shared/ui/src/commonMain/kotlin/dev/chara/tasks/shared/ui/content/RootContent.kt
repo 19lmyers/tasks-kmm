@@ -1,10 +1,13 @@
 package dev.chara.tasks.shared.ui.content
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
 import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.ui.Modifier
 import com.arkivanov.decompose.extensions.compose.jetbrains.stack.Children
 import com.arkivanov.decompose.extensions.compose.jetbrains.stack.animation.fade
 import com.arkivanov.decompose.extensions.compose.jetbrains.stack.animation.stackAnimation
@@ -41,6 +44,7 @@ fun RootContent(component: RootComponent) {
     ) {
         Children(
             stack = component.childStack,
+            modifier = Modifier.background(MaterialTheme.colorScheme.background),
             animation = stackAnimation(fade()),
         ) {
             when (val child = it.instance) {

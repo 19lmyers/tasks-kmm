@@ -3,13 +3,18 @@ package dev.chara.tasks.shared.component.home.task_details
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.essenty.backhandler.BackHandlerOwner
 import com.github.michaelbull.result.Ok
+import dev.chara.tasks.shared.component.util.SnackbarMessage
 import dev.chara.tasks.shared.component.util.coroutineScope
+import dev.chara.tasks.shared.component.util.emitAsMessage
 import dev.chara.tasks.shared.data.Repository
 import dev.chara.tasks.shared.model.Task
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
@@ -20,6 +25,8 @@ import org.koin.core.component.inject
 
 interface TaskDetailsComponent : BackHandlerOwner {
     val state: StateFlow<TaskDetailsUiState>
+
+    val messages: SharedFlow<SnackbarMessage>
 
     fun onUp()
 
@@ -41,6 +48,9 @@ class DefaultTaskDetailsComponent(
 
     private var _state = MutableStateFlow(TaskDetailsUiState())
     override val state = _state.asStateFlow()
+
+    private var _messages = MutableSharedFlow<SnackbarMessage>()
+    override val messages = _messages.asSharedFlow()
 
     init {
         coroutineScope.launch {
@@ -69,7 +79,7 @@ class DefaultTaskDetailsComponent(
     override fun updateTask(task: Task) {
         coroutineScope.launch {
             val result = repository.updateTask(task.listId, task.id, task)
-            // _messages.emitAsMessage(result)
+            _messages.emitAsMessage(result)
         }
     }
 
@@ -77,14 +87,14 @@ class DefaultTaskDetailsComponent(
         coroutineScope.launch {
             val result =
                 repository.moveTask(oldListId, newListId, taskId, lastModified = Clock.System.now())
-            // _messages.emitAsMessage(result)
+            _messages.emitAsMessage(result)
         }
     }
 
     override fun deleteTask(task: Task) {
         coroutineScope.launch {
             val result = repository.deleteTask(task.listId, task.id)
-            // _messages.emitAsMessage(result, successMessage = "List deleted")
+            _messages.emitAsMessage(result, successMessage = "List deleted")
             if (result is Ok) {
                 withContext(Dispatchers.Main) { navigateUp() }
             }

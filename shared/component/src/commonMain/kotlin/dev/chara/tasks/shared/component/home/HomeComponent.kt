@@ -299,7 +299,7 @@ class DefaultHomeComponent(
 
     private sealed interface Config : Parcelable {
         sealed interface Main : Config {
-            @Parcelize object Dashboard : Main
+            @Parcelize data object Dashboard : Main
         }
 
         sealed interface Stack : Config {

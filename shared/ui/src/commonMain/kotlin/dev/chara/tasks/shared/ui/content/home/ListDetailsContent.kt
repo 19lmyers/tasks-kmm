@@ -37,6 +37,10 @@ import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarDuration
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.SnackbarResult
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -44,6 +48,7 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -73,7 +78,11 @@ import kotlinx.datetime.Clock
     ExperimentalMaterialApi::class
 )
 @Composable
-fun ListDetailsContent(component: ListDetailsComponent, upAsCloseButton: Boolean) {
+fun ListDetailsContent(
+    component: ListDetailsComponent,
+    upAsCloseButton: Boolean,
+    snackbarHostState: SnackbarHostState
+) {
     val state = component.state.collectAsState()
 
     var showOverflowMenu by remember { mutableStateOf(false) }
@@ -127,6 +136,7 @@ fun ListDetailsContent(component: ListDetailsComponent, upAsCloseButton: Boolean
         }
 
         Scaffold(
+            snackbarHost = { SnackbarHost(snackbarHostState) },
             topBar = {
                 TopBar(
                     scrollBehavior,
@@ -221,6 +231,23 @@ fun ListDetailsContent(component: ListDetailsComponent, upAsCloseButton: Boolean
                 }
             }
         )
+    }
+
+    LaunchedEffect(component.messages) {
+        component.messages.collect { message ->
+            snackbarHostState
+                .showSnackbar(
+                    message = message.text,
+                    duration = SnackbarDuration.Short,
+                    withDismissAction = message.action == null,
+                    actionLabel = message.action?.text
+                )
+                .let {
+                    if (it == SnackbarResult.ActionPerformed) {
+                        message.action?.function?.invoke()
+                    }
+                }
+        }
     }
 }
 

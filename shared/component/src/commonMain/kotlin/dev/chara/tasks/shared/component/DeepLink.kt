@@ -1,13 +1,13 @@
 package dev.chara.tasks.shared.component
 
 sealed interface DeepLink {
-    object None : DeepLink
+    data object None : DeepLink
 
     data class ViewList(val id: String) : DeepLink
 
     data class ViewTask(val id: String) : DeepLink
 
-    object CreateTask : DeepLink
+    data object CreateTask : DeepLink
 
     data class VerifyEmail(val token: String) : DeepLink
 

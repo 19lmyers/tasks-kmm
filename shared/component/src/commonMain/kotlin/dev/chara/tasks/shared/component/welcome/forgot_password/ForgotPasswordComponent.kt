@@ -63,11 +63,12 @@ class DefaultForgotPasswordComponent(
 
     override fun sendResetEmail(email: String) {
         coroutineScope.launch {
+            _state.value = state.value.copy(isLoading = true)
+
             val result = repository.requestPasswordResetEmail(email)
             _messages.emitAsMessage(result)
 
-            _state.value =
-                _state.value.copy(isLoading = false, passwordResetLinkSent = result is Ok)
+            _state.value = state.value.copy(isLoading = false, passwordResetLinkSent = result is Ok)
         }
     }
 }

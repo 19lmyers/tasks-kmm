@@ -228,7 +228,7 @@ class DefaultRootComponent(
                         task.id,
                         task.copy(isCompleted = true, lastModified = Clock.System.now())
                     )
-                // TODO show snackbar
+                // TODO display result? (this is called from iOS)
             }
         }
     }
@@ -254,32 +254,32 @@ class DefaultRootComponent(
     }
 
     private sealed interface Config : Parcelable {
-        @Parcelize object Welcome : Config
+        @Parcelize data object Welcome : Config
 
-        @Parcelize object SignUp : Config
+        @Parcelize data object SignUp : Config
 
-        @Parcelize object SignIn : Config
+        @Parcelize data object SignIn : Config
 
-        @Parcelize object ForgotPassword : Config
+        @Parcelize data object ForgotPassword : Config
 
         sealed interface Home : Config {
 
-            @Parcelize object Default : Home
+            @Parcelize data object Default : Home
 
             @Parcelize data class WithListDetails(val id: String) : Home
 
             @Parcelize data class WithTaskDetails(val id: String) : Home
 
-            @Parcelize object WithCreateTask : Home
+            @Parcelize data object WithCreateTask : Home
         }
 
-        @Parcelize object Profile : Config
+        @Parcelize data object Profile : Config
 
-        @Parcelize object Settings : Config
+        @Parcelize data object Settings : Config
 
-        @Parcelize object ChangeEmail : Config
+        @Parcelize data object ChangeEmail : Config
 
-        @Parcelize object ChangePassword : Config
+        @Parcelize data object ChangePassword : Config
 
         @Parcelize class VerifyEmail(val verifyToken: String) : Config
 

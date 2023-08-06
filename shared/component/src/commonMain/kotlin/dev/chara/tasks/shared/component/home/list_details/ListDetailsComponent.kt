@@ -2,14 +2,19 @@ package dev.chara.tasks.shared.component.home.list_details
 
 import com.arkivanov.decompose.ComponentContext
 import com.github.michaelbull.result.Ok
+import dev.chara.tasks.shared.component.util.SnackbarMessage
 import dev.chara.tasks.shared.component.util.coroutineScope
+import dev.chara.tasks.shared.component.util.emitAsMessage
 import dev.chara.tasks.shared.data.Repository
 import dev.chara.tasks.shared.model.Task
 import dev.chara.tasks.shared.model.TaskList
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
@@ -20,6 +25,8 @@ import org.koin.core.component.inject
 
 interface ListDetailsComponent {
     val state: StateFlow<ListDetailsUiState>
+
+    val messages: SharedFlow<SnackbarMessage>
 
     fun onUp()
 
@@ -34,8 +41,6 @@ interface ListDetailsComponent {
     fun updateList(taskList: TaskList)
 
     fun deleteList(listId: String)
-
-    fun createTask(task: Task)
 
     fun updateTask(task: Task)
 
@@ -59,6 +64,9 @@ class DefaultListDetailsComponent(
 
     private var _state = MutableStateFlow(ListDetailsUiState())
     override val state = _state.asStateFlow()
+
+    private var _messages = MutableSharedFlow<SnackbarMessage>()
+    override val messages = _messages.asSharedFlow()
 
     init {
         coroutineScope.launch {
@@ -92,7 +100,7 @@ class DefaultListDetailsComponent(
             _state.value = state.value.copy(isRefreshing = true)
 
             val result = repository.refresh()
-            // _messages.emitAsMessage(result)
+            _messages.emitAsMessage(result)
         }
     }
 
@@ -105,31 +113,24 @@ class DefaultListDetailsComponent(
     override fun updateList(taskList: TaskList) {
         coroutineScope.launch {
             val result = repository.updateList(taskList.id, taskList)
-            // _messages.emitAsMessage(result)
+            _messages.emitAsMessage(result)
         }
     }
 
     override fun deleteList(listId: String) {
         coroutineScope.launch {
             val result = repository.deleteList(listId)
-            // _messages.emitAsMessage(result, successMessage = "List deleted")
+            _messages.emitAsMessage(result, successMessage = "List deleted")
             if (result is Ok) {
                 withContext(Dispatchers.Main) { navigateUp() }
             }
         }
     }
 
-    override fun createTask(task: Task) {
-        coroutineScope.launch {
-            val result = repository.createTask(task.listId, task)
-            // _messages.emitAsMessage(result, successMessage = "Task created")
-        }
-    }
-
     override fun updateTask(task: Task) {
         coroutineScope.launch {
             val result = repository.updateTask(task.listId, task.id, task)
-            // _messages.emitAsMessage(result, successMessage = "Task updated")
+            _messages.emitAsMessage(result)
         }
     }
 
@@ -143,14 +144,14 @@ class DefaultListDetailsComponent(
                     toIndex,
                     lastModified = Clock.System.now()
                 )
-            // _messages.emitAsMessage(result, successMessage = "Task updated")
+            _messages.emitAsMessage(result)
         }
     }
 
     override fun clearCompletedTasks(listId: String) {
         coroutineScope.launch {
             val result = repository.clearCompletedTasks(listId)
-            // _messages.emitAsMessage(result)
+            _messages.emitAsMessage(result)
         }
     }
 }
