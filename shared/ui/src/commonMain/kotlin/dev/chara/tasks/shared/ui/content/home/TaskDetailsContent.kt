@@ -141,9 +141,9 @@ fun TaskDetailsContent(component: TaskDetailsComponent, snackbarHostState: Snack
             snackbarHost = { SnackbarHost(snackbarHostState) },
             topBar = {
                 TopBarWithListSelector(
-                    task = task!!,
+                    task = task,
                     taskLists = state.value.allLists,
-                    selectedListId = task!!.listId,
+                    selectedListId = task?.listId,
                     scrollBehavior = scrollBehavior,
                     upAsCloseButton = true,
                     onUpClicked = {
@@ -155,8 +155,7 @@ fun TaskDetailsContent(component: TaskDetailsComponent, snackbarHostState: Snack
                     },
                     onDeleteClicked = { showDeleteDialog = true },
                     onListSelected = {
-                        component.updateTask(task!!)
-                        component.moveTask(task!!.listId, it, task!!.id)
+                        component.moveTask(task!!.listId, it, task!!)
                         modified = false
                     },
                     onUpdateTask = {
@@ -195,7 +194,7 @@ fun TaskDetailsContent(component: TaskDetailsComponent, snackbarHostState: Snack
                     horizontalAlignment = Alignment.CenterHorizontally,
                     modifier = Modifier.verticalScroll(scrollState)
                 ) {
-                    TaskDetailsForm(task!!) {
+                    TaskDetailsForm(task) {
                         task = it
                         modified = true
                     }
@@ -225,9 +224,9 @@ fun TaskDetailsContent(component: TaskDetailsComponent, snackbarHostState: Snack
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun TopBarWithListSelector(
-    task: Task,
+    task: Task?,
     taskLists: List<TaskList>,
-    selectedListId: String,
+    selectedListId: String?,
     scrollBehavior: TopAppBarScrollBehavior,
     upAsCloseButton: Boolean,
     onUpClicked: () -> Unit,
@@ -237,11 +236,13 @@ private fun TopBarWithListSelector(
 ) {
     TopAppBar(
         title = {
-            ListSelector(
-                taskLists = taskLists,
-                selectedListId = selectedListId,
-                onListClicked = onListSelected
-            )
+            if (selectedListId != null) {
+                ListSelector(
+                    taskLists = taskLists,
+                    selectedListId = selectedListId,
+                    onListClicked = onListSelected
+                )
+            }
         },
         navigationIcon = {
             IconButton(onClick = { onUpClicked() }) {
@@ -262,14 +263,14 @@ private fun TopBarWithListSelector(
         },
         actions = {
             IconToggleButton(
-                checked = task.isStarred,
+                checked = task?.isStarred == true,
                 onCheckedChange = { isStarred ->
                     onUpdateTask(
-                        task.copy(isStarred = isStarred, lastModified = Clock.System.now())
+                        task!!.copy(isStarred = isStarred, lastModified = Clock.System.now())
                     )
                 }
             ) {
-                if (task.isStarred) {
+                if (task?.isStarred == true) {
                     Icon(
                         Icons.Filled.Star,
                         contentDescription = "Unstar task",
@@ -348,7 +349,7 @@ private fun ListSelector(
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
 private fun TaskDetailsForm(
-    task: Task,
+    task: Task?,
     onUpdateTask: (Task) -> Unit,
 ) {
     val keyboardController = LocalSoftwareKeyboardController.current
@@ -363,7 +364,7 @@ private fun TaskDetailsForm(
             onDismiss = { showReminderDateDialog = false },
             onConfirm = { selectedDate ->
                 onUpdateTask(
-                    task.copy(
+                    task!!.copy(
                         reminderDate = selectedDate.toInstant(TimeZone.currentSystemDefault()),
                         lastModified = Clock.System.now()
                     )
@@ -379,7 +380,7 @@ private fun TaskDetailsForm(
             onDismiss = { showDueDatePickerDialog = false },
             onConfirm = { selectedDate ->
                 onUpdateTask(
-                    task.copy(
+                    task!!.copy(
                         dueDate = selectedDate.toInstant(TimeZone.currentSystemDefault()),
                         lastModified = Clock.System.now()
                     )
@@ -393,15 +394,15 @@ private fun TaskDetailsForm(
     Row(modifier = Modifier.padding(horizontal = 4.dp)) {
         Checkbox(
             modifier = Modifier.align(Alignment.CenterVertically),
-            checked = task.isCompleted,
-            onCheckedChange = { isChecked -> onUpdateTask(task.copy(isCompleted = isChecked)) }
+            checked = task?.isCompleted == true,
+            onCheckedChange = { isChecked -> onUpdateTask(task!!.copy(isCompleted = isChecked)) }
         )
 
         BasicTextField(
             modifier = Modifier.padding(vertical = 16.dp, horizontal = 2.dp).fillMaxWidth(),
-            value = task.label,
+            value = task?.label ?: "",
             onValueChange = {
-                onUpdateTask(task.copy(label = it, lastModified = Clock.System.now()))
+                onUpdateTask(task!!.copy(label = it, lastModified = Clock.System.now()))
             },
             singleLine = false,
             textStyle =
@@ -411,7 +412,7 @@ private fun TaskDetailsForm(
                 ),
             cursorBrush = SolidColor(MaterialTheme.colorScheme.primary),
             decorationBox = { innerTextField ->
-                if (task.label.isEmpty()) {
+                if (task?.label?.isEmpty() == true) {
                     Text(
                         text = "Enter label",
                         style = MaterialTheme.typography.titleLarge,
@@ -434,10 +435,10 @@ private fun TaskDetailsForm(
         headlineContent = {
             BasicTextField(
                 modifier = Modifier.fillMaxWidth(),
-                value = task.details ?: "",
+                value = task?.details ?: "",
                 onValueChange = {
                     if (it.isEmpty()) return@BasicTextField
-                    onUpdateTask(task.copy(details = it, lastModified = Clock.System.now()))
+                    onUpdateTask(task!!.copy(details = it, lastModified = Clock.System.now()))
                 },
                 singleLine = false,
                 textStyle =
@@ -446,7 +447,7 @@ private fun TaskDetailsForm(
                     ),
                 cursorBrush = SolidColor(MaterialTheme.colorScheme.primary),
                 decorationBox = { innerTextField ->
-                    if (task.details.isNullOrEmpty()) {
+                    if (task?.details.isNullOrEmpty()) {
                         Text(
                             text = "Add details",
                             style = MaterialTheme.typography.bodyLarge,
@@ -465,7 +466,7 @@ private fun TaskDetailsForm(
         },
         leadingContent = { Icon(Icons.Filled.Notes, contentDescription = "Details") },
         trailingContent = {
-            if (task.details != null) {
+            if (task?.details != null) {
                 IconButton(
                     onClick = {
                         onUpdateTask(task.copy(details = null, lastModified = Clock.System.now()))
@@ -480,7 +481,7 @@ private fun TaskDetailsForm(
     val currentTime = Clock.System.now()
 
     val reminderColors =
-        if (task.reminderDate == null) {
+        if (task?.reminderDate == null) {
             ListItemDefaults.colors(
                 headlineColor = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.8f),
             )
@@ -496,14 +497,14 @@ private fun TaskDetailsForm(
     ListItem(
         headlineContent = { Text("Remind me") },
         leadingContent = {
-            if (task.reminderDate != null) {
+            if (task?.reminderDate != null) {
                 Icon(Icons.Filled.Notifications, contentDescription = "Reminder")
             } else {
                 Icon(Icons.Filled.NotificationAdd, contentDescription = "Reminder")
             }
         },
         trailingContent = {
-            if (task.reminderDate != null) {
+            if (task?.reminderDate != null) {
                 ReminderChip(
                     task.reminderDate,
                     formatDateTime = { dateFormatter.formatDateTime(it) },
@@ -519,7 +520,7 @@ private fun TaskDetailsForm(
     )
 
     val dueDateColors =
-        if (task.dueDate == null) {
+        if (task?.dueDate == null) {
             ListItemDefaults.colors(
                 headlineColor = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.8f),
             )
@@ -536,7 +537,7 @@ private fun TaskDetailsForm(
         headlineContent = { Text("Set due date") },
         leadingContent = { Icon(Icons.Filled.Event, contentDescription = "Due date") },
         trailingContent = {
-            if (task.dueDate != null) {
+            if (task?.dueDate != null) {
                 DueDateChip(
                     task.dueDate,
                     formatDate = { dateFormatter.formatDate(it) },

@@ -17,7 +17,7 @@
 			<key>UIApplicationShortcutItemType</key>
 			<string>CreateTaskAction</string>
 			<key>UIApplicationShortcutItemTitle</key>
-			<string>New task</string>
+			<string>New Task</string>
 		</dict>
 	</array>
 	<key>UIAppFonts</key>

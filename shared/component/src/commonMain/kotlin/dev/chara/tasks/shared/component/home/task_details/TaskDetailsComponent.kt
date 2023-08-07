@@ -32,7 +32,7 @@ interface TaskDetailsComponent : BackHandlerOwner {
 
     fun updateTask(task: Task)
 
-    fun moveTask(oldListId: String, newListId: String, taskId: String)
+    fun moveTask(oldListId: String, newListId: String, task: Task)
 
     fun deleteTask(task: Task)
 }
@@ -83,11 +83,20 @@ class DefaultTaskDetailsComponent(
         }
     }
 
-    override fun moveTask(oldListId: String, newListId: String, taskId: String) {
+    override fun moveTask(oldListId: String, newListId: String, task: Task) {
         coroutineScope.launch {
-            val result =
-                repository.moveTask(oldListId, newListId, taskId, lastModified = Clock.System.now())
-            _messages.emitAsMessage(result)
+            // Always save the user's changes before moving a task, otherwise they will be lost
+            val updateResult = repository.updateTask(oldListId, task.id, task)
+            _messages.emitAsMessage(updateResult)
+
+            val moveResult =
+                repository.moveTask(
+                    oldListId,
+                    newListId,
+                    task.id,
+                    lastModified = Clock.System.now()
+                )
+            _messages.emitAsMessage(moveResult)
         }
     }
 
