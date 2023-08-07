@@ -55,6 +55,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.style.TextAlign
@@ -434,11 +435,12 @@ private fun SortListDialog(
                 for (type in TaskList.SortType.values()) {
                     ListItem(
                         modifier =
-                            Modifier.selectable(
-                                selected = sortType == type,
-                                onClick = { onSelect(type) },
-                                role = Role.RadioButton
-                            ),
+                            Modifier.clip(MaterialTheme.shapes.extraLarge)
+                                .selectable(
+                                    selected = sortType == type,
+                                    onClick = { onSelect(type) },
+                                    role = Role.RadioButton
+                                ),
                         headlineContent = { Text(type.toString()) },
                         leadingContent = { Icon(type.icon, contentDescription = null) }
                     )
