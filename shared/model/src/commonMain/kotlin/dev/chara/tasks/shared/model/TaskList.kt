@@ -15,7 +15,8 @@ data class TaskList(
     val sortType: SortType = SortType.ORDINAL,
     val sortDirection: SortDirection = SortDirection.ASCENDING,
     val dateCreated: Instant = Clock.System.now(),
-    val lastModified: Instant = Clock.System.now()
+    val lastModified: Instant = Clock.System.now(),
+    val ordinal: Int = -1
 ) {
     @Serializable
     enum class Color {

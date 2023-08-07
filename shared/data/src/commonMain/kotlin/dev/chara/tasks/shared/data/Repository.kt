@@ -225,6 +225,17 @@ class Repository(
         return restDataSource.updateList(listId, taskList)
     }
 
+    suspend fun reorderList(
+        listId: String,
+        fromIndex: Int,
+        toIndex: Int,
+        lastModified: Instant
+    ): Result<Unit, DataError> {
+        cacheDataSource.reorderTaskList(listId, fromIndex, toIndex, lastModified)
+        widgetManager.update()
+        return restDataSource.reorderList(listId, fromIndex, toIndex, lastModified)
+    }
+
     suspend fun deleteList(id: String) =
         restDataSource.deleteList(id).onSuccess {
             cacheDataSource.deleteTasksByList(id)

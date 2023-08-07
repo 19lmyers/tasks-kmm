@@ -20,7 +20,9 @@ CREATE TABLE TaskList (
     sort_direction TEXT AS SortDirection NOT NULL,
 
     date_created TEXT AS Instant NOT NULL,
-    last_modified TEXT AS Instant NOT NULL
+    last_modified TEXT AS Instant NOT NULL,
+
+    ordinal INTEGER NOT NULL
 );
 
 CREATE TABLE Task (

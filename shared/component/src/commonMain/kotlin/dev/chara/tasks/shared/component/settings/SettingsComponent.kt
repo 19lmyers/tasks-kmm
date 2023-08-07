@@ -5,7 +5,6 @@ import dev.chara.tasks.shared.component.util.SnackbarMessage
 import dev.chara.tasks.shared.component.util.coroutineScope
 import dev.chara.tasks.shared.component.util.emitAsMessage
 import dev.chara.tasks.shared.data.Repository
-import dev.chara.tasks.shared.model.TaskList
 import dev.chara.tasks.shared.model.board.BoardSection
 import dev.chara.tasks.shared.model.preference.Theme
 import dev.chara.tasks.shared.model.preference.ThemeVariant
@@ -19,6 +18,7 @@ import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
+import kotlinx.datetime.Clock
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
@@ -35,7 +35,7 @@ interface SettingsComponent {
 
     fun setEnabledForBoardSection(section: BoardSection.Type, enabled: Boolean)
 
-    fun updateList(taskList: TaskList)
+    fun reorderList(listId: String, fromIndex: Int, toIndex: Int)
 }
 
 class DefaultSettingsComponent(
@@ -86,9 +86,15 @@ class DefaultSettingsComponent(
         coroutineScope.launch { repository.setEnabledForBoardSection(section, enabled) }
     }
 
-    override fun updateList(taskList: TaskList) {
+    override fun reorderList(listId: String, fromIndex: Int, toIndex: Int) {
         coroutineScope.launch {
-            val result = repository.updateList(taskList.id, taskList)
+            val result =
+                repository.reorderList(
+                    listId,
+                    fromIndex,
+                    toIndex,
+                    lastModified = Clock.System.now()
+                )
             _messages.emitAsMessage(result)
         }
     }

@@ -453,6 +453,29 @@ class RestDataSource(private val preferenceDataSource: PreferenceDataSource, end
             Err(ClientError(ex))
         }
 
+    suspend fun reorderList(listId: String, fromIndex: Int, toIndex: Int, lastModified: Instant) =
+        try {
+            val response =
+                client.post("$endpointUrl/lists/$listId/reorder") {
+                    contentType(ContentType.Application.Json)
+                    setBody(Reorder(fromIndex, toIndex, lastModified))
+                }
+
+            when (response.status) {
+                HttpStatusCode.OK -> {
+                    Ok(Unit)
+                }
+                HttpStatusCode.BadRequest -> {
+                    Err(ApiError.InvalidQuery(response.body()))
+                }
+                else -> {
+                    Err(ApiError.OtherServerError(response.body()))
+                }
+            }
+        } catch (ex: Throwable) {
+            Err(ClientError(ex))
+        }
+
     suspend fun deleteList(listId: String) =
         try {
             val response = client.delete("$endpointUrl/lists/$listId")
@@ -586,9 +609,6 @@ class RestDataSource(private val preferenceDataSource: PreferenceDataSource, end
         } catch (ex: Throwable) {
             Err(ClientError(ex))
         }
-
-    @Serializable
-    data class Reorder(val fromIndex: Int, val toIndex: Int, val lastModified: Instant)
 
     suspend fun reorderTask(
         listId: String,

@@ -90,11 +90,9 @@ fun Tasks(
     var reorderableTasks = remember { currentTasks.toMutableStateList() }
 
     SideEffect {
-        if (reorderableTasks != currentTasks) {
-            reorderableTasks.apply {
-                clear()
-                addAll(currentTasks)
-            }
+        reorderableTasks.apply {
+            clear()
+            addAll(currentTasks)
         }
     }
 
@@ -176,7 +174,7 @@ fun TaskItem(
     indexNumber: Int? = null,
     isDragging: Boolean = false
 ) {
-    val shadowElevation = animateDpAsState(if (isDragging) 8.dp else 0.dp)
+    val shadowElevation by animateDpAsState(if (isDragging) 8.dp else 0.dp)
 
     Row(modifier = modifier) {
         if (showIndexNumbers) {
@@ -190,7 +188,7 @@ fun TaskItem(
             color = MaterialTheme.colorScheme.surfaceContainerHigh,
             modifier = Modifier.padding(4.dp).fillMaxWidth(),
             onClick = { onClick(task) },
-            shadowElevation = shadowElevation.value,
+            shadowElevation = shadowElevation,
             shape = MaterialTheme.shapes.extraLarge,
             border =
                 BorderStroke(

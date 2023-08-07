@@ -27,34 +27,61 @@ class CacheDataSource(driverFactory: DriverFactory) {
             it?.toModel()
         }
 
+    private fun getMaxListOrdinal() =
+        database.taskListQueries.getMaxOrdinal().executeAsOneOrNull()?.MAX
+
     suspend fun insertTaskList(taskList: TaskList) =
         withContext(Dispatchers.IO) {
             database.taskListQueries.insert(
-                taskList.id,
-                taskList.title,
-                taskList.color,
-                taskList.icon,
-                taskList.description,
-                taskList.showIndexNumbers,
-                taskList.sortType,
-                taskList.sortDirection,
-                taskList.dateCreated,
-                taskList.lastModified
+                id = taskList.id,
+                title = taskList.title,
+                color = taskList.color,
+                icon = taskList.icon,
+                description = taskList.description,
+                show_index_numbers = taskList.showIndexNumbers,
+                sort_type = taskList.sortType,
+                sort_direction = taskList.sortDirection,
+                date_created = taskList.dateCreated,
+                last_modified = taskList.lastModified,
+                ordinal =
+                    if (taskList.ordinal == -1) {
+                        getMaxListOrdinal()?.plus(1) ?: 0
+                    } else {
+                        taskList.ordinal.toLong()
+                    }
             )
         }
 
     suspend fun updateTaskList(taskList: TaskList) =
         withContext(Dispatchers.IO) {
             database.taskListQueries.update(
-                taskList.title,
-                taskList.color,
-                taskList.icon,
-                taskList.description,
-                taskList.sortType,
-                taskList.sortDirection,
-                taskList.showIndexNumbers,
-                taskList.lastModified,
-                taskList.id
+                title = taskList.title,
+                color = taskList.color,
+                icon = taskList.icon,
+                description = taskList.description,
+                sort_type = taskList.sortType,
+                sort_direction = taskList.sortDirection,
+                show_index_numbers = taskList.showIndexNumbers,
+                last_modified = taskList.lastModified,
+                ordinal = taskList.ordinal.toLong(),
+                id = taskList.id
+            )
+        }
+
+    suspend fun reorderTaskList(
+        listId: String,
+        fromIndex: Int,
+        toIndex: Int,
+        lastModified: Instant
+    ) =
+        withContext(Dispatchers.IO) {
+            database.taskListQueries.reorder(
+                list_id = listId,
+                ordinal = toIndex.toLong(),
+                difference_sign = (fromIndex - toIndex).sign.toLong(),
+                lower_bound = min(fromIndex, toIndex).toLong(),
+                upper_bound = max(fromIndex, toIndex).toLong(),
+                last_modified = lastModified
             )
         }
 
@@ -115,42 +142,43 @@ class CacheDataSource(driverFactory: DriverFactory) {
             .asFlow()
             .mapToOneOrNull(Dispatchers.IO)
 
-    private fun getMaxOrdinal(listId: String) =
+    private fun getMaxTaskOrdinal(listId: String) =
         database.taskQueries.getMaxOrdinal(listId).executeAsOneOrNull()?.MAX
 
     suspend fun insertTask(task: Task) =
         withContext(Dispatchers.IO) {
             database.taskQueries.insert(
-                task.id,
-                task.listId,
-                task.label,
-                task.isCompleted,
-                task.isStarred,
-                task.details,
-                task.reminderDate,
-                task.dueDate,
-                task.dateCreated,
-                task.lastModified,
-                if (task.ordinal == -1) {
-                    getMaxOrdinal(task.listId)?.plus(1) ?: 0
-                } else {
-                    task.ordinal.toLong()
-                }
+                id = task.id,
+                list_id = task.listId,
+                label = task.label,
+                is_completed = task.isCompleted,
+                is_starred = task.isStarred,
+                details = task.details,
+                reminder_date = task.reminderDate,
+                due_date = task.dueDate,
+                date_created = task.dateCreated,
+                last_modified = task.lastModified,
+                ordinal =
+                    if (task.ordinal == -1) {
+                        getMaxTaskOrdinal(task.listId)?.plus(1) ?: 0
+                    } else {
+                        task.ordinal.toLong()
+                    }
             )
         }
 
     suspend fun updateTask(task: Task) =
         withContext(Dispatchers.IO) {
             database.taskQueries.update(
-                task.label,
-                task.isCompleted,
-                task.isStarred,
-                task.details,
-                task.reminderDate,
-                task.dueDate,
-                task.lastModified,
-                task.ordinal.toLong(),
-                task.id
+                label = task.label,
+                is_completed = task.isCompleted,
+                is_starred = task.isStarred,
+                details = task.details,
+                reminder_date = task.reminderDate,
+                due_date = task.dueDate,
+                last_modified = task.lastModified,
+                ordinal = task.ordinal.toLong(),
+                id = task.id
             )
         }
 
@@ -189,35 +217,42 @@ class CacheDataSource(driverFactory: DriverFactory) {
                 database.taskListQueries.deleteAll()
                 for (taskList in taskLists) {
                     database.taskListQueries.insert(
-                        taskList.id,
-                        taskList.title,
-                        taskList.color,
-                        taskList.icon,
-                        taskList.description,
-                        taskList.showIndexNumbers,
-                        taskList.sortType,
-                        taskList.sortDirection,
-                        taskList.dateCreated,
-                        taskList.lastModified
+                        id = taskList.id,
+                        title = taskList.title,
+                        color = taskList.color,
+                        icon = taskList.icon,
+                        description = taskList.description,
+                        show_index_numbers = taskList.showIndexNumbers,
+                        sort_type = taskList.sortType,
+                        sort_direction = taskList.sortDirection,
+                        date_created = taskList.dateCreated,
+                        last_modified = taskList.lastModified,
+                        ordinal =
+                            if (taskList.ordinal == -1) {
+                                getMaxListOrdinal()?.plus(1) ?: 0
+                            } else {
+                                taskList.ordinal.toLong()
+                            }
                     )
                 }
                 for (task in tasks) {
                     database.taskQueries.insert(
-                        task.id,
-                        task.listId,
-                        task.label,
-                        task.isCompleted,
-                        task.isStarred,
-                        task.details,
-                        task.reminderDate,
-                        task.dueDate,
-                        task.dateCreated,
-                        task.lastModified,
-                        if (task.ordinal == -1) {
-                            getMaxOrdinal(task.listId)?.plus(1) ?: 0
-                        } else {
-                            task.ordinal.toLong()
-                        }
+                        id = task.id,
+                        list_id = task.listId,
+                        label = task.label,
+                        is_completed = task.isCompleted,
+                        is_starred = task.isStarred,
+                        details = task.details,
+                        reminder_date = task.reminderDate,
+                        due_date = task.dueDate,
+                        date_created = task.dateCreated,
+                        last_modified = task.lastModified,
+                        ordinal =
+                            if (task.ordinal == -1) {
+                                getMaxTaskOrdinal(task.listId)?.plus(1) ?: 0
+                            } else {
+                                task.ordinal.toLong()
+                            }
                     )
                 }
             }

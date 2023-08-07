@@ -32,8 +32,8 @@ android {
         applicationId = "dev.chara.tasks.android"
         minSdk = 24
         targetSdk = 34
-        versionCode = 14
-        versionName = "0.8"
+        versionCode = 15
+        versionName = "0.8.1"
     }
     compileOptions {
         isCoreLibraryDesugaringEnabled = true

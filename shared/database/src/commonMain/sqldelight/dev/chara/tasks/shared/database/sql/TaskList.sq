@@ -1,7 +1,7 @@
 get:
 SELECT *
 FROM TaskList
-ORDER BY title ASC;
+ORDER BY ordinal ASC;
 
 getById:
 SELECT *
@@ -9,13 +9,27 @@ FROM TaskList
 WHERE id = ?
 LIMIT 1;
 
+getMaxOrdinal:
+SELECT MAX(tl.ordinal)
+FROM TaskList tl;
+
 insert:
-INSERT INTO TaskList VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+INSERT INTO TaskList VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
 
 update:
 UPDATE TaskList
-SET title = ?, color = ?, icon = ?, description = ?, sort_type = ?, sort_direction = ?, show_index_numbers = ?, last_modified = ?
+SET title = ?, color = ?, icon = ?, description = ?, sort_type = ?, sort_direction = ?, show_index_numbers = ?, last_modified = ?, ordinal = ?
 WHERE id = ?;
+
+reorder {
+    UPDATE TaskList
+    SET ordinal = ordinal + :difference_sign, last_modified = :last_modified
+    WHERE ordinal BETWEEN :lower_bound AND :upper_bound;
+
+    UPDATE TaskList
+    SET ordinal = :ordinal + 0, last_modified = :last_modified
+    WHERE id = :list_id;
+}
 
 delete:
 DELETE FROM TaskList

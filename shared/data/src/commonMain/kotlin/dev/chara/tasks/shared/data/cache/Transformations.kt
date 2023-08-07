@@ -10,31 +10,32 @@ import kotlin.jvm.JvmName
 
 fun SqlTask.toModel() =
     Task(
-        this.id,
-        this.list_id,
-        this.label,
-        this.is_completed,
-        this.is_starred,
-        this.details,
-        this.reminder_date,
-        this.due_date,
-        this.date_created,
-        this.last_modified,
-        this.ordinal.toInt()
+        id = this.id,
+        listId = this.list_id,
+        label = this.label,
+        isCompleted = this.is_completed,
+        isStarred = this.is_starred,
+        details = this.details,
+        reminderDate = this.reminder_date,
+        dueDate = this.due_date,
+        dateCreated = this.date_created,
+        lastModified = this.last_modified,
+        ordinal = this.ordinal.toInt()
     )
 
 @JvmName("toTaskListModel") fun Collection<SqlTaskList>.toModel() = map { it.toModel() }
 
 fun SqlTaskList.toModel() =
     TaskList(
-        this.id,
-        this.title,
-        this.color,
-        this.icon,
-        this.description,
-        this.show_index_numbers,
-        this.sort_type,
-        this.sort_direction,
-        this.date_created,
-        this.last_modified
+        id = this.id,
+        title = this.title,
+        color = this.color,
+        icon = this.icon,
+        description = this.description,
+        showIndexNumbers = this.show_index_numbers,
+        sortType = this.sort_type,
+        sortDirection = this.sort_direction,
+        dateCreated = this.date_created,
+        lastModified = this.last_modified,
+        ordinal = this.ordinal.toInt()
     )

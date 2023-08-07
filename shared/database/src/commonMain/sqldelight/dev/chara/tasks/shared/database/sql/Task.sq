@@ -100,7 +100,6 @@ WHERE id = ?;
 
 move:
 UPDATE Task
-
 SET list_id = ?, last_modified = ?
 WHERE id = ?;
 
