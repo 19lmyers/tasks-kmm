@@ -22,6 +22,7 @@ import androidx.compose.material.icons.filled.ExpandMore
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.filled.StarOutline
 import androidx.compose.material3.Checkbox
+import androidx.compose.material3.CheckboxDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconToggleButton
 import androidx.compose.material3.MaterialTheme
@@ -227,7 +228,9 @@ private fun Task(
                         onUpdate(
                             task.copy(isCompleted = isCompleted, lastModified = Clock.System.now())
                         )
-                    }
+                    },
+                    colors =
+                        CheckboxDefaults.colors(uncheckedColor = MaterialTheme.colorScheme.primary)
                 )
                 Column(modifier = Modifier.align(Alignment.CenterVertically).fillMaxWidth(0.85f)) {
                     Text(
