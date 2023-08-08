@@ -156,7 +156,7 @@ fun HomeContent(component: HomeComponent, windowSizeClass: WindowSizeClass) {
                             child.component,
                             paddingTop,
                             paddingBottom,
-                            scrollBehavior.nestedScrollConnection,
+                            scrollBehavior,
                             snackbarHostState
                         )
                 }

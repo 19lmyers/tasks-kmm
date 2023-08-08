@@ -264,7 +264,11 @@ private fun Task(
             if (task.isStarred) {
                 Icon(Icons.Filled.Star, contentDescription = "Unstar task")
             } else {
-                Icon(Icons.Filled.StarOutline, contentDescription = "Star task")
+                Icon(
+                    Icons.Filled.StarOutline,
+                    contentDescription = "Star task",
+                    tint = MaterialTheme.colorScheme.primary
+                )
             }
         }
     }
