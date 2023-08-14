@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.requiredWidth
 import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -25,17 +26,20 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.androidx.material3.polyfill.AlertDialog
 import dev.chara.tasks.shared.ui.theme.extend.surfaceContainerHigh
 import dev.chara.tasks.shared.ui.theme.extend.surfaceContainerHighest
+import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
+import kotlinx.datetime.atStartOfDayIn
 import kotlinx.datetime.toLocalDateTime
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PickDueDateDialog(onDismiss: () -> Unit, onConfirm: (LocalDateTime) -> Unit) {
+    val localDateTime = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())
+
     val datePickerState = rememberDatePickerState()
 
     DatePickerDialog(
@@ -61,7 +65,10 @@ fun PickDueDateDialog(onDismiss: () -> Unit, onConfirm: (LocalDateTime) -> Unit)
                 colors =
                     DatePickerDefaults.colors(
                         containerColor = MaterialTheme.colorScheme.surfaceContainerHigh
-                    )
+                    ),
+                dateValidator = {
+                    it > localDateTime.date.atStartOfDayIn(TimeZone.UTC).toEpochMilliseconds()
+                }
             )
         }
     }

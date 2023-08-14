@@ -31,9 +31,12 @@ import androidx.compose.material.icons.filled.NotificationAdd
 import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.filled.StarOutline
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Button
 import androidx.compose.material3.Checkbox
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -70,9 +73,6 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import com.androidx.material3.polyfill.AlertDialog
-import com.androidx.material3.polyfill.DropdownMenu
-import com.androidx.material3.polyfill.DropdownMenuItem
 import dev.chara.tasks.shared.component.home.task_details.TaskDetailsComponent
 import dev.chara.tasks.shared.domain.FriendlyDateFormatter
 import dev.chara.tasks.shared.model.Task

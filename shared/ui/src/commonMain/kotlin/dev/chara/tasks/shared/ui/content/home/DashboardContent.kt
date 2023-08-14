@@ -33,7 +33,6 @@ import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.SnackbarDuration
@@ -332,13 +331,7 @@ private fun LazyItemScope.ListCard(
             shape = MaterialTheme.shapes.extraLarge,
             onClick = onClick
         ) {
-            CardContent(
-                title = title,
-                icon = icon,
-                description = description,
-                onClick = onClick,
-                content = content
-            )
+            CardContent(title = title, icon = icon, description = description, content = content)
         }
     }
 }
@@ -385,30 +378,16 @@ private fun CardContent(
     title: String,
     icon: ImageVector,
     description: String? = null,
-    onClick: (() -> Unit)? = null,
     content: @Composable ColumnScope.() -> Unit
 ) {
     Column(modifier = Modifier.padding(horizontal = 8.dp, vertical = 12.dp)) {
         Row(modifier = Modifier.padding(horizontal = 16.dp).fillMaxWidth()) {
-            if (onClick != null) {
-                IconButton(
-                    onClick = onClick,
-                    modifier = Modifier.align(Alignment.CenterVertically),
-                ) {
-                    Icon(
-                        icon,
-                        contentDescription = "View list",
-                        tint = MaterialTheme.colorScheme.primary
-                    )
-                }
-            } else {
-                Icon(
-                    modifier = Modifier.padding(8.dp).align(Alignment.CenterVertically),
-                    imageVector = icon,
-                    tint = MaterialTheme.colorScheme.primary,
-                    contentDescription = null
-                )
-            }
+            Icon(
+                modifier = Modifier.padding(8.dp).align(Alignment.CenterVertically),
+                imageVector = icon,
+                tint = MaterialTheme.colorScheme.primary,
+                contentDescription = null
+            )
             Text(
                 modifier = Modifier.padding(8.dp),
                 text = title,

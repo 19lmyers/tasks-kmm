@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.requiredWidth
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Schedule
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDefaults
 import androidx.compose.material3.Divider
@@ -35,7 +36,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.androidx.material3.polyfill.AlertDialog
 import dev.chara.tasks.shared.domain.FriendlyDateFormatter
 import dev.chara.tasks.shared.ui.theme.extend.surfaceContainerHigh
 import dev.chara.tasks.shared.ui.theme.extend.surfaceContainerHighest
@@ -107,7 +107,10 @@ fun PickReminderDateDialog(onDismiss: () -> Unit, onConfirm: (LocalDateTime) -> 
                 colors =
                     DatePickerDefaults.colors(
                         containerColor = MaterialTheme.colorScheme.surfaceContainerHigh
-                    )
+                    ),
+                dateValidator = {
+                    it >= localDateTime.date.atStartOfDayIn(TimeZone.UTC).toEpochMilliseconds()
+                }
             )
         }
 

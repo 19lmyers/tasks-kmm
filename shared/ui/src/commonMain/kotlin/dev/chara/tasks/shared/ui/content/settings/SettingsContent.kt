@@ -14,6 +14,8 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.DragHandle
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -41,8 +43,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
-import com.androidx.material3.polyfill.DropdownMenu
-import com.androidx.material3.polyfill.DropdownMenuItem
 import com.androidx.material3.polyfill.ExposedDropdownMenuBox
 import com.androidx.material3.polyfill.ExposedDropdownMenuDefaults
 import dev.chara.tasks.shared.component.settings.SettingsComponent

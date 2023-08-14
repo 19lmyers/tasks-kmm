@@ -24,6 +24,7 @@ import androidx.compose.material.icons.filled.Password
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material.icons.filled.RemoveCircle
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -55,7 +56,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.dp
 import co.touchlab.kermit.Logger
-import com.androidx.material3.polyfill.AlertDialog
 import com.github.michaelbull.result.mapBoth
 import dev.chara.tasks.shared.component.profile.ProfileComponent
 import dev.chara.tasks.shared.ui.item.ProfileImage
