@@ -1,5 +1,5 @@
 [versions]
-android = "8.2.0-alpha15"
+android = "8.2.0-alpha16"
 kotlin = "1.9.0"
 
 coroutines = "1.7.3"
@@ -9,7 +9,7 @@ ktor = "2.3.3"
 result = "1.1.18"
 
 kermit = "2.0.0-RC5"
-decompose = "2.1.0-compose-experimental-alpha-06"
+decompose = "2.1.0-compose-experimental-alpha-07"
 sqldelight = "2.0.0"
 
 [plugins]
@@ -20,7 +20,7 @@ crashlytics = { id = "com.google.firebase.crashlytics", version = "2.9.8" }
 
 google-services = { id = "com.google.gms.google-services", version = "4.3.15" }
 
-jetbrains-compose = { id = "org.jetbrains.compose", version = "1.5.0-beta02" }
+jetbrains-compose = { id = "org.jetbrains.compose", version = "1.5.0-rc01" }
 
 kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
@@ -39,6 +39,7 @@ versions = { id = "com.github.ben-manes.versions", version = "0.47.0" }
 accompanist-systemuicontroller = { module = "com.google.accompanist:accompanist-systemuicontroller", version = "0.31.6-rc" }
 
 androidx-core = { module = "androidx.core:core-ktx", version = "1.10.1" }
+androidx-core-splashscreen = { module = "androidx.core:core-splashscreen", version = "1.0.1" }
 
 androidx-activity = { module = "androidx.activity:activity-compose", version = "1.7.2" }
 
@@ -49,7 +50,7 @@ androidx-lifecycle-service = { module = "androidx.lifecycle:lifecycle-service", 
 
 androidx-work = { module = "androidx.work:work-runtime-ktx", version = "2.8.1" }
 
-atomicfu = { module = "org.jetbrains.kotlinx:atomicfu", version = "0.21.0" }
+atomicfu = { module = "org.jetbrains.kotlinx:atomicfu", version = "0.22.0" }
 
 crashkios = { module = "co.touchlab.crashkios:crashlytics", version = "0.8.2" }
 
@@ -60,7 +61,7 @@ datastore = { module = "androidx.datastore:datastore-preferences-core", version 
 
 desugar_jdk_libs = { module = "com.android.tools:desugar_jdk_libs", version = "2.0.3" }
 
-essenty = { module = "com.arkivanov.essenty:lifecycle", version = "1.2.0-alpha-03" }
+essenty = { module = "com.arkivanov.essenty:lifecycle", version = "1.2.0-alpha-06" }
 
 firebase-bom = { module = "com.google.firebase:firebase-bom", version = "32.2.2" }
 
@@ -114,7 +115,7 @@ sqlite-android = { module = "com.github.requery:sqlite-android", version = "3.42
 
 uuid = { module = "com.benasher44:uuid", version = "0.8.0" }
 
-window-size = { module = "dev.chrisbanes.material3:material3-window-size-class-multiplatform", version = "0.2.0" }
+window-size = { module = "dev.chrisbanes.material3:material3-window-size-class-multiplatform", version = "0.3.1" }
 
 [bundles]
 firebase = ["firebase-analytics", "firebase-messaging", "firebase-crashlytics"]

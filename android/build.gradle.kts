@@ -99,6 +99,8 @@ dependencies {
 
     implementation(libs.androidx.activity)
 
+    implementation(libs.androidx.core.splashscreen)
+
     implementation(libs.androidx.glance)
     implementation(libs.androidx.glance.material3)
 
