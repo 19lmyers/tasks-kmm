@@ -1,5 +1,3 @@
-@file:Suppress("UNUSED_VARIABLE")
-
 plugins {
     alias(libs.plugins.kotlin.multiplatform)
 

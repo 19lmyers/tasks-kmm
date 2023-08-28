@@ -22,7 +22,7 @@ class AppleFirebaseWrapper: FirebaseWrapper {
     }
 
     func recordException(t: KotlinThrowable) {
-        CrashlyticsKotlin.shared.sendHandledException(throwable: t)
+        CrashlyticsKt.recordException(throwable: t)
     }
 
     func setUserId(userId: String) {

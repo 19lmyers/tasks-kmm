@@ -1,5 +1,3 @@
-@file:Suppress("UNUSED_VARIABLE")
-
 import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget
 
 plugins {
@@ -21,19 +19,17 @@ kotlin {
         val commonMain by getting {
             dependencies {
                 api(project(":shared:component"))
-                api(project(":shared:ui"))
                 api(project(":shared:ext"))
 
-                api(compose.runtime)
-
-                api(libs.crashkios)
-
                 api(libs.decompose)
-
                 api(libs.essenty)
 
-                api(libs.kermit)
-                api(libs.kermit.crashlytics)
+                implementation(project(":shared:ui"))
+
+                implementation(libs.crashkios)
+
+                implementation(libs.kermit)
+                implementation(libs.kermit.crashlytics)
             }
         }
         val commonTest by getting {
@@ -77,19 +73,10 @@ kotlin {
                 }
 
                 export(project(":shared:component"))
-                export(project(":shared:ui"))
                 export(project(":shared:ext"))
 
-                export(libs.crashkios)
-
-                export(compose.runtime)
-
                 export(libs.decompose)
-
                 export(libs.essenty)
-
-                export(libs.kermit)
-                export(libs.kermit.crashlytics)
             }
         }
     }
