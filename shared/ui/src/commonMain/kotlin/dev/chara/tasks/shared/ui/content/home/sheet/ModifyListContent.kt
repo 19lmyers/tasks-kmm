@@ -31,8 +31,8 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.ListItem
-import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Switch
@@ -56,7 +56,6 @@ import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.unit.dp
-import com.androidx.material3.polyfill.ModalBottomSheet
 import dev.chara.tasks.shared.component.home.modify_list.ModifyListComponent
 import dev.chara.tasks.shared.model.TaskList
 import dev.chara.tasks.shared.ui.model.icon
@@ -122,7 +121,7 @@ fun ModifyListContent(component: ModifyListComponent) {
                                 }
                             }
 
-                            items(TaskList.Icon.values(), key = { it.name }) { icon ->
+                            items(TaskList.Icon.entries.toTypedArray(), key = { it.name }) { icon ->
                                 IconSwatch(
                                     icon = icon.icon,
                                     contentDescription = icon.toString(),
@@ -184,10 +183,6 @@ fun ModifyListContent(component: ModifyListComponent) {
                 )
 
                 ListItem(
-                    colors =
-                        ListItemDefaults.colors(
-                            containerColor = MaterialTheme.colorScheme.surfaceContainerHigh
-                        ),
                     modifier = Modifier.clickable { showIconDialog = true },
                     headlineContent = { Text(text = "Icon") },
                     trailingContent = {
@@ -212,7 +207,8 @@ fun ModifyListContent(component: ModifyListComponent) {
                         }
                     }
 
-                    items(items = TaskList.Color.values(), key = { it.name }) { color ->
+                    items(items = TaskList.Color.entries.toTypedArray(), key = { it.name }) { color
+                        ->
                         ColorTheme(color = color) {
                             ColorSwatch(
                                 color = MaterialTheme.colorScheme.surfaceContainerHigh,
@@ -243,10 +239,6 @@ fun ModifyListContent(component: ModifyListComponent) {
                 )
 
                 ListItem(
-                    colors =
-                        ListItemDefaults.colors(
-                            containerColor = MaterialTheme.colorScheme.surfaceContainerHigh
-                        ),
                     headlineContent = { Text(text = "Show list numbers") },
                     leadingContent = {
                         Icon(imageVector = Icons.Filled.FormatListNumbered, "List numbers")
@@ -323,7 +315,7 @@ fun ColorSwatch(
 
             Modifier.background(
                 Brush.sweepGradient(
-                    TaskList.Color.values().map { listColor ->
+                    TaskList.Color.entries.map { listColor ->
                         val surfaceColors =
                             dynamicSurfaceColors(listColor.seed, darkTheme, variant.style)
                         surfaceColors.surfaceContainerHigh

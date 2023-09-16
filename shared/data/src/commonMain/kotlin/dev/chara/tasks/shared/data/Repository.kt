@@ -315,7 +315,7 @@ class Repository(
 
     fun getEnabledBoardSections() =
         preferenceDataSource.getDisabledBoardSections().map { disabledSections ->
-            val enabledSections = BoardSection.Type.values().toMutableList()
+            val enabledSections = BoardSection.Type.entries.toMutableList()
             enabledSections.removeAll(disabledSections.map { BoardSection.Type.valueOf(it) })
             enabledSections
         }

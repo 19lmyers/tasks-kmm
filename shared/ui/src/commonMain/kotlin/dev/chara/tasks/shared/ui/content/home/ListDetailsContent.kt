@@ -433,7 +433,7 @@ private fun SortListDialog(
                 Box(modifier = Modifier.padding(bottom = 16.dp)) {
                     Text(text = "Sort by", style = MaterialTheme.typography.headlineSmall)
                 }
-                for (type in TaskList.SortType.values()) {
+                for (type in TaskList.SortType.entries) {
                     ListItem(
                         modifier =
                             Modifier.clip(MaterialTheme.shapes.extraLarge)

@@ -13,14 +13,17 @@ import androidx.compose.material.icons.filled.NotificationAdd
 import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExposedDropdownMenuBox
+import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.ListItem
-import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
@@ -35,10 +38,6 @@ import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.unit.dp
-import com.androidx.material3.polyfill.ExposedDropdownMenuBox
-import com.androidx.material3.polyfill.ExposedDropdownMenuDefaults
-import com.androidx.material3.polyfill.ModalBottomSheet
-import com.androidx.material3.polyfill.rememberModalBottomSheetState
 import dev.chara.tasks.shared.component.home.create_task.CreateTaskComponent
 import dev.chara.tasks.shared.domain.FriendlyDateFormatter
 import dev.chara.tasks.shared.model.Task
@@ -48,7 +47,6 @@ import dev.chara.tasks.shared.ui.item.DueDateChip
 import dev.chara.tasks.shared.ui.item.ReminderChip
 import dev.chara.tasks.shared.ui.model.icon
 import dev.chara.tasks.shared.ui.theme.ColorTheme
-import dev.chara.tasks.shared.ui.theme.extend.surfaceContainerHigh
 import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
 import kotlinx.datetime.TimeZone
@@ -191,10 +189,6 @@ fun CreateTaskContent(component: CreateTaskComponent) {
             }
 
             ListItem(
-                colors =
-                    ListItemDefaults.colors(
-                        containerColor = MaterialTheme.colorScheme.surfaceContainerHigh
-                    ),
                 modifier =
                     Modifier.clickable(enabled = !state.value.isLoading) {
                         showReminderDatePickerDialog = true
@@ -222,10 +216,6 @@ fun CreateTaskContent(component: CreateTaskComponent) {
             )
 
             ListItem(
-                colors =
-                    ListItemDefaults.colors(
-                        containerColor = MaterialTheme.colorScheme.surfaceContainerHigh
-                    ),
                 modifier =
                     Modifier.clickable(enabled = !state.value.isLoading) {
                         showDueDatePickerDialog = true

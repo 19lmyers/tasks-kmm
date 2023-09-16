@@ -17,6 +17,8 @@ import androidx.compose.material.icons.filled.DragHandle
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExposedDropdownMenuBox
+import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.ListItem
@@ -43,8 +45,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
-import com.androidx.material3.polyfill.ExposedDropdownMenuBox
-import com.androidx.material3.polyfill.ExposedDropdownMenuDefaults
 import dev.chara.tasks.shared.component.settings.SettingsComponent
 import dev.chara.tasks.shared.model.TaskList
 import dev.chara.tasks.shared.model.board.BoardSection
@@ -205,7 +205,7 @@ private fun BoardSettings(
                             expanded = showThemeDropdown,
                             onDismissRequest = { showThemeDropdown = false },
                         ) {
-                            for (theme in Theme.values()) {
+                            for (theme in Theme.entries) {
                                 DropdownMenuItem(
                                     text = { Text(theme.toString()) },
                                     onClick = {
@@ -250,7 +250,7 @@ private fun BoardSettings(
                             expanded = showThemeVariantDropdown,
                             onDismissRequest = { showThemeVariantDropdown = false },
                         ) {
-                            for (variant in ThemeVariant.values()) {
+                            for (variant in ThemeVariant.entries) {
                                 DropdownMenuItem(
                                     text = { Text(variant.toString()) },
                                     onClick = {
@@ -271,7 +271,7 @@ private fun BoardSettings(
                 }
             )
 
-            for (boardSection in BoardSection.Type.values()) {
+            for (boardSection in BoardSection.Type.entries) {
                 ListItem(
                     modifier =
                         Modifier.clickable {
