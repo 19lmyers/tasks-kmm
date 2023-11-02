@@ -7,9 +7,7 @@ if (propertiesFile.exists()) {
 }
 
 plugins {
-    alias(libs.plugins.kotlin.android)
-
-    alias(libs.plugins.android.application)
+    id("dev.chara.tasks.convention.plugin.android-application")
 
     alias(libs.plugins.google.services)
     alias(libs.plugins.crashlytics)
@@ -17,21 +15,12 @@ plugins {
     alias(libs.plugins.jetbrains.compose)
 
     id("kotlin-parcelize")
-
-    alias(libs.plugins.ktfmt)
-}
-
-kotlin {
-    jvmToolchain(17)
 }
 
 android {
     namespace = "dev.chara.tasks.android"
-    compileSdk = 34
     defaultConfig {
         applicationId = "dev.chara.tasks.android"
-        minSdk = 24
-        targetSdk = 34
         versionCode = 17
         versionName = "0.8.3"
     }
@@ -132,8 +121,4 @@ dependencies {
 
 compose {
     kotlinCompilerPlugin.set(dependencies.compiler.auto)
-}
-
-ktfmt {
-    kotlinLangStyle()
 }

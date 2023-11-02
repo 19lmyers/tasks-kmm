@@ -1,47 +1,40 @@
 [versions]
-android = "8.2.0-beta06"
-kotlin = "1.9.10"
+android = "8.2.0-rc02"
+kotlin = "1.9.20"
 
 coroutines = "1.7.3"
 glance = "1.0.0"
 koin = "3.5.0"
-ktor = "2.3.4"
+ktor = "2.3.5"
 result = "1.1.18"
 
-kermit = "2.0.1"
-decompose = "2.1.0-compose-experimental"
+kermit = "2.0.2"
+decompose = "2.1.2-compose-experimental"
 sqldelight = "2.0.0"
 
 [plugins]
-android-application = { id = "com.android.application", version.ref = "android" }
-android-library = { id = "com.android.library", version.ref = "android" }
-
 crashlytics = { id = "com.google.firebase.crashlytics", version = "2.9.9" }
 
 google-services = { id = "com.google.gms.google-services", version = "4.4.0" }
 
-jetbrains-compose = { id = "org.jetbrains.compose", version = "1.5.10-beta02" }
-
-kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+jetbrains-compose = { id = "org.jetbrains.compose", version = "1.5.10" }
 
 kotlin-plugin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
-
 kotlin-atomicfu = { id = "org.jetbrains.kotlin.plugin.atomicfu", version.ref = "kotlin" }
-
-ktfmt = { id = "com.ncorti.ktfmt.gradle", version = "0.13.0" }
 
 sqldelight = { id = "app.cash.sqldelight", version.ref = "sqldelight" }
 
-versions = { id = "com.github.ben-manes.versions", version = "0.48.0" }
+versions = { id = "com.github.ben-manes.versions", version = "0.49.0" }
 
 [libraries]
 accompanist-systemuicontroller = { module = "com.google.accompanist:accompanist-systemuicontroller", version = "0.32.0" }
 
+android-gradle-plugin = { module = "com.android.tools.build:gradle", version.ref = "android" }
+
 androidx-core = { module = "androidx.core:core-ktx", version = "1.12.0" }
 androidx-core-splashscreen = { module = "androidx.core:core-splashscreen", version = "1.0.1" }
 
-androidx-activity = { module = "androidx.activity:activity-compose", version = "1.7.2" }
+androidx-activity = { module = "androidx.activity:activity-compose", version = "1.8.0" }
 
 androidx-glance = { module = "androidx.glance:glance-appwidget", version.ref = "glance" }
 androidx-glance-material3 = { module = "androidx.glance:glance-material3", version.ref = "glance" }
@@ -63,13 +56,13 @@ desugar_jdk_libs = { module = "com.android.tools:desugar_jdk_libs", version = "2
 
 essenty = { module = "com.arkivanov.essenty:lifecycle", version = "1.2.0" }
 
-firebase-bom = { module = "com.google.firebase:firebase-bom", version = "32.3.1" }
+firebase-bom = { module = "com.google.firebase:firebase-bom", version = "32.4.1" }
 
 firebase-analytics = { module = "com.google.firebase:firebase-analytics-ktx" }
 firebase-messaging = { module = "com.google.firebase:firebase-messaging-ktx" }
 firebase-crashlytics = { module = "com.google.firebase:firebase-crashlytics-ktx" }
 
-kamel = { module = "media.kamel:kamel-image", version = "0.7.3" }
+kamel = { module = "media.kamel:kamel-image", version = "0.8.2" }
 
 kermit = { module = "co.touchlab:kermit", version.ref = "kermit" }
 kermit-crashlytics = { module = "co.touchlab:kermit-crashlytics", version.ref = "kermit" }
@@ -79,12 +72,16 @@ koin-core = { module = "io.insert-koin:koin-core", version.ref = "koin" }
 koin-android = { module = "io.insert-koin:koin-android", version.ref = "koin" }
 koin-compose = { module = "io.insert-koin:koin-compose", version = "1.1.0" }
 
+kotlin-gradle-plugin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
+
 kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "coroutines" }
 
 kotlinx-datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version = "0.4.1" }
 
 kotlinx-serialization-core = { module = "org.jetbrains.kotlinx:kotlinx-serialization-core", version = "1.6.0" }
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version = "1.6.0" }
+
+ktfmt-gradle-plugin = { module = "com.ncorti.ktfmt.gradle:plugin", version = "0.15.1" }
 
 ktor-client-core = { module = "io.ktor:ktor-client-core", version.ref = "ktor" }
 
@@ -96,14 +93,14 @@ ktor-client-okhttp = { module = "io.ktor:ktor-client-okhttp", version.ref = "kto
 
 ktor-serialization-kotlinx-json = { module = "io.ktor:ktor-serialization-kotlinx-json", version.ref = "ktor" }
 
-materialkolor = { module = "com.materialkolor:material-kolor", version = "1.2.6" }
+materialkolor = { module = "com.materialkolor:material-kolor", version = "1.2.7" }
 
 nserrorkt = { module = "com.rickclephas.kmp:nserror-kt", version = "0.1.0" }
 
 result = { module = "com.michael-bull.kotlin-result:kotlin-result", version.ref = "result" }
 result-coroutines = { module = "com.michael-bull.kotlin-result:kotlin-result-coroutines", version.ref = "result" }
 
-okio = { module = "com.squareup.okio:okio", version = "3.5.0" }
+okio = { module = "com.squareup.okio:okio", version = "3.6.0" }
 
 sqldelight-dialect = { module = "app.cash.sqldelight:sqlite-3-38-dialect", version.ref = "sqldelight" }
 sqldelight-coroutines-extensions = { module = "app.cash.sqldelight:coroutines-extensions", version.ref = "sqldelight" }

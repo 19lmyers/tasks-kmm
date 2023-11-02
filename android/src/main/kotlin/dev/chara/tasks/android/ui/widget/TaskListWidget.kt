@@ -93,8 +93,8 @@ class TaskListWidget : GlanceAppWidget(), KoinComponent {
                                 title = boardList.taskList.title,
                                 description = boardList.taskList.description,
                                 tintColor = boardList.taskList.color,
-                                icon = boardList.taskList.icon?.drawable
-                                        ?: R.drawable.checklist_48px
+                                icon =
+                                    boardList.taskList.icon?.drawable ?: R.drawable.checklist_48px
                             ) {
                                 for ((index, task) in boardList.topTasks.withIndex()) {
                                     Task(task = task)

@@ -62,7 +62,7 @@ class RestDataSource(private val preferenceDataSource: PreferenceDataSource, end
                         val refreshToken: String =
                             oldTokens?.refreshToken
                                 ?: preferenceDataSource.getApiTokens().first()?.refresh
-                                    ?: return@refreshTokens null
+                                ?: return@refreshTokens null
 
                         refreshAuth(refreshToken)
                             .mapBoth(
