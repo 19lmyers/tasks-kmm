@@ -1,0 +1,27 @@
+{
+  "configurations": [
+    {
+      "type": "android-app",
+      "name": "Android Emulator",
+      "module": "Tasks.android.main",
+      "destination": "Pixel 7 API 34",
+    },
+    {
+      "type": "xcode-app",
+      "name": "iOS Simulator",
+      "buildTarget": {
+        "project": "Tasks",
+        "target": "Tasks",
+      },
+      "configuration": "Debug",
+      "destination": "iPhone 14 | iOS 17.0",
+    },
+    {
+      "type": "gradle",
+      "name": "Dependency Updates",
+      "tasks": [
+        "dependencyUpdates"
+      ],
+    }
+  ]
+}

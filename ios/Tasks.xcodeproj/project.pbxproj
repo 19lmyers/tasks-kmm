@@ -61,6 +61,7 @@
 			children = (
 				DD9E902129FE109700D6DD11 /* Tasks */,
 				7555FF7C242A565900829871 /* Products */,
+				BE83E6EA8B7581C0FA394554 /* xcschemes */,
 			);
 			sourceTree = "<group>";
 		};
@@ -70,6 +71,14 @@
 				DD6DB40229F9FAD500EE8325 /* Tasks.app */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		BE83E6EA8B7581C0FA394554 /* xcschemes */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = xcschemes;
+			path = Tasks.xcodeproj/project.xcworkspace/xcuserdata/lmyers.xcuserdatad/xcschemes;
 			sourceTree = "<group>";
 		};
 		DD5E05552A7C421D005A2B6A /* Fonts */ = {
@@ -217,6 +226,7 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "cd \"$SRCROOT/..\" \n./gradlew :shared:framework:embedAndSignAppleFrameworkForXcode\n";
+			showEnvVarsInLog = 0;
 		};
 		DD62595D2A01B9F600BE63B1 /* Format Sources (SwiftFormat) */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -236,6 +246,7 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "cd BuildTools\nSDKROOT=(xcrun --sdk macosx --show-sdk-path)\n#swift package update #Uncomment this line temporarily to update the version used to the latest matching your BuildTools/Package.swift file\nswift run -c release swiftformat \"$SRCROOT/Tasks\"\n";
+			showEnvVarsInLog = 0;
 		};
 		DDBF7C3F2A69FAEB00EC8475 /* Upload Debug Symbols (Crashlytics) */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -255,6 +266,7 @@
 			runOnlyForDeploymentPostprocessing = 1;
 			shellPath = /bin/sh;
 			shellScript = "${BUILD_DIR%Build/*}/SourcePackages/checkouts/firebase-ios-sdk/Crashlytics/run\n";
+			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
 
