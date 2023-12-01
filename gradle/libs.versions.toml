@@ -4,8 +4,8 @@ kotlin = "1.9.21"
 
 coroutines = "1.7.3"
 glance = "1.0.0"
-koin = "3.5.0"
-ktor = "2.3.5"
+koin = "3.5.2-RC1"
+ktor = "2.3.6"
 result = "1.1.18"
 
 kermit = "2.0.2"
@@ -41,7 +41,7 @@ androidx-glance-material3 = { module = "androidx.glance:glance-material3", versi
 
 androidx-lifecycle-service = { module = "androidx.lifecycle:lifecycle-service", version = "2.6.2" }
 
-androidx-work = { module = "androidx.work:work-runtime-ktx", version = "2.8.1" }
+androidx-work = { module = "androidx.work:work-runtime-ktx", version = "2.9.0" }
 
 atomicfu = { module = "org.jetbrains.kotlinx:atomicfu", version = "0.22.0" }
 
@@ -50,7 +50,7 @@ crashkios = { module = "co.touchlab.crashkios:crashlytics", version = "0.8.5" }
 decompose = { module = "com.arkivanov.decompose:decompose", version.ref = "decompose" }
 decompose-extensions = { module = "com.arkivanov.decompose:extensions-compose-jetbrains", version.ref = "decompose" }
 
-datastore = { module = "androidx.datastore:datastore-preferences-core", version = "1.1.0-alpha04" }
+datastore = { module = "androidx.datastore:datastore-preferences-core", version = "1.1.0-alpha07" }
 
 desugar_jdk_libs = { module = "com.android.tools:desugar_jdk_libs", version = "2.0.4" }
 
@@ -93,7 +93,7 @@ ktor-client-okhttp = { module = "io.ktor:ktor-client-okhttp", version.ref = "kto
 
 ktor-serialization-kotlinx-json = { module = "io.ktor:ktor-serialization-kotlinx-json", version.ref = "ktor" }
 
-materialkolor = { module = "com.materialkolor:material-kolor", version = "1.2.8" }
+materialkolor = { module = "com.materialkolor:material-kolor", version = "1.2.9" }
 
 nserrorkt = { module = "com.rickclephas.kmp:nserror-kt", version = "0.1.0" }
 

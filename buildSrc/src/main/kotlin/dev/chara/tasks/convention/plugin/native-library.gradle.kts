@@ -9,7 +9,7 @@ plugins {
 }
 
 kotlin {
-    jvmToolchain(Versions.jvmToolchain)
+    jvmToolchain(Versions.JVM_TOOLCHAIN)
 }
 
 ktfmt {

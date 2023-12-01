@@ -2,10 +2,10 @@ package dev.chara.tasks.convention
 
 object Versions {
     // Kotlin
-    const val jvmToolchain = 17
+    const val JVM_TOOLCHAIN = 17
 
     // Android
-    const val minSdk = 24
-    const val targetSdk = 34
-    const val compileSdk = targetSdk
+    const val MIN_SDK = 24
+    const val TARGET_SDK = 34
+    const val COMPILE_SDK = TARGET_SDK
 }

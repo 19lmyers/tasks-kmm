@@ -10,13 +10,13 @@ plugins {
 }
 
 kotlin {
-    jvmToolchain(Versions.jvmToolchain)
+    jvmToolchain(Versions.JVM_TOOLCHAIN)
 }
 
 android {
-    compileSdk = Versions.compileSdk
+    compileSdk = Versions.COMPILE_SDK
     defaultConfig {
-        minSdk = Versions.minSdk
+        minSdk = Versions.MIN_SDK
     }
 }
 
