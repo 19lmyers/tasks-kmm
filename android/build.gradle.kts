@@ -21,8 +21,8 @@ android {
     namespace = "dev.chara.tasks.android"
     defaultConfig {
         applicationId = "dev.chara.tasks.android"
-        versionCode = 17
-        versionName = "0.8.3"
+        versionCode = 18
+        versionName = "0.9"
     }
     compileOptions {
         isCoreLibraryDesugaringEnabled = true
@@ -56,7 +56,7 @@ android {
 
             dimension = "endpoint"
 
-            buildConfigField("String", "ENDPOINT_URL", "\"https://tasks-api.chara.dev\"")
+            buildConfigField("String", "ENDPOINT_URL", "\"https://dominaria.chara.dev:8804\"")
         }
         create("dev") {
             dimension = "endpoint"

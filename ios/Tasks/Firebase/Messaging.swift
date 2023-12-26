@@ -15,6 +15,10 @@ private var DATA_TASK_ID = "DATA_TASK_ID"
 
 private var MESSAGE_TYPE_REMINDER = "MESSAGE_TYPE_REMINDER"
 
+private var DATA_TASK_CATEGORY = "DATA_TASK_CATEGORY"
+
+private var MESSAGE_TYPE_PREDICTION = "MESSAGE_TYPE_PREDICTION"
+
 private var REMINDER_CATEGORY_IDENTIFIER = "reminder"
 private var COMPLETE_ACTION_IDENTIFIER = "reminder.complete"
 
@@ -30,14 +34,27 @@ func initNotificationCategories() {
 }
 
 extension AppDelegate: UNUserNotificationCenterDelegate {
-    func userNotificationCenter(_: UNUserNotificationCenter, willPresent _: UNNotification) async -> UNNotificationPresentationOptions {
-        [[.banner, .list, .sound]]
+    func userNotificationCenter(_: UNUserNotificationCenter, willPresent notification: UNNotification) async -> UNNotificationPresentationOptions {
+        let userInfo = notification.request.content.userInfo
+
+        let messageType = userInfo[DATA_MESSAGE_TYPE] as? String
+
+        if messageType == MESSAGE_TYPE_PREDICTION {
+            guard let taskId = userInfo[DATA_TASK_ID] as? String else { return [[]] }
+            guard let category = userInfo[DATA_TASK_CATEGORY] as? String else { return [[]] }
+            rootHolder.root.updateTaskCategory(id: taskId, category: category)
+            return [[]]
+        }
+
+        return [[.banner, .list, .sound]]
     }
 
     func userNotificationCenter(_: UNUserNotificationCenter, didReceive response: UNNotificationResponse) async {
         let userInfo = response.notification.request.content.userInfo
 
-        if userInfo[DATA_MESSAGE_TYPE] as? String == MESSAGE_TYPE_REMINDER {
+        let messageType = userInfo[DATA_MESSAGE_TYPE] as? String
+
+        if messageType == MESSAGE_TYPE_REMINDER {
             guard let taskId = userInfo[DATA_TASK_ID] as? String else { return }
             if response.actionIdentifier == COMPLETE_ACTION_IDENTIFIER {
                 rootHolder.root.markTaskAsCompleted(id: taskId)

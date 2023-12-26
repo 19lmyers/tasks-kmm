@@ -20,7 +20,8 @@ fun SqlTask.toModel() =
         dueDate = this.due_date,
         dateCreated = this.date_created,
         lastModified = this.last_modified,
-        ordinal = this.ordinal.toInt()
+        ordinal = this.ordinal.toInt(),
+        category = this.category
     )
 
 @JvmName("toTaskListModel") fun Collection<SqlTaskList>.toModel() = map { it.toModel() }
@@ -37,5 +38,6 @@ fun SqlTaskList.toModel() =
         sortDirection = this.sort_direction,
         dateCreated = this.date_created,
         lastModified = this.last_modified,
-        ordinal = this.ordinal.toInt()
+        ordinal = this.ordinal.toInt(),
+        classifierType = this.classifier_type
     )

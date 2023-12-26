@@ -9,6 +9,7 @@ import androidx.compose.material.icons.filled.Bookmark
 import androidx.compose.material.icons.filled.Brush
 import androidx.compose.material.icons.filled.Cake
 import androidx.compose.material.icons.filled.Call
+import androidx.compose.material.icons.filled.Category
 import androidx.compose.material.icons.filled.Celebration
 import androidx.compose.material.icons.filled.Checklist
 import androidx.compose.material.icons.filled.ContentCut
@@ -90,6 +91,7 @@ val TaskList.SortType.icon: ImageVector
         when (this) {
             TaskList.SortType.ORDINAL -> Icons.Filled.Sort
             TaskList.SortType.LABEL -> Icons.Filled.SortByAlpha
+            TaskList.SortType.CATEGORY -> Icons.Filled.Category
             TaskList.SortType.DATE_CREATED -> Icons.Filled.Event
             TaskList.SortType.UPCOMING -> Icons.Filled.Schedule
             TaskList.SortType.STARRED -> Icons.Filled.Star

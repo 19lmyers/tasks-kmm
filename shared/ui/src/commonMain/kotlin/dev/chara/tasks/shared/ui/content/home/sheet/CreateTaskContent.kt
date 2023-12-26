@@ -5,9 +5,12 @@ import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.ime
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Category
+import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.Event
 import androidx.compose.material.icons.filled.NotificationAdd
 import androidx.compose.material.icons.filled.Notifications
@@ -17,6 +20,7 @@ import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
@@ -34,6 +38,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
@@ -63,6 +68,8 @@ fun CreateTaskContent(component: CreateTaskComponent) {
     var listId by remember(component.defaultListId) { mutableStateOf(component.defaultListId) }
 
     var label by remember { mutableStateOf("") }
+
+    var category by remember { mutableStateOf<String?>(null) }
 
     var reminderDate by remember { mutableStateOf<Instant?>(null) }
     var dueDate by remember { mutableStateOf<Instant?>(null) }
@@ -145,6 +152,7 @@ fun CreateTaskContent(component: CreateTaskComponent) {
                                         id = "",
                                         listId = parentList!!.id,
                                         label = label,
+                                        category = category,
                                         reminderDate = reminderDate,
                                         dueDate = dueDate,
                                         lastModified = Clock.System.now()
@@ -187,6 +195,50 @@ fun CreateTaskContent(component: CreateTaskComponent) {
                     }
                 }
             }
+
+            ListItem(
+                headlineContent = {
+                    BasicTextField(
+                        modifier = Modifier.fillMaxWidth(),
+                        value = category ?: "",
+                        onValueChange = {
+                            if (it.isEmpty()) return@BasicTextField
+                            category = it
+                        },
+                        singleLine = false,
+                        textStyle =
+                            MaterialTheme.typography.bodyLarge.copy(
+                                color = MaterialTheme.colorScheme.onBackground
+                            ),
+                        cursorBrush = SolidColor(MaterialTheme.colorScheme.primary),
+                        decorationBox = { innerTextField ->
+                            if (category.isNullOrEmpty()) {
+                                Text(
+                                    text = "Add category",
+                                    style = MaterialTheme.typography.bodyLarge,
+                                    color =
+                                        MaterialTheme.colorScheme.onBackground.copy(alpha = 0.8f)
+                                )
+                            }
+                            innerTextField()
+                        },
+                        keyboardOptions =
+                            KeyboardOptions(
+                                capitalization = KeyboardCapitalization.Sentences,
+                                imeAction = ImeAction.Done,
+                            ),
+                        keyboardActions = KeyboardActions(onDone = { keyboardController?.hide() })
+                    )
+                },
+                leadingContent = { Icon(Icons.Filled.Category, contentDescription = "Category") },
+                trailingContent = {
+                    if (category != null) {
+                        IconButton(onClick = { category = null }) {
+                            Icon(Icons.Filled.Clear, contentDescription = "Clear")
+                        }
+                    }
+                },
+            )
 
             ListItem(
                 modifier =
@@ -248,6 +300,7 @@ fun CreateTaskContent(component: CreateTaskComponent) {
                             id = "",
                             listId = parentList!!.id,
                             label = label,
+                            category = category,
                             reminderDate = reminderDate,
                             dueDate = dueDate,
                             lastModified = Clock.System.now()

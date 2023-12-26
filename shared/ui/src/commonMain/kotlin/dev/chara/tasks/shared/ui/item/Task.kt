@@ -233,6 +233,15 @@ private fun Task(
                         CheckboxDefaults.colors(uncheckedColor = MaterialTheme.colorScheme.primary)
                 )
                 Column(modifier = Modifier.align(Alignment.CenterVertically).fillMaxWidth(0.85f)) {
+                    if (!task.category.isNullOrBlank()) {
+                        Text(
+                            text = task.category!!,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis,
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.8f)
+                        )
+                    }
                     Text(
                         text = task.label,
                         maxLines = 5,

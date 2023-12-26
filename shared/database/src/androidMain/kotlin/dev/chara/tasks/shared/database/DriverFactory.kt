@@ -13,7 +13,7 @@ actual class DriverFactory(private val context: Context) {
         AndroidSqliteDriver(
             SQLDatabase.Schema,
             context,
-            "cache_v2.db",
+            "cache_v4.db",
             factory = RequerySQLiteOpenHelperFactory(),
             callback = CallbackDelegate(AndroidSqliteDriver.Callback(SQLDatabase.Schema))
         )

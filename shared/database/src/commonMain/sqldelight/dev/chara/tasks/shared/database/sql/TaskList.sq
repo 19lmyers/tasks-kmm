@@ -14,11 +14,11 @@ SELECT MAX(tl.ordinal)
 FROM TaskList tl;
 
 insert:
-INSERT INTO TaskList VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+INSERT INTO TaskList VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
 
 update:
 UPDATE TaskList
-SET title = ?, color = ?, icon = ?, description = ?, sort_type = ?, sort_direction = ?, show_index_numbers = ?, last_modified = ?, ordinal = ?
+SET title = ?, color = ?, icon = ?, description = ?, sort_type = ?, sort_direction = ?, show_index_numbers = ?, last_modified = ?, ordinal = ?, classifier_type = ?
 WHERE id = ?;
 
 reorder {

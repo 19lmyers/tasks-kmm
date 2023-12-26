@@ -16,7 +16,8 @@ data class TaskList(
     val sortDirection: SortDirection = SortDirection.ASCENDING,
     val dateCreated: Instant = Clock.System.now(),
     val lastModified: Instant = Clock.System.now(),
-    val ordinal: Int = -1
+    val ordinal: Int = -1,
+    val classifierType: ClassifierType? = null
 ) {
     @Serializable
     enum class Color {
@@ -64,6 +65,7 @@ data class TaskList(
     enum class SortType(private val friendlyName: String) {
         ORDINAL("My order"),
         LABEL("Label"),
+        CATEGORY("Category"),
         DATE_CREATED("Date created"),
         UPCOMING("Upcoming"),
         STARRED("Starred recently");
@@ -77,6 +79,15 @@ data class TaskList(
     enum class SortDirection(private val friendlyName: String) {
         ASCENDING("ASC"),
         DESCENDING("DESC");
+
+        override fun toString(): String {
+            return friendlyName
+        }
+    }
+
+    @Serializable
+    enum class ClassifierType(private val friendlyName: String) {
+        SHOPPING("Shopping");
 
         override fun toString(): String {
             return friendlyName

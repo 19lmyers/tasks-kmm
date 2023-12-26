@@ -20,6 +20,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Category
 import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Delete
@@ -470,6 +471,53 @@ private fun TaskDetailsForm(
                 IconButton(
                     onClick = {
                         onUpdateTask(task.copy(details = null, lastModified = Clock.System.now()))
+                    }
+                ) {
+                    Icon(Icons.Filled.Clear, contentDescription = "Clear")
+                }
+            }
+        },
+    )
+
+    ListItem(
+        headlineContent = {
+            BasicTextField(
+                modifier = Modifier.fillMaxWidth(),
+                value = task?.category ?: "",
+                onValueChange = {
+                    if (it.isEmpty()) return@BasicTextField
+                    onUpdateTask(task!!.copy(category = it, lastModified = Clock.System.now()))
+                },
+                singleLine = false,
+                textStyle =
+                    MaterialTheme.typography.bodyLarge.copy(
+                        color = MaterialTheme.colorScheme.onBackground
+                    ),
+                cursorBrush = SolidColor(MaterialTheme.colorScheme.primary),
+                decorationBox = { innerTextField ->
+                    if (task?.category.isNullOrEmpty()) {
+                        Text(
+                            text = "Add category",
+                            style = MaterialTheme.typography.bodyLarge,
+                            color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.8f)
+                        )
+                    }
+                    innerTextField()
+                },
+                keyboardOptions =
+                    KeyboardOptions(
+                        capitalization = KeyboardCapitalization.Sentences,
+                        imeAction = ImeAction.Done,
+                    ),
+                keyboardActions = KeyboardActions(onDone = { keyboardController?.hide() })
+            )
+        },
+        leadingContent = { Icon(Icons.Filled.Category, contentDescription = "Category") },
+        trailingContent = {
+            if (task?.category != null) {
+                IconButton(
+                    onClick = {
+                        onUpdateTask(task.copy(category = null, lastModified = Clock.System.now()))
                     }
                 ) {
                     Icon(Icons.Filled.Clear, contentDescription = "Clear")

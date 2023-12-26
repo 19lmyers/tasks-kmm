@@ -5,6 +5,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.ime
@@ -20,15 +21,20 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Category
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Checklist
 import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.FormatListNumbered
+import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.InputChip
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
@@ -37,6 +43,8 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
+import androidx.compose.material3.surfaceColorAtElevation
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -76,15 +84,22 @@ fun ModifyListContent(component: ModifyListComponent) {
 
     var showIconDialog by remember { mutableStateOf(false) }
 
-    var listTitle by remember { mutableStateOf(state.value.selectedList?.title ?: "") }
+    var showClassifierDialog by remember { mutableStateOf(false) }
 
-    var listColor by remember { mutableStateOf(state.value.selectedList?.color) }
-    var listIcon by remember { mutableStateOf(state.value.selectedList?.icon) }
-    var description by remember { mutableStateOf(state.value.selectedList?.description) }
+    var listTitle by remember(state.value) { mutableStateOf(state.value.selectedList?.title ?: "") }
 
-    var showIndexNumbers by remember {
-        mutableStateOf(state.value.selectedList?.showIndexNumbers ?: false)
-    }
+    var listColor by remember(state.value) { mutableStateOf(state.value.selectedList?.color) }
+    var listIcon by remember(state.value) { mutableStateOf(state.value.selectedList?.icon) }
+    var description by
+        remember(state.value) { mutableStateOf(state.value.selectedList?.description) }
+
+    var classifierType by
+        remember(state.value) { mutableStateOf(state.value.selectedList?.classifierType) }
+
+    var showIndexNumbers by
+        remember(state.value) {
+            mutableStateOf(state.value.selectedList?.showIndexNumbers ?: false)
+        }
 
     ColorTheme(color = listColor) {
         if (showIconDialog) {
@@ -135,6 +150,80 @@ fun ModifyListContent(component: ModifyListComponent) {
                     }
                 }
             }
+        }
+
+        if (showClassifierDialog) {
+            AlertDialog(
+                onDismissRequest = { showClassifierDialog = false },
+                icon = {
+                    Icon(
+                        Icons.Filled.Category,
+                        contentDescription = null,
+                    )
+                },
+                title = { Text("Categorize list (preview)") },
+                text = {
+                    Column {
+                        Card(
+                            colors =
+                                CardDefaults.cardColors(
+                                    MaterialTheme.colorScheme.surfaceColorAtElevation(24.dp)
+                                ),
+                            modifier = Modifier.fillMaxWidth().padding(bottom = 12.dp),
+                            onClick = {
+                                classifierType =
+                                    if (classifierType == null) TaskList.ClassifierType.SHOPPING
+                                    else null
+                            }
+                        ) {
+                            Box(modifier = Modifier.padding(12.dp).fillMaxWidth()) {
+                                Row(
+                                    modifier =
+                                        Modifier.padding(horizontal = 16.dp)
+                                            .align(Alignment.CenterStart)
+                                ) {
+                                    Icon(
+                                        Icons.Filled.ShoppingCart,
+                                        contentDescription = null,
+                                        tint = MaterialTheme.colorScheme.primary,
+                                        modifier =
+                                            Modifier.padding(end = 16.dp)
+                                                .align(Alignment.CenterVertically)
+                                    )
+                                    Text(
+                                        "Shopping",
+                                        style = MaterialTheme.typography.titleLarge,
+                                        color = MaterialTheme.colorScheme.primary,
+                                        modifier = Modifier.align(Alignment.CenterVertically),
+                                    )
+                                }
+                                Switch(
+                                    checked = classifierType == TaskList.ClassifierType.SHOPPING,
+                                    onCheckedChange = {
+                                        classifierType =
+                                            if (it) TaskList.ClassifierType.SHOPPING else null
+                                    },
+                                    modifier =
+                                        Modifier.align(Alignment.CenterEnd).padding(end = 16.dp)
+                                )
+                            }
+                        }
+                        Text(
+                            """
+                            List categorization uses Google's Gemini AI to semantically categorize your list.
+                            
+                            To accomplish this, some task labels may be sent to Google servers.
+                            
+                            Currently only shopping lists are supported.
+                            """
+                                .trimIndent()
+                        )
+                    }
+                },
+                confirmButton = {
+                    TextButton(onClick = { showClassifierDialog = false }) { Text("Done") }
+                },
+            )
         }
 
         ModalBottomSheet(
@@ -239,6 +328,25 @@ fun ModifyListContent(component: ModifyListComponent) {
                 )
 
                 ListItem(
+                    modifier = Modifier.clickable { showClassifierDialog = true },
+                    headlineContent = {
+                        Text(
+                            text = "Categorize (preview)",
+                        )
+                    },
+                    leadingContent = {
+                        Icon(Icons.Filled.Category, contentDescription = "Categorize")
+                    },
+                    trailingContent = {
+                        InputChip(
+                            label = { Text(text = classifierType?.toString() ?: "Off") },
+                            selected = classifierType != null,
+                            onClick = { showClassifierDialog = true }
+                        )
+                    }
+                )
+
+                ListItem(
                     headlineContent = { Text(text = "Show list numbers") },
                     leadingContent = {
                         Icon(imageVector = Icons.Filled.FormatListNumbered, "List numbers")
@@ -267,6 +375,7 @@ fun ModifyListContent(component: ModifyListComponent) {
                                     icon = listIcon,
                                     description = description,
                                     showIndexNumbers = showIndexNumbers,
+                                    classifierType = classifierType,
                                     lastModified = Clock.System.now()
                                 )
                             } else {
@@ -277,6 +386,7 @@ fun ModifyListContent(component: ModifyListComponent) {
                                     icon = listIcon,
                                     description = description,
                                     showIndexNumbers = showIndexNumbers,
+                                    classifierType = classifierType,
                                     lastModified = Clock.System.now()
                                 )
                             }

@@ -58,6 +58,8 @@ interface RootComponent {
 
     fun markTaskAsCompleted(id: String)
 
+    fun updateTaskCategory(id: String, category: String)
+
     fun linkFCMToken(token: String)
 
     sealed class Child {
@@ -227,6 +229,22 @@ class DefaultRootComponent(
                         task.listId,
                         task.id,
                         task.copy(isCompleted = true, lastModified = Clock.System.now())
+                    )
+                // TODO display result? (this is called from iOS)
+            }
+        }
+    }
+
+    override fun updateTaskCategory(id: String, category: String) {
+        coroutineScope.launch {
+            withContext(Dispatchers.IO) {
+                val task = repository.getTaskById(id).first() ?: return@withContext
+
+                val result =
+                    repository.updateTask(
+                        task.listId,
+                        task.id,
+                        task.copy(category = category, lastModified = Clock.System.now())
                     )
                 // TODO display result? (this is called from iOS)
             }

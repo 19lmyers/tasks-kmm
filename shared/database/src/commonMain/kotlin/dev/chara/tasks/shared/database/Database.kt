@@ -38,6 +38,7 @@ object Database {
                 sort_directionAdapter = EnumColumnAdapter(),
                 date_createdAdapter = instantAdapter,
                 last_modifiedAdapter = instantAdapter,
+                classifier_typeAdapter = EnumColumnAdapter()
             )
         )
     }

@@ -48,7 +48,8 @@ class CacheDataSource(driverFactory: DriverFactory) {
                         getMaxListOrdinal()?.plus(1) ?: 0
                     } else {
                         taskList.ordinal.toLong()
-                    }
+                    },
+                classifier_type = taskList.classifierType
             )
         }
 
@@ -64,6 +65,7 @@ class CacheDataSource(driverFactory: DriverFactory) {
                 show_index_numbers = taskList.showIndexNumbers,
                 last_modified = taskList.lastModified,
                 ordinal = taskList.ordinal.toLong(),
+                classifier_type = taskList.classifierType,
                 id = taskList.id
             )
         }
@@ -115,6 +117,8 @@ class CacheDataSource(driverFactory: DriverFactory) {
                 TaskList.SortType.ORDINAL ->
                     database.taskQueries.getByList_Ordinal(listId, isCompleted)
                 TaskList.SortType.LABEL -> database.taskQueries.getByList_Label(listId, isCompleted)
+                TaskList.SortType.CATEGORY ->
+                    database.taskQueries.getByList_Category(listId, isCompleted)
                 TaskList.SortType.DATE_CREATED ->
                     database.taskQueries.getByList_DateCreated(listId, isCompleted)
                 TaskList.SortType.UPCOMING ->
@@ -163,7 +167,8 @@ class CacheDataSource(driverFactory: DriverFactory) {
                         getMaxTaskOrdinal(task.listId)?.plus(1) ?: 0
                     } else {
                         task.ordinal.toLong()
-                    }
+                    },
+                category = task.category
             )
         }
 
@@ -178,6 +183,7 @@ class CacheDataSource(driverFactory: DriverFactory) {
                 due_date = task.dueDate,
                 last_modified = task.lastModified,
                 ordinal = task.ordinal.toLong(),
+                category = task.category,
                 id = task.id
             )
         }
@@ -232,7 +238,8 @@ class CacheDataSource(driverFactory: DriverFactory) {
                                 getMaxListOrdinal()?.plus(1) ?: 0
                             } else {
                                 taskList.ordinal.toLong()
-                            }
+                            },
+                        classifier_type = taskList.classifierType
                     )
                 }
                 for (task in tasks) {
@@ -252,7 +259,8 @@ class CacheDataSource(driverFactory: DriverFactory) {
                                 getMaxTaskOrdinal(task.listId)?.plus(1) ?: 0
                             } else {
                                 task.ordinal.toLong()
-                            }
+                            },
+                        category = task.category
                     )
                 }
             }

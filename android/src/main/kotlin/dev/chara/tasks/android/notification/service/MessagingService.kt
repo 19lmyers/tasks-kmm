@@ -26,6 +26,7 @@ import dev.chara.tasks.shared.data.Repository
 import dev.chara.tasks.shared.model.TaskList
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
+import kotlinx.datetime.Clock
 import org.koin.android.ext.android.inject
 
 class MessagingService : FirebaseMessagingService(), LifecycleOwner {
@@ -156,6 +157,21 @@ class MessagingService : FirebaseMessagingService(), LifecycleOwner {
                 NotificationManagerCompat.from(this)
                     .notify(taskId, NOTIFICATION_TYPE_REMINDER, builder.build())
             }
+        } else if (messageType == MESSAGE_TYPE_PREDICTION) {
+            val taskId = message.data[DATA_TASK_ID] ?: return
+            val predictedCategory = message.data[DATA_TASK_CATEGORY] ?: return
+
+            lifecycleScope.launch {
+                if (!repository.isUserAuthenticated().first()) return@launch
+
+                val task = repository.getTaskById(taskId).first() ?: return@launch
+
+                repository.updateTask(
+                    task.listId,
+                    task.id,
+                    task.copy(category = predictedCategory, lastModified = Clock.System.now())
+                )
+            }
         }
     }
 
@@ -168,6 +184,10 @@ class MessagingService : FirebaseMessagingService(), LifecycleOwner {
         private const val DATA_LIST_ICON = "DATA_LIST_ICON"
 
         private const val MESSAGE_TYPE_REMINDER = "MESSAGE_TYPE_REMINDER"
+
+        private const val DATA_TASK_CATEGORY = "DATA_TASK_CATEGORY"
+
+        private const val MESSAGE_TYPE_PREDICTION = "MESSAGE_TYPE_PREDICTION"
 
         const val NOTIFICATION_TYPE_REMINDER = 1
     }

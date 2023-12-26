@@ -53,6 +53,13 @@ WHERE list_id = ?
 AND is_completed = ?
 ORDER BY label ASC;
 
+getByList_Category:
+SELECT *
+FROM Task
+WHERE list_id = ?
+AND is_completed = ?
+ORDER BY category ASC, label ASC;
+
 getByList_DateCreated:
 SELECT *
 FROM Task
@@ -91,11 +98,11 @@ FROM Task t
 WHERE list_id = ?;
 
 insert:
-INSERT INTO Task VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+INSERT INTO Task VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
 
 update:
 UPDATE Task
-SET label = ?, is_completed = ?, is_starred = ?, details = ?, reminder_date = ?, due_date = ?, last_modified = ?, ordinal = ?
+SET label = ?, is_completed = ?, is_starred = ?, details = ?, reminder_date = ?, due_date = ?, last_modified = ?, ordinal = ?, category = ?
 WHERE id = ?;
 
 move:

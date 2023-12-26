@@ -2,6 +2,7 @@ import dev.chara.tasks.shared.model.TaskList.Color;
 import dev.chara.tasks.shared.model.TaskList.Icon;
 import dev.chara.tasks.shared.model.TaskList.SortType;
 import dev.chara.tasks.shared.model.TaskList.SortDirection;
+import dev.chara.tasks.shared.model.TaskList.ClassifierType;
 import kotlinx.datetime.Instant;
 import kotlin.Boolean;
 
@@ -22,7 +23,9 @@ CREATE TABLE TaskList (
     date_created TEXT AS Instant NOT NULL,
     last_modified TEXT AS Instant NOT NULL,
 
-    ordinal INTEGER NOT NULL
+    ordinal INTEGER NOT NULL,
+    
+    classifier_type TEXT AS ClassifierType
 );
 
 CREATE TABLE Task (
@@ -41,6 +44,8 @@ CREATE TABLE Task (
     last_modified TEXT AS Instant NOT NULL,
 
     ordinal INTEGER NOT NULL,
+
+    category TEXT,
 
     FOREIGN KEY (list_id) REFERENCES TaskList(id)
 );

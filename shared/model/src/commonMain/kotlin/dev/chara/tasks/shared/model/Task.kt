@@ -16,5 +16,6 @@ data class Task(
     val dueDate: Instant? = null,
     val dateCreated: Instant = Clock.System.now(),
     val lastModified: Instant = Clock.System.now(),
-    val ordinal: Int = -1
+    val ordinal: Int = -1,
+    val category: String? = null
 )
