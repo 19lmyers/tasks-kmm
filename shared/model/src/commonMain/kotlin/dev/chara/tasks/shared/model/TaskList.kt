@@ -87,7 +87,7 @@ data class TaskList(
 
     @Serializable
     enum class ClassifierType(private val friendlyName: String) {
-        SHOPPING("Shopping");
+        SHOPPING("Grocery");
 
         override fun toString(): String {
             return friendlyName

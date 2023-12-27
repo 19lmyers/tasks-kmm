@@ -8,6 +8,7 @@ import com.arkivanov.decompose.router.stack.pop
 import com.arkivanov.decompose.router.stack.push
 import com.arkivanov.decompose.router.stack.replaceAll
 import com.arkivanov.decompose.value.Value
+import com.arkivanov.essenty.lifecycle.coroutines.coroutineScope
 import com.arkivanov.essenty.parcelable.Parcelable
 import com.arkivanov.essenty.parcelable.Parcelize
 import dev.chara.tasks.shared.component.RootComponent.Child
@@ -25,7 +26,6 @@ import dev.chara.tasks.shared.component.profile.change_password.ChangePasswordCo
 import dev.chara.tasks.shared.component.profile.change_password.DefaultChangePasswordComponent
 import dev.chara.tasks.shared.component.settings.DefaultSettingsComponent
 import dev.chara.tasks.shared.component.settings.SettingsComponent
-import dev.chara.tasks.shared.component.util.coroutineScope
 import dev.chara.tasks.shared.component.welcome.DefaultWelcomeComponent
 import dev.chara.tasks.shared.component.welcome.WelcomeComponent
 import dev.chara.tasks.shared.component.welcome.forgot_password.DefaultForgotPasswordComponent
@@ -37,7 +37,6 @@ import dev.chara.tasks.shared.component.welcome.sign_up.SignUpComponent
 import dev.chara.tasks.shared.data.Repository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
-import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -92,7 +91,7 @@ class DefaultRootComponent(
     deepLink: DeepLink = DeepLink.None,
 ) : RootComponent, KoinComponent, ComponentContext by componentContext {
 
-    private val coroutineScope = coroutineScope(Dispatchers.Default + SupervisorJob())
+    private val coroutineScope = coroutineScope()
 
     private val repository: Repository by inject()
 

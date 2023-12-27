@@ -21,8 +21,8 @@ android {
     namespace = "dev.chara.tasks.android"
     defaultConfig {
         applicationId = "dev.chara.tasks.android"
-        versionCode = 18
-        versionName = "0.9"
+        versionCode = 19
+        versionName = "0.9.1"
     }
     compileOptions {
         isCoreLibraryDesugaringEnabled = true

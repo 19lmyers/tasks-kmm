@@ -161,7 +161,7 @@ fun ModifyListContent(component: ModifyListComponent) {
                         contentDescription = null,
                     )
                 },
-                title = { Text("Categorize list (preview)") },
+                title = { Text("Categorize (preview)") },
                 text = {
                     Column {
                         Card(
@@ -191,7 +191,7 @@ fun ModifyListContent(component: ModifyListComponent) {
                                                 .align(Alignment.CenterVertically)
                                     )
                                     Text(
-                                        "Shopping",
+                                        "Grocery",
                                         style = MaterialTheme.typography.titleLarge,
                                         color = MaterialTheme.colorScheme.primary,
                                         modifier = Modifier.align(Alignment.CenterVertically),
@@ -214,7 +214,7 @@ fun ModifyListContent(component: ModifyListComponent) {
                             
                             To accomplish this, some task labels may be sent to Google servers.
                             
-                            Currently only shopping lists are supported.
+                            Currently only grocery lists are supported.
                             """
                                 .trimIndent()
                         )

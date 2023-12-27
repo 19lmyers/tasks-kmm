@@ -3,15 +3,14 @@ package dev.chara.tasks.shared.component.welcome.sign_in
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.essenty.backhandler.BackCallback
 import com.arkivanov.essenty.backhandler.BackHandlerOwner
+import com.arkivanov.essenty.lifecycle.coroutines.coroutineScope
 import com.github.michaelbull.result.Ok
 import com.github.michaelbull.result.Result
 import dev.chara.tasks.shared.component.util.SnackbarMessage
-import dev.chara.tasks.shared.component.util.coroutineScope
 import dev.chara.tasks.shared.component.util.emitAsMessage
 import dev.chara.tasks.shared.data.Repository
 import dev.chara.tasks.shared.domain.EmailValidator
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
@@ -44,7 +43,7 @@ class DefaultSignInComponent(
     private val navigateToHome: () -> Unit
 ) : SignInComponent, KoinComponent, ComponentContext by componentContext, BackHandlerOwner {
 
-    private val coroutineScope = coroutineScope(Dispatchers.Default + SupervisorJob())
+    private val coroutineScope = coroutineScope()
 
     private val repository: Repository by inject()
 

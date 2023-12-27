@@ -2,14 +2,13 @@ package dev.chara.tasks.shared.component.home.task_details
 
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.essenty.backhandler.BackHandlerOwner
+import com.arkivanov.essenty.lifecycle.coroutines.coroutineScope
 import com.github.michaelbull.result.Ok
 import dev.chara.tasks.shared.component.util.SnackbarMessage
-import dev.chara.tasks.shared.component.util.coroutineScope
 import dev.chara.tasks.shared.component.util.emitAsMessage
 import dev.chara.tasks.shared.data.Repository
 import dev.chara.tasks.shared.model.Task
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
@@ -42,7 +41,7 @@ class DefaultTaskDetailsComponent(
     taskId: String,
     private val navigateUp: () -> Unit
 ) : TaskDetailsComponent, KoinComponent, ComponentContext by componentContext {
-    private val coroutineScope = coroutineScope(Dispatchers.Default + SupervisorJob())
+    private val coroutineScope = coroutineScope()
 
     private val repository: Repository by inject()
 

@@ -14,6 +14,7 @@ import com.arkivanov.decompose.router.slot.childSlot
 import com.arkivanov.decompose.router.slot.dismiss
 import com.arkivanov.decompose.value.Value
 import com.arkivanov.essenty.backhandler.BackCallback
+import com.arkivanov.essenty.lifecycle.coroutines.coroutineScope
 import com.arkivanov.essenty.parcelable.Parcelable
 import com.arkivanov.essenty.parcelable.Parcelize
 import com.github.michaelbull.result.Ok
@@ -28,11 +29,9 @@ import dev.chara.tasks.shared.component.home.modify_list.ModifyListComponent
 import dev.chara.tasks.shared.component.home.task_details.DefaultTaskDetailsComponent
 import dev.chara.tasks.shared.component.home.task_details.TaskDetailsComponent
 import dev.chara.tasks.shared.component.util.SnackbarMessage
-import dev.chara.tasks.shared.component.util.coroutineScope
 import dev.chara.tasks.shared.data.Repository
 import dev.chara.tasks.shared.domain.Gravatar
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
@@ -104,7 +103,7 @@ class DefaultHomeComponent(
     private val navigateToSettings: () -> Unit,
 ) : HomeComponent, KoinComponent, ComponentContext by componentContext {
 
-    private val coroutineScope = coroutineScope(Dispatchers.Default + SupervisorJob())
+    private val coroutineScope = coroutineScope()
 
     private val repository: Repository by inject()
 

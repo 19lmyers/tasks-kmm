@@ -2,13 +2,11 @@ package dev.chara.tasks.shared.component.profile.change_password
 
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.essenty.backhandler.BackCallback
+import com.arkivanov.essenty.lifecycle.coroutines.coroutineScope
 import com.github.michaelbull.result.Ok
 import dev.chara.tasks.shared.component.util.SnackbarMessage
-import dev.chara.tasks.shared.component.util.coroutineScope
 import dev.chara.tasks.shared.component.util.emitAsMessage
 import dev.chara.tasks.shared.data.Repository
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
@@ -35,7 +33,7 @@ class DefaultChangePasswordComponent(
     componentContext: ComponentContext,
     private val navigateUp: () -> Unit,
 ) : ChangePasswordComponent, KoinComponent, ComponentContext by componentContext {
-    private val coroutineScope = coroutineScope(Dispatchers.Default + SupervisorJob())
+    private val coroutineScope = coroutineScope()
 
     private val repository: Repository by inject()
 

@@ -31,6 +31,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -61,6 +62,7 @@ private const val KEY_DIVIDER = "KEY_DIVIDER"
 
 private const val CONTENT_TYPE_TASK = "CONTENT_TYPE_TASK"
 private const val CONTENT_TYPE_DIVIDER = "CONTENT_TYPE_DIVIDER"
+private const val CONTENT_TYPE_CATEGORY = "CONTENT_TYPE_CATEGORY"
 
 fun Modifier.reorderable(state: ReorderableLazyListState, enabled: Boolean) =
     composed(
@@ -77,9 +79,113 @@ fun Modifier.reorderable(state: ReorderableLazyListState, enabled: Boolean) =
         }
     }
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun Tasks(
+    currentTasks: List<Task>,
+    completedTasks: List<Task>,
+    showIndexNumbers: Boolean,
+    groupByCategory: Boolean,
+    onClick: (Task) -> Unit,
+    onUpdate: (Task) -> Unit,
+    allowReorder: Boolean,
+    onReorder: (String, Int, Int) -> Unit
+) {
+    if (groupByCategory) {
+        GroupedTasks(currentTasks, completedTasks, onClick, onUpdate)
+    } else {
+        UngroupedTasks(
+            currentTasks,
+            completedTasks,
+            showIndexNumbers,
+            onClick,
+            onUpdate,
+            allowReorder,
+            onReorder
+        )
+    }
+}
+
+@OptIn(ExperimentalFoundationApi::class)
+@Composable
+fun GroupedTasks(
+    currentTasks: List<Task>,
+    completedTasks: List<Task>,
+    onClick: (Task) -> Unit,
+    onUpdate: (Task) -> Unit
+) {
+    val groupedTasks = currentTasks.sortedBy { it.label }.groupBy { task -> task.category }
+
+    var showCompletedTasks by rememberSaveable { mutableStateOf(false) }
+
+    val showGroupedTasks = remember { mutableStateMapOf<String?, Boolean>() }
+
+    LazyColumn(
+        modifier = Modifier.fillMaxSize(),
+        contentPadding = PaddingValues(start = 16.dp, end = 16.dp, bottom = 32.dp),
+    ) {
+        for (category in groupedTasks.keys.sortedBy { it }) {
+            val tasks = groupedTasks.getOrElse(category) { emptyList() }
+
+            item(key = category, contentType = CONTENT_TYPE_CATEGORY) {
+                TaskGroupDivider(
+                    category = category,
+                    modifier = Modifier.animateItemPlacement(),
+                    expanded = showGroupedTasks.getOrElse(category) { true },
+                    setExpanded = { showGroupedTasks.put(category, it) },
+                    count = tasks.size
+                )
+            }
+
+            if (showGroupedTasks.getOrElse(category) { true }) {
+                itemsIndexed(
+                    tasks,
+                    key = { _, task -> task.id },
+                    contentType = { _, _ -> CONTENT_TYPE_TASK }
+                ) { index, task ->
+                    TaskItem(
+                        modifier = Modifier.animateItemPlacement(),
+                        task = task,
+                        onClick = { onClick(it) },
+                        onUpdate = { onUpdate(it) },
+                        showIndexNumbers = false,
+                        indexNumber = index + 1,
+                        isDragging = false,
+                        showCategory = false
+                    )
+                }
+            }
+        }
+
+        if (completedTasks.isNotEmpty()) {
+            item(key = KEY_DIVIDER, contentType = CONTENT_TYPE_DIVIDER) {
+                CompletedTasksDivider(
+                    modifier = Modifier.animateItemPlacement(),
+                    expanded = showCompletedTasks,
+                    setExpanded = { showCompletedTasks = it },
+                    count = completedTasks.size
+                )
+            }
+
+            if (showCompletedTasks) {
+                items(completedTasks, key = { it.id }, contentType = { CONTENT_TYPE_TASK }) { task
+                    ->
+                    TaskItem(
+                        modifier = Modifier.animateItemPlacement(),
+                        task = task,
+                        onClick = { onClick(it) },
+                        onUpdate = { onUpdate(it) },
+                        showIndexNumbers = false,
+                        isDragging = false
+                    )
+                }
+            }
+        }
+    }
+}
+
+@OptIn(ExperimentalFoundationApi::class)
+@Composable
+fun UngroupedTasks(
     currentTasks: List<Task>,
     completedTasks: List<Task>,
     showIndexNumbers: Boolean,
@@ -173,7 +279,8 @@ fun TaskItem(
     onListClicked: (TaskList) -> Unit = {},
     showIndexNumbers: Boolean = false,
     indexNumber: Int? = null,
-    isDragging: Boolean = false
+    isDragging: Boolean = false,
+    showCategory: Boolean = true
 ) {
     val shadowElevation by animateDpAsState(if (isDragging) 8.dp else 0.dp)
 
@@ -203,7 +310,8 @@ fun TaskItem(
                 parentList = parentList,
                 onClick = onClick,
                 onListClicked = onListClicked,
-                onUpdate = onUpdate
+                onUpdate = onUpdate,
+                showCategory = showCategory
             )
         }
     }
@@ -217,6 +325,7 @@ private fun Task(
     onUpdate: (Task) -> Unit,
     parentList: TaskList? = null,
     onListClicked: (TaskList) -> Unit = {},
+    showCategory: Boolean = true,
 ) {
     Box(modifier = modifier.fillMaxWidth()) {
         Column {
@@ -233,7 +342,7 @@ private fun Task(
                         CheckboxDefaults.colors(uncheckedColor = MaterialTheme.colorScheme.primary)
                 )
                 Column(modifier = Modifier.align(Alignment.CenterVertically).fillMaxWidth(0.85f)) {
-                    if (!task.category.isNullOrBlank()) {
+                    if (showCategory && !task.category.isNullOrBlank()) {
                         Text(
                             text = task.category!!,
                             maxLines = 1,
@@ -347,6 +456,45 @@ private fun CompletedTasksDivider(
             Icon(
                 Icons.Filled.ExpandMore,
                 contentDescription = "Show completed tasks",
+                modifier = Modifier.align(Alignment.CenterEnd)
+            )
+        }
+    }
+}
+
+@Composable
+private fun TaskGroupDivider(
+    category: String?,
+    modifier: Modifier = Modifier,
+    expanded: Boolean,
+    setExpanded: (Boolean) -> Unit,
+    count: Int
+) {
+    val title = category ?: "Uncategorized"
+
+    Box(
+        modifier =
+            modifier
+                .fillMaxWidth()
+                .clip(MaterialTheme.shapes.extraLarge)
+                .clickable { setExpanded(!expanded) }
+                .padding(16.dp)
+    ) {
+        Text(
+            text = "$title ($count)",
+            style = MaterialTheme.typography.bodyLarge,
+            modifier = Modifier.align(Alignment.CenterStart)
+        )
+        if (expanded) {
+            Icon(
+                Icons.Filled.ExpandLess,
+                contentDescription = "Hide $title",
+                modifier = Modifier.align(Alignment.CenterEnd)
+            )
+        } else {
+            Icon(
+                Icons.Filled.ExpandMore,
+                contentDescription = "Show $title",
                 modifier = Modifier.align(Alignment.CenterEnd)
             )
         }

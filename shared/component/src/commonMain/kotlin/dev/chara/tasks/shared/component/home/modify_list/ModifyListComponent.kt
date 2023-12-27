@@ -1,12 +1,11 @@
 package dev.chara.tasks.shared.component.home.modify_list
 
 import com.arkivanov.decompose.ComponentContext
+import com.arkivanov.essenty.lifecycle.coroutines.coroutineScope
 import com.github.michaelbull.result.Ok
-import dev.chara.tasks.shared.component.util.coroutineScope
 import dev.chara.tasks.shared.data.Repository
 import dev.chara.tasks.shared.model.TaskList
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -30,7 +29,7 @@ class DefaultModifyListComponent(
     private val dismiss: () -> Unit,
 ) : ModifyListComponent, KoinComponent, ComponentContext by componentContext {
 
-    private val coroutineScope = coroutineScope(Dispatchers.Default + SupervisorJob())
+    private val coroutineScope = coroutineScope()
 
     private val repository: Repository by inject()
 

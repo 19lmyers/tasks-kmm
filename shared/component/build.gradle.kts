@@ -26,6 +26,7 @@ kotlin {
             implementation(libs.koin.core)
 
             implementation(libs.decompose)
+            implementation(libs.essenty.coroutines)
 
             implementation(libs.result)
         }

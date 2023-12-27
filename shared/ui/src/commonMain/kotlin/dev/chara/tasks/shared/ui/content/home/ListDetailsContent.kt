@@ -217,6 +217,8 @@ fun ListDetailsContent(
                                 },
                                 showIndexNumbers =
                                     state.value.selectedList?.showIndexNumbers == true,
+                                groupByCategory =
+                                    state.value.selectedList?.sortType == TaskList.SortType.CATEGORY
                             )
                         }
                     }
@@ -365,7 +367,11 @@ private fun BottomBar(
                     Text(text = sortType.toString())
                 }
             }
-            if (sortDirection != null && sortType != TaskList.SortType.ORDINAL) {
+            if (
+                sortDirection != null &&
+                    sortType != TaskList.SortType.ORDINAL &&
+                    sortType != TaskList.SortType.CATEGORY
+            ) {
                 TextButton(onClick = onSortDirectionClicked) {
                     Icon(sortDirection.icon, contentDescription = "Sort order")
                     Spacer(modifier = Modifier.size(ButtonDefaults.IconSpacing))
