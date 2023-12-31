@@ -66,6 +66,7 @@ import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.unit.dp
 import dev.chara.tasks.shared.component.home.modify_list.ModifyListComponent
 import dev.chara.tasks.shared.model.TaskList
+import dev.chara.tasks.shared.model.TaskListPrefs
 import dev.chara.tasks.shared.ui.model.icon
 import dev.chara.tasks.shared.ui.model.seed
 import dev.chara.tasks.shared.ui.theme.ColorTheme
@@ -97,9 +98,7 @@ fun ModifyListContent(component: ModifyListComponent) {
         remember(state.value) { mutableStateOf(state.value.selectedList?.classifierType) }
 
     var showIndexNumbers by
-        remember(state.value) {
-            mutableStateOf(state.value.selectedList?.showIndexNumbers ?: false)
-        }
+        remember(state.value) { mutableStateOf(state.value.prefs?.showIndexNumbers ?: false) }
 
     ColorTheme(color = listColor) {
         if (showIconDialog) {
@@ -374,19 +373,30 @@ fun ModifyListContent(component: ModifyListComponent) {
                                     color = listColor,
                                     icon = listIcon,
                                     description = description,
-                                    showIndexNumbers = showIndexNumbers,
                                     classifierType = classifierType,
                                     lastModified = Clock.System.now()
                                 )
                             } else {
                                 TaskList(
                                     id = "",
+                                    ownerId = "",
                                     title = listTitle,
                                     color = listColor,
                                     icon = listIcon,
                                     description = description,
-                                    showIndexNumbers = showIndexNumbers,
                                     classifierType = classifierType,
+                                    lastModified = Clock.System.now()
+                                )
+                            },
+                            if (state.value.prefs != null) {
+                                state.value.prefs!!.copy(
+                                    showIndexNumbers = showIndexNumbers,
+                                    lastModified = Clock.System.now()
+                                )
+                            } else {
+                                TaskListPrefs(
+                                    listId = "",
+                                    showIndexNumbers = showIndexNumbers,
                                     lastModified = Clock.System.now()
                                 )
                             }

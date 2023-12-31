@@ -49,6 +49,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
@@ -63,6 +64,7 @@ import dev.chara.tasks.shared.ui.picker.photoPicker
 import dev.chara.tasks.shared.ui.theme.extend.surfaceContainerHigh
 import dev.chara.tasks.shared.ui.theme.extend.surfaceContainerHighest
 import dev.chara.tasks.shared.ui.util.BackHandler
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
 @Composable
@@ -94,9 +96,11 @@ fun ProfileContent(component: ProfileComponent) {
 
     val scrollState = rememberScrollState()
 
+    val coroutineScope = rememberCoroutineScope()
+
     var displayName by
-        rememberSaveable(state.value.profile!!.displayName) {
-            mutableStateOf(state.value.profile!!.displayName)
+        rememberSaveable(state.value.profile?.displayName) {
+            mutableStateOf(state.value.profile?.displayName)
         }
 
     var modified by rememberSaveable { mutableStateOf(false) }
@@ -140,13 +144,14 @@ fun ProfileContent(component: ProfileComponent) {
                     onClick = {
                         component.updateUserProfile(
                             state.value.profile!!.copy(
-                                displayName = displayName,
+                                displayName = displayName!!,
                                 profilePhotoUri = state.value.profile?.profilePhotoUri
                             )
                         )
                         modified = false
                     },
-                    enabled = !state.value.isUploading && displayName.isNotBlank() && modified
+                    enabled =
+                        !state.value.isUploading && displayName?.isNotBlank() == true && modified
                 ) {
                     Text(text = "Save")
                 }
@@ -174,12 +179,12 @@ fun ProfileContent(component: ProfileComponent) {
                             ListItemDefaults.colors(
                                 containerColor = MaterialTheme.colorScheme.surfaceContainerHigh
                             ),
-                        headlineContent = { Text(displayName) },
-                        supportingContent = { Text(state.value.profile!!.email) },
+                        headlineContent = { Text(displayName ?: "") },
+                        supportingContent = { Text(state.value.profile?.email ?: "") },
                         leadingContent = {
                             ProfileImage(
-                                email = state.value.profile!!.email,
-                                profilePhotoUri = state.value.profile!!.profilePhotoUri,
+                                email = state.value.profile?.email ?: "",
+                                profilePhotoUri = state.value.profile?.profilePhotoUri,
                                 getGravatarUri = { component.getGravatarUri(it) },
                                 modifier = Modifier.requiredSize(48.dp)
                             )
@@ -189,7 +194,7 @@ fun ProfileContent(component: ProfileComponent) {
 
                 OutlinedTextField(
                     modifier = Modifier.padding(16.dp, 8.dp).fillMaxWidth(),
-                    value = displayName,
+                    value = displayName ?: "",
                     singleLine = true,
                     onValueChange = {
                         displayName = it
@@ -203,10 +208,10 @@ fun ProfileContent(component: ProfileComponent) {
                         )
                     },
                     trailingIcon = {
-                        if (displayName != state.value.profile!!.displayName) {
+                        if (displayName != state.value.profile?.displayName) {
                             IconButton(
                                 onClick = {
-                                    displayName = state.value.profile!!.displayName
+                                    displayName = state.value.profile?.displayName
                                     modified = false
                                 }
                             ) {
@@ -218,7 +223,7 @@ fun ProfileContent(component: ProfileComponent) {
 
                 ListItem(
                     headlineContent = {
-                        if (state.value.profile!!.profilePhotoUri != null) {
+                        if (state.value.profile?.profilePhotoUri != null) {
                             Text("Change profile picture")
                         } else {
                             Text("Add profile picture")
@@ -228,10 +233,20 @@ fun ProfileContent(component: ProfileComponent) {
                     modifier =
                         Modifier.padding(horizontal = 16.dp)
                             .clip(MaterialTheme.shapes.extraLarge)
-                            .clickable { selectPhotoAction() }
+                            .clickable {
+                                if (state.value.profile?.emailVerified == true) {
+                                    selectPhotoAction()
+                                } else {
+                                    coroutineScope.launch {
+                                        snackbarHostState.showSnackbar(
+                                            "Verify your email to add a profile photo"
+                                        )
+                                    }
+                                }
+                            }
                 )
 
-                if (state.value.profile!!.profilePhotoUri != null) {
+                if (state.value.profile?.profilePhotoUri != null) {
                     ListItem(
                         headlineContent = { Text("Remove profile picture") },
                         leadingContent = {
@@ -249,9 +264,9 @@ fun ProfileContent(component: ProfileComponent) {
                 }
 
                 ListItem(
-                    headlineContent = { Text(state.value.profile!!.email) },
+                    headlineContent = { Text(state.value.profile?.email ?: "") },
                     supportingContent = {
-                        if (state.value.profile!!.emailVerified) {
+                        if (state.value.profile?.emailVerified == true) {
                             Text("Tap to change")
                         } else {
                             Text("Unverified")
@@ -268,7 +283,7 @@ fun ProfileContent(component: ProfileComponent) {
                             }
                 )
 
-                if (state.value.profile!!.emailVerified) {
+                if (state.value.profile?.emailVerified == true) {
                     ListItem(
                         headlineContent = { Text("Change password") },
                         leadingContent = {

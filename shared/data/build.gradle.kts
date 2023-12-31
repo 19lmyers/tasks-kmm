@@ -20,6 +20,8 @@ kotlin {
 
             implementation(libs.datastore)
 
+            implementation(libs.kermit)
+
             implementation(libs.koin.core)
 
             implementation(libs.kotlinx.datetime)

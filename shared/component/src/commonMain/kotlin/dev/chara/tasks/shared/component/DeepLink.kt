@@ -12,4 +12,6 @@ sealed interface DeepLink {
     data class VerifyEmail(val token: String) : DeepLink
 
     data class ResetPassword(val token: String) : DeepLink
+
+    data class JoinList(val token: String) : DeepLink
 }

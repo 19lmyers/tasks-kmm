@@ -12,12 +12,10 @@ import TasksShared
 
 private var DATA_MESSAGE_TYPE = "DATA_MESSAGE_TYPE"
 private var DATA_TASK_ID = "DATA_TASK_ID"
-
-private var MESSAGE_TYPE_REMINDER = "MESSAGE_TYPE_REMINDER"
-
 private var DATA_TASK_CATEGORY = "DATA_TASK_CATEGORY"
 
-private var MESSAGE_TYPE_PREDICTION = "MESSAGE_TYPE_PREDICTION"
+private var MESSAGE_TYPE_REMINDER = "MESSAGE_TYPE_REMINDER"
+private var MESSAGE_TYPE_ACTION = "MESSAGE_TYPE_ACTION"
 
 private var REMINDER_CATEGORY_IDENTIFIER = "reminder"
 private var COMPLETE_ACTION_IDENTIFIER = "reminder.complete"
@@ -39,11 +37,13 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
 
         let messageType = userInfo[DATA_MESSAGE_TYPE] as? String
 
-        if messageType == MESSAGE_TYPE_PREDICTION {
-            guard let taskId = userInfo[DATA_TASK_ID] as? String else { return [[]] }
-            guard let category = userInfo[DATA_TASK_CATEGORY] as? String else { return [[]] }
-            rootHolder.root.updateTaskCategory(id: taskId, category: category)
-            return [[]]
+        if messageType == MESSAGE_TYPE_REMINDER {
+            return [[.banner, .list, .sound]]
+        }
+
+        if messageType == MESSAGE_TYPE_ACTION {
+            rootHolder.root.refreshCache()
+            return [[.list]]
         }
 
         return [[.banner, .list, .sound]]

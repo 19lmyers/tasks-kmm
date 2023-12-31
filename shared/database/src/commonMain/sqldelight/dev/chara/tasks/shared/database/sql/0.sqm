@@ -1,13 +1,15 @@
+import dev.chara.tasks.shared.model.TaskList.ClassifierType;
 import dev.chara.tasks.shared.model.TaskList.Color;
 import dev.chara.tasks.shared.model.TaskList.Icon;
-import dev.chara.tasks.shared.model.TaskList.SortType;
-import dev.chara.tasks.shared.model.TaskList.SortDirection;
-import dev.chara.tasks.shared.model.TaskList.ClassifierType;
-import kotlinx.datetime.Instant;
+import dev.chara.tasks.shared.model.TaskListPrefs.SortDirection;
+import dev.chara.tasks.shared.model.TaskListPrefs.SortType;
 import kotlin.Boolean;
+import kotlinx.datetime.Instant;
 
 CREATE TABLE TaskList (
     id TEXT PRIMARY KEY NOT NULL,
+
+    owner_id TEXT NOT NULL,
 
     title TEXT NOT NULL,
 
@@ -15,17 +17,25 @@ CREATE TABLE TaskList (
     icon TEXT AS Icon,
     description TEXT,
 
+    date_created TEXT AS Instant NOT NULL,
+    last_modified TEXT AS Instant NOT NULL,
+    
+    classifier_type TEXT AS ClassifierType
+);
+
+CREATE TABLE TaskListPrefs (
+    list_id TEXT PRIMARY KEY NOT NULL,
+
     show_index_numbers INTEGER AS Boolean NOT NULL DEFAULT 0,
 
     sort_type TEXT AS SortType NOT NULL,
     sort_direction TEXT AS SortDirection NOT NULL,
 
-    date_created TEXT AS Instant NOT NULL,
+    ordinal INTEGER NOT NULL,
+
     last_modified TEXT AS Instant NOT NULL,
 
-    ordinal INTEGER NOT NULL,
-    
-    classifier_type TEXT AS ClassifierType
+    FOREIGN KEY (list_id) REFERENCES TaskList(id)
 );
 
 CREATE TABLE Task (

@@ -22,10 +22,14 @@ import dev.chara.tasks.shared.component.home.create_task.CreateTaskComponent
 import dev.chara.tasks.shared.component.home.create_task.DefaultCreateTaskComponent
 import dev.chara.tasks.shared.component.home.dashboard.DashboardComponent
 import dev.chara.tasks.shared.component.home.dashboard.DefaultDashboardComponent
+import dev.chara.tasks.shared.component.home.join_list.DefaultJoinListComponent
+import dev.chara.tasks.shared.component.home.join_list.JoinListComponent
 import dev.chara.tasks.shared.component.home.list_details.DefaultListDetailsComponent
 import dev.chara.tasks.shared.component.home.list_details.ListDetailsComponent
 import dev.chara.tasks.shared.component.home.modify_list.DefaultModifyListComponent
 import dev.chara.tasks.shared.component.home.modify_list.ModifyListComponent
+import dev.chara.tasks.shared.component.home.share_list.DefaultShareListComponent
+import dev.chara.tasks.shared.component.home.share_list.ShareListComponent
 import dev.chara.tasks.shared.component.home.task_details.DefaultTaskDetailsComponent
 import dev.chara.tasks.shared.component.home.task_details.TaskDetailsComponent
 import dev.chara.tasks.shared.component.util.SnackbarMessage
@@ -89,6 +93,10 @@ interface HomeComponent {
     sealed class Sheet {
         class ModifyList(val component: ModifyListComponent) : Sheet()
 
+        class ShareList(val component: ShareListComponent) : Sheet()
+
+        class JoinList(val component: JoinListComponent) : Sheet()
+
         class CreateTask(val component: CreateTaskComponent) : Sheet()
     }
 }
@@ -97,6 +105,7 @@ class DefaultHomeComponent(
     componentContext: ComponentContext,
     defaultListId: String? = null,
     defaultTaskId: String? = null,
+    defaultListInviteToken: String? = null,
     showCreateTaskSheet: Boolean = false,
     private val navigateToWelcome: () -> Unit,
     private val navigateToProfile: () -> Unit,
@@ -210,6 +219,9 @@ class DefaultHomeComponent(
                         navigateToModifyList = { listId ->
                             sheetNavigation.activate(SheetConfig.ModifyList(listId = listId))
                         },
+                        navigateToShareList = { listId ->
+                            sheetNavigation.activate(SheetConfig.ShareList(listId = listId))
+                        },
                         navigateToTaskDetails = { taskId ->
                             navigation.push(Config.Stack.TaskDetails(taskId))
                         },
@@ -234,7 +246,13 @@ class DefaultHomeComponent(
         childSlot(
             source = sheetNavigation,
             initialConfiguration = {
-                if (showCreateTaskSheet) SheetConfig.CreateTask(listId = null) else null
+                if (showCreateTaskSheet) {
+                    SheetConfig.CreateTask(listId = null)
+                } else if (defaultListInviteToken != null) {
+                    SheetConfig.JoinList(defaultListInviteToken)
+                } else {
+                    null
+                }
             },
             childFactory = ::sheet,
             handleBackButton = true
@@ -252,6 +270,24 @@ class DefaultHomeComponent(
                         dismiss = { sheetNavigation.dismiss() }
                     )
                 )
+            is SheetConfig.ShareList -> {
+                HomeComponent.Sheet.ShareList(
+                    DefaultShareListComponent(
+                        componentContext,
+                        listId = config.listId,
+                        dismiss = { sheetNavigation.dismiss() }
+                    )
+                )
+            }
+            is SheetConfig.JoinList -> {
+                HomeComponent.Sheet.JoinList(
+                    DefaultJoinListComponent(
+                        componentContext,
+                        inviteToken = config.inviteToken,
+                        dismiss = { sheetNavigation.dismiss() }
+                    )
+                )
+            }
             is SheetConfig.CreateTask ->
                 HomeComponent.Sheet.CreateTask(
                     DefaultCreateTaskComponent(
@@ -302,6 +338,7 @@ class DefaultHomeComponent(
         }
 
         sealed interface Stack : Config {
+
             @Parcelize data class ListDetails(val id: String) : Stack
 
             @Parcelize data class TaskDetails(val id: String) : Stack
@@ -333,6 +370,10 @@ class DefaultHomeComponent(
 
     private sealed interface SheetConfig : Parcelable {
         @Parcelize data class ModifyList(val listId: String?) : SheetConfig
+
+        @Parcelize data class ShareList(val listId: String) : SheetConfig
+
+        @Parcelize data class JoinList(val inviteToken: String) : SheetConfig
 
         @Parcelize data class CreateTask(val listId: String?) : SheetConfig
     }

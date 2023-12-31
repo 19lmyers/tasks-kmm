@@ -5,6 +5,7 @@ import com.arkivanov.essenty.lifecycle.coroutines.coroutineScope
 import com.github.michaelbull.result.Ok
 import dev.chara.tasks.shared.data.Repository
 import dev.chara.tasks.shared.model.TaskList
+import dev.chara.tasks.shared.model.TaskListPrefs
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -20,7 +21,7 @@ interface ModifyListComponent {
 
     fun onDismiss()
 
-    fun onSave(taskList: TaskList)
+    fun onSave(taskList: TaskList, prefs: TaskListPrefs)
 }
 
 class DefaultModifyListComponent(
@@ -40,8 +41,10 @@ class DefaultModifyListComponent(
         coroutineScope.launch {
             if (listId != null) {
                 val taskList = repository.getListById(listId).firstOrNull()
+                val prefs = repository.getListPrefsById(listId).firstOrNull()
                 if (taskList != null) {
-                    _state.value = state.value.copy(isLoading = false, selectedList = taskList)
+                    _state.value =
+                        state.value.copy(isLoading = false, selectedList = taskList, prefs = prefs)
                 }
             } else {
                 _state.value = state.value.copy(isLoading = false)
@@ -55,13 +58,14 @@ class DefaultModifyListComponent(
         }
     }
 
-    override fun onSave(taskList: TaskList) {
+    override fun onSave(taskList: TaskList, prefs: TaskListPrefs) {
         coroutineScope.launch {
             val result =
                 if (taskList.id.isEmpty()) {
-                    repository.createList(taskList)
+                    repository.createList(taskList, prefs)
                 } else {
                     repository.updateList(taskList.id, taskList)
+                    repository.updateListPrefs(taskList.id, prefs)
                 }
 
             if (result is Ok) {

@@ -60,13 +60,15 @@ class DefaultDashboardComponent(
                     repository.getBoardSections(),
                     repository.getBoardLists(),
                     repository.getLists(),
-                ) { boardSections, pinnedLists, allLists ->
+                    repository.getListPrefs()
+                ) { boardSections, pinnedLists, allLists, allPrefs ->
                     DashboardUiState(
                         isLoading = false,
                         isRefreshing = false,
                         boardSections = boardSections,
                         boardLists = pinnedLists,
-                        allLists = allLists
+                        allLists = allLists,
+                        allPrefs = allPrefs
                     )
                 }
                 .collect { _state.value = it }

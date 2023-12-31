@@ -57,7 +57,7 @@ interface RootComponent {
 
     fun markTaskAsCompleted(id: String)
 
-    fun updateTaskCategory(id: String, category: String)
+    fun refreshCache()
 
     fun linkFCMToken(token: String)
 
@@ -161,6 +161,8 @@ class DefaultRootComponent(
                             if (config is Config.Home.WithListDetails) config.id else null,
                         defaultTaskId =
                             if (config is Config.Home.WithTaskDetails) config.id else null,
+                        defaultListInviteToken =
+                            if (config is Config.Home.WithListInvite) config.inviteToken else null,
                         showCreateTaskSheet = config is Config.Home.WithCreateTask,
                         navigateToWelcome = { navigation.replaceAll(Config.Welcome) },
                         navigateToProfile = { navigation.push(Config.Profile) },
@@ -234,18 +236,11 @@ class DefaultRootComponent(
         }
     }
 
-    override fun updateTaskCategory(id: String, category: String) {
+    override fun refreshCache() {
         coroutineScope.launch {
             withContext(Dispatchers.IO) {
-                val task = repository.getTaskById(id).first() ?: return@withContext
-
-                val result =
-                    repository.updateTask(
-                        task.listId,
-                        task.id,
-                        task.copy(category = category, lastModified = Clock.System.now())
-                    )
-                // TODO display result? (this is called from iOS)
+                val result = repository.refresh()
+                // TODO display result?
             }
         }
     }
@@ -262,6 +257,7 @@ class DefaultRootComponent(
         private fun getStackFor(deepLink: DeepLink): Config =
             when (deepLink) {
                 DeepLink.None -> Config.Home.Default
+                is DeepLink.JoinList -> Config.Home.WithListInvite(deepLink.token)
                 is DeepLink.ViewList -> Config.Home.WithListDetails(deepLink.id)
                 is DeepLink.ViewTask -> Config.Home.WithTaskDetails(deepLink.id)
                 DeepLink.CreateTask -> Config.Home.WithCreateTask
@@ -282,6 +278,8 @@ class DefaultRootComponent(
         sealed interface Home : Config {
 
             @Parcelize data object Default : Home
+
+            @Parcelize data class WithListInvite(val inviteToken: String) : Home
 
             @Parcelize data class WithListDetails(val id: String) : Home
 

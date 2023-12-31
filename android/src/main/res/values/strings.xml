@@ -3,6 +3,8 @@
 
     <string name="notification_channel_reminders">Reminders</string>
 
+    <string name="notification_channel_actions">Activity</string>
+
     <string name="shortcut_new_disabled">Sign in first</string>
     <string name="shortcut_new_label_short">New task</string>
     <string name="shortcut_new_label_long">New task</string>

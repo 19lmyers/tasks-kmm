@@ -7,6 +7,7 @@ import dev.chara.tasks.shared.database.Database
 import dev.chara.tasks.shared.database.DriverFactory
 import dev.chara.tasks.shared.model.Task
 import dev.chara.tasks.shared.model.TaskList
+import dev.chara.tasks.shared.model.TaskListPrefs
 import kotlin.math.max
 import kotlin.math.min
 import kotlin.math.sign
@@ -20,36 +21,52 @@ class CacheDataSource(driverFactory: DriverFactory) {
     private val database = Database(driverFactory)
 
     fun getTaskLists() =
-        database.taskListQueries.get().asFlow().mapToList(Dispatchers.IO).map { it.toModel() }
+        database.taskListQueries.getByUser().asFlow().mapToList(Dispatchers.IO).map { it.toModel() }
+
+    fun getListPrefs() =
+        database.taskListQueries.getPrefsByUser().asFlow().mapToList(Dispatchers.IO).map {
+            it.toModel()
+        }
 
     fun getTaskListById(id: String) =
         database.taskListQueries.getById(id).asFlow().mapToOneOrNull(Dispatchers.IO).map {
             it?.toModel()
         }
 
+    fun getListPrefsById(listId: String) =
+        database.taskListQueries.getPrefsByIds(listId).asFlow().mapToOneOrNull(Dispatchers.IO).map {
+            it?.toModel()
+        }
+
     private fun getMaxListOrdinal() =
         database.taskListQueries.getMaxOrdinal().executeAsOneOrNull()?.MAX
 
-    suspend fun insertTaskList(taskList: TaskList) =
+    suspend fun insertTaskList(taskList: TaskList, prefs: TaskListPrefs) =
         withContext(Dispatchers.IO) {
             database.taskListQueries.insert(
                 id = taskList.id,
+                owner_id = taskList.ownerId,
                 title = taskList.title,
                 color = taskList.color,
                 icon = taskList.icon,
                 description = taskList.description,
-                show_index_numbers = taskList.showIndexNumbers,
-                sort_type = taskList.sortType,
-                sort_direction = taskList.sortDirection,
                 date_created = taskList.dateCreated,
                 last_modified = taskList.lastModified,
+                classifier_type = taskList.classifierType
+            )
+
+            database.taskListQueries.insertPrefs(
+                list_id = taskList.id,
+                show_index_numbers = prefs.showIndexNumbers,
+                sort_type = prefs.sortType,
+                sort_direction = prefs.sortDirection,
+                last_modified = prefs.lastModified,
                 ordinal =
-                    if (taskList.ordinal == -1) {
+                    if (prefs.ordinal == -1) {
                         getMaxListOrdinal()?.plus(1) ?: 0
                     } else {
-                        taskList.ordinal.toLong()
+                        prefs.ordinal.toLong()
                     },
-                classifier_type = taskList.classifierType
             )
         }
 
@@ -60,13 +77,20 @@ class CacheDataSource(driverFactory: DriverFactory) {
                 color = taskList.color,
                 icon = taskList.icon,
                 description = taskList.description,
-                sort_type = taskList.sortType,
-                sort_direction = taskList.sortDirection,
-                show_index_numbers = taskList.showIndexNumbers,
                 last_modified = taskList.lastModified,
-                ordinal = taskList.ordinal.toLong(),
                 classifier_type = taskList.classifierType,
                 id = taskList.id
+            )
+        }
+
+    suspend fun updateListPrefs(prefs: TaskListPrefs) =
+        withContext(Dispatchers.IO) {
+            database.taskListQueries.updatePrefs(
+                sort_type = prefs.sortType,
+                sort_direction = prefs.sortDirection,
+                show_index_numbers = prefs.showIndexNumbers,
+                last_modified = prefs.lastModified,
+                list_id = prefs.listId,
             )
         }
 
@@ -109,21 +133,22 @@ class CacheDataSource(driverFactory: DriverFactory) {
 
     fun getTasksByList(
         listId: String,
-        sortType: TaskList.SortType,
-        sortDirection: TaskList.SortDirection,
+        sortType: TaskListPrefs.SortType,
+        sortDirection: TaskListPrefs.SortDirection,
         isCompleted: Boolean
     ) =
         when (sortType) {
-                TaskList.SortType.ORDINAL ->
+                TaskListPrefs.SortType.ORDINAL ->
                     database.taskQueries.getByList_Ordinal(listId, isCompleted)
-                TaskList.SortType.LABEL -> database.taskQueries.getByList_Label(listId, isCompleted)
-                TaskList.SortType.CATEGORY ->
+                TaskListPrefs.SortType.LABEL ->
+                    database.taskQueries.getByList_Label(listId, isCompleted)
+                TaskListPrefs.SortType.CATEGORY ->
                     database.taskQueries.getByList_Category(listId, isCompleted)
-                TaskList.SortType.DATE_CREATED ->
+                TaskListPrefs.SortType.DATE_CREATED ->
                     database.taskQueries.getByList_DateCreated(listId, isCompleted)
-                TaskList.SortType.UPCOMING ->
+                TaskListPrefs.SortType.UPCOMING ->
                     database.taskQueries.getByList_Upcoming(listId, isCompleted)
-                TaskList.SortType.STARRED ->
+                TaskListPrefs.SortType.STARRED ->
                     database.taskQueries.getByList_Starred(listId, isCompleted)
             }
             .asFlow()
@@ -131,8 +156,8 @@ class CacheDataSource(driverFactory: DriverFactory) {
             .map { it.toModel() }
             .let {
                 if (
-                    sortType != TaskList.SortType.ORDINAL &&
-                        sortDirection == TaskList.SortDirection.DESCENDING
+                    sortType != TaskListPrefs.SortType.ORDINAL &&
+                        sortDirection == TaskListPrefs.SortDirection.DESCENDING
                 ) {
                     it.map { tasks -> tasks.asReversed() }
                 } else {
@@ -216,7 +241,11 @@ class CacheDataSource(driverFactory: DriverFactory) {
     suspend fun deleteTasksByList(listId: String) =
         withContext(Dispatchers.IO) { database.taskQueries.deleteByList(listId) }
 
-    suspend fun clearAndInsert(taskLists: Collection<TaskList>, tasks: Collection<Task>) =
+    suspend fun clearAndInsert(
+        taskLists: Collection<TaskList>,
+        prefs: Collection<TaskListPrefs>,
+        tasks: Collection<Task>
+    ) =
         withContext(Dispatchers.IO) {
             database.transaction {
                 database.taskQueries.deleteAll()
@@ -224,22 +253,29 @@ class CacheDataSource(driverFactory: DriverFactory) {
                 for (taskList in taskLists) {
                     database.taskListQueries.insert(
                         id = taskList.id,
+                        owner_id = taskList.ownerId,
                         title = taskList.title,
                         color = taskList.color,
                         icon = taskList.icon,
                         description = taskList.description,
-                        show_index_numbers = taskList.showIndexNumbers,
-                        sort_type = taskList.sortType,
-                        sort_direction = taskList.sortDirection,
                         date_created = taskList.dateCreated,
                         last_modified = taskList.lastModified,
+                        classifier_type = taskList.classifierType
+                    )
+                }
+                for (pref in prefs) {
+                    database.taskListQueries.insertPrefs(
+                        list_id = pref.listId,
+                        show_index_numbers = pref.showIndexNumbers,
+                        sort_type = pref.sortType,
+                        sort_direction = pref.sortDirection,
+                        last_modified = pref.lastModified,
                         ordinal =
-                            if (taskList.ordinal == -1) {
+                            if (pref.ordinal == -1) {
                                 getMaxListOrdinal()?.plus(1) ?: 0
                             } else {
-                                taskList.ordinal.toLong()
+                                pref.ordinal.toLong()
                             },
-                        classifier_type = taskList.classifierType
                     )
                 }
                 for (task in tasks) {

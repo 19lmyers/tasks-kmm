@@ -40,6 +40,7 @@ import androidx.compose.material.icons.filled.Work
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import dev.chara.tasks.shared.model.TaskList
+import dev.chara.tasks.shared.model.TaskListPrefs
 
 val TaskList.Color.seed: Color
     get() =
@@ -86,20 +87,20 @@ val TaskList.Icon?.icon: ImageVector
             else -> Icons.Filled.Checklist
         }
 
-val TaskList.SortType.icon: ImageVector
+val TaskListPrefs.SortType.icon: ImageVector
     get() =
         when (this) {
-            TaskList.SortType.ORDINAL -> Icons.Filled.Sort
-            TaskList.SortType.LABEL -> Icons.Filled.SortByAlpha
-            TaskList.SortType.CATEGORY -> Icons.Filled.Category
-            TaskList.SortType.DATE_CREATED -> Icons.Filled.Event
-            TaskList.SortType.UPCOMING -> Icons.Filled.Schedule
-            TaskList.SortType.STARRED -> Icons.Filled.Star
+            TaskListPrefs.SortType.ORDINAL -> Icons.Filled.Sort
+            TaskListPrefs.SortType.LABEL -> Icons.Filled.SortByAlpha
+            TaskListPrefs.SortType.CATEGORY -> Icons.Filled.Category
+            TaskListPrefs.SortType.DATE_CREATED -> Icons.Filled.Event
+            TaskListPrefs.SortType.UPCOMING -> Icons.Filled.Schedule
+            TaskListPrefs.SortType.STARRED -> Icons.Filled.Star
         }
 
-val TaskList.SortDirection.icon: ImageVector
+val TaskListPrefs.SortDirection.icon: ImageVector
     get() =
         when (this) {
-            TaskList.SortDirection.ASCENDING -> Icons.Filled.ArrowUpward
-            TaskList.SortDirection.DESCENDING -> Icons.Filled.ArrowDownward
+            TaskListPrefs.SortDirection.ASCENDING -> Icons.Filled.ArrowUpward
+            TaskListPrefs.SortDirection.DESCENDING -> Icons.Filled.ArrowDownward
         }

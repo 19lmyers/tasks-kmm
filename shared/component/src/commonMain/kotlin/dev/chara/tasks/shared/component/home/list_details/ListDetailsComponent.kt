@@ -8,6 +8,7 @@ import dev.chara.tasks.shared.component.util.emitAsMessage
 import dev.chara.tasks.shared.data.Repository
 import dev.chara.tasks.shared.model.Task
 import dev.chara.tasks.shared.model.TaskList
+import dev.chara.tasks.shared.model.TaskListPrefs
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -35,11 +36,17 @@ interface ListDetailsComponent {
 
     fun onEditClicked(listId: String)
 
+    fun onShareClicked(listId: String)
+
     fun onTaskClicked(taskId: String)
 
     fun updateList(taskList: TaskList)
 
+    fun updatePrefs(prefs: TaskListPrefs)
+
     fun deleteList(listId: String)
+
+    fun leaveList(listId: String)
 
     fun updateTask(task: Task)
 
@@ -53,6 +60,7 @@ class DefaultListDetailsComponent(
     listId: String,
     private val navigateUp: () -> Unit,
     private val navigateToModifyList: (String) -> Unit,
+    private val navigateToShareList: (String) -> Unit,
     private val navigateToTaskDetails: (String) -> Unit,
     private val navigateToCreateTask: () -> Unit,
 ) : ListDetailsComponent, KoinComponent, ComponentContext by componentContext {
@@ -70,14 +78,18 @@ class DefaultListDetailsComponent(
     init {
         coroutineScope.launch {
             combine(
+                    repository.getUserProfile(),
                     repository.getListById(listId),
+                    repository.getListPrefsById(listId),
                     repository.getTasksByList(listId, false),
                     repository.getTasksByList(listId, true)
-                ) { list, currentTasks, completedTasks ->
+                ) { profile, list, prefs, currentTasks, completedTasks ->
                     ListDetailsUiState(
+                        profile = profile,
                         isLoading = false,
                         isRefreshing = false,
                         selectedList = list,
+                        prefs = prefs,
                         currentTasks = currentTasks,
                         completedTasks = completedTasks
                     )
@@ -107,6 +119,8 @@ class DefaultListDetailsComponent(
 
     override fun onEditClicked(listId: String) = navigateToModifyList(listId)
 
+    override fun onShareClicked(listId: String) = navigateToShareList(listId)
+
     override fun onTaskClicked(taskId: String) = navigateToTaskDetails(taskId)
 
     override fun updateList(taskList: TaskList) {
@@ -116,10 +130,27 @@ class DefaultListDetailsComponent(
         }
     }
 
+    override fun updatePrefs(prefs: TaskListPrefs) {
+        coroutineScope.launch {
+            val result = repository.updateListPrefs(prefs.listId, prefs)
+            _messages.emitAsMessage(result)
+        }
+    }
+
     override fun deleteList(listId: String) {
         coroutineScope.launch {
             val result = repository.deleteList(listId)
             _messages.emitAsMessage(result, successMessage = "List deleted")
+            if (result is Ok) {
+                withContext(Dispatchers.Main) { navigateUp() }
+            }
+        }
+    }
+
+    override fun leaveList(listId: String) {
+        coroutineScope.launch {
+            val result = repository.leaveList(listId)
+            _messages.emitAsMessage(result, successMessage = "List left")
             if (result is Ok) {
                 withContext(Dispatchers.Main) { navigateUp() }
             }

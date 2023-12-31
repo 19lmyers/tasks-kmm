@@ -77,7 +77,9 @@ class PreferenceDataSource(private val dataStorePath: DataStorePath) {
 
     suspend fun clearAuthFields() =
         dataStore.edit {
+            it.remove(KEY_AUTH_USER_ID)
             it.remove(KEY_AUTH_USER_EMAIL)
+            it.remove(KEY_AUTH_USER_EMAIL_VERIFIED)
             it.remove(KEY_AUTH_USER_DISPLAY_NAME)
             it.remove(KEY_AUTH_USER_PROFILE_PHOTO_URI)
 

@@ -12,6 +12,9 @@ private var QUERY_VERIFY_EMAIL_TOKEN = "token"
 private var PATH_RESET_PASSWORD = "/reset"
 private var QUERY_PASSWORD_RESET_TOKEN = "token"
 
+private var PATH_JOIN_LIST = "/join"
+private var QUERY_LIST_INVITE_TOKEN = "token"
+
 private var PATH_VIEW_LIST = "/list"
 private var QUERY_LIST_ID = "id"
 
@@ -66,6 +69,10 @@ struct TasksApp: App {
                     case PATH_RESET_PASSWORD:
                         if let token = params.first(where: { $0.name == QUERY_PASSWORD_RESET_TOKEN })?.value {
                             rootHolder.root.onDeepLink(deepLink: DeepLinkResetPassword(token: token))
+                        }
+                    case PATH_JOIN_LIST:
+                        if let token = params.first(where: { $0.name == QUERY_LIST_INVITE_TOKEN })?.value {
+                            rootHolder.root.onDeepLink(deepLink: DeepLinkJoinList(token: token))
                         }
                     case PATH_VIEW_LIST:
                         if let id = params.first(where: { $0.name == QUERY_LIST_ID })?.value {

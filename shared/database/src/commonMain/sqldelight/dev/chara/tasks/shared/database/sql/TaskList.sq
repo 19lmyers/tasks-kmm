@@ -1,7 +1,13 @@
-get:
+getByUser:
+SELECT tl.*
+FROM TaskList tl
+INNER JOIN TaskListPrefs prefs
+ON prefs.list_id = tl.id
+ORDER BY prefs.ordinal ASC;
+
+getPrefsByUser:
 SELECT *
-FROM TaskList
-ORDER BY ordinal ASC;
+FROM TaskListPrefs prefs;
 
 getById:
 SELECT *
@@ -9,31 +15,53 @@ FROM TaskList
 WHERE id = ?
 LIMIT 1;
 
+getPrefsByIds:
+SELECT *
+FROM TaskListPrefs prefs
+WHERE prefs.list_id = ?
+LIMIT 1;
+
 getMaxOrdinal:
-SELECT MAX(tl.ordinal)
-FROM TaskList tl;
+SELECT MAX(prefs.ordinal)
+FROM TaskList tl
+INNER JOIN TaskListPrefs prefs
+ON prefs.list_id = tl.id;
 
 insert:
-INSERT INTO TaskList VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+INSERT INTO TaskList VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);
+
+insertPrefs:
+INSERT INTO TaskListPrefs VALUES(?, ?, ?, ?, ?, ?);
 
 update:
 UPDATE TaskList
-SET title = ?, color = ?, icon = ?, description = ?, sort_type = ?, sort_direction = ?, show_index_numbers = ?, last_modified = ?, ordinal = ?, classifier_type = ?
+SET title = ?, color = ?, icon = ?, description = ?, last_modified = ?, classifier_type = ?
 WHERE id = ?;
 
+updatePrefs:
+UPDATE TaskListPrefs
+SET show_index_numbers = ?, sort_type = ?, sort_direction = ?, last_modified = :last_modified
+WHERE list_id = :list_id;
+
 reorder {
-    UPDATE TaskList
+    UPDATE TaskListPrefs
     SET ordinal = ordinal + :difference_sign, last_modified = :last_modified
     WHERE ordinal BETWEEN :lower_bound AND :upper_bound;
 
-    UPDATE TaskList
+    UPDATE TaskListPrefs
     SET ordinal = :ordinal + 0, last_modified = :last_modified
+    WHERE list_id = :list_id;
+}
+
+delete {
+    DELETE FROM TaskListPrefs
+    WHERE list_id = :list_id;
+
+    DELETE FROM TaskList
     WHERE id = :list_id;
 }
 
-delete:
-DELETE FROM TaskList
-WHERE id = ?;
-
-deleteAll:
-DELETE FROM TaskList;
+deleteAll {
+    DELETE FROM TaskListPrefs;
+    DELETE FROM TaskList;
+}

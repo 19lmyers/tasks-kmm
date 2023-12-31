@@ -8,6 +8,6 @@ object Gravatar {
         val byteString = trimmed.encodeToByteArray().toByteString()
         val hash = byteString.md5().hex()
 
-        return "https://www.gravatar.com/avatar/$hash.png?d=identicon"
+        return "https://www.gravatar.com/avatar/$hash.png?d=retro"
     }
 }

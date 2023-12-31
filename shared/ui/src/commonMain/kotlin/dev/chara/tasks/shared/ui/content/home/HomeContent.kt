@@ -60,7 +60,9 @@ import com.arkivanov.decompose.extensions.compose.jetbrains.subscribeAsState
 import dev.chara.tasks.shared.component.home.HomeComponent
 import dev.chara.tasks.shared.model.Profile
 import dev.chara.tasks.shared.ui.content.home.sheet.CreateTaskContent
+import dev.chara.tasks.shared.ui.content.home.sheet.JoinListContent
 import dev.chara.tasks.shared.ui.content.home.sheet.ModifyListContent
+import dev.chara.tasks.shared.ui.content.home.sheet.ShareListContent
 import dev.chara.tasks.shared.ui.item.ProfileImage
 import dev.chara.tasks.shared.ui.theme.extend.surfaceContainer
 import dev.chara.tasks.shared.ui.theme.extend.surfaceContainerHighest
@@ -205,6 +207,8 @@ fun HomeContent(component: HomeComponent, windowSizeClass: WindowSizeClass) {
         saveableStateHolder.SaveableStateProvider(key = config) {
             when (child) {
                 is HomeComponent.Sheet.ModifyList -> ModifyListContent(component = child.component)
+                is HomeComponent.Sheet.ShareList -> ShareListContent(component = child.component)
+                is HomeComponent.Sheet.JoinList -> JoinListContent(component = child.component)
                 is HomeComponent.Sheet.CreateTask -> CreateTaskContent(component = child.component)
             }
         }

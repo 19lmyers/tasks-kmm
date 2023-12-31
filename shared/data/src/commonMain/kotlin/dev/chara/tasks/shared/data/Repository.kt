@@ -13,6 +13,7 @@ import dev.chara.tasks.shared.ext.WidgetManager
 import dev.chara.tasks.shared.model.Profile
 import dev.chara.tasks.shared.model.Task
 import dev.chara.tasks.shared.model.TaskList
+import dev.chara.tasks.shared.model.TaskListPrefs
 import dev.chara.tasks.shared.model.board.BoardList
 import dev.chara.tasks.shared.model.board.BoardSection
 import dev.chara.tasks.shared.model.preference.Theme
@@ -20,6 +21,7 @@ import dev.chara.tasks.shared.model.preference.ThemeVariant
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
@@ -86,6 +88,8 @@ class Repository(
 
     fun getUserProfile() = preferenceDataSource.getUserProfile()
 
+    suspend fun getUserProfileFor(userId: String) = restDataSource.getUserProfileFor(userId)
+
     suspend fun updateUserProfile(profile: Profile): Result<Unit, DataError> {
         preferenceDataSource.setUserProfile(profile)
         return restDataSource.updateUserProfile(profile)
@@ -114,18 +118,27 @@ class Repository(
         val taskLists = restDataSource.getLists().bind()
 
         val tasks = mutableListOf<Task>()
+        val prefs = mutableListOf<TaskListPrefs>()
+
         for (taskList in taskLists) {
             val tasksForList = restDataSource.getTasks(taskList.id).bind()
             tasks.addAll(tasksForList)
+
+            val prefsForList = restDataSource.getListPrefs(taskList.id).bind() ?: continue
+            prefs.add(prefsForList)
         }
 
         val freshLists = taskLists.associateBy { it.id }.toMutableMap()
 
         val freshTasks = tasks.associateBy { it.id }.toMutableMap()
 
+        val freshPrefs = prefs.associateBy { it.listId }.toMutableMap()
+
         val staleLists = cacheDataSource.getTaskLists().first()
 
         val staleTasks = cacheDataSource.getTasks().first()
+
+        val stalePrefs = cacheDataSource.getListPrefs().first()
 
         // This represents the actions to take on the server to get it "up to speed"
         val serverDiff = mutableListOf<DiffAction>()
@@ -172,12 +185,25 @@ class Repository(
             // Otherwise, it's been deleted, so we can ignore it
         }
 
+        for (stalePref in stalePrefs) {
+            if (freshPrefs.containsKey(stalePref.listId)) {
+                val freshPref = freshPrefs.remove(stalePref.listId)!!
+
+                if (freshPref.lastModified < stalePref.lastModified) {
+                    serverDiff.add(DiffAction.TaskListPrefs.Update(stalePref))
+                }
+            }
+        }
+
         if (serverDiff.isNotEmpty()) {
             for (action in serverDiff) {
                 val result =
                     when (action) {
                         is DiffAction.TaskList.Update -> {
                             restDataSource.updateList(action.taskList.id, action.taskList)
+                        }
+                        is DiffAction.TaskListPrefs.Update -> {
+                            restDataSource.updateListPrefs(action.prefs.listId, action.prefs)
                         }
                         is DiffAction.Task.Create -> {
                             restDataSource.createTask(action.task.listId, action.task).onSuccess {
@@ -206,18 +232,18 @@ class Repository(
 
             refreshCache(skipIds)
         } else {
-            cacheDataSource.clearAndInsert(taskLists, tasks)
+            cacheDataSource.clearAndInsert(taskLists, prefs, tasks)
             widgetManager.update()
             Ok(Unit)
         }
     }
 
-    fun getLists() = cacheDataSource.getTaskLists()
+    suspend fun getLists() = cacheDataSource.getTaskLists()
 
     fun getListById(listId: String) = cacheDataSource.getTaskListById(listId)
 
-    suspend fun createList(taskList: TaskList) =
-        restDataSource.createList(taskList).onSuccess { refreshCache() }
+    suspend fun createList(taskList: TaskList, prefs: TaskListPrefs) =
+        restDataSource.createList(taskList, prefs).onSuccess { refreshCache() }
 
     suspend fun updateList(listId: String, taskList: TaskList): Result<Unit, DataError> {
         cacheDataSource.updateTaskList(taskList)
@@ -243,19 +269,52 @@ class Repository(
             widgetManager.update()
         }
 
+    fun getListPrefs() = cacheDataSource.getListPrefs()
+
+    fun getListPrefsById(listId: String) = cacheDataSource.getListPrefsById(listId)
+
+    suspend fun updateListPrefs(listId: String, prefs: TaskListPrefs): Result<Unit, DataError> {
+        cacheDataSource.updateListPrefs(prefs)
+        widgetManager.update()
+        return restDataSource.updateListPrefs(listId, prefs)
+    }
+
+    suspend fun getListMembers(listId: String) = restDataSource.getListMembers(listId)
+
+    suspend fun requestListInvite(listId: String) = restDataSource.requestListInvite(listId)
+
+    suspend fun getListInviteInfo(inviteToken: String) =
+        restDataSource.getListInviteInfo(inviteToken)
+
+    suspend fun requestListJoin(inviteToken: String) =
+        restDataSource.requestListJoin(inviteToken).onSuccess { refreshCache() }
+
+    suspend fun leaveList(listId: String) =
+        restDataSource.leaveList(listId).onSuccess {
+            cacheDataSource.deleteTasksByList(listId)
+            cacheDataSource.deleteTaskList(listId)
+            widgetManager.update()
+        }
+
+    suspend fun removeMemberFromList(listId: String, memberId: String) =
+        restDataSource.removeMemberFromList(listId, memberId).onSuccess {
+            // TODO
+        }
+
     @OptIn(ExperimentalCoroutinesApi::class)
     fun getTasksByList(listId: String, isCompleted: Boolean) =
-        getListById(listId).flatMapLatest { taskList ->
-            if (taskList == null) {
-                return@flatMapLatest flowOf(emptyList())
+        combine(getListById(listId), getListPrefsById(listId)) { list, prefs -> list to prefs }
+            .flatMapLatest { (taskList, prefs) ->
+                if (taskList == null || prefs == null) {
+                    return@flatMapLatest flowOf(emptyList())
+                }
+                cacheDataSource.getTasksByList(
+                    listId,
+                    prefs.sortType,
+                    prefs.sortDirection,
+                    isCompleted
+                )
             }
-            cacheDataSource.getTasksByList(
-                listId,
-                taskList.sortType,
-                taskList.sortDirection,
-                isCompleted
-            )
-        }
 
     fun getTaskById(id: String) = cacheDataSource.getTaskById(id)
 
@@ -368,23 +427,29 @@ class Repository(
             combine(boardLists) { lists -> lists.toList() }
         }
 
+    @OptIn(ExperimentalCoroutinesApi::class)
     private fun getBoardList(taskList: TaskList) =
-        combine(
-            cacheDataSource.getTasksByList(
-                taskList.id,
-                taskList.sortType,
-                taskList.sortDirection,
-                isCompleted = false
-            ),
-            cacheDataSource.getTaskCountForList(taskList.id, false),
-            cacheDataSource.getTaskCountForList(taskList.id, true)
-        ) { topTasks, currentTaskCount, completedTaskCount ->
-            BoardList(
-                taskList,
-                topTasks.take(NUM_TOP_TASKS),
-                currentTaskCount?.toInt() ?: 0,
-                completedTaskCount?.toInt() ?: 0
-            )
+        cacheDataSource.getListPrefsById(taskList.id).flatMapLatest { prefs ->
+            if (prefs == null) return@flatMapLatest emptyFlow()
+
+            combine(
+                cacheDataSource.getTasksByList(
+                    taskList.id,
+                    prefs.sortType,
+                    prefs.sortDirection,
+                    isCompleted = false
+                ),
+                cacheDataSource.getTaskCountForList(taskList.id, false),
+                cacheDataSource.getTaskCountForList(taskList.id, true)
+            ) { topTasks, currentTaskCount, completedTaskCount ->
+                BoardList(
+                    taskList,
+                    prefs,
+                    topTasks.take(NUM_TOP_TASKS),
+                    currentTaskCount?.toInt() ?: 0,
+                    completedTaskCount?.toInt() ?: 0
+                )
+            }
         }
 
     companion object {

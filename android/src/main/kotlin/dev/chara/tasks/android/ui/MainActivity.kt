@@ -1,5 +1,6 @@
 package dev.chara.tasks.android.ui
 
+import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.ComponentActivity
@@ -16,10 +17,13 @@ import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import dev.chara.tasks.android.notification.service.MessagingService
 import dev.chara.tasks.shared.component.DeepLink
 import dev.chara.tasks.shared.component.DefaultRootComponent
+import dev.chara.tasks.shared.component.RootComponent
 import dev.chara.tasks.shared.model.preference.Theme
 import dev.chara.tasks.shared.ui.content.RootContent
 
 class MainActivity : ComponentActivity() {
+
+    private lateinit var root: RootComponent
 
     override fun onCreate(savedInstanceState: Bundle?) {
         installSplashScreen()
@@ -28,10 +32,10 @@ class MainActivity : ComponentActivity() {
 
         WindowCompat.setDecorFitsSystemWindows(window, false)
 
-        val root =
+        root =
             DefaultRootComponent(
                 componentContext = defaultComponentContext(),
-                deepLink = parseIntent()
+                deepLink = parseIntent(intent)
             )
 
         setContent {
@@ -58,7 +62,13 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-    private fun parseIntent(): DeepLink =
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+
+        root.onDeepLink(parseIntent(intent))
+    }
+
+    private fun parseIntent(intent: Intent): DeepLink =
         if (intent.data != null && intent.data!!.host == DEEP_LINK_HOST) {
             when (intent.data!!.path) {
                 PATH_VERIFY_EMAIL -> {
@@ -76,6 +86,16 @@ class MainActivity : ComponentActivity() {
 
                     if (token != null) {
                         DeepLink.ResetPassword(token)
+                    } else {
+                        Toast.makeText(this, "Missing token parameter", Toast.LENGTH_LONG).show()
+                        DeepLink.None
+                    }
+                }
+                PATH_JOIN_LIST -> {
+                    val token = intent.data!!.getQueryParameter(QUERY_LIST_INVITE_TOKEN)
+
+                    if (token != null) {
+                        DeepLink.JoinList(token)
                     } else {
                         Toast.makeText(this, "Missing token parameter", Toast.LENGTH_LONG).show()
                         DeepLink.None
@@ -122,6 +142,9 @@ class MainActivity : ComponentActivity() {
 
         const val PATH_RESET_PASSWORD = "/reset"
         const val QUERY_PASSWORD_RESET_TOKEN = "token"
+
+        const val PATH_JOIN_LIST = "/join"
+        const val QUERY_LIST_INVITE_TOKEN = "token"
 
         const val PATH_VIEW_LIST = "/list"
         const val QUERY_LIST_ID = "id"

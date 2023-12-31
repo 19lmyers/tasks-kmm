@@ -6,6 +6,7 @@ import app.cash.sqldelight.db.SqlDriver
 import dev.chara.tasks.shared.database.sql.SQLDatabase
 import dev.chara.tasks.shared.database.sql.Task
 import dev.chara.tasks.shared.database.sql.TaskList
+import dev.chara.tasks.shared.database.sql.TaskListPrefs
 import kotlinx.datetime.Instant
 
 expect class DriverFactory {
@@ -34,11 +35,14 @@ object Database {
             TaskList.Adapter(
                 colorAdapter = EnumColumnAdapter(),
                 iconAdapter = EnumColumnAdapter(),
-                sort_typeAdapter = EnumColumnAdapter(),
-                sort_directionAdapter = EnumColumnAdapter(),
                 date_createdAdapter = instantAdapter,
                 last_modifiedAdapter = instantAdapter,
                 classifier_typeAdapter = EnumColumnAdapter()
+            ),
+            TaskListPrefs.Adapter(
+                sort_typeAdapter = EnumColumnAdapter(),
+                sort_directionAdapter = EnumColumnAdapter(),
+                last_modifiedAdapter = instantAdapter
             )
         )
     }

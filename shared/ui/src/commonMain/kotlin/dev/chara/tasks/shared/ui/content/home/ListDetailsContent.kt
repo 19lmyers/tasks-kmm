@@ -21,7 +21,9 @@ import androidx.compose.material.icons.filled.CheckCircleOutline
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.ExitToApp
 import androidx.compose.material.icons.filled.MoreVert
+import androidx.compose.material.icons.filled.Share
 import androidx.compose.material.pullrefresh.PullRefreshIndicator
 import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
@@ -55,6 +57,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -65,11 +68,12 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import dev.chara.tasks.shared.component.home.list_details.ListDetailsComponent
-import dev.chara.tasks.shared.model.TaskList
+import dev.chara.tasks.shared.model.TaskListPrefs
 import dev.chara.tasks.shared.ui.item.Tasks
 import dev.chara.tasks.shared.ui.model.icon
 import dev.chara.tasks.shared.ui.theme.ColorTheme
 import dev.chara.tasks.shared.ui.theme.extend.surfaceContainerHighest
+import kotlinx.coroutines.launch
 import kotlinx.datetime.Clock
 
 @OptIn(
@@ -92,7 +96,21 @@ fun ListDetailsContent(
 
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
 
+    val coroutineScope = rememberCoroutineScope()
+
     ColorTheme(color = state.value.selectedList?.color) {
+        var showLeaveListDialog by remember { mutableStateOf(false) }
+
+        if (showLeaveListDialog) {
+            LeaveListDialog(
+                onDismiss = { showLeaveListDialog = false },
+                onConfirm = {
+                    showLeaveListDialog = false
+                    component.leaveList(state.value.selectedList!!.id)
+                }
+            )
+        }
+
         var showDeleteListDialog by remember { mutableStateOf(false) }
 
         if (showDeleteListDialog) {
@@ -121,11 +139,11 @@ fun ListDetailsContent(
 
         if (showSortDialog) {
             SortListDialog(
-                sortType = state.value.selectedList!!.sortType,
+                sortType = state.value.prefs!!.sortType,
                 onDismiss = { showSortDialog = false },
                 onSelect = { sortType ->
-                    component.updateList(
-                        state.value.selectedList!!.copy(
+                    component.updatePrefs(
+                        state.value.prefs!!.copy(
                             sortType = sortType,
                             lastModified = Clock.System.now()
                         )
@@ -145,28 +163,39 @@ fun ListDetailsContent(
                     onUpClicked = { component.onUp() },
                     enableActions = !state.value.isLoading,
                     onEditClicked = { component.onEditClicked(state.value.selectedList!!.id) },
+                    onShareClicked = {
+                        if (state.value.profile?.emailVerified == true) {
+                            component.onShareClicked(state.value.selectedList!!.id)
+                        } else {
+                            coroutineScope.launch {
+                                snackbarHostState.showSnackbar("Verify your email to share lists")
+                            }
+                        }
+                    },
                     showOverflowMenu = showOverflowMenu,
                     setOverflowShown = { showOverflowMenu = it },
+                    isOwner = state.value.selectedList?.ownerId == state.value.profile?.id,
                     onDeleteTasksClicked = { showDeleteCompletedTasksDialog = true },
-                    onDeleteListClicked = { showDeleteListDialog = true }
+                    onDeleteListClicked = { showDeleteListDialog = true },
+                    onLeaveListClicked = { showLeaveListDialog = true }
                 )
             },
             bottomBar = {
                 BottomBar(
-                    sortType = state.value.selectedList?.sortType,
-                    sortDirection = state.value.selectedList?.sortDirection,
+                    sortType = state.value.prefs?.sortType,
+                    sortDirection = state.value.prefs?.sortDirection,
                     onSortTypeClicked = { showSortDialog = true },
                     onSortDirectionClicked = {
-                        component.updateList(
-                            state.value.selectedList!!.copy(
+                        component.updatePrefs(
+                            state.value.prefs!!.copy(
                                 sortDirection =
                                     if (
-                                        state.value.selectedList!!.sortDirection ==
-                                            TaskList.SortDirection.ASCENDING
+                                        state.value.prefs!!.sortDirection ==
+                                            TaskListPrefs.SortDirection.ASCENDING
                                     ) {
-                                        TaskList.SortDirection.DESCENDING
+                                        TaskListPrefs.SortDirection.DESCENDING
                                     } else {
-                                        TaskList.SortDirection.ASCENDING
+                                        TaskListPrefs.SortDirection.ASCENDING
                                     },
                                 lastModified = Clock.System.now()
                             )
@@ -206,7 +235,7 @@ fun ListDetailsContent(
                                 onClick = { task -> component.onTaskClicked(task.id) },
                                 onUpdate = { task -> component.updateTask(task) },
                                 allowReorder =
-                                    state.value.selectedList?.sortType == TaskList.SortType.ORDINAL,
+                                    state.value.prefs?.sortType == TaskListPrefs.SortType.ORDINAL,
                                 onReorder = { taskId, fromIndex, toIndex ->
                                     component.reorderTask(
                                         state.value.selectedList!!.id,
@@ -215,10 +244,9 @@ fun ListDetailsContent(
                                         toIndex
                                     )
                                 },
-                                showIndexNumbers =
-                                    state.value.selectedList?.showIndexNumbers == true,
+                                showIndexNumbers = state.value.prefs?.showIndexNumbers == true,
                                 groupByCategory =
-                                    state.value.selectedList?.sortType == TaskList.SortType.CATEGORY
+                                    state.value.prefs?.sortType == TaskListPrefs.SortType.CATEGORY
                             )
                         }
                     }
@@ -258,14 +286,17 @@ fun ListDetailsContent(
 private fun TopBar(
     scrollBehavior: TopAppBarScrollBehavior,
     title: String?,
+    isOwner: Boolean,
     upAsCloseButton: Boolean,
     onUpClicked: () -> Unit,
     enableActions: Boolean,
     onEditClicked: () -> Unit,
+    onShareClicked: () -> Unit,
     showOverflowMenu: Boolean,
     setOverflowShown: (Boolean) -> Unit,
     onDeleteTasksClicked: () -> Unit,
-    onDeleteListClicked: () -> Unit
+    onDeleteListClicked: () -> Unit,
+    onLeaveListClicked: () -> Unit
 ) {
     TopAppBar(
         title = {
@@ -301,6 +332,14 @@ private fun TopBar(
                 )
             }
 
+            IconButton(onClick = { onShareClicked() }, enabled = enableActions) {
+                Icon(
+                    Icons.Filled.Share,
+                    contentDescription = "Share",
+                    tint = MaterialTheme.colorScheme.primary
+                )
+            }
+
             IconButton(onClick = { setOverflowShown(true) }) {
                 Icon(
                     Icons.Filled.MoreVert,
@@ -323,15 +362,29 @@ private fun TopBar(
                     },
                     enabled = enableActions
                 )
-                DropdownMenuItem(
-                    text = { Text(text = "Delete list") },
-                    leadingIcon = { Icon(Icons.Filled.Delete, contentDescription = "Delete") },
-                    onClick = {
-                        onDeleteListClicked()
-                        setOverflowShown(false)
-                    },
-                    enabled = enableActions
-                )
+                if (isOwner) {
+                    DropdownMenuItem(
+                        text = { Text(text = "Delete list") },
+                        leadingIcon = { Icon(Icons.Filled.Delete, contentDescription = "Delete") },
+                        onClick = {
+                            onDeleteListClicked()
+                            setOverflowShown(false)
+                        },
+                        enabled = enableActions
+                    )
+                } else {
+                    DropdownMenuItem(
+                        text = { Text(text = "Leave list") },
+                        leadingIcon = {
+                            Icon(Icons.Filled.ExitToApp, contentDescription = "Leave")
+                        },
+                        onClick = {
+                            onLeaveListClicked()
+                            setOverflowShown(false)
+                        },
+                        enabled = enableActions
+                    )
+                }
             }
         },
         scrollBehavior = scrollBehavior
@@ -351,8 +404,8 @@ private fun TaskPlaceholder() {
 
 @Composable
 private fun BottomBar(
-    sortType: TaskList.SortType?,
-    sortDirection: TaskList.SortDirection?,
+    sortType: TaskListPrefs.SortType?,
+    sortDirection: TaskListPrefs.SortDirection?,
     onSortTypeClicked: () -> Unit,
     onSortDirectionClicked: () -> Unit,
     enableActions: Boolean,
@@ -369,8 +422,8 @@ private fun BottomBar(
             }
             if (
                 sortDirection != null &&
-                    sortType != TaskList.SortType.ORDINAL &&
-                    sortType != TaskList.SortType.CATEGORY
+                    sortType != TaskListPrefs.SortType.ORDINAL &&
+                    sortType != TaskListPrefs.SortType.CATEGORY
             ) {
                 TextButton(onClick = onSortDirectionClicked) {
                     Icon(sortDirection.icon, contentDescription = "Sort order")
@@ -420,12 +473,26 @@ private fun DeleteListDialog(
     )
 }
 
+@Composable
+private fun LeaveListDialog(
+    onDismiss: () -> Unit,
+    onConfirm: () -> Unit,
+) {
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text(text = "Leave list?") },
+        text = { Text(text = "You will need an invite to rejoin this list") },
+        dismissButton = { TextButton(onClick = onDismiss) { Text("Cancel") } },
+        confirmButton = { TextButton(onClick = onConfirm) { Text("Leave") } }
+    )
+}
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun SortListDialog(
-    sortType: TaskList.SortType,
+    sortType: TaskListPrefs.SortType,
     onDismiss: () -> Unit,
-    onSelect: (TaskList.SortType) -> Unit
+    onSelect: (TaskListPrefs.SortType) -> Unit
 ) {
     AlertDialog(onDismissRequest = onDismiss) {
         Surface(
@@ -439,7 +506,7 @@ private fun SortListDialog(
                 Box(modifier = Modifier.padding(bottom = 16.dp)) {
                     Text(text = "Sort by", style = MaterialTheme.typography.headlineSmall)
                 }
-                for (type in TaskList.SortType.entries) {
+                for (type in TaskListPrefs.SortType.entries) {
                     ListItem(
                         modifier =
                             Modifier.clip(MaterialTheme.shapes.extraLarge)

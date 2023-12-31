@@ -28,7 +28,7 @@ fun ProfileImage(
         )
     } else {
         KamelImage(
-            resource = asyncPainterResource(profilePhotoUri ?: getGravatarUri(email)),
+            resource = asyncPainterResource(profilePhotoUri ?: getGravatarUri(email), key = email),
             contentDescription = "Account options",
             onLoading = {
                 Icon(

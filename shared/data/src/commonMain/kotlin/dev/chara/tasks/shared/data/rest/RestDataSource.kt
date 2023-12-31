@@ -9,6 +9,7 @@ import dev.chara.tasks.shared.data.preference.PreferenceDataSource
 import dev.chara.tasks.shared.model.Profile
 import dev.chara.tasks.shared.model.Task
 import dev.chara.tasks.shared.model.TaskList
+import dev.chara.tasks.shared.model.TaskListPrefs
 import dev.chara.tasks.shared.model.TokenPair
 import io.ktor.client.HttpClient
 import io.ktor.client.HttpClientConfig
@@ -25,6 +26,7 @@ import io.ktor.client.request.get
 import io.ktor.client.request.post
 import io.ktor.client.request.put
 import io.ktor.client.request.setBody
+import io.ktor.client.statement.bodyAsText
 import io.ktor.http.ContentType
 import io.ktor.http.Headers
 import io.ktor.http.HttpHeaders
@@ -88,6 +90,26 @@ class RestDataSource(private val preferenceDataSource: PreferenceDataSource, end
     suspend fun getUserProfile() =
         try {
             val response = client.get("$endpointUrl/profile")
+
+            when (response.status) {
+                HttpStatusCode.OK -> {
+                    val profile: Profile = response.body()
+                    Ok(profile)
+                }
+                HttpStatusCode.BadRequest -> {
+                    Err(ApiError.InvalidQuery(response.body()))
+                }
+                else -> {
+                    Err(ApiError.OtherServerError(response.body()))
+                }
+            }
+        } catch (ex: Throwable) {
+            Err(ClientError(ex))
+        }
+
+    suspend fun getUserProfileFor(userId: String) =
+        try {
+            val response = client.get("$endpointUrl/profile/$userId")
 
             when (response.status) {
                 HttpStatusCode.OK -> {
@@ -407,12 +429,14 @@ class RestDataSource(private val preferenceDataSource: PreferenceDataSource, end
             Err(ClientError(ex))
         }
 
-    suspend fun createList(taskList: TaskList) =
+    @Serializable data class Insert(val taskList: TaskList, val prefs: TaskListPrefs)
+
+    suspend fun createList(taskList: TaskList, prefs: TaskListPrefs) =
         try {
             val response =
                 client.post("$endpointUrl/lists") {
                     contentType(ContentType.Application.Json)
-                    setBody(taskList)
+                    setBody(Insert(taskList, prefs))
                 }
 
             when (response.status) {
@@ -482,6 +506,177 @@ class RestDataSource(private val preferenceDataSource: PreferenceDataSource, end
 
             when (response.status) {
                 HttpStatusCode.Accepted -> {
+                    Ok(Unit)
+                }
+                HttpStatusCode.BadRequest -> {
+                    Err(ApiError.InvalidQuery(response.body()))
+                }
+                else -> {
+                    Err(ApiError.OtherServerError(response.body()))
+                }
+            }
+        } catch (ex: Throwable) {
+            Err(ClientError(ex))
+        }
+
+    suspend fun getListPrefs(listId: String) =
+        try {
+            val response = client.get("$endpointUrl/lists/$listId/prefs")
+
+            when (response.status) {
+                HttpStatusCode.OK -> {
+                    val prefs: TaskListPrefs? = response.body()
+                    Ok(prefs)
+                }
+                HttpStatusCode.BadRequest -> {
+                    Err(ApiError.InvalidQuery(response.body()))
+                }
+                else -> {
+                    Err(ApiError.OtherServerError(response.body()))
+                }
+            }
+        } catch (ex: Throwable) {
+            Err(ClientError(ex))
+        }
+
+    suspend fun updateListPrefs(listId: String, prefs: TaskListPrefs) =
+        try {
+            val response =
+                client.put("$endpointUrl/lists/$listId/prefs") {
+                    contentType(ContentType.Application.Json)
+                    setBody(prefs)
+                }
+
+            when (response.status) {
+                HttpStatusCode.OK -> {
+                    Ok(Unit)
+                }
+                HttpStatusCode.BadRequest -> {
+                    Err(ApiError.InvalidQuery(response.body()))
+                }
+                else -> {
+                    Err(ApiError.OtherServerError(response.body()))
+                }
+            }
+        } catch (ex: Throwable) {
+            Err(ClientError(ex))
+        }
+
+    suspend fun getListMembers(listId: String) =
+        try {
+            val response = client.get("$endpointUrl/lists/$listId/members")
+
+            when (response.status) {
+                HttpStatusCode.OK -> {
+                    val profiles = response.body<List<Profile>>()
+                    Ok(profiles)
+                }
+                HttpStatusCode.BadRequest -> {
+                    Err(ApiError.InvalidQuery(response.body()))
+                }
+                else -> {
+                    Err(ApiError.OtherServerError(response.body()))
+                }
+            }
+        } catch (ex: Throwable) {
+            Err(ClientError(ex))
+        }
+
+    suspend fun requestListInvite(listId: String) =
+        try {
+            val response = client.post("$endpointUrl/lists/$listId/invite")
+
+            when (response.status) {
+                HttpStatusCode.Created -> {
+                    val token = response.bodyAsText()
+                    Ok(token)
+                }
+                HttpStatusCode.BadRequest -> {
+                    Err(ApiError.InvalidQuery(response.body()))
+                }
+                else -> {
+                    Err(ApiError.OtherServerError(response.body()))
+                }
+            }
+        } catch (ex: Throwable) {
+            Err(ClientError(ex))
+        }
+
+    suspend fun getListInviteInfo(inviteToken: String) =
+        try {
+            val response =
+                client.post("$endpointUrl/lists/invite") {
+                    contentType(ContentType.Text.Plain)
+                    setBody(inviteToken)
+                }
+            when (response.status) {
+                HttpStatusCode.OK -> {
+                    val taskList = response.body<TaskList>()
+                    Ok(taskList)
+                }
+                HttpStatusCode.BadRequest -> {
+                    Err(ApiError.InvalidQuery(response.body()))
+                }
+                else -> {
+                    Err(ApiError.OtherServerError(response.body()))
+                }
+            }
+        } catch (ex: Throwable) {
+            Err(ClientError(ex))
+        }
+
+    suspend fun requestListJoin(inviteToken: String) =
+        try {
+            val response =
+                client.post("$endpointUrl/lists/join") {
+                    contentType(ContentType.Text.Plain)
+                    setBody(inviteToken)
+                }
+
+            when (response.status) {
+                HttpStatusCode.OK -> {
+                    Ok(Unit)
+                }
+                HttpStatusCode.BadRequest -> {
+                    Err(ApiError.InvalidQuery(response.body()))
+                }
+                else -> {
+                    Err(ApiError.OtherServerError(response.body()))
+                }
+            }
+        } catch (ex: Throwable) {
+            Err(ClientError(ex))
+        }
+
+    suspend fun leaveList(listId: String) =
+        try {
+            val response = client.post("$endpointUrl/lists/$listId/leave")
+
+            when (response.status) {
+                HttpStatusCode.OK -> {
+                    Ok(Unit)
+                }
+                HttpStatusCode.BadRequest -> {
+                    Err(ApiError.InvalidQuery(response.body()))
+                }
+                else -> {
+                    Err(ApiError.OtherServerError(response.body()))
+                }
+            }
+        } catch (ex: Throwable) {
+            Err(ClientError(ex))
+        }
+
+    suspend fun removeMemberFromList(listId: String, memberId: String) =
+        try {
+            val response =
+                client.post("$endpointUrl/lists/$listId/remove") {
+                    contentType(ContentType.Text.Plain)
+                    setBody(memberId)
+                }
+
+            when (response.status) {
+                HttpStatusCode.OK -> {
                     Ok(Unit)
                 }
                 HttpStatusCode.BadRequest -> {

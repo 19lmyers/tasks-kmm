@@ -206,7 +206,7 @@ fun DashboardContent(
                                             task = task,
                                             onClick = { component.onTaskClicked(it) },
                                             onUpdate = { component.updateTask(it) },
-                                            showIndexNumbers = boardList.taskList.showIndexNumbers,
+                                            showIndexNumbers = boardList.prefs.showIndexNumbers,
                                             indexNumber = index + 1
                                         )
                                     }

@@ -8,7 +8,7 @@ import dev.chara.tasks.shared.database.sql.SQLDatabase
 
 private val dbConfig =
     DatabaseConfiguration(
-        name = "cache_v4.db",
+        name = "cache_v5_1.db",
         version = SQLDatabase.Schema.version.toInt(),
         create = { connection -> wrapConnection(connection) { SQLDatabase.Schema.create(it) } },
         upgrade = { connection, oldVersion, newVersion ->
